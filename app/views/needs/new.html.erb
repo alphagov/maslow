@@ -1,0 +1,8 @@
+<%= semantic_form_for "need" do |f| %>
+  <%= f.input :as_a, :label => "As a..." %> 
+  <%= f.input :i_want_to, :label => "I want to..." %>
+  <%= f.input :so_that, :label => "So that..." %>
+  <%= f.input :organisations, :label => "Organisations" %>
+  <%= f.input :why_needed, :label => "Why is this needed?", :as => :check_boxes, :collection => @why_needed %>
+  <%= f.input :evidence, :label => "Evidence", :as => :text %>
+<% end %>
