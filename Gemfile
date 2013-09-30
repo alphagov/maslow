@@ -32,3 +32,6 @@ gem 'jquery-rails'
 
 gem 'unicorn'
 gem 'exception_notification', '2.6.1'
+gem 'bootstrap-sass', '2.3.2.2'
+gem 'formtastic', '2.2.1'
+gem 'formtastic-bootstrap', '2.1.3'
