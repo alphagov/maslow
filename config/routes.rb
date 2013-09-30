@@ -1,6 +1,6 @@
 Maslow::Application.routes.draw do
 
   root :to => "default#index"
-  resources :needs, only: [:index, :new]
+  resources :needs, only: [:index, :new, :create]
 
 end
