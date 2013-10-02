@@ -19,6 +19,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_unchecked_field?("legislation")
       assert page.has_unchecked_field?("obligation")
       assert page.has_unchecked_field?("other")
+      assert page.has_text?("What is the impact of GOV.UK not doing this?")
+      assert page.has_unchecked_field?("Ben's impact #1")
+      assert page.has_unchecked_field?("Ben's impact #2")
+      assert page.has_unchecked_field?("Ben's impact #3")
       assert page.has_field?("Evidence")
     end
 
@@ -32,6 +36,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("Organisations", with: "Department of Justice")
       check("legislation")
       check("obligation")
+      check("Ben's impact #1")
+      check("Ben's impact #2")
+      check("Ben's impact #3")
       fill_in("Evidence", with: "web links, legislation references")
 
       click_on("Submit Need")

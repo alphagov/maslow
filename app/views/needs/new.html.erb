@@ -4,6 +4,7 @@
   <%= f.input :benefit, :label => "So that..." %>
   <%= f.input :organisations, :label => "Organisations" %>
   <%= f.input :justification, :label => "Why is this needed?", :as => :check_boxes, :collection => @why_needed %>
+  <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :as => :check_boxes, :collection => @impacts %>
   <%= f.input :evidence, :label => "Evidence", :as => :text %>
 
   <%= f.action :submit, :as => :button %>
