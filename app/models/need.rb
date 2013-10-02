@@ -5,9 +5,9 @@ class Need
   include ActiveModel::Validations
   include ActiveModel::Conversion
 
-  attr_accessor :role
+  attr_accessor :role, :goal, :benefit, :organisations, :evidence, :impact, :justification
 
-  validates_presence_of :role
+  validates_presence_of :role, :goal, :benefit, :organisations, :evidence, :impact, :justification
 
   def persisted?
     false

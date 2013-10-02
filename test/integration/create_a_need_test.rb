@@ -36,12 +36,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("Organisations", with: "Department of Justice")
       check("legislation")
       check("obligation")
-      check("Ben's impact #1")
-      check("Ben's impact #2")
-      check("Ben's impact #3")
+      choose("Ben's impact #1")
       fill_in("Evidence", with: "web links, legislation references")
 
-      click_on("Submit Need")
+      click_on("Create Need")
     end
   end
 
