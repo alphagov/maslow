@@ -27,6 +27,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_unchecked_field?("Noticed by an expert audience")
       assert page.has_unchecked_field?("No impact")
       assert page.has_field?("Evidence")
+      assert page.has_text?("Need is likely to be met when")
     end
 
     should "be able to create a new Need" do
@@ -41,6 +42,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("obligation")
       choose("Noticed by the average member of the public")
       fill_in("Evidence", with: "web links, legislation references")
+      fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
       click_on("Create Need")
     end
