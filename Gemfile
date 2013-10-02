@@ -19,6 +19,7 @@ group :test do
   gem 'shoulda-context', '1.1.5'
   gem 'simplecov', '0.7.1'
   gem 'simplecov-rcov'
+  gem 'mocha', '0.14.0', require: false
 end
 
 group :assets do

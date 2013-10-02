@@ -6,6 +6,6 @@ class NeedLintTest < ActiveModel::TestCase
   include ActiveModel::Lint::Tests
 
   def setup
-    @model = Need.new
+    @model = Need.new({})
   end
 end

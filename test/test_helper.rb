@@ -7,6 +7,8 @@ require 'database_cleaner'
 require 'simplecov'
 require 'simplecov-rcov'
 
+require 'mocha/setup'
+
 SimpleCov.start 'rails'
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 

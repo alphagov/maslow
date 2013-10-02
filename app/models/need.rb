@@ -9,6 +9,9 @@ class Need
 
   validates_presence_of :role, :goal, :benefit, :organisations, :evidence, :impact, :justification, :met_when
 
+  def initialize(attributes)
+  end
+
   def persisted?
     false
   end

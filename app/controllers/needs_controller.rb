@@ -3,7 +3,7 @@ class NeedsController < ApplicationController
   end
 
   def new
-    @need = Need.new
+    @need = Need.new({})
     @justification = ["legislation", "obligation", "other"]
     @impacts = [
       "Endangers the health of individuals",
@@ -16,6 +16,12 @@ class NeedsController < ApplicationController
   end
 
   def create
+    # Rails inserts an empty string into multi-valued fields.
+    # We are removing the unneeded value
+    if params["need"] && params["need"]["justification"]
+      params["need"]["justification"].select!(&:present?)
+    end
+    @need = Need.new(params["need"])
     redirect_to("/")
   end
 end
