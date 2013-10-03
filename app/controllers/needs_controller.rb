@@ -1,4 +1,11 @@
+require "need_api_submitter"
+
 class NeedsController < ApplicationController
+
+  def need_api_submitter
+    NeedAPISubmitter.instance
+  end
+
   def index
   end
 
@@ -29,6 +36,12 @@ class NeedsController < ApplicationController
       raise(ArgumentError, "Need data not found")
     end
     @need = Need.new(params["need"])
-    redirect_to("/")
+
+    if @need.valid?
+      need_api_submitter.create(@need)
+      redirect_to("/")
+    else
+      render "new", :status => :unprocessable_entity
+    end
   end
 end
