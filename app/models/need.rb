@@ -4,12 +4,20 @@ class Need
   extend ActiveModel::Naming
   include ActiveModel::Validations
   include ActiveModel::Conversion
+  include ActiveModel::Serialization
 
-  attr_accessor :role, :goal, :benefit, :organisations, :evidence, :impact, :justification, :met_when
+  FIELDS = ["role", "goal", "benefit", "organisations", "evidence", "impact", "justification", "met_when"]
+  attr_accessor *FIELDS
 
-  validates_presence_of :role, :goal, :benefit, :organisations, :evidence, :impact, :justification, :met_when
+  validates_presence_of *FIELDS
 
-  def initialize(attributes)
+  def initialize(attrs)
+    unless (attrs.keys - FIELDS).empty?
+      raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
+    end
+    attrs.keys.each do |f|
+      send("#{f}=", attrs[f])
+    end
   end
 
   def persisted?
