@@ -2,6 +2,16 @@ require "need_api_submitter"
 
 class NeedsController < ApplicationController
 
+  JUSTIFICATION = ["legislation", "obligation", "other"]
+  IMPACTS = [
+    "Endangers the health of individuals",
+    "Has serious consequences for the day-to-day lives of your users",
+    "Annoys the majority of your users. May incur fines",
+    "Noticed by the average member of the public",
+    "Noticed by an expert audience",
+    "No impact"
+  ]
+
   def need_api_submitter
     NeedAPISubmitter.instance
   end
@@ -11,15 +21,8 @@ class NeedsController < ApplicationController
 
   def new
     @need = Need.new({})
-    @justification = ["legislation", "obligation", "other"]
-    @impacts = [
-      "Endangers the health of individuals",
-      "Has serious consequences for the day-to-day lives of your users",
-      "Annoys the majority of your users. May incur fines",
-      "Noticed by the average member of the public",
-      "Noticed by an expert audience",
-      "No impact"
-    ]
+    @justification = JUSTIFICATION
+    @impacts = IMPACTS
   end
 
   def create
@@ -41,6 +44,8 @@ class NeedsController < ApplicationController
       need_api_submitter.create(@need)
       redirect_to("/")
     else
+      @justification = JUSTIFICATION
+      @impacts = IMPACTS
       render "new", :status => :unprocessable_entity
     end
   end
