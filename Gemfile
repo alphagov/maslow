@@ -20,6 +20,7 @@ group :test do
   gem 'simplecov', '0.7.1'
   gem 'simplecov-rcov'
   gem 'mocha', '0.14.0', require: false
+  gem 'webmock', '1.14.0'
 end
 
 group :assets do
@@ -37,4 +38,3 @@ gem 'bootstrap-sass', '2.3.2.2'
 gem 'formtastic', '2.2.1'
 gem 'formtastic-bootstrap', '2.1.3'
 gem 'gds-api-adapters', '7.8.0'
-gem 'webmock', '1.14.0'
