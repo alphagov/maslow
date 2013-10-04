@@ -15,5 +15,11 @@ class NeedTest < ActiveSupport::TestCase
         Need.new(data)
       end
     end
+
+    should "not include errors as a serialised field" do
+      n = Need.new("role" => "me", "goal" => "stuff", "benefit" => "win")
+      n.valid?  # Check this to set errors attribute
+      assert_equal ["benefit", "goal", "role"], n.as_json.keys.sort
+    end
   end
 end

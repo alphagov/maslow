@@ -20,6 +20,15 @@ class Need
     end
   end
 
+  def as_json(options = {})
+    # Build up the hash manually, as ActiveModel::Serialization's default
+    # behaviour serialises all attributes, including @errors and
+    # @validation_context.
+    FIELDS.each_with_object({}) do |field, hash|
+      hash[field] = send(field) unless send(field).nil?
+    end
+  end
+
   def persisted?
     false
   end
