@@ -14,7 +14,7 @@ class NeedsController < ApplicationController
   ]
 
   def need_api_submitter
-    GdsApi::NeedApi.new(Plek.current.find('needapi'))
+    GdsApi::NeedApi.new(Plek.current.find('need-api'))
   end
 
   def index
