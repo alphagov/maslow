@@ -46,6 +46,29 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       click_on("Create Need")
     end
+
+    should "retain previous values when the need content is incomplete" do
+      visit('/needs')
+      click_on('Add a Need')
+
+      fill_in("As a", with: "User")
+      check("legislation")
+      fill_in("Need is likely to be met when", with: "Can download a birth certificate.\nOther criteria")
+
+      click_on("Create Need")
+
+      assert_equal("Can download a birth certificate.\nOther criteria",
+                   find_field("Need is likely to be met when").value)
+    end
+
+    should "not have any fields filled in when submitting a blank form" do
+      visit('/needs')
+      click_on('Add a Need')
+
+      click_on("Create Need")
+
+      assert_equal("", find_field("Need is likely to be met when").value)
+    end
   end
 
 end

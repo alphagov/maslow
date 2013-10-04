@@ -46,6 +46,9 @@ class NeedsController < ApplicationController
     else
       @justification = JUSTIFICATION
       @impacts = IMPACTS
+      @need.met_when = @need.met_when.try do |f|
+        f.join("\n")
+      end
       render "new", :status => :unprocessable_entity
     end
   end
