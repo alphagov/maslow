@@ -9,7 +9,7 @@ class Need
   FIELDS = ["role", "goal", "benefit", "organisations", "evidence", "impact", "justification", "met_when"]
   attr_accessor *FIELDS
 
-  validates_presence_of *FIELDS
+  validates_presence_of ["role", "goal", "benefit"]
 
   def initialize(attrs)
     unless (attrs.keys - FIELDS).empty?

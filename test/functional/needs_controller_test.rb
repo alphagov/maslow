@@ -25,7 +25,7 @@ class NeedsControllerTest < ActionController::TestCase
       need_data = {
         "role" => "User",
         "goal" => "do stuff",
-        "benefit" => "get stuff",
+        # No benefit
         "organisations" => "me"
       }
 
