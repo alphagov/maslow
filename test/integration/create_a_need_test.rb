@@ -31,6 +31,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to create a new Need" do
+      stub_request(:post, Plek.current.find('needapi')+'/needs')
+
       visit('/needs')
       click_on('Add a Need')
 

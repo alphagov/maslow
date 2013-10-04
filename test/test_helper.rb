@@ -9,6 +9,8 @@ require 'simplecov-rcov'
 
 require 'mocha/setup'
 
+require 'webmock/test_unit'
+
 SimpleCov.start 'rails'
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 

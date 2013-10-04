@@ -1,4 +1,5 @@
-require "need_api_submitter"
+require 'gds_api/need_api'
+require 'plek'
 
 class NeedsController < ApplicationController
 
@@ -13,7 +14,7 @@ class NeedsController < ApplicationController
   ]
 
   def need_api_submitter
-    NeedAPISubmitter.instance
+    GdsApi::NeedApi.new(Plek.current.find('needapi'))
   end
 
   def index
@@ -41,7 +42,7 @@ class NeedsController < ApplicationController
     @need = Need.new(params["need"])
 
     if @need.valid?
-      need_api_submitter.create(@need)
+      need_api_submitter.create_need(@need)
       redirect_to("/")
     else
       @justification = JUSTIFICATION
