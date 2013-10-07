@@ -4,9 +4,9 @@ class NeedTest < ActiveSupport::TestCase
 
   context "Posting need data" do
     should "serialize Need model to JSON" do
-      data = { "role" => "User", "justification" => ["x","y"] }
+      data = { "role" => "User", "justifications" => ["x","y"] }
       need = Need.new(data)
-      assert_equal(["justification","role"], need.as_json.keys.sort)
+      assert_equal(["justifications","role"], need.as_json.keys.sort)
     end
 
     should "Reject unrecognised fields" do

@@ -16,7 +16,7 @@ class NeedsControllerTest < ActionController::TestCase
         "organisations" => "me",
         "evidence" => "Blah",
         "impact" => "Nasty",
-        "justification" => ["Wanna", "Gotta"],
+        "justifications" => ["Wanna", "Gotta"],
         "met_when" => "Winning"
       }
     end
@@ -43,11 +43,11 @@ class NeedsControllerTest < ActionController::TestCase
       # Assert need posted
     end
 
-    should "remove blank entries from justification" do
-      need_data = complete_need_data.merge("justification" => ["", "foo"])
+    should "remove blank entries from justifications" do
+      need_data = complete_need_data.merge("justifications" => ["", "foo"])
 
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:justification, ["foo"])
+        responds_with(:justifications, ["foo"])
       )
       post(:create, need: need_data)
     end

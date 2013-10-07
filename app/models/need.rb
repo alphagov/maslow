@@ -6,7 +6,7 @@ class Need
   include ActiveModel::Conversion
   include ActiveModel::Serialization
 
-  FIELDS = ["role", "goal", "benefit", "organisations", "evidence", "impact", "justification", "met_when"]
+  FIELDS = ["role", "goal", "benefit", "organisations", "evidence", "impact", "justifications", "met_when"]
   attr_accessor *FIELDS
 
   validates_presence_of ["role", "goal", "benefit"]

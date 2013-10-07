@@ -3,8 +3,8 @@ require 'plek'
 
 class NeedsController < ApplicationController
 
-  JUSTIFICATION = ["legislation", "obligation", "other"]
-  IMPACTS = [
+  JUSTIFICATIONS = ["legislation", "obligation", "other"]
+  IMPACT = [
     "Endangers the health of individuals",
     "Has serious consequences for the day-to-day lives of your users",
     "Annoys the majority of your users. May incur fines",
@@ -22,16 +22,16 @@ class NeedsController < ApplicationController
 
   def new
     @need = Need.new({})
-    @justification = JUSTIFICATION
-    @impacts = IMPACTS
+    @justifications = JUSTIFICATIONS
+    @impact = IMPACT
   end
 
   def create
     # Rails inserts an empty string into multi-valued fields.
     # We are removing the unneeded value
     if params["need"]
-      if params["need"]["justification"]
-        params["need"]["justification"].select!(&:present?)
+      if params["need"]["justifications"]
+        params["need"]["justifications"].select!(&:present?)
       end
       if params["need"]["met_when"]
         params["need"]["met_when"] = params["need"]["met_when"].split("\n").map(&:strip)
@@ -45,8 +45,8 @@ class NeedsController < ApplicationController
       need_api_submitter.create_need(@need)
       redirect_to("/")
     else
-      @justification = JUSTIFICATION
-      @impacts = IMPACTS
+      @justifications = JUSTIFICATIONS
+      @impact = IMPACT
       @need.met_when = @need.met_when.try do |f|
         f.join("\n")
       end

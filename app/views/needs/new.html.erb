@@ -3,8 +3,8 @@
   <%= f.input :goal, :label => "I want to..." %>
   <%= f.input :benefit, :label => "So that..." %>
   <%= f.input :organisations, :label => "Organisations" %>
-  <%= f.input :justification, :label => "Why is this needed?", :as => :check_boxes, :collection => @justification %>
-  <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => @impacts %>
+  <%= f.input :justifications, :label => "Why is this needed?", :as => :check_boxes, :collection => @justifications %>
+  <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => @impact %>
   <%= f.input :evidence, :label => "Evidence", :as => :text %>
   <%= f.input :met_when, :label => "Need is likely to be met when", :as => :text %>
 
