@@ -5,7 +5,6 @@
   <%= f.input :organisations, :label => "Organisations" %>
   <%= f.input :justifications, :label => "Why is this needed?", :as => :check_boxes, :collection => @justifications %>
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => @impact %>
-  <%= f.input :evidence, :label => "Evidence", :as => :text %>
   <%= f.input :met_when, :label => "Need is likely to be met when", :as => :text %>
 
   <%= f.action :submit, :as => :button %>
