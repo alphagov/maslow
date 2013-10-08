@@ -2,7 +2,7 @@
   <%= f.input :role, :label => "As a..." %>
   <%= f.input :goal, :label => "I want to..." %>
   <%= f.input :benefit, :label => "So that..." %>
-  <%= f.input :organisations, :label => "Organisations" %>
+  <%= f.input :organisation_ids, :label => "Organisations", :as => :select, :input_html => { :multiple => true }, :collection => @organisations %>
   <%= f.input :justifications, :label => "Why is this needed?", :as => :check_boxes, :collection => @justifications %>
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => @impact %>
   <%= f.input :met_when, :label => "Need is likely to be met when", :as => :text %>

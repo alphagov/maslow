@@ -13,7 +13,7 @@ class NeedsControllerTest < ActionController::TestCase
         "role" => "User",
         "goal" => "do stuff",
         "benefit" => "get stuff",
-        "organisations" => "me",
+        "organisation_ids" => ["ministry-of-justice"],
         "evidence" => "Blah",
         "impact" => "Nasty",
         "justifications" => ["Wanna", "Gotta"],
@@ -26,7 +26,7 @@ class NeedsControllerTest < ActionController::TestCase
         "role" => "User",
         "goal" => "do stuff",
         # No benefit
-        "organisations" => "me"
+        "organisation_ids" => ["ministry-of-justice"]
       }
 
       post(:create, need: need_data)

@@ -14,7 +14,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_field?("As a")
       assert page.has_field?("I want to")
       assert page.has_field?("So that")
-      assert page.has_field?("Organisations")
+      assert page.has_text?("Organisations")
       assert page.has_text?("Why is this needed?")
       assert page.has_unchecked_field?("legislation")
       assert page.has_unchecked_field?("obligation")
@@ -26,7 +26,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_unchecked_field?("Noticed by the average member of the public")
       assert page.has_unchecked_field?("Noticed by an expert audience")
       assert page.has_unchecked_field?("No impact")
-      assert page.has_field?("Evidence")
       assert page.has_text?("Need is likely to be met when")
     end
 
@@ -39,11 +38,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("As a", with: "User")
       fill_in("I want to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
-      fill_in("Organisations", with: "Department of Justice")
+      select("Ministry of Justice", from: "Organisations")
       check("legislation")
       check("obligation")
       choose("Noticed by the average member of the public")
-      fill_in("Evidence", with: "web links, legislation references")
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
       click_on("Create Need")
