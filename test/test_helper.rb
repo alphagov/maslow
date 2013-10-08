@@ -10,6 +10,7 @@ require 'simplecov-rcov'
 require 'mocha/setup'
 
 require 'webmock/test_unit'
+WebMock.disable_net_connect!(:allow_localhost => true)
 
 SimpleCov.start 'rails'
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
@@ -20,6 +21,7 @@ DatabaseCleaner.clean
 class ActiveSupport::TestCase
   teardown do
     DatabaseCleaner.clean
+    WebMock.reset!
   end
 
   def stub_user

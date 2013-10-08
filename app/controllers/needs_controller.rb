@@ -1,7 +1,10 @@
 require 'gds_api/need_api'
 require 'plek'
+require 'json'
 
 class NeedsController < ApplicationController
+
+  NEED_API = GdsApi::NeedApi.new(Plek.current.find('needapi'))
 
   JUSTIFICATIONS = [
     "it's something only government does",
@@ -20,13 +23,10 @@ class NeedsController < ApplicationController
     "Noticed by an expert audience",
     "No impact"
   ]
-  ORGANISATIONS = [
-    ["Ministry of Justice","ministry-of-justice"],
-    ["Competition Commission","competition-commission"]
-  ]
+  ORGANISATIONS = JSON.parse(NEED_API.organisations().raw_response_body)["organisations"].map {|h| h.values.reverse }
 
   def need_api_submitter
-    GdsApi::NeedApi.new(Plek.current.find('need-api'))
+    NEED_API
   end
 
   def index
@@ -70,4 +70,5 @@ class NeedsController < ApplicationController
       render "new", :status => :unprocessable_entity
     end
   end
+
 end

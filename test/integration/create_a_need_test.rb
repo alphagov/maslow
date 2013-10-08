@@ -1,9 +1,15 @@
 require_relative '../integration_test_helper'
+require 'gds_api/test_helpers/need_api'
 
 class CreateANeedTest < ActionDispatch::IntegrationTest
+  include GdsApi::TestHelpers::NeedApi
 
   setup do
     login_as(stub_user)
+    need_api_has_organisations(
+      "committee-on-climate-change" => "Committee on Climate Change",
+      "competition-commission" => "Competition Commission"
+    )
   end
 
   context "Creating a need" do
@@ -15,6 +21,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_field?("I want to")
       assert page.has_field?("So that")
       assert page.has_text?("Organisations")
+      assert page.has_text?("Competition Commission")
+      assert page.has_text?("Committee on Climate Change")
       assert page.has_text?("Why is this needed?")
       assert page.has_unchecked_field?("it's something only government does")
       assert page.has_unchecked_field?("the government is legally obliged to provide it")
@@ -35,7 +43,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to create a new Need" do
       stub_request(:post, Plek.current.find('need-api')+'/needs')
-
       visit('/needs')
       click_on('Add a Need')
 

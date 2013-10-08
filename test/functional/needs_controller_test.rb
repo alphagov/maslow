@@ -1,9 +1,15 @@
 require_relative '../integration_test_helper'
+require 'gds_api/test_helpers/need_api'
 
 class NeedsControllerTest < ActionController::TestCase
+  include GdsApi::TestHelpers::NeedApi
 
   setup do
     login_as stub_user
+    need_api_has_organisations(
+      "ministry-of-justice" => "Ministry of Justice",
+      "competition-commission" => "Competition Commission"
+    )
   end
 
   context "Posting need data" do
