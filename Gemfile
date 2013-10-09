@@ -37,4 +37,9 @@ gem 'exception_notification', '2.6.1'
 gem 'bootstrap-sass', '2.3.2.2'
 gem 'formtastic', '2.2.1'
 gem 'formtastic-bootstrap', '2.1.3'
-gem 'gds-api-adapters', '7.9.0'
+
+if ENV['API_DEV']
+  gem 'gds-api-adapters', path: '../gds-api-adapters'
+else
+  gem 'gds-api-adapters', '7.9.0'
+end
