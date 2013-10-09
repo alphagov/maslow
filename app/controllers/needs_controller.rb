@@ -4,7 +4,7 @@ require 'json'
 
 class NeedsController < ApplicationController
 
-  NEED_API = GdsApi::NeedApi.new(Plek.current.find('needapi'))
+  NEED_API = GdsApi::NeedApi.new(Plek.current.find('need-api'))
 
   JUSTIFICATIONS = [
     "it's something only government does",
