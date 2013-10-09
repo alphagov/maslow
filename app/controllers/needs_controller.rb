@@ -23,7 +23,6 @@ class NeedsController < ApplicationController
     "Noticed by an expert audience",
     "No impact"
   ]
-  ORGANISATIONS = JSON.parse(NEED_API.organisations().raw_response_body)["organisations"].map {|h| h.values.reverse }
 
   def need_api_submitter
     NEED_API
@@ -36,7 +35,7 @@ class NeedsController < ApplicationController
     @need = Need.new({})
     @justifications = JUSTIFICATIONS
     @impact = IMPACT
-    @organisations = ORGANISATIONS
+    @organisations = Organisation.all
   end
 
   def create
@@ -63,7 +62,7 @@ class NeedsController < ApplicationController
     else
       @justifications = JUSTIFICATIONS
       @impact = IMPACT
-      @organisations = ORGANISATIONS
+      @organisations = Organisation.all
       @need.met_when = @need.met_when.try do |f|
         f.join("\n")
       end
