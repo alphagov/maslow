@@ -8,7 +8,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     login_as(stub_user)
     need_api_has_organisations(
       "committee-on-climate-change" => "Committee on Climate Change",
-      "competition-commission" => "Competition Commission"
+      "competition-commission" => "Competition Commission",
+      "ministry-of-justice" => "Ministry of Justice"
     )
   end
 
