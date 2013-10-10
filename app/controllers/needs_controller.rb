@@ -4,8 +4,6 @@ require 'json'
 
 class NeedsController < ApplicationController
 
-  NEED_API = GdsApi::NeedApi.new(Plek.current.find('need-api'))
-
   JUSTIFICATIONS = [
     "it's something only government does",
     "the government is legally obliged to provide it",
@@ -23,10 +21,6 @@ class NeedsController < ApplicationController
     "Noticed by an expert audience",
     "No impact"
   ]
-
-  def need_api_submitter
-    NEED_API
-  end
 
   def index
   end
@@ -57,7 +51,7 @@ class NeedsController < ApplicationController
     @need = Need.new(params["need"])
 
     if @need.valid?
-      need_api_submitter.create_need(@need)
+      Maslow.need_api.create_need(@need)
       redirect_to("/")
     else
       @justifications = JUSTIFICATIONS
