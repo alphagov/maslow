@@ -43,7 +43,18 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to create a new Need" do
-      stub_request(:post, Plek.current.find('need-api')+'/needs')
+      request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
+        :body => {
+          "role" => "User",
+          "goal" => "find my local register office",
+          "benefit" => "I can find records of birth, marriage or death",
+          "organisation_ids" => ["ministry-of-justice"],
+          "impact" => "Noticed by the average member of the public",
+          "justifications" => ["it's something only government does",
+                               "it's straightforward advice that helps people to comply with their statutory obligations"],
+          "met_when" => ["Can download a birth certificate."]
+      }.to_json)
+
       visit('/needs')
       click_on('Add a Need')
 
@@ -57,6 +68,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
       click_on("Create Need")
+      assert_requested request
       assert page.has_text?("Need created.")
     end
 
