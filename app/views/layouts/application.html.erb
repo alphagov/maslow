@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
+  <div class="alert <%= k %>">
+    <%= flash[k] %>
+  </div>
+<% end %>
+
 <%= yield %>
 
 </body>

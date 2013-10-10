@@ -57,6 +57,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
       click_on("Create Need")
+      assert page.has_text?("Need created.")
     end
 
     should "retain previous values when the need content is incomplete" do
@@ -69,6 +70,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       click_on("Create Need")
 
+      assert page.has_text?("Please fill in the required fields.")
       assert_equal("Can download a birth certificate.\nOther criteria",
                    find_field("Need is likely to be met when").value)
     end

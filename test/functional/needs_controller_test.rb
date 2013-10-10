@@ -45,7 +45,7 @@ class NeedsControllerTest < ActionController::TestCase
         is_a(Need)
       )
       post(:create, need: complete_need_data)
-      assert_response :redirect
+      assert_redirected_to :action => :index
       # Assert need posted
     end
 

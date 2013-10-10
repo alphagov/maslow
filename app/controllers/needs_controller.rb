@@ -29,11 +29,12 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       @need.save
-      redirect_to("/")
+      redirect_to "/needs", notice: "Need created."
     else
       @need.met_when = @need.met_when.try do |f|
         f.join("\n")
       end
+      flash[:error] = "Please fill in the required fields."
       render "new"
     end
   end
