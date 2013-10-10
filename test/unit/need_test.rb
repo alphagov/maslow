@@ -21,5 +21,11 @@ class NeedTest < ActiveSupport::TestCase
       n.valid?  # Check this to set errors attribute
       assert_equal ["benefit", "goal", "role"], n.as_json.keys.sort
     end
+
+    should "call the Need API" do
+      n = Need.new({})
+      GdsApi::NeedApi.any_instance.expects(:create_need).once.with(n)
+      n.save
+    end
   end
 end

@@ -29,6 +29,10 @@ class Need
     end
   end
 
+  def save
+    Maslow.need_api.create_need(self)
+  end
+
   def persisted?
     false
   end

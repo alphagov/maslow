@@ -51,7 +51,7 @@ class NeedsController < ApplicationController
     @need = Need.new(params["need"])
 
     if @need.valid?
-      Maslow.need_api.create_need(@need)
+      @need.save
       redirect_to("/")
     else
       @justifications = JUSTIFICATIONS
