@@ -36,7 +36,7 @@ class NeedsControllerTest < ActionController::TestCase
       }
 
       post(:create, need: need_data)
-      assert_response :unprocessable_entity
+      assert_template :new
       # assert need not posted
     end
 

@@ -6,6 +6,23 @@ class Need
   include ActiveModel::Conversion
   include ActiveModel::Serialization
 
+  JUSTIFICATIONS = [
+    "it's something only government does",
+    "the government is legally obliged to provide it",
+    "it's inherent to a person's or an organisation's rights and obligations",
+    "it's something that people can do or it's something people need to know before they can do something that's regulated by/related to government",
+    "there is clear demand for it from users",
+    "it's something the government provides/does/pays for",
+    "it's straightforward advice that helps people to comply with their statutory obligations"
+  ]
+  IMPACT = [
+    "Endangers the health of individuals",
+    "Has serious consequences for the day-to-day lives of your users",
+    "Annoys the majority of your users. May incur fines",
+    "Noticed by the average member of the public",
+    "Noticed by an expert audience",
+    "No impact"
+  ]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "evidence", "impact", "justifications", "met_when"]
   attr_accessor *FIELDS
 

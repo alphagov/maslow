@@ -4,32 +4,11 @@ require 'json'
 
 class NeedsController < ApplicationController
 
-  JUSTIFICATIONS = [
-    "it's something only government does",
-    "the government is legally obliged to provide it",
-    "it's inherent to a person's or an organisation's rights and obligations",
-    "it's something that people can do or it's something people need to know before they can do something that's regulated by/related to government",
-    "there is clear demand for it from users",
-    "it's something the government provides/does/pays for",
-    "it's straightforward advice that helps people to comply with their statutory obligations"
-  ]
-  IMPACT = [
-    "Endangers the health of individuals",
-    "Has serious consequences for the day-to-day lives of your users",
-    "Annoys the majority of your users. May incur fines",
-    "Noticed by the average member of the public",
-    "Noticed by an expert audience",
-    "No impact"
-  ]
-
   def index
   end
 
   def new
     @need = Need.new({})
-    @justifications = JUSTIFICATIONS
-    @impact = IMPACT
-    @organisations = Organisation.all
   end
 
   def create
@@ -45,8 +24,6 @@ class NeedsController < ApplicationController
       if params["need"]["met_when"]
         params["need"]["met_when"] = params["need"]["met_when"].split("\n").map(&:strip)
       end
-    else
-      raise(ArgumentError, "Need data not found")
     end
     @need = Need.new(params["need"])
 
@@ -54,13 +31,10 @@ class NeedsController < ApplicationController
       @need.save
       redirect_to("/")
     else
-      @justifications = JUSTIFICATIONS
-      @impact = IMPACT
-      @organisations = Organisation.all
       @need.met_when = @need.met_when.try do |f|
         f.join("\n")
       end
-      render "new", :status => :unprocessable_entity
+      render "new"
     end
   end
 
