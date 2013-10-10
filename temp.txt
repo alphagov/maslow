@@ -1,0 +1,13 @@
+As a: What type of user of GOV.UK are you?
+I want to: What need of government do you have?
+So that: What are you trying to achieve?
+
+Organisations: Which government organisation(s) owns this need?
+
+Justifications: Why should this need be on GOV.UK?
+
+Impact: What is the impact of GOV.UK not doing this?
+
+Met when: How will you know when this need has been met?
+
+Evidence: Can you provide evidence that supports this user need?

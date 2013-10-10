@@ -28,6 +28,8 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "fail with incomplete data" do
+      GdsApi::NeedApi.any_instance.expects(:create_need).never
+
       need_data = {
         "role" => "User",
         "goal" => "do stuff",
@@ -37,7 +39,6 @@ class NeedsControllerTest < ActionController::TestCase
 
       post(:create, need: need_data)
       assert_template :new
-      # assert need not posted
     end
 
     should "post to needs API when data is complete" do
