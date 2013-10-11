@@ -1,4 +1,6 @@
-<% content_for :page_title, 'Create a need' %>
+<% content_for :page_title, 'Create need' %>
+
+<h1 class="page-header">Create need</h1>
 
 <%= semantic_form_for @need, url: "/needs" do |f| %>
   <%= f.input :role, :label => "As a...", :hint => "What type of user of GOV.UK are you?", :input_html => { :class => 'span8' } %>
@@ -12,5 +14,6 @@
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
   <hr/>
   <%= f.input :met_when, :label => "Need is likely to be met when", :hint => "How will you know when this need has been met?", :as => :text, :input_html => { :class => 'span8' } %>
+  <hr/>
   <%= f.action :submit, :button_html => { :class => 'btn btn-success' } %>
 <% end %>
