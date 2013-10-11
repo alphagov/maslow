@@ -23,10 +23,14 @@ class Need
     "Noticed by an expert audience",
     "No impact"
   ]
-  FIELDS = ["role", "goal", "benefit", "organisation_ids", "evidence", "impact", "justifications", "met_when"]
+  FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when"]
   attr_accessor *FIELDS
 
   validates_presence_of ["role", "goal", "benefit"]
+  validates :impact, inclusion: { in: IMPACT }, allow_blank: true
+  validates_each :justifications do |record, attr, value|
+    record.errors.add(attr, "must contain a known value") unless (value.nil? || value.all? { |v| JUSTIFICATIONS.include? v })
+  end
 
   def initialize(attrs)
     unless (attrs.keys - FIELDS).empty?
