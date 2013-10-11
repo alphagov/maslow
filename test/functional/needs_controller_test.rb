@@ -41,12 +41,11 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "post to needs API when data is complete" do
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        is_a(Need)
-      )
+      GdsApi::NeedApi.any_instance.expects(:create_need).with do |req|
+        req.to_json == complete_need_data.merge("met_when"=>["Winning"]).to_json
+      end
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
-      # Assert need posted
     end
 
     should "remove blank entries from justifications" do
