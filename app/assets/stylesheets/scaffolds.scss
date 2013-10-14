@@ -1,0 +1,72 @@
+@import '_theme';
+@import 'bootstrap/_variables';
+
+/* Base styles */
+body {
+  background-color: #fff;
+  color: #333;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+footer {
+  clear: left;
+  padding-top: 2em;
+}
+
+.add-top-margin {
+  margin-bottom: $baseLineHeight;
+}
+
+.remove-top-margin {
+  margin-bottom: 0;
+}
+
+.add-bottom-margin {
+  margin-bottom: $baseLineHeight;
+}
+
+.remove-bottom-margin {
+  margin-bottom: 0;
+}
+
+main a {
+  &:visited {
+    color: $linkColorVisited;
+  }
+
+  // Don't give visited links that are buttons
+  // the visited link colour
+
+  &.btn:visited {
+    color: $defaultButtonColor;
+  }
+
+  &.btn-primary:visited {
+    color: $primaryButtonColor;
+  }
+
+  &.btn-info:visited {
+    color: $infoButtonColor;
+  }
+
+  &.btn-success:visited {
+    color: $successButtonColor;
+  }
+
+  &.btn-warning:visited {
+    color: $warningButtonColor;
+  }
+
+  &.btn-danger:visited {
+    color: $dangerButtonColor;
+  }
+
+  &.btn-inverse:visited {
+    color: $inverseButtonColor;
+  }
+}
