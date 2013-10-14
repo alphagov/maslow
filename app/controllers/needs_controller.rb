@@ -12,20 +12,7 @@ class NeedsController < ApplicationController
   end
 
   def create
-    # Rails inserts an empty string into multi-valued fields.
-    # We are removing the unneeded value
-    if params["need"]
-      if params["need"]["justifications"]
-        params["need"]["justifications"].select!(&:present?)
-      end
-      if params["need"]["organisation_ids"]
-        params["need"]["organisation_ids"].select!(&:present?)
-      end
-      if params["need"]["met_when"]
-        params["need"]["met_when"] = params["need"]["met_when"].split("\n").map(&:strip)
-      end
-    end
-    @need = Need.new(params["need"])
+    @need = Need.new( prepare_need_params(params) )
 
     if @need.valid?
       @need.save
@@ -39,4 +26,22 @@ class NeedsController < ApplicationController
     end
   end
 
+  private
+
+  def prepare_need_params(params_hash)
+    # Rails inserts an empty string into multi-valued fields.
+    # We are removing the unneeded value
+    if params_hash["need"]
+      if params_hash["need"]["justifications"]
+        params_hash["need"]["justifications"].select!(&:present?)
+      end
+      if params_hash["need"]["organisation_ids"]
+        params_hash["need"]["organisation_ids"].select!(&:present?)
+      end
+      if params_hash["need"]["met_when"]
+        params_hash["need"]["met_when"] = params_hash["need"]["met_when"].split("\n").map(&:strip)
+      end
+    end
+    params_hash["need"]
+  end
 end
