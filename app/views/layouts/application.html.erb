@@ -1,20 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Maslow</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <title><%= yield :page_title %> | GOV.UK Maslow</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= stylesheet_link_tag "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
+  <%= csrf_meta_tag %>
+  <%= yield :extra_headers %>
 </head>
 <body>
+<script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-<% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
-  <div class="alert <%= k %>">
-    <%= flash[k] %>
-  </div>
-<% end %>
+  <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+    <div class="navbar-inner">
+      <div class="container">
+        <%= link_to 'GOV.UK Maslow', root_path, :class => "brand" %>
+        <nav role="navigation" class="nav-collapse">
+          <p class="navbar-text pull-right">
+            Signed in as <%= link_to current_user.name, Plek.current.find('signon') %>
+          </p>
+        </nav><!--/.nav-collapse -->
+      </div>
+    </div>
+  </header>
 
-<%= yield %>
+  <div class="container">
+
+    <section class="page-header"></section>
+
+    <main role="main">
+      <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
+        <div class="alert <%= k %>">
+          <%= flash[k] %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+
+    </main>
+
+    <footer>
+      <p>&copy; GDS. <span class="pull-right">Version: 1</span></p>
+    </footer>
+  </div><!-- /container -->
 
 </body>
 </html>
