@@ -105,24 +105,28 @@ class NeedsControllerTest < ActionController::TestCase
       need_data = complete_need_data.merge("contacts" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
+      assert_response 422
     end
 
     should "reject non-numeric values in the Site Views field" do
       need_data = complete_need_data.merge("site_views" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
+      assert_response 422
     end
 
     should "reject non-numeric values in the Need Views field" do
       need_data = complete_need_data.merge("need_views" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
+      assert_response 422
     end
 
     should "reject non-numeric values in the Need Searches field" do
       need_data = complete_need_data.merge("searched_for" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
+      assert_response 422
     end
   end
 

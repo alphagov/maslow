@@ -26,7 +26,7 @@ class NeedsController < ApplicationController
         f.join("\n")
       end
       flash[:error] = "Please fill in the required fields."
-      render "new"
+      render "new", :status => 422
     end
   end
 
