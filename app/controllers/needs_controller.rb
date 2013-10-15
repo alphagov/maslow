@@ -22,6 +22,9 @@ class NeedsController < ApplicationController
       @need.met_when = @need.met_when.try do |f|
         f.join("\n")
       end
+      @need.legislation = @need.legislation.try do |f|
+        f.join("\n")
+      end
       flash[:error] = "Please fill in the required fields."
       render "new"
     end
