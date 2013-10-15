@@ -12,6 +12,30 @@ class NeedsControllerTest < ActionController::TestCase
     )
   end
 
+  context "GET index" do
+    setup do
+      need_api_has_needs([])
+    end
+
+    should "be successful" do
+      get :index
+      assert_response :success
+    end
+
+    should "fetch needs from the need api and assign them to the template" do
+      needs_collection = [
+        "foo",
+        "bar"
+      ]
+      GdsApi::NeedApi.any_instance.expects(:needs).returns(needs_collection)
+
+      get :index
+
+      assert_equal ["foo", "bar"], assigns(:needs)
+      assert_template "index"
+    end
+  end
+
   context "Posting need data" do
 
     def complete_need_data
