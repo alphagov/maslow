@@ -64,11 +64,11 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "met_when" => ["Can download a birth certificate."],
           "currently_online" => "false",
           "other_evidence" => "Free text evidence with lots more evidence",
-          "contacts" => "10000",
-          "site_views" => "1000000",
-          "need_views" => "1000",
-          "searched_for" => "2000",
-          "legislation" => ["link#1","link#2"]
+          "legislation" => ["link#1","link#2"],
+          "contacts" => 10000,
+          "site_views" => 1000000,
+          "need_views" => 1000,
+          "searched_for" => 2000
       }.to_json)
 
       visit('/needs')

@@ -23,8 +23,9 @@ class Need
     "Noticed by an expert audience",
     "No impact"
   ]
+  NUMERIC_FIELDS = ["contacts", "site_views", "need_views", "searched_for"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
-    "currently_online", "other_evidence", "contacts", "site_views", "need_views", "searched_for", "legislation"]
+    "currently_online", "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
 
   validates_presence_of ["role", "goal", "benefit"]
@@ -32,10 +33,10 @@ class Need
   validates_each :justifications do |record, attr, value|
     record.errors.add(attr, "must contain a known value") unless (value.nil? || value.all? { |v| JUSTIFICATIONS.include? v })
   end
-  validates_numericality_of :contacts, :allow_nil => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :site_views, :allow_nil => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :need_views, :allow_nil => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :searched_for, :allow_nil => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :contacts, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :site_views, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :need_views, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :searched_for, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
 
   def initialize(attrs)
     unless (attrs.keys - FIELDS).empty?
@@ -50,9 +51,13 @@ class Need
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
-    FIELDS.each_with_object({}) do |field, hash|
-      hash[field] = send(field) unless send(field).nil?
+    res = FIELDS.each_with_object({}) do |field, hash|
+      hash[field] = send(field) if send(field).present?
     end
+    NUMERIC_FIELDS.each do |field|
+      res[field] = Integer(res[field]) if res[field].present?
+    end
+    res
   end
 
   def save

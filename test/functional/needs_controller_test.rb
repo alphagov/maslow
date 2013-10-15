@@ -128,6 +128,19 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, :need => need_data)
       assert_response 422
     end
+
+    should "accept blank values in the numeric fields" do
+      need_data = complete_need_data.merge("contacts" => "", "searched_for" => "",
+                                           "need_views" => "", "site_views" => "")
+      GdsApi::NeedApi.any_instance.expects(:create_need).with do |need|
+        need.as_json["contacts"].nil? &&
+        need.as_json["searched_for"].nil? &&
+        need.as_json["need_views"].nil? &&
+        need.as_json["site_views"].nil?
+      end
+      post(:create, :need => need_data)
+      assert_redirected_to :action => :index
+    end
   end
 
 end
