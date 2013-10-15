@@ -62,7 +62,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "justifications" => ["it's something only government does",
                                "it's straightforward advice that helps people to comply with their statutory obligations"],
           "met_when" => ["Can download a birth certificate."],
-<<<<<<< HEAD
           "currently_met" => false,
           "other_evidence" => "Free text evidence with lots more evidence",
           "legislation" => ["http://www.legislation.gov.uk/stuff","http://www.legislation.gov.uk/stuff"],
@@ -70,15 +69,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "monthly_site_views" => 1000000,
           "monthly_need_views" => 1000,
           "monthly_searches" => 2000
-=======
-          "currently_online" => "false",
-          "other_evidence" => "Free text evidence with lots more evidence",
-          "contacts" => "10000",
-          "site_views" => "1000000",
-          "need_views" => "1000",
-          "searched_for" => "2000",
-          "legislation" => ["link#1","link#2"]
->>>>>>> Evidence fields for the form
       }.to_json)
 
       visit('/needs')
