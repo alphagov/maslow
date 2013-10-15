@@ -32,6 +32,10 @@ class Need
   validates_each :justifications do |record, attr, value|
     record.errors.add(attr, "must contain a known value") unless (value.nil? || value.all? { |v| JUSTIFICATIONS.include? v })
   end
+  validates_numericality_of :contacts, :allow_nil => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :site_views, :allow_nil => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :need_views, :allow_nil => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :searched_for, :allow_nil => true, :greater_than_or_equal_to => 0
 
   def initialize(attrs)
     unless (attrs.keys - FIELDS).empty?

@@ -16,10 +16,10 @@
   <%= f.inputs "Evidence", :id => "evidence" do %>
     <%= f.input :currently_online, :label => "Do you think GOV.UK currently has functionality that meets this need?", :as => :radio %>
     <%= f.input :other_evidence, :label => "Do you have any other qualitative or quantitative data that supports this need?", :as => :text, :input_html => { :class => 'span8' } %>
-    <%= f.input :contacts, :label => "Contacts in a month in relation to this need", :input_html => { :class => 'span8' } %>
-    <%= f.input :site_views, :label => "Page views for your site in a month", :input_html => { :class => 'span8' } %>
-    <%= f.input :need_views, :label => "Page views for the need in a month", :input_html => { :class => 'span8' } %>
-    <%= f.input :searched_for, :label => "Number of searches for this need in a month", :input_html => { :class => 'span8' } %>
+    <%= f.input :contacts, :label => "Contacts in a month in relation to this need", :input_html => { :class => 'span8', :type => :number, :min => 0 } %>
+    <%= f.input :site_views, :label => "Page views for your site in a month", :input_html => { :class => 'span8', :type => :number, :min => 0 } %>
+    <%= f.input :need_views, :label => "Page views for the need in a month", :input_html => { :class => 'span8', :type => :number, :min => 0 } %>
+    <%= f.input :searched_for, :label => "Number of searches for this need in a month", :input_html => { :class => 'span8', :type => :number, :min => 0 } %>
     <%= f.input :legislation, :label => "What legislation underpins this need?", :as => :text, :input_html => { :class => 'span8' } %>
   <% end %>
   <hr/>
