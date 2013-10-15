@@ -41,6 +41,14 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_unchecked_field?("Noticed by an expert audience")
       assert page.has_unchecked_field?("No impact")
       assert page.has_text?("Need is likely to be met when")
+
+      assert page.has_text?("Do you think GOV.UK currently has functionality that meets this need?")
+      assert page.has_text?("Do you have any other qualitative or quantitative data that supports this need?")
+      assert page.has_text?("Contacts in a month in relation to this need")
+      assert page.has_text?("Page views for your site in a month")
+      assert page.has_text?("Page views for the need in a month")
+      assert page.has_text?("Number of searches for this need in a month")
+      assert page.has_text?("What legislation underpins this need?")
     end
 
     should "be able to create a new Need" do
@@ -53,7 +61,14 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "impact" => "Noticed by the average member of the public",
           "justifications" => ["it's something only government does",
                                "it's straightforward advice that helps people to comply with their statutory obligations"],
-          "met_when" => ["Can download a birth certificate."]
+          "met_when" => ["Can download a birth certificate."],
+          "currently_online" => "false",
+          "other_evidence" => "Free text evidence with lots more evidence",
+          "contacts" => "10000",
+          "site_views" => "1000000",
+          "need_views" => "1000",
+          "searched_for" => "2000",
+          "legislation" => ["link#1","link#2"]
       }.to_json)
 
       visit('/needs')
@@ -66,6 +81,14 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("it's straightforward advice that helps people to comply with their statutory obligations")
       check("it's something only government does")
       choose("Noticed by the average member of the public")
+      choose("No")
+      fill_in("Do you have any other qualitative or quantitative data that supports this need?", with: "Free text evidence with lots more evidence")
+      fill_in("Contacts in a month in relation to this need", with: 10000)
+      fill_in("Page views for your site in a month", with: 1000000)
+      fill_in("Page views for the need in a month", with: 1000)
+      fill_in("Number of searches for this need in a month", with: 2000)
+      fill_in("What legislation underpins this need?", with: "link#1\nlink#2")
+
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
       click_on("Create Need")

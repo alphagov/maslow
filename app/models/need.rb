@@ -23,7 +23,8 @@ class Need
     "Noticed by an expert audience",
     "No impact"
   ]
-  FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when"]
+  FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
+    "currently_online", "other_evidence", "contacts", "site_views", "need_views", "searched_for", "legislation"]
   attr_accessor *FIELDS
 
   validates_presence_of ["role", "goal", "benefit"]
