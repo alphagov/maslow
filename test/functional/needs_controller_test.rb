@@ -101,6 +101,22 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
+    should "split legislation references into separate parts" do
+      need_data = complete_need_data.merge("legislation" => "link#1\nlink#2")
+      GdsApi::NeedApi.any_instance.expects(:create_need).with(
+        responds_with(:legislation, ["link#1","link#2"])
+      )
+      post(:create, need: need_data)
+    end
+
+    should "split out CRLF line breaks from legislation references" do
+      need_data = complete_need_data.merge("legislation" => "link#1\r\nlink#2")
+      GdsApi::NeedApi.any_instance.expects(:create_need).with(
+        responds_with(:legislation, ["link#1", "link#2"])
+      )
+      post(:create, need: need_data)
+    end
+
     should "reject non-numeric values in the Contacts field" do
       need_data = complete_need_data.merge("contacts" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never

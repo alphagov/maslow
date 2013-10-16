@@ -64,7 +64,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "met_when" => ["Can download a birth certificate."],
           "currently_online" => "false",
           "other_evidence" => "Free text evidence with lots more evidence",
-          "legislation" => ["link#1","link#2"],
+          "legislation" => ["http://www.legislation.gov.uk/stuff","http://www.legislation.gov.uk/stuff"],
           "contacts" => 10000,
           "site_views" => 1000000,
           "need_views" => 1000,
@@ -87,7 +87,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("Page views for your site in a month", with: 1000000)
       fill_in("Page views for the need in a month", with: 1000)
       fill_in("Number of searches for this need in a month", with: 2000)
-      fill_in("What legislation underpins this need?", with: "link#1\nlink#2")
+      fill_in("What legislation underpins this need?", with: "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff")
 
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
