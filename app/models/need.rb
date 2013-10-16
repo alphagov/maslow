@@ -23,9 +23,9 @@ class Need
     "Noticed by an expert audience",
     "No impact"
   ]
-  NUMERIC_FIELDS = ["contacts", "site_views", "need_views", "searched_for"]
+  NUMERIC_FIELDS = ["monthly_user_contacts", "monthly_site_views", "monthly_need_views", "monthly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
-    "currently_online", "other_evidence", "legislation"] + NUMERIC_FIELDS
+    "currently_met", "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
 
   validates_presence_of ["role", "goal", "benefit"]
@@ -56,6 +56,7 @@ class Need
     NUMERIC_FIELDS.each do |field|
       res[field] = Integer(res[field]) if res[field].present?
     end
+    res["currently_met"] = res["currently_met"] == 'true' if res["currently_met"].present?
     res
   end
 

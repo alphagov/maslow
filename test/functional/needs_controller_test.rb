@@ -118,41 +118,41 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "reject non-numeric values in the Contacts field" do
-      need_data = complete_need_data.merge("contacts" => "test")
+      need_data = complete_need_data.merge("monthly_user_contacts" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
       assert_response 422
     end
 
     should "reject non-numeric values in the Site Views field" do
-      need_data = complete_need_data.merge("site_views" => "test")
+      need_data = complete_need_data.merge("monthly_site_views" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
       assert_response 422
     end
 
     should "reject non-numeric values in the Need Views field" do
-      need_data = complete_need_data.merge("need_views" => "test")
+      need_data = complete_need_data.merge("monthly_need_views" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
       assert_response 422
     end
 
     should "reject non-numeric values in the Need Searches field" do
-      need_data = complete_need_data.merge("searched_for" => "test")
+      need_data = complete_need_data.merge("monthly_searches" => "test")
       GdsApi::NeedApi.any_instance.expects(:create_need).never
       post(:create, :need => need_data)
       assert_response 422
     end
 
     should "accept blank values in the numeric fields" do
-      need_data = complete_need_data.merge("contacts" => "", "searched_for" => "",
-                                           "need_views" => "", "site_views" => "")
+      need_data = complete_need_data.merge("monthly_user_contacts" => "", "monthly_searches" => "",
+                                           "monthly_need_views" => "", "monthly_site_views" => "")
       GdsApi::NeedApi.any_instance.expects(:create_need).with do |need|
-        need.as_json["contacts"].nil? &&
-        need.as_json["searched_for"].nil? &&
-        need.as_json["need_views"].nil? &&
-        need.as_json["site_views"].nil?
+        need.as_json["monthly_user_contacts"].nil? &&
+        need.as_json["monthly_site_views"].nil? &&
+        need.as_json["monthly_need_views"].nil? &&
+        need.as_json["monthly_searches"].nil?
       end
       post(:create, :need => need_data)
       assert_redirected_to :action => :index
