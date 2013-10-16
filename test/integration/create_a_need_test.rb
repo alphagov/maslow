@@ -11,12 +11,13 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       "competition-commission" => "Competition Commission",
       "ministry-of-justice" => "Ministry of Justice"
     )
+    need_api_has_needs([])
   end
 
   context "Creating a need" do
     should "be able to access 'Add a Need' page" do
       visit('/needs')
-      click_on('Add a Need')
+      click_on('Add a new need')
 
       assert page.has_field?("As a")
       assert page.has_field?("I want to")
@@ -56,7 +57,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       }.to_json)
 
       visit('/needs')
-      click_on('Add a Need')
+      click_on('Add a new need')
 
       fill_in("As a", with: "User")
       fill_in("I want to", with: "find my local register office")
@@ -74,7 +75,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
     should "retain previous values when the need content is incomplete" do
       visit('/needs')
-      click_on('Add a Need')
+      click_on('Add a new need')
 
       fill_in("As a", with: "User")
       check("it's something only government does")
@@ -89,7 +90,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
     should "not have any fields filled in when submitting a blank form" do
       visit('/needs')
-      click_on('Add a Need')
+      click_on('Add a new need')
 
       click_on("Create Need")
 
