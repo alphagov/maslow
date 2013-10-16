@@ -7,13 +7,21 @@
   <%= f.input :goal, :label => "I want to...", :hint => "What need of government do you have?", :input_html => { :class => 'span8' } %>
   <%= f.input :benefit, :label => "So that...", :hint => "What are you trying to achieve?", :input_html => { :class => 'span8' } %>
   <hr/>
-  <%= f.input :organisation_ids, :label => "Organisations", :hint => "Which government organisation(s) owns this need?", :as => :select, :input_html => { :multiple => true, :class => 'span8' }, :collection => Organisation.all %>
   <hr/>
   <%= f.input :justifications, :label => "Why is this needed?", :hint => "Why should this need be on GOV.UK?", :as => :check_boxes, :collection => Need::JUSTIFICATIONS %>
   <hr/>
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
   <br/>
   <%= f.inputs "Evidence", :id => "evidence" do %>
+    <%= f.input :organisation_ids,
+                  :as => :select,
+                  :collection => Organisation.all,
+                  :hint => "Which government organisations own this need?",
+                  :label => "Organisations",
+                  :input_html => {
+                    :multiple => true,
+                    :class => "organisation-select span8"
+                  } %>
     <%= f.input :currently_met, :label => "Do you think GOV.UK currently has functionality that meets this need?", :as => :radio %>
     <%= f.input :legislation, :label => "What legislation underpins this need?", :hint => "Please supply the legislation URL, including the relevant section. For example http://www.legislation.gov.uk/ukpga/2006/11/section/26", :as => :text, :input_html => { :class => 'span8', :rows => 3 } %>
     <%= f.input :monthly_user_contacts, :label => "Contacts in a month in relation to this need", :hint => "Please supply the mean number of contacts per month", :input_html => { :class => 'span8', :type => :number, :min => 0 } %>
