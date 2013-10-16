@@ -5,6 +5,7 @@ require 'json'
 class NeedsController < ApplicationController
 
   def index
+    @needs = Maslow.need_api.needs
   end
 
   def new

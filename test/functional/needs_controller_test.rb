@@ -12,6 +12,34 @@ class NeedsControllerTest < ActionController::TestCase
     )
   end
 
+  context "GET index" do
+    setup do
+      need_api_has_needs([])
+    end
+
+    should "be successful" do
+      get :index
+      assert_response :success
+    end
+
+    should "fetch needs from the need api and assign them to the template" do
+      # given we're using mocked data, stub the render action so we don't
+      # try and render the view. we're only testing here that the variables
+      # are actually being assigned correctly.
+      @controller.stubs(:render)
+
+      needs_collection = [
+        OpenStruct.new(id: "foo"),
+        OpenStruct.new(id: "bar")
+      ]
+      GdsApi::NeedApi.any_instance.expects(:needs).returns(needs_collection)
+
+      get :index
+
+      assert_equal ["foo", "bar"], assigns(:needs).map(&:id)
+    end
+  end
+
   context "Posting need data" do
 
     def complete_need_data
