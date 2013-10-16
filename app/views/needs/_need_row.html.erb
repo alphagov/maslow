@@ -1,0 +1,9 @@
+<tr>
+  <td><%= need.id %></td>
+  <td><%= format_need_goal need.goal %></td>
+  <td>
+    <% if need.organisations.any? %>
+      <%= need.organisations.map(&:name).join(", ") %>
+    <% end %>
+  </td>
+</tr>
