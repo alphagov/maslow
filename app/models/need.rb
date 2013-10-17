@@ -23,13 +23,18 @@ class Need
     "Noticed by an expert audience",
     "No impact"
   ]
-  FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when"]
+  NUMERIC_FIELDS = ["monthly_user_contacts", "monthly_site_views", "monthly_need_views", "monthly_searches"]
+  FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
+    "currently_met", "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
 
   validates_presence_of ["role", "goal", "benefit"]
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
   validates_each :justifications do |record, attr, value|
     record.errors.add(attr, "must contain a known value") unless (value.nil? || value.all? { |v| JUSTIFICATIONS.include? v })
+  end
+  NUMERIC_FIELDS.each do |field|
+    validates_numericality_of field, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
   end
 
   def initialize(attrs)
@@ -45,9 +50,14 @@ class Need
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
-    FIELDS.each_with_object({}) do |field, hash|
-      hash[field] = send(field) unless send(field).nil?
+    res = FIELDS.each_with_object({}) do |field, hash|
+      hash[field] = send(field) if send(field).present?
     end
+    NUMERIC_FIELDS.each do |field|
+      res[field] = Integer(res[field]) if res[field].present?
+    end
+    res["currently_met"] = res["currently_met"] == 'true' if res["currently_met"].present?
+    res
   end
 
   def save
