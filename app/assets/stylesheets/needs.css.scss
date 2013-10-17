@@ -7,7 +7,9 @@ p.new-need {
   padding-bottom: 20px;
 }
 
-form.form-horizontal {
+form.need {
+  @extend .form-horizontal;
+
   .control-label {
     width: 200px;
   }
