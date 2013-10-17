@@ -23,22 +23,21 @@ class NeedsController < ApplicationController
         f.join("\n")
       end
       flash[:error] = "Please fill in the required fields."
-      render "new"
+      render "new", :status => 422
     end
   end
 
   private
 
   def prepare_need_params(params_hash)
-    # Rails inserts an empty string into multi-valued fields.
-    # We are removing the unneeded value
     if params_hash["need"]
-      if params_hash["need"]["justifications"]
-        params_hash["need"]["justifications"].select!(&:present?)
+      # Remove empty strings from multi-valued fields that Rails inserts.
+      ["justifications","organisation_ids"].each do |field|
+        if params_hash["need"][field]
+          params_hash["need"][field].select!(&:present?)
+        end
       end
-      if params_hash["need"]["organisation_ids"]
-        params_hash["need"]["organisation_ids"].select!(&:present?)
-      end
+      # Convert free text into List of sentences
       if params_hash["need"]["met_when"]
         params_hash["need"]["met_when"] = params_hash["need"]["met_when"].split("\n").map(&:strip)
       end
