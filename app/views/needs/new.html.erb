@@ -11,7 +11,7 @@
     <%= f.actions %>
   <% end %>
 
-  <%= f.inputs "Information about this need" do %>
+  <%= f.inputs "Give extra information about this need" do %>
     <%= f.input :organisation_ids,
                   :as => :select,
                   :collection => Organisation.all,
