@@ -16,6 +16,10 @@ form.form-horizontal {
     margin-left: 220px;
   }
 
+  .chosen-container + .help-block {
+    margin-top: 10px;
+  }
+
   fieldset#user-story {
     padding-bottom: 40px;
   }
