@@ -101,18 +101,10 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "split legislation references into separate parts" do
+    should "legislation free text remains unchanged" do
       need_data = complete_need_data.merge("legislation" => "link#1\nlink#2")
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:legislation, ["link#1","link#2"])
-      )
-      post(:create, need: need_data)
-    end
-
-    should "split out CRLF line breaks from legislation references" do
-      need_data = complete_need_data.merge("legislation" => "link#1\r\nlink#2")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:legislation, ["link#1", "link#2"])
+        responds_with(:legislation, "link#1\nlink#2")
       )
       post(:create, need: need_data)
     end

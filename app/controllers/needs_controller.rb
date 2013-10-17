@@ -22,9 +22,6 @@ class NeedsController < ApplicationController
       @need.met_when = @need.met_when.try do |f|
         f.join("\n")
       end
-      @need.legislation = @need.legislation.try do |f|
-        f.join("\n")
-      end
       flash[:error] = "Please fill in the required fields."
       render "new", :status => 422
     end
@@ -41,10 +38,8 @@ class NeedsController < ApplicationController
         end
       end
       # Convert free text into List of sentences
-      ["met_when","legislation"].each do |field|
-        if params_hash["need"][field]
-          params_hash["need"][field] = params_hash["need"][field].split("\n").map(&:strip)
-        end
+      if params_hash["need"]["met_when"]
+        params_hash["need"]["met_when"] = params_hash["need"]["met_when"].split("\n").map(&:strip)
       end
     end
     params_hash["need"]

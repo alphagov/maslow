@@ -64,7 +64,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "met_when" => ["Can download a birth certificate."],
           "currently_met" => false,
           "other_evidence" => "Free text evidence with lots more evidence",
-          "legislation" => ["http://www.legislation.gov.uk/stuff","http://www.legislation.gov.uk/stuff"],
+          "legislation" => "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff",
           "monthly_user_contacts" => 10000,
           "monthly_site_views" => 1000000,
           "monthly_need_views" => 1000,
