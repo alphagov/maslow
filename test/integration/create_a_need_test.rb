@@ -90,7 +90,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("What legislation underpins this need?", with: "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff")
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
 
-      click_on("Create Need")
+      click_on_first("Create Need")
       assert_requested request
       assert page.has_text?("Need created.")
     end
@@ -103,7 +103,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("it's something only government does")
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.\nOther criteria")
 
-      click_on("Create Need")
+      click_on_first("Create Need")
 
       assert page.has_text?("Please fill in the required fields.")
       assert_equal("Can download a birth certificate.\nOther criteria",
@@ -114,7 +114,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
       click_on('Add a new need')
 
-      click_on("Create Need")
+      click_on_first("Create Need")
 
       assert_equal("", find_field("Need is likely to be met when").value)
     end

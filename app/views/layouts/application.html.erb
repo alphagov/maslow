@@ -13,13 +13,13 @@
 <body>
 <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-  <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+  <header class="navbar navbar-inverse navbar-static-top" role="banner">
     <div class="navbar-inner">
       <div class="container">
-        <%= link_to 'GOV.UK Maslow', root_path, :class => "brand" %>
+        <%= link_to 'Maslow', root_path, :class => "brand" %>
         <nav role="navigation" class="nav-collapse">
           <p class="navbar-text pull-right">
-            Signed in as <%= link_to current_user.name, Plek.current.find('signon') %>
+            Hello, <%= link_to current_user.name, Plek.current.find('signon') %>
           </p>
         </nav><!--/.nav-collapse -->
       </div>
@@ -27,8 +27,6 @@
   </header>
 
   <div class="container">
-
-    <section class="page-header"></section>
 
     <main role="main">
       <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
@@ -42,7 +40,7 @@
     </main>
 
     <footer>
-      <p>&copy; GDS. <span class="pull-right">Version: 1</span></p>
+      <p>&copy; GDS. <span class="pull-right">Maslow release: <%= CURRENT_RELEASE_SHA %></span></p>
     </footer>
   </div><!-- /container -->
 

@@ -31,6 +31,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'chosen-rails'
 
 gem 'unicorn'
 gem 'exception_notification', '2.6.1'
