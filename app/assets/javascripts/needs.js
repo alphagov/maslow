@@ -1,3 +1,3 @@
 $(function(){
-  $('.organisation-select').chosen();
+  $('.organisation-select').chosen({ allow_single_deselect: true });
 })
