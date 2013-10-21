@@ -5,7 +5,9 @@ require 'json'
 class NeedsController < ApplicationController
 
   def index
-    @needs = Maslow.need_api.needs
+    opts = {}
+    opts["organisation_id"] = params["organisation_id"] if params["organisation_id"]
+    @needs = Maslow.need_api.needs(opts)
   end
 
   def new
