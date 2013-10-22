@@ -6,7 +6,7 @@ class NeedsController < ApplicationController
 
   def index
     opts = {}
-    opts["organisation_id"] = params["organisation_id"] if params["organisation_id"]
+    opts = params.slice("organisation_id")
     @needs = Maslow.need_api.needs(opts)
   end
 
