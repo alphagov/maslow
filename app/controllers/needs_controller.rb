@@ -5,7 +5,6 @@ require 'json'
 class NeedsController < ApplicationController
 
   def index
-    opts = {}
     opts = params.slice("organisation_id")
     @needs = Maslow.need_api.needs(opts)
   end
