@@ -4,13 +4,39 @@ require 'json'
 
 class NeedsController < ApplicationController
 
+  class Http404 < StandardError
+  end
+
+  rescue_from Http404 do
+    render "public/404", :status => 404
+  end
+
   def index
     opts = params.slice("organisation_id")
     @needs = Maslow.need_api.needs(opts)
   end
 
+  def show
+    redirect_to :action => :edit, :id => params[:id]
+  end
+
+  def edit
+    begin
+      need_id = Integer(params[:id])
+      @need = Need.find(need_id)
+    rescue ArgumentError, TypeError # shouldn't happen; route is constrained
+      raise Http404
+    rescue Need::NotFound
+      raise Http404
+    end
+
+    @target = need_path(need_id)
+    render "new"
+  end
+
   def new
     @need = Need.new({})
+    @target = needs_path
   end
 
   def create

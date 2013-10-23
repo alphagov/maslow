@@ -40,6 +40,13 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "Need creation form" do
+    should "target the new need endpoint" do
+      get :new
+      assert_equal "/needs", assigns[:target]
+    end
+  end
+
   context "Posting need data" do
 
     def complete_need_data
@@ -167,6 +174,40 @@ class NeedsControllerTest < ActionController::TestCase
     should "not send any other values" do
       GdsApi::NeedApi.any_instance.expects(:needs).with({})
       get(:index, "fake" => "fake")
+    end
+  end
+
+  context "viewing a need" do
+
+    def stub_need
+      need_fields = {
+        "need_id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      Need.new(need_fields, true)  # existing need
+    end
+
+    should "redirect to the need form" do
+      # We're not bothered whether the lookup method is invoked here
+      Need.stubs(:find)
+      get :show, :id => 100001
+      assert_redirected_to :action => :edit, :id => 100001
+    end
+
+    should "reject non-numeric IDs" do
+      Need.expects(:find).never
+      get :edit, :id => "coffee"
+      assert_response :not_found
+    end
+
+    should "display the need form" do
+      Need.expects(:find).with(100001).returns(stub_need)
+      get :edit, :id => "100001"
+      assert_response :ok
+      assert_equal "do things", assigns[:need].goal
+      assert_equal "/needs/100001", assigns[:target]
     end
   end
 
