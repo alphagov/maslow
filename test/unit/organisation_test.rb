@@ -4,10 +4,6 @@ require 'gds_api/test_helpers/need_api'
 class OrganisationTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::NeedApi
 
-  teardown do
-    Organisation.organisations = nil
-  end
-
   context "loading organisations" do
     setup do
       need_api_has_organisations(

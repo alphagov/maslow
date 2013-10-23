@@ -1,8 +1,17 @@
 <h1 class="page-header">All needs</h1>
 
-<p class="new-need">
+<div>
   <%= link_to "Add a new need", new_need_path, class: "btn" %>
-</p>
+  <%= form_tag("/needs", method: "get", class: "filter") do %>
+    <%= label_tag "organisation_id", "Filter needs by organisation:" %>
+    &nbsp;
+    <%= select_tag "organisation_id",
+      options_from_collection_for_select(Organisation.all, "id", "name", params[:organisation_id]),
+      include_blank: true,
+      class: "organisation-select" %>
+    <%= submit_tag "Filter", class: "btn" %>
+  <% end %>
+</div>
 
 <table class="table table-striped" id="needs">
   <tbody>

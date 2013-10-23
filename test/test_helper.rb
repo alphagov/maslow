@@ -19,6 +19,10 @@ DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 class ActiveSupport::TestCase
+  setup do
+    Organisation.organisations = nil
+  end
+
   teardown do
     DatabaseCleaner.clean
     WebMock.reset!

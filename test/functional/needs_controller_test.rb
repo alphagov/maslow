@@ -151,4 +151,16 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "filtering needs" do
+    should "sends the organisation id" do
+      GdsApi::NeedApi.any_instance.expects(:needs).with({"organisation_id" => "test"})
+      get(:index, "organisation_id" => "test")
+    end
+
+    should "not send any other values" do
+      GdsApi::NeedApi.any_instance.expects(:needs).with({})
+      get(:index, "fake" => "fake")
+    end
+  end
+
 end
