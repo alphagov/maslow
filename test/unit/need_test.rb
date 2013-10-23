@@ -178,5 +178,43 @@ class NeedTest < ActiveSupport::TestCase
 
       assert need.valid?
     end
+
+    should "report new needs as not persisted" do
+      refute Need.new({}).persisted?
+    end
+  end
+
+
+  context "loading needs" do
+
+    def stub_response
+      response_hash = {
+        "_response_info" => {"status" => "ok"},
+        "need_id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      stub("response", :to_hash => response_hash)
+    end
+
+    should "construct a need from an API response" do
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
+
+      need = Need.find(100001)
+
+      assert_equal 100001, need.need_id
+      assert_equal "person", need.role
+      assert_equal "do things", need.goal
+      assert_equal "good things", need.benefit
+      assert need.persisted?
+    end
+
+    should "raise an error when need not found" do
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(nil)
+      assert_raises Need::NotFound do
+        Need.find(100001)
+      end
+    end
   end
 end

@@ -6,6 +6,15 @@ class Need
   include ActiveModel::Conversion
   include ActiveModel::Serialization
 
+  class NotFound < StandardError
+    attr_reader :need_id
+
+    def initialize(need_id)
+      super("Need with ID #{need_id} not found")
+      @need_id = need_id
+    end
+  end
+
   JUSTIFICATIONS = [
     "it's something only government does",
     "the government is legally obliged to provide it",
@@ -27,6 +36,7 @@ class Need
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "currently_met", "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
+  attr_reader :need_id
 
   validates_presence_of ["role", "goal", "benefit"]
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -37,7 +47,28 @@ class Need
     validates_numericality_of field, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
   end
 
-  def initialize(attrs)
+  # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
+  #
+  # This works in roughly the same way as an ActiveRecord-style `find` method,
+  # just with a different exception type.
+  def self.find(need_id)
+    need_response = Maslow.need_api.need(need_id)
+    if need_response
+      # Discard fields from the API we don't understand. Coupling the fields
+      # this app understands to the fields it expects from clients is fine, but
+      # we don't want to couple that with the fields we can use in the API.
+      self.new(need_response.to_hash.slice(*FIELDS + ["need_id"]), true)
+    else
+      raise NotFound, need_id
+    end
+  end
+
+  def initialize(attrs, existing = false)
+    if existing
+      @need_id = attrs.delete("need_id")
+    end
+    @existing = existing
+
     unless (attrs.keys - FIELDS).empty?
       raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
     end
@@ -75,6 +106,7 @@ class Need
   end
 
   def persisted?
-    false
+    @existing
+  end
   end
 end
