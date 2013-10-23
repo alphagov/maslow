@@ -10,8 +10,6 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
   context "filtering the list of needs" do
     setup do
-      Organisation.organisations = nil
-
       need_api_has_organisations(
         "department-for-education" => "Department for Education",
         "hm-passport-office" => "HM Passport Office",
