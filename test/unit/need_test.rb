@@ -48,6 +48,22 @@ class NeedTest < ActiveSupport::TestCase
           refute json.has_key?("errors")
         end
 
+        should "set the correct boolean value for currently_met" do
+          need = Need.new("currently_met" => true)
+          assert_equal true, need.as_json["currently_met"]
+
+          need = Need.new("currently_met" => "true")
+          assert_equal true, need.as_json["currently_met"]
+
+          need = Need.new("currently_met" => false)
+          assert_equal false, need.as_json["currently_met"]
+
+          need = Need.new("currently_met" => "false")
+          assert_equal false, need.as_json["currently_met"]
+
+          need = Need.new("currently_met" => nil)
+          assert_nil need.as_json["currently_met"]
+        end
       end
     end
 

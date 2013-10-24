@@ -56,7 +56,7 @@ class Need
     NUMERIC_FIELDS.each do |field|
       res[field] = Integer(res[field]) if res[field].present?
     end
-    res["currently_met"] = res["currently_met"] == 'true' if res["currently_met"].present?
+    res["currently_met"] = (currently_met == true || currently_met == 'true') unless currently_met.nil?
     res
   end
 
