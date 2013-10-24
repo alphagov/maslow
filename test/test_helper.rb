@@ -29,7 +29,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_user
-    @stub_user ||= FactoryGirl.create(:user, :name => 'Stub User')
+    @stub_user ||= FactoryGirl.create(:user, :name => 'Stub User', :email => "stub@alphagov.co.uk", :uid => "stub-user-uid-123")
   end
 
   def login_as_stub_user
