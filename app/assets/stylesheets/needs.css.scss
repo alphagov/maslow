@@ -50,9 +50,12 @@ form.filter {
     text-align: left;
     margin-right: 10px;
   }
+  .organisation-select {
+    @extend .span4;
+  }
 
   text-align: right;
   display: block;
   float: right;
-  @extend .span6;
+  @extend .span8;
 }
