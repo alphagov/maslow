@@ -23,6 +23,25 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     context "given valid attributes" do
+      should "make a request to the need API with an author" do
+        need = Need.new(@atts)
+        author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+
+        request = @atts.merge(
+          "author" => {
+            "name" => "O'Brien",
+            "email" => "obrien@alphagov.co.uk",
+            "uid" => "user-1234"
+          })
+        response = @atts.merge(
+          "_response_info" => {
+            "status" => "created"
+          })
+
+        GdsApi::NeedApi.any_instance.expects(:create_need).with(request).returns(status: 201, body: response.to_json)
+
+        assert need.save_as(author)
+      end
 
       context "preparing a need as json" do
         should "present attributes as json" do
