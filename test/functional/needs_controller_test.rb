@@ -70,7 +70,14 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "post to needs API when data is complete" do
       GdsApi::NeedApi.any_instance.expects(:create_need).with do |req|
-        req.to_json == complete_need_data.merge("met_when"=>["Winning"]).to_json
+        req.to_json == complete_need_data.merge(
+          "met_when" => [ "Winning" ],
+          "author" => {
+            "name" => stub_user.name,
+            "email" => stub_user.email,
+            "uid" => stub_user.uid
+          }
+        ).to_json
       end
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
@@ -80,7 +87,7 @@ class NeedsControllerTest < ActionController::TestCase
       need_data = complete_need_data.merge("justifications" => ["", "it's something only government does"])
 
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:justifications, ["it's something only government does"])
+        has_entry("justifications", ["it's something only government does"])
       )
       post(:create, need: need_data)
     end
@@ -88,7 +95,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "split 'Need is met' criteria into separate parts" do
       need_data = complete_need_data.merge("met_when" => "Foo\nBar\nBaz")
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:met_when, ["Foo", "Bar", "Baz"])
+        has_entry("met_when", ["Foo", "Bar", "Baz"])
       )
       post(:create, need: need_data)
     end
@@ -96,7 +103,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "split out CRLF line breaks from 'Need is met' criteria" do
       need_data = complete_need_data.merge("met_when" => "Foo\r\nBar\r\nBaz")
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:met_when, ["Foo", "Bar", "Baz"])
+        has_entry("met_when", ["Foo", "Bar", "Baz"])
       )
       post(:create, need: need_data)
     end
@@ -104,7 +111,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "legislation free text remains unchanged" do
       need_data = complete_need_data.merge("legislation" => "link#1\nlink#2")
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        responds_with(:legislation, "link#1\nlink#2")
+        has_entry("legislation", "link#1\nlink#2")
       )
       post(:create, need: need_data)
     end

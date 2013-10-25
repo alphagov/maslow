@@ -56,12 +56,22 @@ class Need
     NUMERIC_FIELDS.each do |field|
       res[field] = Integer(res[field]) if res[field].present?
     end
-    res["currently_met"] = res["currently_met"] == 'true' if res["currently_met"].present?
+    res["currently_met"] = (currently_met == true || currently_met == 'true') unless currently_met.nil?
     res
   end
 
   def save
-    Maslow.need_api.create_need(self)
+    raise("The save_as method must be used when persisting a need, providing details about the author.")
+  end
+
+  def save_as(author)
+    atts = as_json.merge("author" => {
+      "name" => author.name,
+      "email" => author.email,
+      "uid" => author.uid
+    })
+
+    Maslow.need_api.create_need(atts)
   end
 
   def persisted?

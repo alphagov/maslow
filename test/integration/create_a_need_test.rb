@@ -68,7 +68,12 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "monthly_user_contacts" => 10000,
           "monthly_site_views" => 1000000,
           "monthly_need_views" => 1000,
-          "monthly_searches" => 2000
+          "monthly_searches" => 2000,
+          "author" => {
+            "name" => stub_user.name,
+            "email" => stub_user.email,
+            "uid" => stub_user.uid
+          }
       }.to_json)
 
       visit('/needs')
