@@ -38,15 +38,20 @@ class NeedsController < ApplicationController
   def create
     @need = Need.new( prepare_need_params(params) )
 
-    if @need.valid? && @need.save_as(current_user)
-      redirect_to "/needs", notice: "Need created."
-    else
-      @need.met_when = @need.met_when.try do |f|
-        f.join("\n")
+    if @need.valid?
+      if @need.save_as(current_user)
+        redirect_to "/needs", notice: "Need created."
+        return
+      else
+        flash[:error] = "There was a problem saving your need."
       end
+    else
       flash[:error] = "Please fill in the required fields."
-      render "new", :status => 422
     end
+    @need.met_when = @need.met_when.try do |f|
+      f.join("\n")
+    end
+    render "new", :status => 422
   end
 
   def update
