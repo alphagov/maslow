@@ -14,6 +14,13 @@
 </div>
 
 <table class="table table-striped" id="needs">
+  <thead>
+    <tr>
+      <th>Need ID</th>
+      <th>Goal</th>
+      <th>Organisations</th>
+    </tr>
+  </thead>
   <tbody>
     <%= render partial: "need_row", collection: @needs, as: :need %>
   </tbody>
