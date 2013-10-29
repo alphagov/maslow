@@ -217,4 +217,37 @@ class NeedTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "updating needs" do
+
+    setup do
+      need_hash = {
+        "id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      @need = Need.new(need_hash, existing = true)
+    end
+
+    should "update fields" do
+
+      @need.update(
+        "impact" => "Endangers the health of individuals",
+        "monthly_searches" => 50000
+      )
+
+      assert_equal "person", @need.role
+      assert_equal "do things", @need.goal
+      assert_equal "good things", @need.benefit
+      assert_equal "Endangers the health of individuals", @need.impact
+      assert_equal 50000, @need.monthly_searches
+    end
+
+    should "reject unrecognised fields" do
+      assert_raises ArgumentError do
+        @need.update("cheese" => "obstinate")
+      end
+    end
+  end
 end

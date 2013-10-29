@@ -69,6 +69,10 @@ class Need
     end
     @existing = existing
 
+    update(attrs)
+  end
+
+  def update(attrs)
     unless (attrs.keys - FIELDS).empty?
       raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
     end
