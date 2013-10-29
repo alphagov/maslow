@@ -1,6 +1,6 @@
-<% content_for :page_title, "Add a new need" %>
+<% content_for :page_title, @need.persisted? ? "Edit a need" : "Add a new need" %>
 
-<h1 class="page-header">Add a new need</h1>
+<h1 class="page-header"><% if @need.persisted? %>Edit a need<% else %>Add a new need<% end %></h1>
 
 <%= semantic_form_for @need, { url: @target } do |f| %>
   <%= f.inputs "User story", :id => "user-story" do %>
