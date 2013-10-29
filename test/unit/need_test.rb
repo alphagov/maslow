@@ -249,5 +249,20 @@ class NeedTest < ActiveSupport::TestCase
         @need.update("cheese" => "obstinate")
       end
     end
+
+    should "call the need API" do
+      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      update_hash = {
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "excellent things",
+        "author" => {
+          "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
+        }
+      }
+      GdsApi::NeedApi.any_instance.expects(:update_need).once.with(100001, update_hash)
+      @need.update("benefit" => "excellent things")
+      @need.save_as(author)
+    end
   end
 end

@@ -106,7 +106,11 @@ class Need
       "uid" => author.uid
     })
 
-    Maslow.need_api.create_need(atts)
+    if persisted?
+      Maslow.need_api.update_need(@need_id, atts)
+    else
+      Maslow.need_api.create_need(atts)
+    end
   end
 
   def persisted?
