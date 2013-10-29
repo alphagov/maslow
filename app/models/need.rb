@@ -112,10 +112,6 @@ class Need
       Maslow.need_api.create_need(atts)
     end
   rescue GdsApi::HTTPErrorResponse => err
-    @errors = ActiveModel::Errors.new(self)
-    err.error_details.each do |e|
-      errors.add :base, e
-    end
     false
   end
 
