@@ -57,7 +57,7 @@ class Need
       # Discard fields from the API we don't understand. Coupling the fields
       # this app understands to the fields it expects from clients is fine, but
       # we don't want to couple that with the fields we can use in the API.
-      self.new(need_response.to_hash.slice(*FIELDS + ["need_id"]), true)
+      self.new(need_response.to_hash.slice(*FIELDS + ["id"]), true)
     else
       raise NotFound, need_id
     end
@@ -65,7 +65,7 @@ class Need
 
   def initialize(attrs, existing = false)
     if existing
-      @need_id = attrs.delete("need_id")
+      @need_id = attrs.delete("id")
     end
     @existing = existing
 

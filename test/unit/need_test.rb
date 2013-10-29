@@ -190,7 +190,7 @@ class NeedTest < ActiveSupport::TestCase
     def stub_response
       response_hash = {
         "_response_info" => {"status" => "ok"},
-        "need_id" => 100001,
+        "id" => 100001,
         "role" => "person",
         "goal" => "do things",
         "benefit" => "good things"

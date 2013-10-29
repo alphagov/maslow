@@ -181,7 +181,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     def stub_need
       need_fields = {
-        "need_id" => 100001,
+        "id" => 100001,
         "role" => "person",
         "goal" => "do things",
         "benefit" => "good things"
