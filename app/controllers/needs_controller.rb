@@ -38,8 +38,7 @@ class NeedsController < ApplicationController
   def create
     @need = Need.new( prepare_need_params(params) )
 
-    if @need.valid?
-      @need.save_as(current_user)
+    if @need.valid? && @need.save_as(current_user)
       redirect_to "/needs", notice: "Need created."
     else
       @need.met_when = @need.met_when.try do |f|

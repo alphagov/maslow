@@ -38,6 +38,19 @@ class NeedsControllerTest < ActionController::TestCase
 
       assert_equal ["foo", "bar"], assigns(:needs).map(&:id)
     end
+
+    should "not blow up if Need API returns a 422" do
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test"
+      }
+      request = stub_request(:post, Plek.current.find("need-api")+"/needs").with(need_data).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error 1", "error 2"] }.to_json)
+
+      post(:create, need: need_data)
+
+      assert_response 422
+    end
   end
 
   context "Need creation form" do
@@ -62,7 +75,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "fail with incomplete data" do
-      GdsApi::NeedApi.any_instance.expects(:create_need).never
+      Need.any_instance.expects(:save_as).never
 
       need_data = {
         "role" => "User",
@@ -76,16 +89,11 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "post to needs API when data is complete" do
-      GdsApi::NeedApi.any_instance.expects(:create_need).with do |req|
-        req.to_json == complete_need_data.merge(
-          "met_when" => [ "Winning" ],
-          "author" => {
-            "name" => stub_user.name,
-            "email" => stub_user.email,
-            "uid" => stub_user.uid
-          }
-        ).to_json
-      end
+      Need.any_instance.expects(:save_as).with do |user|
+        user.name = stub_user.name
+        user.email = stub_user.email
+        user.uid = stub_user.uid
+      end.returns(true)
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
     end
