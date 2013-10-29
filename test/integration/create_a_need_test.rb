@@ -131,7 +131,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             "email" => stub_user.email,
             "uid" => stub_user.uid
           }
-      }.to_json).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error 1", "error 2"] }.to_json)
+      }.to_json).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
 
       visit('/needs')
       click_on('Add a new need')

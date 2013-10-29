@@ -45,7 +45,7 @@ class NeedsControllerTest < ActionController::TestCase
         "goal" => "Do Stuff",
         "benefit" => "test"
       }
-      request = stub_request(:post, Plek.current.find("need-api")+"/needs").with(need_data).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error 1", "error 2"] }.to_json)
+      request = stub_request(:post, Plek.current.find("need-api")+"/needs").with(need_data).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
 
       post(:create, need: need_data)
 
