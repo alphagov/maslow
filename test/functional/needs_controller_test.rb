@@ -211,4 +211,61 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "updating a need" do
+    def base_need_fields
+      {
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+    end
+
+    def stub_need
+      Need.new(base_need_fields.merge("id" => 100001), true)  # existing need
+    end
+
+    should "404 if need not found" do
+      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+      post :update, :id => "100001", :need => { :goal => "do things" }
+      assert_response :not_found
+    end
+
+    should "redisplay with a 422 if need is invalid" do
+      need = stub_need
+      Need.expects(:find).with(100001).returns(need)
+      need.expects(:save_as).never
+
+      post :update,
+           :id => "100001",
+           :need => base_need_fields.merge(:goal => "")
+      assert_response 422
+    end
+
+    should "save the need if valid and redirect to show it" do
+      need = stub_need
+      Need.expects(:find).with(100001).returns(need)
+      need.expects(:save_as).with(is_a(User)).returns(true)
+
+      post :update,
+           :id => "100001",
+           :need => base_need_fields.merge(:benefit => "be awesome")
+      assert_redirected_to need_path(100001)
+    end
+
+    should "separate 'met when' criteria back into separate lines" do
+      need = stub_need
+      Need.expects(:find).with(100001).returns(need)
+      # Forcing the validity check to false so we redisplay the form
+      need.expects(:valid?).returns(false)
+      need.expects(:save_as).never
+
+      post :update,
+           :id => "100001",
+           :need => base_need_fields.merge(:met_when => "something\nsomething else")
+
+      assert_response 422
+      assert_equal "something\nsomething else", assigns[:need].met_when
+    end
+  end
+
 end

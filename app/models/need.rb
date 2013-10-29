@@ -116,5 +116,15 @@ class Need
   def persisted?
     @existing
   end
+
+private
+  def id
+    # This method is required, because otherwise:
+    #
+    #   `semantic_form_for` from Formtastic invokes
+    #   `form_for` from Rails, which invokes
+    #   `dom_id` from ActionController, which invokes
+    #   `to_key` from ActiveModel, which falls over
+    @need_id
   end
 end
