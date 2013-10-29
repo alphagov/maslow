@@ -178,5 +178,91 @@ class NeedTest < ActiveSupport::TestCase
 
       assert need.valid?
     end
+
+    should "report new needs as not persisted" do
+      refute Need.new({}).persisted?
+    end
+  end
+
+
+  context "loading needs" do
+
+    def stub_response
+      response_hash = {
+        "_response_info" => {"status" => "ok"},
+        "id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      stub("response", :to_hash => response_hash)
+    end
+
+    should "construct a need from an API response" do
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
+
+      need = Need.find(100001)
+
+      assert_equal 100001, need.need_id
+      assert_equal "person", need.role
+      assert_equal "do things", need.goal
+      assert_equal "good things", need.benefit
+      assert need.persisted?
+    end
+
+    should "raise an error when need not found" do
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(nil)
+      assert_raises Need::NotFound do
+        Need.find(100001)
+      end
+    end
+  end
+
+  context "updating needs" do
+
+    setup do
+      need_hash = {
+        "id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      @need = Need.new(need_hash, existing = true)
+    end
+
+    should "update fields" do
+
+      @need.update(
+        "impact" => "Endangers the health of individuals",
+        "monthly_searches" => 50000
+      )
+
+      assert_equal "person", @need.role
+      assert_equal "do things", @need.goal
+      assert_equal "good things", @need.benefit
+      assert_equal "Endangers the health of individuals", @need.impact
+      assert_equal 50000, @need.monthly_searches
+    end
+
+    should "reject unrecognised fields" do
+      assert_raises ArgumentError do
+        @need.update("cheese" => "obstinate")
+      end
+    end
+
+    should "call the need API" do
+      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      update_hash = {
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "excellent things",
+        "author" => {
+          "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
+        }
+      }
+      GdsApi::NeedApi.any_instance.expects(:update_need).once.with(100001, update_hash)
+      @need.update("benefit" => "excellent things")
+      @need.save_as(author)
+    end
   end
 end
