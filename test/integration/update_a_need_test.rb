@@ -53,6 +53,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       click_on_first("Update Need")
 
       assert_requested request
+
+      assert page.has_text?("Need updated."), "No success message displayed"
     end
   end
 end

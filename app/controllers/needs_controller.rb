@@ -17,6 +17,7 @@ class NeedsController < ApplicationController
   end
 
   def show
+    flash.keep
     redirect_to :action => :edit, :id => params[:id]
   end
 
