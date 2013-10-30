@@ -16,7 +16,35 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
-      "organisations" => []
+      "organisations" => [],
+      "revisions" => [
+        {
+          "action_type" => "update",
+          "author" => {
+            "name" => "Mickey Mouse",
+            "email" => "mickey.mouse@test.com",
+            "uid" => "m0u53"
+          },
+          "changes" => {
+            "goal" => [ "apply for a secondary school place" ,"apply for a primary school place" ],
+            "role" => [ nil, "parent" ]
+          },
+          "created_at" => "2013-05-01T00:00:00+00:00"
+        },
+        {
+          "action_type" => "create",
+          "author" => {
+            "name" => "Donald Duck",
+            "email" => "donald.duck@test.com",
+            "uid" => "d0n4ld"
+          },
+          "changes" => {
+            "goal" => [ "apply for a school place", "apply for a secondary school place" ],
+            "role" => [ "grandparent", nil ]
+          },
+          "created_at" => "2013-01-01T00:00:00+00:00"
+        }
+      ]
     }
     need_api_has_needs([need_hash])  # For need list
     need_api_has_need(need_hash)  # For individual need
