@@ -25,11 +25,11 @@ class Need
     "It's straightforward advice that helps people to comply with their statutory obligations"
   ]
   IMPACT = [
-    "No impact"
-    "Noticed only by an expert audience"
-    "Noticed by the average member of the public"
-    "Has consequences for the majority of your users"
-    "Has serious consequences for your users and/or their customers"
+    "No impact",
+    "Noticed only by an expert audience",
+    "Noticed by the average member of the public",
+    "Has consequences for the majority of your users",
+    "Has serious consequences for your users and/or their customers",
     "Endangers people"
   ]
   NUMERIC_FIELDS = ["monthly_user_contacts", "monthly_site_views", "monthly_need_views", "monthly_searches"]
