@@ -16,21 +16,21 @@ class Need
   end
 
   JUSTIFICATIONS = [
-    "it's something only government does",
-    "the government is legally obliged to provide it",
-    "it's inherent to a person's or an organisation's rights and obligations",
-    "it's something that people can do or it's something people need to know before they can do something that's regulated by/related to government",
-    "there is clear demand for it from users",
-    "it's something the government provides/does/pays for",
-    "it's straightforward advice that helps people to comply with their statutory obligations"
+    "It's something only government does",
+    "The government is legally obliged to provide it",
+    "It's inherent to a person's or an organisation's rights and obligations",
+    "It's something that people can do or it's something people need to know before they can do something that's regulated by/related to government",
+    "There is clear demand for it from users",
+    "It's something the government provides/does/pays for",
+    "It's straightforward advice that helps people to comply with their statutory obligations"
   ]
   IMPACT = [
-    "Endangers the health of individuals",
-    "Has serious consequences for the day-to-day lives of your users",
-    "Annoys the majority of your users. May incur fines",
+    "No impact",
+    "Noticed only by an expert audience",
     "Noticed by the average member of the public",
-    "Noticed by an expert audience",
-    "No impact"
+    "Has consequences for the majority of your users",
+    "Has serious consequences for your users and/or their customers",
+    "Endangers people"
   ]
   NUMERIC_FIELDS = ["monthly_user_contacts", "monthly_site_views", "monthly_need_views", "monthly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
