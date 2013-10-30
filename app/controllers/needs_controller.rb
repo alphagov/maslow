@@ -24,12 +24,15 @@ class NeedsController < ApplicationController
   def edit
     @need = load_need
     @target = need_path(params[:id])
-    render "new"
+
+    # edit.html.erb
   end
 
   def new
     @need = Need.new({})
     @target = needs_path
+
+    # new.html.erb
   end
 
   def create
