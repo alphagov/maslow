@@ -55,8 +55,8 @@ class NeedsControllerTest < ActionController::TestCase
         "goal" => "do stuff",
         "benefit" => "get stuff",
         "organisation_ids" => ["ministry-of-justice"],
-        "impact" => "Endangers the health of individuals",
-        "justifications" => ["it's something only government does", "the government is legally obliged to provide it"],
+        "impact" => "Endangers people",
+        "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
         "met_when" => "Winning"
       }
     end
@@ -91,10 +91,10 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "remove blank entries from justifications" do
-      need_data = complete_need_data.merge("justifications" => ["", "it's something only government does"])
+      need_data = complete_need_data.merge("justifications" => ["", "It's something only government does"])
 
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("justifications", ["it's something only government does"])
+        has_entry("justifications", ["It's something only government does"])
       )
       post(:create, need: need_data)
     end

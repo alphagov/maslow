@@ -9,8 +9,8 @@ class NeedTest < ActiveSupport::TestCase
         "goal" => "do stuff",
         "benefit" => "get stuff",
         "organisation_ids" => ["ministry-of-justice"],
-        "impact" => "Endangers the health of individuals",
-        "justifications" => ["it's something only government does", "the government is legally obliged to provide it"],
+        "impact" => "Endangers people",
+        "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
         "met_when" => ["Winning"],
         "currently_met" => true,
         "other_evidence" => "Ministerial priority",
@@ -52,8 +52,8 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal "do stuff", json["goal"]
           assert_equal "get stuff", json["benefit"]
           assert_equal ["ministry-of-justice"], json["organisation_ids"]
-          assert_equal "Endangers the health of individuals", json["impact"]
-          assert_equal ["it's something only government does", "the government is legally obliged to provide it"], json["justifications"]
+          assert_equal "Endangers people", json["impact"]
+          assert_equal ["It's something only government does", "The government is legally obliged to provide it"], json["justifications"]
           assert_equal ["Winning"], json["met_when"]
         end
 
@@ -233,14 +233,14 @@ class NeedTest < ActiveSupport::TestCase
     should "update fields" do
 
       @need.update(
-        "impact" => "Endangers the health of individuals",
+        "impact" => "Endangers people",
         "monthly_searches" => 50000
       )
 
       assert_equal "person", @need.role
       assert_equal "do things", @need.goal
       assert_equal "good things", @need.benefit
-      assert_equal "Endangers the health of individuals", @need.impact
+      assert_equal "Endangers people", @need.impact
       assert_equal 50000, @need.monthly_searches
     end
 
