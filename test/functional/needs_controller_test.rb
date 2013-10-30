@@ -40,12 +40,20 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "not blow up if Need API returns a 422" do
+      url = Plek.current.find("need-api")+"/needs"
       need_data = {
         "role" => "User",
         "goal" => "Do Stuff",
         "benefit" => "test"
       }
-      request = stub_request(:post, Plek.current.find("need-api")+"/needs").with(need_data).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
+      error = {
+        status: 422,
+        body: {
+          _response_info: { status: "invalid_attributes" },
+          errors: ["error"]
+        }
+      }.to_json
+      request = stub_request(:post, url).with(need_data).to_return(error)
 
       post(:create, need: need_data)
 
