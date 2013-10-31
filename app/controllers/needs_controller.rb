@@ -25,6 +25,9 @@ class NeedsController < ApplicationController
   def edit
     @need = load_need
     @target = need_path(params[:id])
+    @need.met_when = @need.met_when.try do |f|
+      f.join("\n")
+    end
 
     # edit.html.erb
   end
