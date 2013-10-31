@@ -73,7 +73,7 @@ class NeedsController < ApplicationController
       f.join("\n")
     end
     @target = need_path(params[:id])
-    render "new", :status => 422
+    render "edit", :status => 422
   end
   private
 

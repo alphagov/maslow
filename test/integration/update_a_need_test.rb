@@ -85,6 +85,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       fill_in("So that", with: "my grandchild can start school")
       click_on_first('Update Need')
 
+      assert page.has_css?("h1", text: "Edit a need")
       assert page.has_text?("There was a problem saving your need.")
     end
   end
