@@ -29,7 +29,7 @@
   <%= f.inputs "Provide evidence for this need", :id => "evidence" do %>
     <%= f.input :currently_met, :label => "Do you think GOV.UK currently has functionality that meets this need?", :as => :radio %>
     <%= f.input :legislation, :label => "What legislation underpins this need?", :hint => "Please supply the law (including part and relevant section)", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
-    <%= f.input :monthly_user_contacts, :label => "User feedback in a month related to this need", :hint => "Calls to contact centres, email feedback, etc", :input_html => { :type => :number, :min => 0 } %>
+    <%= f.input :monthly_user_contacts, :label => "User contacts in a month related to this need", :hint => "Calls to contact centres, email feedback, etc", :input_html => { :type => :number, :min => 0 } %>
     <%= f.input :monthly_site_views, :label => "Page views in a month for your whole site", :hint => "As this is the overall total for your site, it will be the same for all your user needs", :input_html => { :type => :number, :min => 0 } %>
     <%= f.input :monthly_need_views, :label => "Page views in a month related to this need", :hint => "This may require combining the page views for several pieces of content", :input_html => { :type => :number, :min => 0 } %>
     <%= f.input :monthly_searches, :label => "Searches in a month related to this need", :hint => "This may require combining several search terms and data from both internal and external search. If it would be useful, record the keywords and phrases below", :input_html => { :type => :number, :min => 0 } %>
