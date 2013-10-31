@@ -39,15 +39,19 @@ class NeedsController < ApplicationController
     @need = Need.new( prepare_need_params(params) )
 
     if @need.valid?
-      @need.save_as(current_user)
-      redirect_to "/needs", notice: "Need created."
-    else
-      @need.met_when = @need.met_when.try do |f|
-        f.join("\n")
+      if @need.save_as(current_user)
+        redirect_to "/needs", notice: "Need created."
+        return
+      else
+        flash[:error] = "There was a problem saving your need."
       end
+    else
       flash[:error] = "Please fill in the required fields."
-      render "new", :status => 422
     end
+    @need.met_when = @need.met_when.try do |f|
+      f.join("\n")
+    end
+    render "new", :status => 422
   end
 
   def update
@@ -55,16 +59,20 @@ class NeedsController < ApplicationController
     @need.update(prepare_need_params(params))
 
     if @need.valid?
-      @need.save_as(current_user)
-      redirect_to need_url(@need.need_id), notice: "Need updated."
-    else
-      @need.met_when = @need.met_when.try do |f|
-        f.join("\n")
+      if @need.save_as(current_user)
+        redirect_to need_url(@need.need_id), notice: "Need updated."
+        return
+      else
+        flash[:error] = "There was a problem saving your need."
       end
+    else
       flash[:error] = "There were errors in the need form."
-      @target = need_path(params[:id])
-      render "new", :status => 422
     end
+    @need.met_when = @need.met_when.try do |f|
+      f.join("\n")
+    end
+    @target = need_path(params[:id])
+    render "new", :status => 422
   end
   private
 

@@ -179,6 +179,15 @@ class NeedTest < ActiveSupport::TestCase
       assert need.valid?
     end
 
+    should "report a problem if unable to save the need" do
+      need = Need.new(@atts)
+      GdsApi::NeedApi.any_instance.expects(:create_need).raises(
+        GdsApi::HTTPErrorResponse.new(422, ["error"])
+      )
+
+      assert_equal false, need.save_as(stub_user)
+    end
+
     should "report new needs as not persisted" do
       refute Need.new({}).persisted?
     end

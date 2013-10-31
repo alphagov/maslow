@@ -111,6 +111,8 @@ class Need
     else
       Maslow.need_api.create_need(atts)
     end
+  rescue GdsApi::HTTPErrorResponse => err
+    false
   end
 
   def persisted?
