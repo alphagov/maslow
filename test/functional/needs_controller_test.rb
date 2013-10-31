@@ -51,8 +51,8 @@ class NeedsControllerTest < ActionController::TestCase
         body: {
           _response_info: { status: "invalid_attributes" },
           errors: ["error"]
-        }
-      }.to_json
+        }.to_json
+      }
       request = stub_request(:post, url).with(need_data).to_return(error)
 
       post(:create, need: need_data)
