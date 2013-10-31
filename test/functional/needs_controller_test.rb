@@ -242,6 +242,21 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 422
       assert_equal "something\nsomething else", assigns[:need].met_when
     end
+
+    should "return a 422 response if save fails" do
+      need = stub_need
+      Need.expects(:find).with(100001).returns(need)
+      need.expects(:save_as).returns(false)
+
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test"
+      }
+      post(:update, id: 100001, need: need_data)
+
+      assert_response 422
+    end
   end
 
 end

@@ -56,5 +56,36 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("Need updated."), "No success message displayed"
     end
+
+    should "handle 422 errors from the Need API" do
+      api_url = Plek.current.find('need-api') + '/needs/100001'
+      request_body = {
+        "role" => "grandparent",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my grandchild can start school",
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      }.to_json
+      request = stub_request(:put, api_url)
+                  .with(:body => request_body)
+                  .to_return(
+                    status: 422,
+                    body: {
+                      _response_info: { status: "invalid_attributes" },
+                      errors: [ "error"]
+                    }.to_json
+                  )
+
+      visit('/needs')
+      click_on('100001')
+      fill_in("As a", with: "grandparent")
+      fill_in("So that", with: "my grandchild can start school")
+      click_on_first('Update Need')
+
+      assert page.has_text?("There was a problem saving your need.")
+    end
   end
 end
