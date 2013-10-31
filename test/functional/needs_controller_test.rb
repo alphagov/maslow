@@ -159,10 +159,15 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "redirect to the need form" do
-      # We're not bothered whether the lookup method is invoked here
-      Need.stubs(:find)
+      Need.expects(:find).returns(stub_need)
       get :show, :id => 100001
       assert_redirected_to :action => :edit, :id => 100001
+    end
+
+    should "404 if the need doesn't exist" do
+      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+      get :show, :id => 100001
+      assert_response :not_found
     end
 
     should "reject non-numeric IDs" do
