@@ -39,26 +39,6 @@ class NeedsControllerTest < ActionController::TestCase
       assert_equal ["foo", "bar"], assigns(:needs).map(&:id)
     end
 
-    should "not blow up if Need API returns a 422" do
-      url = Plek.current.find("need-api")+"/needs"
-      need_data = {
-        "role" => "User",
-        "goal" => "Do Stuff",
-        "benefit" => "test"
-      }
-      error = {
-        status: 422,
-        body: {
-          _response_info: { status: "invalid_attributes" },
-          errors: ["error"]
-        }.to_json
-      }
-      request = stub_request(:post, url).with(need_data).to_return(error)
-
-      post(:create, need: need_data)
-
-      assert_response 422
-    end
   end
 
   context "Need creation form" do
@@ -104,6 +84,19 @@ class NeedsControllerTest < ActionController::TestCase
       end.returns(true)
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
+    end
+
+    should "return a 422 response if save fails" do
+      Need.any_instance.expects(:save_as).returns(false)
+
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test"
+      }
+      post(:create, need: need_data)
+
+      assert_response 422
     end
 
     should "remove blank entries from justifications" do
