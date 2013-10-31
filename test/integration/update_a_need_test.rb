@@ -4,6 +4,16 @@ require 'gds_api/test_helpers/need_api'
 class UpdateANeedTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::NeedApi
 
+  def need_hash
+    {
+      "id" => "100001",
+      "role" => "parent",
+      "goal" => "apply for a primary school place",
+      "benefit" => "my child can start school",
+      "organisations" => []
+    }
+  end
+
   setup do
     login_as(stub_user)
     need_api_has_organisations(
@@ -11,13 +21,6 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "competition-commission" => "Competition Commission",
       "ministry-of-justice" => "Ministry of Justice"
     )
-    need_hash = {
-      "id" => "100001",
-      "role" => "parent",
-      "goal" => "apply for a primary school place",
-      "benefit" => "my child can start school",
-      "organisations" => []
-    }
     need_api_has_needs([need_hash])  # For need list
     need_api_has_need(need_hash)  # For individual need
   end
@@ -31,6 +34,16 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_field?("I want to")
       assert page.has_field?("So that")
       # Other fields are tested in create_a_need_test.rb
+    end
+
+    should "split 'met when' criteria onto separate lines" do
+      need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
+      visit('/needs')
+      click_on('100001')
+      assert page.has_field?(
+        "Need is likely to be met when",
+        with: "win\nawesome"
+      )
     end
 
     should "be able to update a need" do
