@@ -25,21 +25,17 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Organisations")
       assert page.has_text?("Competition Commission")
       assert page.has_text?("Committee on Climate Change")
+
       assert page.has_text?("Why is this needed?")
-      assert page.has_unchecked_field?("it's something only government does")
-      assert page.has_unchecked_field?("the government is legally obliged to provide it")
-      assert page.has_unchecked_field?("it's inherent to a person's or an organisation's rights and obligations")
-      assert page.has_unchecked_field?("it's something that people can do or it's something people need to know before they can do something that's regulated by/related to government")
-      assert page.has_unchecked_field?("there is clear demand for it from users")
-      assert page.has_unchecked_field?("it's something the government provides/does/pays for")
-      assert page.has_unchecked_field?("it's straightforward advice that helps people to comply with their statutory obligations")
+      Need::JUSTIFICATIONS.each do |just|
+        assert page.has_unchecked_field?(just), "Missing justification: #{just}"
+      end
+
       assert page.has_text?("What is the impact of GOV.UK not doing this?")
-      assert page.has_unchecked_field?("Endangers the health of individuals")
-      assert page.has_unchecked_field?("Has serious consequences for the day-to-day lives of your users")
-      assert page.has_unchecked_field?("Annoys the majority of your users. May incur fines")
-      assert page.has_unchecked_field?("Noticed by the average member of the public")
-      assert page.has_unchecked_field?("Noticed by an expert audience")
-      assert page.has_unchecked_field?("No impact")
+      Need::IMPACT.each do |impact|
+        assert page.has_unchecked_field?(impact), "Missing impact: #{impact}"
+      end
+
       assert page.has_text?("Need is likely to be met when")
 
       assert page.has_text?("Do you think GOV.UK currently has functionality that meets this need?")
@@ -59,8 +55,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "benefit" => "I can find records of birth, marriage or death",
           "organisation_ids" => ["ministry-of-justice"],
           "impact" => "Noticed by the average member of the public",
-          "justifications" => ["it's something only government does",
-                               "it's straightforward advice that helps people to comply with their statutory obligations"],
+          "justifications" => ["It's something only government does",
+                               "It's straightforward advice that helps people to comply with their statutory obligations"],
           "met_when" => ["Can download a birth certificate."],
           "currently_met" => false,
           "other_evidence" => "Free text evidence with lots more evidence",
@@ -83,8 +79,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("I want to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
       select("Ministry of Justice", from: "Organisations")
-      check("it's straightforward advice that helps people to comply with their statutory obligations")
-      check("it's something only government does")
+      check("It's straightforward advice that helps people to comply with their statutory obligations")
+      check("It's something only government does")
       choose("Noticed by the average member of the public")
       choose("No")
       fill_in("Do you have any other qualitative or quantitative data that supports this need?", with: "Free text evidence with lots more evidence")
@@ -105,7 +101,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       click_on('Add a new need')
 
       fill_in("As a", with: "User")
-      check("it's something only government does")
+      check("It's something only government does")
       fill_in("Need is likely to be met when", with: "Can download a birth certificate.\nOther criteria")
 
       click_on_first("Create Need")
@@ -122,6 +118,31 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       click_on_first("Create Need")
 
       assert_equal("", find_field("Need is likely to be met when").value)
+    end
+
+    should "handle 422 errors from the Need API" do
+      request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
+        :body => {
+          "role" => "User",
+          "goal" => "find my local register office",
+          "benefit" => "I can find records of birth, marriage or death",
+          "author" => {
+            "name" => stub_user.name,
+            "email" => stub_user.email,
+            "uid" => stub_user.uid
+          }
+      }.to_json).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
+
+      visit('/needs')
+      click_on('Add a new need')
+
+      fill_in("As a", with: "User")
+      fill_in("I want to", with: "find my local register office")
+      fill_in("So that", with: "I can find records of birth, marriage or death")
+
+      click_on_first("Create Need")
+
+      assert page.has_text?("There was a problem saving your need.")
     end
   end
 

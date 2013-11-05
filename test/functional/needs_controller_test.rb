@@ -38,6 +38,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       assert_equal ["foo", "bar"], assigns(:needs).map(&:id)
     end
+
   end
 
   context "Need creation form" do
@@ -55,14 +56,14 @@ class NeedsControllerTest < ActionController::TestCase
         "goal" => "do stuff",
         "benefit" => "get stuff",
         "organisation_ids" => ["ministry-of-justice"],
-        "impact" => "Endangers the health of individuals",
-        "justifications" => ["it's something only government does", "the government is legally obliged to provide it"],
+        "impact" => "Endangers people",
+        "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
         "met_when" => "Winning"
       }
     end
 
     should "fail with incomplete data" do
-      GdsApi::NeedApi.any_instance.expects(:create_need).never
+      Need.any_instance.expects(:save_as).never
 
       need_data = {
         "role" => "User",
@@ -76,25 +77,33 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "post to needs API when data is complete" do
-      GdsApi::NeedApi.any_instance.expects(:create_need).with do |req|
-        req.to_json == complete_need_data.merge(
-          "met_when" => [ "Winning" ],
-          "author" => {
-            "name" => stub_user.name,
-            "email" => stub_user.email,
-            "uid" => stub_user.uid
-          }
-        ).to_json
-      end
+      Need.any_instance.expects(:save_as).with do |user|
+        user.name = stub_user.name
+        user.email = stub_user.email
+        user.uid = stub_user.uid
+      end.returns(true)
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
     end
 
+    should "return a 422 response if save fails" do
+      Need.any_instance.expects(:save_as).returns(false)
+
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test"
+      }
+      post(:create, need: need_data)
+
+      assert_response 422
+    end
+
     should "remove blank entries from justifications" do
-      need_data = complete_need_data.merge("justifications" => ["", "it's something only government does"])
+      need_data = complete_need_data.merge("justifications" => ["", "It's something only government does"])
 
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("justifications", ["it's something only government does"])
+        has_entry("justifications", ["It's something only government does"])
       )
       post(:create, need: need_data)
     end
@@ -123,46 +132,6 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "reject non-numeric values in the Contacts field" do
-      need_data = complete_need_data.merge("monthly_user_contacts" => "test")
-      GdsApi::NeedApi.any_instance.expects(:create_need).never
-      post(:create, :need => need_data)
-      assert_response 422
-    end
-
-    should "reject non-numeric values in the Site Views field" do
-      need_data = complete_need_data.merge("monthly_site_views" => "test")
-      GdsApi::NeedApi.any_instance.expects(:create_need).never
-      post(:create, :need => need_data)
-      assert_response 422
-    end
-
-    should "reject non-numeric values in the Need Views field" do
-      need_data = complete_need_data.merge("monthly_need_views" => "test")
-      GdsApi::NeedApi.any_instance.expects(:create_need).never
-      post(:create, :need => need_data)
-      assert_response 422
-    end
-
-    should "reject non-numeric values in the Need Searches field" do
-      need_data = complete_need_data.merge("monthly_searches" => "test")
-      GdsApi::NeedApi.any_instance.expects(:create_need).never
-      post(:create, :need => need_data)
-      assert_response 422
-    end
-
-    should "accept blank values in the numeric fields" do
-      need_data = complete_need_data.merge("monthly_user_contacts" => "", "monthly_searches" => "",
-                                           "monthly_need_views" => "", "monthly_site_views" => "")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with do |need|
-        need.as_json["monthly_user_contacts"].nil? &&
-        need.as_json["monthly_site_views"].nil? &&
-        need.as_json["monthly_need_views"].nil? &&
-        need.as_json["monthly_searches"].nil?
-      end
-      post(:create, :need => need_data)
-      assert_redirected_to :action => :index
-    end
   end
 
   context "filtering needs" do
@@ -190,10 +159,15 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "redirect to the need form" do
-      # We're not bothered whether the lookup method is invoked here
-      Need.stubs(:find)
+      Need.expects(:find).returns(stub_need)
       get :show, :id => 100001
       assert_redirected_to :action => :edit, :id => 100001
+    end
+
+    should "404 if the need doesn't exist" do
+      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+      get :show, :id => 100001
+      assert_response :not_found
     end
 
     should "reject non-numeric IDs" do
@@ -265,6 +239,21 @@ class NeedsControllerTest < ActionController::TestCase
 
       assert_response 422
       assert_equal "something\nsomething else", assigns[:need].met_when
+    end
+
+    should "return a 422 response if save fails" do
+      need = stub_need
+      Need.expects(:find).with(100001).returns(need)
+      need.expects(:save_as).returns(false)
+
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test"
+      }
+      post(:update, id: 100001, need: need_data)
+
+      assert_response 422
     end
   end
 
