@@ -36,7 +36,7 @@ class Need
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "currently_met", "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
-  attr_reader :need_id
+  attr_reader :need_id, :revisions
 
   validates_presence_of ["role", "goal", "benefit"]
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -57,7 +57,7 @@ class Need
       # Discard fields from the API we don't understand. Coupling the fields
       # this app understands to the fields it expects from clients is fine, but
       # we don't want to couple that with the fields we can use in the API.
-      self.new(need_response.to_hash.slice(*FIELDS + ["id"]), true)
+      self.new(need_response.to_hash.slice(*FIELDS + ["id", "revisions"]), true)
     else
       raise NotFound, need_id
     end
@@ -66,6 +66,7 @@ class Need
   def initialize(attrs, existing = false)
     if existing
       @need_id = attrs.delete("id")
+      @revisions = prepare_revisions(attrs.delete("revisions"))
     end
     @existing = existing
 
@@ -126,5 +127,17 @@ private
     #   `dom_id` from ActionController, which invokes
     #   `to_key` from ActiveModel, which falls over
     @need_id
+  end
+
+  def prepare_revisions(revisions)
+    return [] unless revisions.present?
+
+    structs = GdsApi::Response.build_ostruct_recursively(revisions)
+
+    # Return changes as a hash, rather than an OpenStruct because
+    # we would like changes to be returned as field-value pairs
+    structs.each_with_index do |revision, i|
+      revision.changes = revisions[i]["changes"]
+    end
   end
 end
