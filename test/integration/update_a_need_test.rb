@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
 
@@ -27,22 +28,30 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           },
           "changes" => {
             "goal" => [ "apply for a secondary school place" ,"apply for a primary school place" ],
-            "role" => [ nil, "parent" ]
+            "role" => [ nil, "parent" ],
           },
-          "created_at" => "2013-05-01T00:00:00+00:00"
+          "created_at" => "2013-05-01T13:00:00+00:00"
+        },
+        {
+          "action_type" => "update",
+          "author" => nil,
+          "changes" => {
+            "legislation" => [ "foo", "bar" ]
+          },
+          "created_at" => "2013-04-01T13:00:00+00:00"
         },
         {
           "action_type" => "create",
           "author" => {
             "name" => "Donald Duck",
-            "email" => "donald.duck@test.com",
-            "uid" => "d0n4ld"
+            "email" => nil,
+            "uid" => nil
           },
           "changes" => {
             "goal" => [ "apply for a school place", "apply for a secondary school place" ],
             "role" => [ "grandparent", nil ]
           },
-          "created_at" => "2013-01-01T00:00:00+00:00"
+          "created_at" => "2013-01-01T13:00:00+00:00"
         }
       ]
     }
@@ -83,6 +92,45 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert_requested request
 
       assert page.has_text?("Need updated."), "No success message displayed"
+    end
+
+    should "see a list of recent revisions" do
+      visit "/needs/100001"
+
+      within "#revisions" do
+        assert_equal 3, page.all("li.revision").count
+
+        within "li.revision:nth-child(1)" do
+          assert page.has_content?("Update by Mickey Mouse (mickey.mouse@test.com)")
+          assert page.has_content?("1 May 2013, 13:00")
+
+          within "ul.changes" do
+            assert_equal 2, page.all("li").count
+
+            assert page.has_content?("Goal: apply for a secondary school place → apply for a primary school place")
+            assert page.has_content?("Role: blank → parent")
+          end
+        end
+
+        within "li.revision:nth-child(2)" do
+          assert page.has_content?("Update by unknown author")
+          assert page.has_no_content?("()") # catch missing email
+          assert page.has_content?("1 April 2013, 13:00")
+        end
+
+        within "li.revision:nth-child(3)" do
+          assert page.has_content?("Create by Donald Duck")
+          assert page.has_no_content?("()") # catch an empty email string
+          assert page.has_content?("1 January 2013, 13:00")
+
+          within "ul.changes" do
+            assert_equal 2, page.all("li").count
+
+            assert page.has_content?("Goal: apply for a school place → apply for a secondary school place")
+            assert page.has_content?("Role: grandparent → blank")
+          end
+        end
+      end
     end
   end
 end

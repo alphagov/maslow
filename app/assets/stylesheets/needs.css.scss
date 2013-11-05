@@ -59,3 +59,32 @@ form.filter {
   float: right;
   @extend .span8;
 }
+
+#revisions {
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  margin-top: 10px;
+
+  > ul {
+    margin: 20px 0px;
+
+    li.revision {
+      @extend .well;
+      list-style: none;
+
+      h3 {
+        font-size: 16px;
+        line-height: 20px;
+        margin: 0 0 5px;
+      }
+
+      ul.changes {
+        li span {
+          background: #fff;
+          display: inline-block;
+          font-family: monospace;
+        }
+      }
+    }
+  }
+}

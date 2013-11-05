@@ -1,0 +1,18 @@
+<li class="revision">
+  <h3>
+    <%= Time.parse(revision.created_at).strftime("%-d %B %Y, %H:%M") %> &mdash;
+    <%= revision.action_type.capitalize %> by
+    <% if revision.author.present? -%>
+      <%= revision.author.name %>
+      <%= "(#{revision.author.email})" if revision.author.email.present? %>
+    <% else %>
+      unknown author
+    <% end %>
+  </h3>
+
+  <ul class="changes">
+    <% revision.changes.each do |field,(previous,current)| %>
+      <li><%= format_field_name(field) %>: <span><%= format_field_value(previous) %></span> &rarr; <span><%= format_field_value(current) %></span></li>
+    <% end %>
+  </ul>
+</li>
