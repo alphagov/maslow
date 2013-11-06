@@ -11,7 +11,7 @@ class NeedTest < ActiveSupport::TestCase
         "organisation_ids" => ["ministry-of-justice"],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => ["Winning"],
+        "met_when" => ["Winning","Winning More"],
         "currently_met" => true,
         "other_evidence" => "Ministerial priority",
         "legislation" => "Vehicle Excise and Registration Act 1994, schedule 4",
@@ -54,7 +54,32 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal ["ministry-of-justice"], json["organisation_ids"]
           assert_equal "Endangers people", json["impact"]
           assert_equal ["It's something only government does", "The government is legally obliged to provide it"], json["justifications"]
+          assert_equal ["Winning","Winning More"], json["met_when"]
+        end
+
+        should "have one blank value in 'met_when' when creating a new need" do
+          assert_equal [""], Need.new({}).met_when
+        end
+
+        should "be able to add more criteria" do
+          need = Need.new({})
+          need.add_more_criteria
+
+          assert_equal ["",""], need.met_when
+        end
+
+        should "remove empty values from 'met_when' when converted to json" do
+          @atts.merge!({"met_when" => ["","Winning",""]})
+          json = Need.new(@atts).as_json
+
           assert_equal ["Winning"], json["met_when"]
+        end
+
+        should "clear 'met_when' if no values set when converted to json" do
+          @atts.merge!({"met_when" => ["","",""]})
+          json = Need.new(@atts).as_json
+
+          refute json.has_key?("met_when")
         end
 
         should "ignore the errors attribute" do

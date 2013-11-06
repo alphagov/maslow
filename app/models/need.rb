@@ -73,7 +73,12 @@ class Need
     update(attrs)
   end
 
+  def add_more_criteria
+    @met_when << ""
+  end
+
   def update(attrs)
+    @met_when = attrs["met_when"].present? ? attrs["met_when"] : [""]
     unless (attrs.keys - FIELDS).empty?
       raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
     end
@@ -86,6 +91,7 @@ class Need
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
+    prepare_met_when_criteria
     res = (FIELDS + NUMERIC_FIELDS).each_with_object({}) do |field, hash|
       if value = send(field) and value.present?
         # Rails prepends a newline character into the textarea fields in the form.
@@ -148,6 +154,15 @@ private
     # we would like changes to be returned as field-value pairs
     structs.each_with_index do |revision, i|
       revision.changes = revisions[i]["changes"]
+    end
+  end
+
+  def prepare_met_when_criteria
+    # Remove blanks and remove the
+    # field if it's then empty
+    if met_when
+      met_when.delete_if(&:empty?)
+      remove_instance_variable(:@met_when) if met_when.empty?
     end
   end
 end
