@@ -4,7 +4,9 @@
     <%= revision.action_type.capitalize %> by
     <% if revision.author.present? -%>
       <%= revision.author.name %>
-      <%= "(#{revision.author.email})" if revision.author.email.present? %>
+      <% if revision.author.email.present? %>
+        &lt;<%= revision.author.email %>&gt;
+      <% end %>
     <% else %>
       unknown author
     <% end %>
@@ -12,7 +14,11 @@
 
   <ul class="changes">
     <% revision.changes.each do |field,(previous,current)| %>
-      <li><%= format_field_name(field) %>: <span><%= format_field_value(previous) %></span> &rarr; <span><%= format_field_value(current) %></span></li>
+      <li>
+        <%= format_field_name(field) %>:
+        <span class="previous"><%= format_field_value(previous) %></span> &rarr;
+        <span class="current"><%= format_field_value(current) %></span>
+      </li>
     <% end %>
   </ul>
 </li>

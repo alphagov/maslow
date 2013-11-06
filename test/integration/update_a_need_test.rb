@@ -146,7 +146,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         assert_equal 3, page.all("li.revision").count
 
         within "li.revision:nth-child(1)" do
-          assert page.has_content?("Update by Mickey Mouse (mickey.mouse@test.com)")
+          assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
           assert page.has_content?("1 May 2013, 13:00")
 
           within "ul.changes" do
@@ -159,13 +159,13 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
         within "li.revision:nth-child(2)" do
           assert page.has_content?("Update by unknown author")
-          assert page.has_no_content?("()") # catch missing email
+          assert page.has_no_content?("<>") # catch missing email
           assert page.has_content?("1 April 2013, 13:00")
         end
 
         within "li.revision:nth-child(3)" do
           assert page.has_content?("Create by Donald Duck")
-          assert page.has_no_content?("()") # catch an empty email string
+          assert page.has_no_content?("<>") # catch an empty email string
           assert page.has_content?("1 January 2013, 13:00")
 
           within "ul.changes" do
