@@ -4,4 +4,12 @@ module NeedHelper
     words.first[0] = words.first[0].upcase
     words.join(" ")
   end
+
+  def format_field_value(value)
+    value.present? ? value : "<em>blank</em>".html_safe
+  end
+
+  def format_field_name(name)
+    name.titleize
+  end
 end

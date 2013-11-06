@@ -13,4 +13,30 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_equal "Apply for Carers' Allowance", format_need_goal("apply for Carers' Allowance")
     end
   end
+
+  context "format_field_value" do
+    should "return the field value when present" do
+      assert_equal "foo", format_field_value("foo")
+    end
+
+    should "return 'blank' when empty" do
+      output = format_field_value("")
+
+      assert_equal "<em>blank</em>", output
+      assert output.html_safe?
+    end
+
+    should "return 'blank' when nil" do
+      output = format_field_value(nil)
+
+      assert_equal "<em>blank</em>", output
+      assert output.html_safe?
+    end
+  end
+
+  context "format_field_name" do
+    should "return a humanized and capitalized field name" do
+      assert_equal "Organisation Ids", format_field_name("organisation_ids")
+    end
+  end
 end

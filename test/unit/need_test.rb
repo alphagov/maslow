@@ -196,14 +196,14 @@ class NeedTest < ActiveSupport::TestCase
 
   context "loading needs" do
 
-    def stub_response
+    def stub_response(additional_atts = {})
       response_hash = {
         "_response_info" => {"status" => "ok"},
         "id" => 100001,
         "role" => "person",
         "goal" => "do things",
         "benefit" => "good things"
-      }
+      }.merge(additional_atts)
       stub("response", :to_hash => response_hash)
     end
 
@@ -217,6 +217,56 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal "do things", need.goal
       assert_equal "good things", need.benefit
       assert need.persisted?
+    end
+
+    should "return revisions for a need" do
+      response = stub_response(
+        "revisions" => [
+          {
+            "action_type" => "update",
+            "author" => {
+              "name" => "Jack Bauer",
+              "email" => "jack.bauer@test.com"
+            },
+            "changes" => {
+              "goal" => [ "apply for a secondary school place" ,"apply for a primary school place" ],
+              "role" => [ nil, "parent" ]
+            },
+            "created_at" => "2013-05-01T00:00:00+00:00"
+          },
+          {
+            "action_type" => "create",
+            "author" => {
+              "name" => "Jack Sparrow",
+              "email" => "jack.sparrow@test.com",
+            },
+            "changes" => {
+              "goal" => [ "apply for a school place", "apply for a secondary school place" ],
+              "role" => [ "grandparent", nil ]
+            },
+            "created_at" => "2013-01-01T00:00:00+00:00"
+          }
+        ]
+      )
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
+
+      need = Need.find(100001)
+
+      assert_equal 2, need.revisions.count
+
+      first_revision = need.revisions.first
+
+      assert_equal "update", first_revision.action_type
+      assert_equal "Jack Bauer", first_revision.author.name
+      assert_equal "jack.bauer@test.com", first_revision.author.email
+
+      assert_nil first_revision.author.uid
+
+      assert_equal ["goal", "role"], first_revision.changes.keys
+      assert_equal [ "apply for a secondary school place" ,"apply for a primary school place" ], first_revision.changes["goal"]
+      assert_equal [ nil, "parent" ], first_revision.changes["role"]
+
+      assert_equal "2013-05-01T00:00:00+00:00", first_revision.created_at
     end
 
     should "raise an error when need not found" do
