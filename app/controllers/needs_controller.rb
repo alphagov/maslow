@@ -25,9 +25,6 @@ class NeedsController < ApplicationController
   def edit
     @need = load_need
     @target = need_path(params[:id])
-    @need.met_when = @need.met_when.try do |f|
-      f.join("\n")
-    end
 
     # edit.html.erb
   end
@@ -42,6 +39,8 @@ class NeedsController < ApplicationController
   def create
     @need = Need.new( prepare_need_params(params) )
 
+    add_criteria(:new) and return if params[:criteria_action]
+
     if @need.valid?
       if @need.save_as(current_user)
         redirect_to "/needs", notice: "Need created."
@@ -52,15 +51,15 @@ class NeedsController < ApplicationController
     else
       flash[:error] = "Please fill in the required fields."
     end
-    @need.met_when = @need.met_when.try do |f|
-      f.join("\n")
-    end
+
     render "new", :status => 422
   end
 
   def update
     @need = load_need
     @need.update(prepare_need_params(params))
+
+    add_criteria(:edit) and return if params[:criteria_action]
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -72,9 +71,7 @@ class NeedsController < ApplicationController
     else
       flash[:error] = "There were errors in the need form."
     end
-    @need.met_when = @need.met_when.try do |f|
-      f.join("\n")
-    end
+
     @target = need_path(params[:id])
     render "edit", :status => 422
   end
@@ -87,10 +84,6 @@ class NeedsController < ApplicationController
         if params_hash["need"][field]
           params_hash["need"][field].select!(&:present?)
         end
-      end
-      # Convert free text into List of sentences
-      if params_hash["need"]["met_when"]
-        params_hash["need"]["met_when"] = params_hash["need"]["met_when"].split("\n").map(&:strip)
       end
     end
     params_hash["need"]
@@ -107,5 +100,10 @@ private
     rescue Need::NotFound
       raise Http404
     end
+  end
+
+  def add_criteria(action)
+    @need.add_more_criteria
+    render :action => action
   end
 end

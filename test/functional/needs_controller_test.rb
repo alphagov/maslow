@@ -58,7 +58,7 @@ class NeedsControllerTest < ActionController::TestCase
         "organisation_ids" => ["ministry-of-justice"],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => "Winning"
+        "met_when" => ["Winning"]
       }
     end
 
@@ -108,16 +108,8 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "split 'Need is met' criteria into separate parts" do
-      need_data = complete_need_data.merge("met_when" => "Foo\nBar\nBaz")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("met_when", ["Foo", "Bar", "Baz"])
-      )
-      post(:create, need: need_data)
-    end
-
-    should "split out CRLF line breaks from 'Need is met' criteria" do
-      need_data = complete_need_data.merge("met_when" => "Foo\r\nBar\r\nBaz")
+    should "leave 'Need is met' criteria unchanged" do
+      need_data = complete_need_data.merge("met_when" => ["Foo", "Bar", "Baz"])
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
         has_entry("met_when", ["Foo", "Bar", "Baz"])
       )
@@ -130,6 +122,13 @@ class NeedsControllerTest < ActionController::TestCase
         has_entry("legislation", "link#1\nlink#2")
       )
       post(:create, need: need_data)
+    end
+
+    should "add a blank 'Need is met' if a 'Add criteria' is requested" do
+      post(:create, { criteria_action: "Add criteria", need: complete_need_data })
+
+      assert_response 200
+      assert_equal ["Winning", ""], assigns[:need].met_when
     end
 
   end
@@ -226,7 +225,7 @@ class NeedsControllerTest < ActionController::TestCase
       assert_redirected_to need_path(100001)
     end
 
-    should "separate 'met when' criteria back into separate lines" do
+    should "leave 'met when' criteria unchanged" do
       need = stub_need
       Need.expects(:find).with(100001).returns(need)
       # Forcing the validity check to false so we redisplay the form
@@ -235,10 +234,10 @@ class NeedsControllerTest < ActionController::TestCase
 
       post :update,
            :id => "100001",
-           :need => base_need_fields.merge(:met_when => "something\nsomething else")
+           :need => base_need_fields.merge(:met_when => ["something", "something else"])
 
       assert_response 422
-      assert_equal "something\nsomething else", assigns[:need].met_when
+      assert_equal ["something", "something else"], assigns[:need].met_when
     end
 
     should "return a 422 response if save fails" do
