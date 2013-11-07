@@ -86,18 +86,20 @@ class Need
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
-    res = FIELDS.each_with_object({}) do |field, hash|
-      if send(field)
-        hash[field] = send(field)
-
+    res = (FIELDS + NUMERIC_FIELDS).each_with_object({}) do |field, hash|
+      if value = send(field) and value.present?
         # Rails prepends a newline character into the textarea fields in the form.
         # Strip these so that we don't send them to the Need API.
-        hash[field].sub!(/\A\n/, "") if ["legislation", "other_evidence"].include?(field)
+        value.sub!(/\A\n/, "") if ["legislation", "other_evidence"].include?(field)
+
+        # if this is a numeric field, force the value we send to the API to be an
+        # integer
+        value = Integer(value) if NUMERIC_FIELDS.include?(field)
       end
+
+      hash[field] = value
     end
-    NUMERIC_FIELDS.each do |field|
-      res[field] = Integer(res[field]) if res[field].present?
-    end
+
     res["currently_met"] = (currently_met == true || currently_met == 'true') unless currently_met.nil?
     res
   end
