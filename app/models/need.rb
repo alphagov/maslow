@@ -78,7 +78,7 @@ class Need
   end
 
   def update(attrs)
-    @met_when = attrs["met_when"].present? ? attrs["met_when"] : [""]
+    @met_when = attrs["met_when"].present? ? attrs["met_when"] : []
     unless (attrs.keys - FIELDS).empty?
       raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
     end

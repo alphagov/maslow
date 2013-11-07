@@ -58,14 +58,14 @@ class NeedTest < ActiveSupport::TestCase
         end
 
         should "have one blank value in 'met_when' when creating a new need" do
-          assert_equal [""], Need.new({}).met_when
+          assert_equal [], Need.new({}).met_when
         end
 
         should "be able to add more criteria" do
           need = Need.new({})
           need.add_more_criteria
 
-          assert_equal ["",""], need.met_when
+          assert_equal [""], need.met_when
         end
 
         should "remove empty values from 'met_when' when converted to json" do
