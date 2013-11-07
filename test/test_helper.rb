@@ -43,4 +43,21 @@ class ActiveSupport::TestCase
       :user => user
     )
   end
+
+  def blank_need_request
+    {
+      "role" => "",
+      "goal" => "",
+      "benefit" => "",
+      "organisation_ids" => [],
+      "justifications" => [],
+      "met_when" => [],
+      "other_evidence" => "",
+      "legislation" => "",
+      "monthly_user_contacts" => "",
+      "monthly_site_views" => "",
+      "monthly_need_views" => "",
+      "monthly_searches" => ""
+    }
+  end
 end

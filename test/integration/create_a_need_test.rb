@@ -121,17 +121,20 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "handle 422 errors from the Need API" do
-      request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
-        :body => {
-          "role" => "User",
-          "goal" => "find my local register office",
-          "benefit" => "I can find records of birth, marriage or death",
-          "author" => {
-            "name" => stub_user.name,
-            "email" => stub_user.email,
-            "uid" => stub_user.uid
-          }
-      }.to_json).to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
+      request_body = blank_need_request.merge(
+        "role" => "User",
+        "goal" => "find my local register office",
+        "benefit" => "I can find records of birth, marriage or death",
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      ).to_json
+
+      stub_request(:post, Plek.current.find('need-api')+'/needs')
+                    .with(:body => request_body)
+                    .to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
 
       visit('/needs')
       click_on('Add a new need')

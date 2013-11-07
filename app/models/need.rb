@@ -87,7 +87,7 @@ class Need
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
     res = FIELDS.each_with_object({}) do |field, hash|
-      if send(field).present?
+      if send(field)
         hash[field] = send(field)
         hash[field].sub!(/\A\n/, "") if ["legislation", "other_evidence"].include?(field)
       end
