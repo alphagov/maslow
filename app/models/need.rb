@@ -91,7 +91,7 @@ class Need
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
-    prepare_met_when_criteria
+    remove_blank_met_when_criteria
     res = (FIELDS + NUMERIC_FIELDS).each_with_object({}) do |field, hash|
       if value = send(field) and value.present?
         # Rails prepends a newline character into the textarea fields in the form.
@@ -157,9 +157,7 @@ private
     end
   end
 
-  def prepare_met_when_criteria
-    # Remove blanks and remove the
-    # field if it's then empty
+  def remove_blank_met_when_criteria
     if met_when
       met_when.delete_if(&:empty?)
     end
