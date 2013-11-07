@@ -12,6 +12,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
       "organisations" => [],
+      "legislation" => "Blank Fields Act 2013",
       "revisions" => [
         {
           "action_type" => "update",
@@ -85,40 +86,44 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to update a need" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
-      request = stub_request(:put, api_url).with(
-        :body => {
+      request_body = blank_need_request.merge(
           "role" => "grandparent",
           "goal" => "apply for a primary school place",
           "benefit" => "my grandchild can start school",
+          "legislation" => "",
           "author" => {
             "name" => stub_user.name,
             "email" => stub_user.email,
             "uid" => stub_user.uid
           }
-      }.to_json)
+      ).to_json
+      request = stub_request(:put, api_url).with(:body => request_body)
+
       visit('/needs')
+
       click_on('100001')
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
+      fill_in("What legislation underpins this need?", with: "")
       click_on_first("Update Need")
 
       assert_requested request
-
       assert page.has_text?("Need updated."), "No success message displayed"
     end
 
     should "handle 422 errors from the Need API" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
-      request_body = {
+      request_body = blank_need_request.merge(
         "role" => "grandparent",
         "goal" => "apply for a primary school place",
         "benefit" => "my grandchild can start school",
+        "legislation" => "Blank Fields Act 2013",
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
           "uid" => stub_user.uid
         }
-      }.to_json
+      ).to_json
       request = stub_request(:put, api_url)
                   .with(:body => request_body)
                   .to_return(

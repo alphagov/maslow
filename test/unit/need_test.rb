@@ -83,6 +83,21 @@ class NeedTest < ActiveSupport::TestCase
           need = Need.new("currently_met" => nil)
           assert_nil need.as_json["currently_met"]
         end
+
+        should "strip leading newlines from textarea fields" do
+          need = Need.new("legislation" => "\nNew Line Act 2013", "other_evidence" => "\nNew line characters everywhere")
+
+          assert_equal "New Line Act 2013", need.as_json["legislation"]
+          assert_equal "New line characters everywhere", need.as_json["other_evidence"]
+        end
+
+        should "return nil values in the hash" do
+          need = Need.new("role" => nil, "goal" => nil, "benefit" => nil)
+
+          assert need.as_json.has_key?("role")
+          assert need.as_json.has_key?("goal")
+          assert need.as_json.has_key?("benefit")
+        end
       end
     end
 
@@ -315,6 +330,17 @@ class NeedTest < ActiveSupport::TestCase
         "role" => "person",
         "goal" => "do things",
         "benefit" => "excellent things",
+        "organisation_ids" => nil,
+        "impact" => nil,
+        "justifications" => nil,
+        "met_when" => nil,
+        "currently_met" => nil,
+        "other_evidence" => nil,
+        "legislation" => nil,
+        "monthly_user_contacts" => nil,
+        "monthly_site_views" => nil,
+        "monthly_need_views" => nil,
+        "monthly_searches" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }
