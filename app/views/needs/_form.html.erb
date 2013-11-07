@@ -1,7 +1,7 @@
 <%= semantic_form_for @need, { url: @target } do |f| %>
   <%= f.inputs "User story", :id => "user-story" do %>
     <%= f.input :role, :label => "As a...", :hint => "What type of user of GOV.UK are you?" %>
-    <%= f.input :goal, :label => "I want to...", :hint => "What need of government do you have?", :input_html => { :class => 'long-form' } %>
+    <%= f.input :goal, :label => "I need to...", :hint => "What need of government do you have?", :input_html => { :class => 'long-form' } %>
     <%= f.input :benefit, :label => "So that...", :hint => "What are you trying to achieve?", :input_html => { :class => 'long-form' } %>
 
     <%= f.actions %>
