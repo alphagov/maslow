@@ -11,6 +11,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
+      "met_when" => ["win","awesome"],
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
       "revisions" => [
@@ -85,6 +86,41 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
     end
 
+    should "be able to add more 'met_when' criteria" do
+      api_url = Plek.current.find('need-api') + '/needs/100001'
+      request = stub_request(:put, api_url).with(
+        :body => {
+        "role" => "parent",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my child can start school",
+          "met_when" => ["win", "awesome", "more"],
+          "author" => {
+            "name" => stub_user.name,
+            "email" => stub_user.email,
+            "uid" => stub_user.uid
+          }
+      }.to_json)
+
+      visit('/needs')
+      click_on('100001')
+
+      assert_equal("win", find_field("criteria-0").value)
+      assert_equal("awesome", find_field("criteria-1").value)
+
+      within "#met-when-criteria" do
+        click_on('Add criteria')
+      end
+
+      within "#met-when-criteria" do
+        fill_in("criteria-2", with: "more")
+      end
+
+      click_on_first("Update Need")
+
+      assert_requested request
+      assert page.has_text?("Need updated."), "No success message displayed"
+    end
+
     should "be able to update a need" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
       request_body = blank_need_request.merge(
@@ -92,6 +128,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           "goal" => "apply for a primary school place",
           "benefit" => "my grandchild can start school",
           "legislation" => "",
+          "met_when" => ["win","awesome"],
           "author" => {
             "name" => stub_user.name,
             "email" => stub_user.email,
@@ -119,6 +156,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "goal" => "apply for a primary school place",
         "benefit" => "my grandchild can start school",
         "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome"],
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
