@@ -83,6 +83,13 @@ class NeedTest < ActiveSupport::TestCase
           need = Need.new("currently_met" => nil)
           assert_nil need.as_json["currently_met"]
         end
+
+        should "strip leading newlines from textarea fields" do
+          need = Need.new("legislation" => "\nNew Line Act 2013", "other_evidence" => "\nNew line characters everywhere")
+
+          assert_equal "New Line Act 2013", need.as_json["legislation"]
+          assert_equal "New line characters everywhere", need.as_json["other_evidence"]
+        end
       end
     end
 
