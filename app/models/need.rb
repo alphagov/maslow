@@ -89,6 +89,9 @@ class Need
     res = FIELDS.each_with_object({}) do |field, hash|
       if send(field)
         hash[field] = send(field)
+
+        # Rails prepends a newline character into the textarea fields in the form.
+        # Strip these so that we don't send them to the Need API.
         hash[field].sub!(/\A\n/, "") if ["legislation", "other_evidence"].include?(field)
       end
     end
