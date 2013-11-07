@@ -68,7 +68,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       click_on('100001')
 
       assert page.has_field?("As a")
-      assert page.has_field?("I want to")
+      assert page.has_field?("I need to")
       assert page.has_field?("So that")
       # Other fields are tested in create_a_need_test.rb
     end

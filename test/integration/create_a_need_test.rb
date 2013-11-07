@@ -20,7 +20,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       click_on('Add a new need')
 
       assert page.has_field?("As a")
-      assert page.has_field?("I want to")
+      assert page.has_field?("I need to")
       assert page.has_field?("So that")
       assert page.has_text?("Organisations")
       assert page.has_text?("Competition Commission")
@@ -76,7 +76,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       click_on('Add a new need')
 
       fill_in("As a", with: "User")
-      fill_in("I want to", with: "find my local register office")
+      fill_in("I need to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
       select("Ministry of Justice", from: "Organisations")
       check("It's straightforward advice that helps people to comply with their statutory obligations")
@@ -137,7 +137,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       click_on('Add a new need')
 
       fill_in("As a", with: "User")
-      fill_in("I want to", with: "find my local register office")
+      fill_in("I need to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
 
       click_on_first("Create Need")
