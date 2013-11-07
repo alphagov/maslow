@@ -89,11 +89,30 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("Page views for the need in a month", with: 1000)
       fill_in("Number of searches for this need in a month", with: 2000)
       fill_in("What legislation underpins this need?", with: "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff")
-      fill_in("Need is likely to be met when", with: "Can download a birth certificate.")
+      within "#met-when-criteria" do
+        fill_in("criteria-0", with: "Can download a birth certificate.")
+      end
 
       click_on_first("Create Need")
       assert_requested request
       assert page.has_text?("Need created.")
+    end
+
+    should "be able to add more 'met when' criteria" do
+      visit('/needs')
+      click_on("Add a new need")
+
+      assert page.has_field?("criteria-0")
+
+      within "#met-when-criteria" do
+        fill_in("criteria-0", with: "New Criteria")
+        click_on('Add criteria')
+      end
+
+      within "#met-when-criteria" do
+        assert_equal("New Criteria", find_field("criteria-0").value)
+        assert page.has_field?("criteria-1")
+      end
     end
 
     should "retain previous values when the need content is incomplete" do
@@ -102,13 +121,17 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       fill_in("As a", with: "User")
       check("It's something only government does")
-      fill_in("Need is likely to be met when", with: "Can download a birth certificate.\nOther criteria")
+      within "#met-when-criteria" do
+        fill_in("criteria-0", with: "Can download a birth certificate.")
+      end
 
       click_on_first("Create Need")
 
       assert page.has_text?("Please fill in the required fields.")
-      assert_equal("Can download a birth certificate.\nOther criteria",
-                   find_field("Need is likely to be met when").value)
+      within "#met-when-criteria" do
+        assert_equal("Can download a birth certificate.",
+                     find_field("criteria-0").value)
+      end
     end
 
     should "not have any fields filled in when submitting a blank form" do
@@ -117,7 +140,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       click_on_first("Create Need")
 
-      assert_equal("", find_field("Need is likely to be met when").value)
+      within "#met-when-criteria" do
+        assert_equal("", find_field("criteria-0").value)
+      end
     end
 
     should "handle 422 errors from the Need API" do

@@ -74,14 +74,15 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       # Other fields are tested in create_a_need_test.rb
     end
 
-    should "split 'met when' criteria onto separate lines" do
+    should "leave 'met when' criteria unchanged" do
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
-      assert page.has_field?(
-        "Need is likely to be met when",
-        with: "win\nawesome"
-      )
+
+      within "#met-when-criteria" do
+        assert_equal("win", find_field("criteria-0").value)
+        assert_equal("awesome", find_field("criteria-1").value)
+      end
     end
 
     should "be able to update a need" do
