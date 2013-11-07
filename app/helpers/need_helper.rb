@@ -12,4 +12,12 @@ module NeedHelper
   def format_field_name(name)
     name.titleize
   end
+
+  def defaulted_criteria(criteria)
+    unless criteria.nil? || criteria.empty?
+      criteria
+    else
+      [""]
+    end
+  end
 end

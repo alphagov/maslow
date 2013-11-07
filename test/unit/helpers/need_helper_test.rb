@@ -39,4 +39,18 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_equal "Organisation Ids", format_field_name("organisation_ids")
     end
   end
+
+  context "defaulted_criteria" do
+    should "return an array with a blank string if criteria is empty" do
+      assert_equal [""], format_met_when([])
+    end
+
+    should "return an array with a blank string when nil" do
+      assert_equal [""], format_met_when(nil)
+    end
+
+    should "return the criteria if values are present" do
+      assert_equal ["1","2"], format_met_when(["1","2"])
+    end
+  end
 end
