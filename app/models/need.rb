@@ -162,7 +162,6 @@ private
     # field if it's then empty
     if met_when
       met_when.delete_if(&:empty?)
-      remove_instance_variable(:@met_when) if met_when.empty?
     end
   end
 end
