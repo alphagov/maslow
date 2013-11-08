@@ -98,7 +98,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Need created.")
     end
 
-    should "be able to add more 'met when' criteria" do
+    should "be able to add more met_when criteria" do
       visit('/needs')
       click_on("Add a new need")
 

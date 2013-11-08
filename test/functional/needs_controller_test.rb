@@ -108,7 +108,7 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "leave 'Need is met' criteria unchanged" do
+    should "leave met_when criteria unchanged" do
       need_data = complete_need_data.merge("met_when" => ["Foo", "Bar", "Baz"])
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
         has_entry("met_when", ["Foo", "Bar", "Baz"])
@@ -124,7 +124,7 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "add a blank 'Need is met' if a 'Add criteria' is requested" do
+    should "add a blank value to met_when if a 'Add criteria' is requested" do
       post(:create, { criteria_action: "Add criteria", need: complete_need_data })
 
       assert_response 200
@@ -225,7 +225,7 @@ class NeedsControllerTest < ActionController::TestCase
       assert_redirected_to need_path(100001)
     end
 
-    should "leave 'met when' criteria unchanged" do
+    should "leave met when criteria unchanged" do
       need = stub_need
       Need.expects(:find).with(100001).returns(need)
       # Forcing the validity check to false so we redisplay the form
