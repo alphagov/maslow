@@ -75,7 +75,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       # Other fields are tested in create_a_need_test.rb
     end
 
-    should "leave 'met when' criteria unchanged" do
+    should "leave met_when criteria unchanged" do
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
@@ -86,20 +86,21 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
     end
 
-    should "be able to add more 'met_when' criteria" do
+    should "be able to add more met_when criteria" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
-      request = stub_request(:put, api_url).with(
-        :body => {
+      request_body = blank_need_request.merge(
         "role" => "parent",
         "goal" => "apply for a primary school place",
         "benefit" => "my child can start school",
-          "met_when" => ["win", "awesome", "more"],
-          "author" => {
-            "name" => stub_user.name,
-            "email" => stub_user.email,
-            "uid" => stub_user.uid
-          }
-      }.to_json)
+        "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      ).to_json
+      request = stub_request(:put, api_url).with(:body => request_body)
 
       visit('/needs')
       click_on('100001')

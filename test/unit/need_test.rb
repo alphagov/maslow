@@ -57,29 +57,33 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal ["Winning","Winning More"], json["met_when"]
         end
 
-        should "have one blank value in 'met_when' when creating a new need" do
+        should "initialize met_when to an empty array when creating a new need" do
           assert_equal [], Need.new({}).met_when
         end
 
-        should "be able to add more criteria" do
+        should "be able to add blank criteria" do
           need = Need.new({})
-          need.add_more_criteria
 
+          need.add_more_criteria
           assert_equal [""], need.met_when
+
+          need.add_more_criteria
+          assert_equal ["",""], need.met_when
         end
 
-        should "remove empty values from 'met_when' when converted to json" do
+        should "remove empty values from met_when when converted to json" do
           @atts.merge!({"met_when" => ["","Winning",""]})
           json = Need.new(@atts).as_json
 
           assert_equal ["Winning"], json["met_when"]
         end
 
-        should "clear 'met_when' if no values set when converted to json" do
+        should "clear met_when if no values set when converted to json" do
           @atts.merge!({"met_when" => ["","",""]})
           json = Need.new(@atts).as_json
 
-          refute json.has_key?("met_when")
+          assert json.has_key?("met_when")
+          assert_equal [], json["met_when"]
         end
 
         should "ignore the errors attribute" do
@@ -358,7 +362,7 @@ class NeedTest < ActiveSupport::TestCase
         "organisation_ids" => nil,
         "impact" => nil,
         "justifications" => nil,
-        "met_when" => nil,
+        "met_when" => [],
         "currently_met" => nil,
         "other_evidence" => nil,
         "legislation" => nil,
