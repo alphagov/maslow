@@ -333,23 +333,34 @@ class NeedTest < ActiveSupport::TestCase
       @need = Need.new(need_hash, existing = true)
     end
 
-    should "update fields" do
+    context "updating fields" do
+      should "update fields" do
 
-      @need.update(
-        "impact" => "Endangers people",
-        "monthly_searches" => 50000
-      )
+        @need.update(
+          "impact" => "Endangers people",
+          "monthly_searches" => 50000
+        )
 
-      assert_equal "person", @need.role
-      assert_equal "do things", @need.goal
-      assert_equal "good things", @need.benefit
-      assert_equal "Endangers people", @need.impact
-      assert_equal 50000, @need.monthly_searches
-    end
+        assert_equal "person", @need.role
+        assert_equal "do things", @need.goal
+        assert_equal "good things", @need.benefit
+        assert_equal "Endangers people", @need.impact
+        assert_equal 50000, @need.monthly_searches
+      end
 
-    should "reject unrecognised fields" do
-      assert_raises ArgumentError do
-        @need.update("cheese" => "obstinate")
+      should "strip leading newline characters from textareas" do
+        @need.update(
+          "legislation" => "\nRemove the newline from legislation",
+          "other_evidence" => "\nRemove the newline from other_evidence"
+        )
+        assert_equal "Remove the newline from legislation", @need.legislation
+        assert_equal "Remove the newline from other_evidence", @need.other_evidence
+      end
+
+      should "reject unrecognised fields" do
+        assert_raises ArgumentError do
+          @need.update("cheese" => "obstinate")
+        end
       end
     end
 
