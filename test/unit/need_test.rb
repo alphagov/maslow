@@ -86,6 +86,19 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal [], json["met_when"]
         end
 
+        should "be able to delete criteria" do
+          need = Need.new({"met_when" => ["0","1","2"]})
+
+          need.remove_criteria(0)
+          assert_equal ["1","2"], need.met_when
+
+          need.remove_criteria(1)
+          assert_equal ["1"], need.met_when
+
+          need.remove_criteria(0)
+          assert_equal [], need.met_when
+        end
+
         should "ignore the errors attribute" do
           need = Need.new(@atts)
           need.valid? # invoking this sets the errors attribute

@@ -77,6 +77,10 @@ class Need
     @met_when << ""
   end
 
+  def remove_criteria(index)
+    @met_when.delete_at(index)
+  end
+
   def update(attrs)
     @met_when ||= []
     strip_newline_from_textareas(attrs)
