@@ -1,0 +1,5 @@
+<h1 class="page-header"><%= @need.goal.capitalize %></h1>
+
+<p>As a <%= @need.role %> I need to <%= @need.goal %> so that <%= @need.benefit %></p>
+
+<p><%= link_to "Edit this need", edit_need_path(@need) %></p>

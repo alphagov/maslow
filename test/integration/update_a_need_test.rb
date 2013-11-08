@@ -66,7 +66,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
   context "Updating a need" do
     should "be able to access edit form" do
       visit('/needs')
-      click_on('100001')
+
+      click_on("100001")
+      click_on("Edit this need")
 
       assert page.has_field?("As a")
       assert page.has_field?("I need to")
@@ -78,6 +80,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
+      click_on('Edit this need')
+
       assert page.has_field?(
         "Need is likely to be met when",
         with: "win\nawesome"
@@ -102,6 +106,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on('100001')
+      click_on('Edit this need')
+
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
@@ -135,7 +141,10 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
                   )
 
       visit('/needs')
-      click_on('100001')
+
+      click_on("100001")
+      click_on("Edit this need")
+
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       click_on_first('Update Need')
@@ -145,7 +154,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "see a list of recent revisions" do
-      visit "/needs/100001"
+      visit "/needs/100001/edit"
 
       within "#revisions" do
         assert_equal 3, page.all("li.revision").count

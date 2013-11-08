@@ -39,16 +39,27 @@ class NeedsControllerTest < ActionController::TestCase
       assert_equal ["foo", "bar"], assigns(:needs).map(&:id)
     end
 
+    context "filtering needs" do
+      should "sends the organisation id" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({"organisation_id" => "test"})
+        get(:index, "organisation_id" => "test")
+      end
+
+      should "not send any other values" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({})
+        get(:index, "fake" => "fake")
+      end
+    end
   end
 
-  context "Need creation form" do
+  context "GET new" do
     should "target the new need endpoint" do
       get :new
       assert_equal "/needs", assigns[:target]
     end
   end
 
-  context "Posting need data" do
+  context "POST create" do
 
     def complete_need_data
       {
@@ -134,39 +145,77 @@ class NeedsControllerTest < ActionController::TestCase
 
   end
 
-  context "filtering needs" do
-    should "sends the organisation id" do
-      GdsApi::NeedApi.any_instance.expects(:needs).with({"organisation_id" => "test"})
-      get(:index, "organisation_id" => "test")
-    end
+  context "GET show" do
+    context "given a valid need" do
+      setup do
+        @stub_need = Need.new({
+          "id" => 100001,
+          "role" => "person",
+          "goal" => "do things",
+          "benefit" => "good things"
+        }, true)
 
-    should "not send any other values" do
-      GdsApi::NeedApi.any_instance.expects(:needs).with({})
-      get(:index, "fake" => "fake")
-    end
-  end
+        Need.expects(:find).with(100001).returns(@stub_need)
+      end
 
-  context "viewing a need" do
+      should "make a successful request" do
+        get :show, id: 100001
 
-    def stub_need
-      need_fields = {
-        "id" => 100001,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }
-      Need.new(need_fields, true)  # existing need
-    end
+        assert_response :ok
+      end
 
-    should "redirect to the need form" do
-      Need.expects(:find).returns(stub_need)
-      get :show, :id => 100001
-      assert_redirected_to :action => :edit, :id => 100001
+      should "use the show template" do
+        get :show, id: 100001
+
+        assert_template :show
+      end
+
+      should "assign the need to the form" do
+        get :show, id: 100001
+
+        assert_equal @stub_need, assigns[:need]
+      end
     end
 
     should "404 if the need doesn't exist" do
       Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
       get :show, :id => 100001
+
+      assert_response :not_found
+    end
+
+    should "reject non-numeric IDs" do
+      Need.expects(:find).never
+      get :show, :id => "coffee"
+
+      assert_response :not_found
+    end
+  end
+
+  context "GET edit" do
+    context "given a valid need" do
+      setup do
+        @stub_need = Need.new({
+          "id" => 100001,
+          "role" => "person",
+          "goal" => "do things",
+          "benefit" => "good things"
+        }, true)
+      end
+
+      should "display the need form" do
+        Need.expects(:find).with(100001).returns(@stub_need)
+        get :edit, :id => "100001"
+
+        assert_response :ok
+        assert_equal "do things", assigns[:need].goal
+        assert_equal "/needs/100001", assigns[:target]
+      end
+    end
+
+    should "404 if the need doesn't exist" do
+      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+      get :edit, :id => 100001
       assert_response :not_found
     end
 
@@ -175,17 +224,9 @@ class NeedsControllerTest < ActionController::TestCase
       get :edit, :id => "coffee"
       assert_response :not_found
     end
-
-    should "display the need form" do
-      Need.expects(:find).with(100001).returns(stub_need)
-      get :edit, :id => "100001"
-      assert_response :ok
-      assert_equal "do things", assigns[:need].goal
-      assert_equal "/needs/100001", assigns[:target]
-    end
   end
 
-  context "updating a need" do
+  context "PUT update" do
     def base_need_fields
       {
         "role" => "person",

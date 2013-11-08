@@ -1,0 +1,28 @@
+{
+  "_response_info": {
+    "status": "ok"
+  },
+  "id": 101350,
+  "role": "user",
+  "goal": "book a driving test",
+  "benefit": "I can get my driving licence",
+  "organisation_ids": ["driver-vehicle-licensing-agency"],
+  "organisations": [
+  ],
+  "impact": "Noticed by the average member of the public",
+  "justifications": [
+    "It's something only government does",
+    "It's straightforward advice that helps people to comply with their statutory obligations"
+  ],
+  "met_when": [
+    "user can book their driving test",
+    "user can find out information about the format of the test and how much it costs"
+  ],
+  "currently_met": true,
+  "other_evidence": "Primary service provided by the DVLA",
+  "legislation": "Driving Test Act 1994, Schedule 8",
+  "monthly_user_contacts": "8000",
+  "monthly_site_views": "2530150",
+  "monthly_need_views": "823800",
+  "monthly_searches": "630100"
+}
