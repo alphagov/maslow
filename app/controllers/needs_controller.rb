@@ -40,10 +40,7 @@ class NeedsController < ApplicationController
     @need = Need.new( prepare_need_params(params) )
 
     add_criteria(:new) and return if params[:criteria_action]
-    if remove_criteria_selected?
-      remove_criteria(:new)
-      return
-    end
+    remove_criteria(:new) and return if remove_criteria_selected?
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -64,10 +61,7 @@ class NeedsController < ApplicationController
     @need.update(prepare_need_params(params))
 
     add_criteria(:edit) and return if params[:criteria_action]
-    if remove_criteria_selected?
-      remove_criteria(:edit)
-      return
-    end
+    remove_criteria(:edit) and return if remove_criteria_selected?
 
     if @need.valid?
       if @need.save_as(current_user)
