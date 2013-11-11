@@ -1,6 +1,33 @@
-h1.page-header {
+.need-wrapper {
+  p, ul, li {
+    font-size: 19px;
+    line-height: 1.31579 !important;
+  }
+}
+
+.need-view.page-header {
+  border-bottom: 10px solid #00beb7;
+}
+
+.big-number {
+  font-size: 80px;
+  font-weight: bold;
+  line-height: 90px;
+  color: #00beb7;
+  margin-bottom: $baseLineHeight;
+}
+
+.big-number span {
+  font-size: 19px;
+  line-height: 1.25;
   font-weight: normal;
-  font-size: 32px;
+  display: block;
+  color: #000;
+}
+
+.the-need {
+  font-size: 28px;
+  line-height: 1.25;
 }
 
 p.new-need {
