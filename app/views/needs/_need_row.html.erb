@@ -1,6 +1,6 @@
 <tr>
   <td><%= link_to need.id, need_path(need.id) %></td>
-  <td><%= format_need_goal need.goal %></td>
+  <td><%= link_to format_need_goal(need.goal), need_path(need.id) %></td>
   <td>
     <% if need.organisations.any? %>
       <%= need.organisations.map(&:name).join(", ") %>
