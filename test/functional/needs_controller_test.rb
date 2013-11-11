@@ -256,4 +256,30 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "deleting met_when criteria" do
+    should "remove the only value" do
+      post(:create, { delete_criteria_0: "", need: complete_need_data })
+
+      assert_response 200
+      assert_equal [], assigns[:need].met_when
+    end
+
+    should "remove one of many values" do
+      data = complete_need_data.merge({
+        "met_when" => ["0","1","2","3"]
+      })
+      post(:create, { delete_criteria_2: "", need: data })
+
+      assert_response 200
+      assert_equal ["0","1","3"], assigns[:need].met_when
+    end
+
+    should "do nothing if an invalid request is made" do
+      post(:create, { delete_criteria_foo: "", need: complete_need_data })
+
+      assert_response 200
+      assert_equal ["Winning"], assigns[:need].met_when
+    end
+  end
+
 end
