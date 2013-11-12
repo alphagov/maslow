@@ -5,7 +5,9 @@
       <% met_when_criteria.each_with_index do |c, i| %>
         <div class="add-bottom-margin">
           <input class="long-form" id="criteria-<%= i %>" name="need[met_when][]" type="text" value="<%= c %>"></input>
-          <button name="delete_criteria" id="delete-criteria" class="icon-remove btn-remove-criteria" value=<%= i %>"></button>
+          <% if met_when_criteria.length > 1 %>
+            <button name="delete_criteria" id="delete-criteria" class="icon-remove btn-remove-criteria" value="<%= i %>"></button>
+          <% end %>
         </div>
       <% end %>
       <span class="help-block">How will you know when this need has been met?</span>

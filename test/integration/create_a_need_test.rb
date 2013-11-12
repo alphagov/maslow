@@ -103,6 +103,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       click_on("Add a new need")
 
       assert page.has_field?("criteria-0")
+      assert page.has_no_field?("delete-criteria")
 
       within "#met-when-criteria" do
         fill_in("criteria-0", with: "New Criteria")

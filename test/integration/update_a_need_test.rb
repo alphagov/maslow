@@ -158,19 +158,24 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert_equal("awesome", find_field("criteria-1").value)
       assert_equal("more", find_field("criteria-2").value)
 
-      assert page.has_button?("delete-criteria-0")
-      assert page.has_button?("delete-criteria-1")
-      assert page.has_button?("delete-criteria-2")
+      within "#met-when-criteria" do
+        # delete criteria buttons
+        assert page.has_selector?(:xpath, ".//button[@id='delete-criteria' and @value='0']")
+        assert page.has_selector?(:xpath, ".//button[@id='delete-criteria' and @value='1']")
+        assert page.has_selector?(:xpath, ".//button[@id='delete-criteria' and @value='2']")
+      end
 
       within "#met-when-criteria" do
-        click_on('delete-criteria-0')
+        click_on_first('delete-criteria')
       end
 
       assert_equal("awesome", find_field("criteria-0").value)
       assert_equal("more", find_field("criteria-1").value)
 
-      assert page.has_no_field?("delete-criteria-2")
-      assert page.has_no_field?("criteria-2")
+      within "#met-when-criteria" do
+        assert page.has_no_selector?(:xpath, ".//button[@value='2']")
+        assert page.has_no_field?("criteria-2")
+      end
     end
 
     should "handle 422 errors from the Need API" do
