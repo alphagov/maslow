@@ -58,7 +58,7 @@ class NeedsControllerTest < ActionController::TestCase
         "organisation_ids" => ["ministry-of-justice"],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => ["Winning"]
+        "met_when" => ["Winning","Awesome"]
       }
     end
 
@@ -77,11 +77,17 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "post to needs API when data is complete" do
-      Need.any_instance.expects(:save_as).with do |user|
+      mock_need = stub(:valid? => true)
+
+      Need.expects(:new).with(has_entries(complete_need_data))
+        .returns(mock_need)
+
+      mock_need.expects(:save_as).with do |user|
         user.name = stub_user.name
         user.email = stub_user.email
         user.uid = stub_user.uid
       end.returns(true)
+
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
     end
@@ -108,27 +114,11 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "leave met_when criteria unchanged" do
-      need_data = complete_need_data.merge("met_when" => ["Foo", "Bar", "Baz"])
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("met_when", ["Foo", "Bar", "Baz"])
-      )
-      post(:create, need: need_data)
-    end
-
-    should "legislation free text remains unchanged" do
-      need_data = complete_need_data.merge("legislation" => "link#1\nlink#2")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("legislation", "link#1\nlink#2")
-      )
-      post(:create, need: need_data)
-    end
-
     should "add a blank value to met_when if a 'Add criteria' is requested" do
       post(:create, { criteria_action: "Add criteria", need: complete_need_data })
 
       assert_response 200
-      assert_equal ["Winning", ""], assigns[:need].met_when
+      assert_equal ["Winning", "Awesome", ""], assigns[:need].met_when
     end
 
   end
@@ -258,7 +248,8 @@ class NeedsControllerTest < ActionController::TestCase
 
   context "deleting met_when criteria" do
     should "remove the only value" do
-      post(:create, { delete_criteria_0: "", need: complete_need_data })
+      need = complete_need_data.merge("met_when" => "Winning")
+      post(:create, { delete_criteria_0: "", need: need })
 
       assert_response 200
       assert_equal [], assigns[:need].met_when
@@ -278,7 +269,7 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, { delete_criteria_foo: "", need: complete_need_data })
 
       assert_response 200
-      assert_equal ["Winning"], assigns[:need].met_when
+      assert_equal ["Winning", "Awesome"], assigns[:need].met_when
     end
   end
 
