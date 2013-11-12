@@ -1,0 +1,23 @@
+<div class="string input optional stringish control-group">
+  <label class="control-label" for="met-when-criteria">Need is likely to be met when</label>
+  <div class="controls">
+    <div id="met-when-criteria">
+
+      <% met_when_criteria.each_with_index do |c, i| %>
+
+        <div class="add-bottom-margin">
+          <%= text_field_tag("need[met_when][]", c, :id => "criteria-#{i}", :class => "long-form") %>
+          <% if met_when_criteria.length > 1 %>
+            <%= button_tag(:name => "delete_criteria", :id => "delete-criteria", :class => "btn-remove-criteria", :value => i) do %>
+              <span class="icon-remove" title="Remove criteria">Remove criteria</span>
+            <% end %>
+          <% end %>
+        </div>
+
+      <% end %>
+
+      <%= f.submit "Add criteria", :name => "criteria_action", :class => "btn" %>
+      <span class="help-block">How will you know when this need has been met?</span>
+    </div>
+  </div>
+</div>

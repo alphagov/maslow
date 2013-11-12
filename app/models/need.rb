@@ -73,24 +73,34 @@ class Need
     update(attrs)
   end
 
+  def add_more_criteria
+    @met_when << ""
+  end
+
+  def remove_criteria(index)
+    @met_when.delete_at(index)
+  end
+
   def update(attrs)
+    strip_newline_from_textareas(attrs)
+
     unless (attrs.keys - FIELDS).empty?
       raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
     end
     attrs.keys.each do |f|
       send("#{f}=", attrs[f])
     end
+    @met_when ||= []
   end
 
   def as_json(options = {})
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
+    remove_blank_met_when_criteria
     res = (FIELDS + NUMERIC_FIELDS).each_with_object({}) do |field, hash|
       if value = send(field) and value.present?
-        # Rails prepends a newline character into the textarea fields in the form.
-        # Strip these so that we don't send them to the Need API.
-        value.sub!(/\A\n/, "") if ["legislation", "other_evidence"].include?(field)
+
 
         # if this is a numeric field, force the value we send to the API to be an
         # integer
@@ -148,6 +158,20 @@ private
     # we would like changes to be returned as field-value pairs
     structs.each_with_index do |revision, i|
       revision.changes = revisions[i]["changes"]
+    end
+  end
+
+  def remove_blank_met_when_criteria
+    if met_when
+      met_when.delete_if(&:empty?)
+    end
+  end
+
+  def strip_newline_from_textareas(attrs)
+    # Rails prepends a newline character into the textarea fields in the form.
+    # Strip these so that we don't send them to the Need API.
+    ["legislation", "other_evidence"].each do |field|
+      attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
   end
 end
