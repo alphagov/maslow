@@ -103,7 +103,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Need updated."), "No success message displayed"
     end
 
-    should "leave met_when criteria unchanged" do
+    should "display met_when criteria on multiple lines" do
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
