@@ -82,7 +82,6 @@ class Need
   end
 
   def update(attrs)
-    @met_when ||= []
     strip_newline_from_textareas(attrs)
 
     unless (attrs.keys - FIELDS).empty?
@@ -91,6 +90,7 @@ class Need
     attrs.keys.each do |f|
       send("#{f}=", attrs[f])
     end
+    @met_when ||= []
   end
 
   def as_json(options = {})

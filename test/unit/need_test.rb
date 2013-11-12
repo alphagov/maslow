@@ -43,6 +43,34 @@ class NeedTest < ActiveSupport::TestCase
         assert need.save_as(author)
       end
 
+      should "initialize met_when to an empty array when creating a new need" do
+        assert_equal [], Need.new({}).met_when
+        assert_equal [], Need.new({"met_when" => nil}).met_when
+      end
+
+      should "be able to add blank criteria" do
+        need = Need.new({})
+
+        need.add_more_criteria
+        assert_equal [""], need.met_when
+
+        need.add_more_criteria
+        assert_equal ["",""], need.met_when
+      end
+
+      should "be able to delete criteria" do
+        need = Need.new({"met_when" => ["0","1","2"]})
+
+        need.remove_criteria(0)
+        assert_equal ["1","2"], need.met_when
+
+        need.remove_criteria(1)
+        assert_equal ["1"], need.met_when
+
+        need.remove_criteria(0)
+        assert_equal [], need.met_when
+      end
+
       context "preparing a need as json" do
         should "present attributes as json" do
           json = Need.new(@atts).as_json
@@ -55,20 +83,6 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal "Endangers people", json["impact"]
           assert_equal ["It's something only government does", "The government is legally obliged to provide it"], json["justifications"]
           assert_equal ["Winning","Winning More"], json["met_when"]
-        end
-
-        should "initialize met_when to an empty array when creating a new need" do
-          assert_equal [], Need.new({}).met_when
-        end
-
-        should "be able to add blank criteria" do
-          need = Need.new({})
-
-          need.add_more_criteria
-          assert_equal [""], need.met_when
-
-          need.add_more_criteria
-          assert_equal ["",""], need.met_when
         end
 
         should "remove empty values from met_when when converted to json" do
@@ -84,19 +98,6 @@ class NeedTest < ActiveSupport::TestCase
 
           assert json.has_key?("met_when")
           assert_equal [], json["met_when"]
-        end
-
-        should "be able to delete criteria" do
-          need = Need.new({"met_when" => ["0","1","2"]})
-
-          need.remove_criteria(0)
-          assert_equal ["1","2"], need.met_when
-
-          need.remove_criteria(1)
-          assert_equal ["1"], need.met_when
-
-          need.remove_criteria(0)
-          assert_equal [], need.met_when
         end
 
         should "ignore the errors attribute" do
