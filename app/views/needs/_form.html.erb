@@ -18,7 +18,7 @@
                     :class => "organisation-select"
                   } %>
 
-    <%= render partial: "met_when", locals: { met_when_criteria: defaulted_criteria(@need.met_when), f: f } %>
+    <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
   <% end %>
 
   <%= f.inputs "Justify this need" do %>

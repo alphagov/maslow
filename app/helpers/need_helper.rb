@@ -13,11 +13,9 @@ module NeedHelper
     name.titleize
   end
 
-  def defaulted_criteria(criteria)
-    unless criteria.empty?
-      criteria
-    else
-      [""]
-    end
+  # If no criteria present, insert a blank
+  # one.
+  def criteria_with_blank_value(criteria)
+    criteria.present? ? criteria : [""]
   end
 end

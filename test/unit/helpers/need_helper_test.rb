@@ -40,13 +40,13 @@ class NeedHelperTest < ActiveSupport::TestCase
     end
   end
 
-  context "defaulted_criteria" do
+  context "criteria_with_blank_value" do
     should "return an array with a blank string if criteria is empty" do
-      assert_equal [""], defaulted_criteria([])
+      assert_equal [""], criteria_with_blank_value([])
     end
 
     should "return the criteria if values are present" do
-      assert_equal ["1","2"], defaulted_criteria(["1","2"])
+      assert_equal ["1","2"], criteria_with_blank_value(["1","2"])
     end
   end
 end
