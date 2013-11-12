@@ -7,7 +7,7 @@
     <%= f.actions %>
   <% end %>
 
-  <%= f.inputs "Give extra information about this need" do %>
+  <%= f.inputs "Give extra information about this need", :id => "extra-information" do %>
     <%= f.input :organisation_ids,
                   :as => :select,
                   :collection => Organisation.all,
@@ -37,4 +37,11 @@
   <% end %>
 
   <%= f.actions %>
+<% end %>
+<% if params[:delete_criteria].present? || params[:criteria_action].present? %>
+  <script>
+    $(document).ready(function() {
+        $(window).scrollTop($("#extra-information").offset().top);
+      });
+  </script>
 <% end %>
