@@ -14,7 +14,7 @@ module NeedHelper
   end
 
   def defaulted_criteria(criteria)
-    unless criteria.nil? || criteria.empty?
+    unless criteria.empty?
       criteria
     else
       [""]
