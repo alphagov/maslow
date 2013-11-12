@@ -90,7 +90,10 @@ form.filter {
 }
 
 .btn-remove-criteria {
-  border: 0;
   vertical-align: middle;
-  background-color: #fff;
+  margin-left: 8px;
+
+  span {
+    text-indent: -9999px;
+  }
 }

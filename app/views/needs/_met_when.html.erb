@@ -2,16 +2,22 @@
   <label class="control-label" for="met-when-criteria">Need is likely to be met when</label>
   <div class="controls">
     <div id="met-when-criteria">
+
       <% met_when_criteria.each_with_index do |c, i| %>
+
         <div class="add-bottom-margin">
-          <input class="long-form" id="criteria-<%= i %>" name="need[met_when][]" type="text" value="<%= c %>"></input>
+          <%= text_field_tag("need[met_when][]", c, :id => "criteria-#{i}", :class => "long-form") %>
           <% if met_when_criteria.length > 1 %>
-            <button name="delete_criteria" id="delete-criteria" class="icon-remove btn-remove-criteria" value="<%= i %>"></button>
+            <%= button_tag(:name => "delete_criteria", :id => "delete-criteria", :class => "btn-remove-criteria", :value => i) do %>
+              <span class="icon-remove" title="Remove criteria">Remove criteria</span>
+            <% end %>
           <% end %>
         </div>
+
       <% end %>
-      <span class="help-block">How will you know when this need has been met?</span>
+
       <%= f.submit "Add criteria", :name => "criteria_action", :class => "btn" %>
+      <span class="help-block">How will you know when this need has been met?</span>
     </div>
   </div>
 </div>
