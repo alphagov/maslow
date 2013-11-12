@@ -11,7 +11,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
-      "met_when" => ["win","awesome"],
+      "met_when" => ["win","awesome","more"],
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
       "revisions" => [
@@ -75,6 +75,34 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       # Other fields are tested in create_a_need_test.rb
     end
 
+    should "be able to update a need" do
+      api_url = Plek.current.find('need-api') + '/needs/100001'
+      request_body = blank_need_request.merge(
+          "role" => "grandparent",
+          "goal" => "apply for a primary school place",
+          "benefit" => "my grandchild can start school",
+          "legislation" => "",
+          "met_when" => ["win","awesome","more"],
+          "author" => {
+            "name" => stub_user.name,
+            "email" => stub_user.email,
+            "uid" => stub_user.uid
+          }
+      ).to_json
+      request = stub_request(:put, api_url).with(:body => request_body)
+
+      visit('/needs')
+
+      click_on('100001')
+      fill_in("As a", with: "grandparent")
+      fill_in("So that", with: "my grandchild can start school")
+      fill_in("What legislation underpins this need?", with: "")
+      click_on_first("Update Need")
+
+      assert_requested request
+      assert page.has_text?("Need updated."), "No success message displayed"
+    end
+
     should "leave met_when criteria unchanged" do
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
@@ -122,32 +150,27 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Need updated."), "No success message displayed"
     end
 
-    should "be able to update a need" do
-      api_url = Plek.current.find('need-api') + '/needs/100001'
-      request_body = blank_need_request.merge(
-          "role" => "grandparent",
-          "goal" => "apply for a primary school place",
-          "benefit" => "my grandchild can start school",
-          "legislation" => "",
-          "met_when" => ["win","awesome"],
-          "author" => {
-            "name" => stub_user.name,
-            "email" => stub_user.email,
-            "uid" => stub_user.uid
-          }
-      ).to_json
-      request = stub_request(:put, api_url).with(:body => request_body)
-
+    should "be able to delete met_when criteria" do
       visit('/needs')
-
       click_on('100001')
-      fill_in("As a", with: "grandparent")
-      fill_in("So that", with: "my grandchild can start school")
-      fill_in("What legislation underpins this need?", with: "")
-      click_on_first("Update Need")
 
-      assert_requested request
-      assert page.has_text?("Need updated."), "No success message displayed"
+      assert_equal("win", find_field("criteria-0").value)
+      assert_equal("awesome", find_field("criteria-1").value)
+      assert_equal("more", find_field("criteria-2").value)
+
+      assert page.has_button?("delete-criteria-0")
+      assert page.has_button?("delete-criteria-1")
+      assert page.has_button?("delete-criteria-2")
+
+      within "#met-when-criteria" do
+        click_on('delete-criteria-0')
+      end
+
+      assert_equal("awesome", find_field("criteria-0").value)
+      assert_equal("more", find_field("criteria-1").value)
+
+      assert page.has_no_field?("delete-criteria-2")
+      assert page.has_no_field?("criteria-2")
     end
 
     should "handle 422 errors from the Need API" do
@@ -157,7 +180,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "goal" => "apply for a primary school place",
         "benefit" => "my grandchild can start school",
         "legislation" => "Blank Fields Act 2013",
-        "met_when" => ["win","awesome"],
+        "met_when" => ["win","awesome","more"],
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
