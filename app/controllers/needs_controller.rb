@@ -39,8 +39,7 @@ class NeedsController < ApplicationController
   def create
     @need = Need.new( prepare_need_params(params) )
 
-    add_criteria(:new) and return if params[:criteria_action]
-    remove_criteria(:new) and return if remove_criteria_selected?
+    add_or_remove_criteria(:new) and return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -60,8 +59,7 @@ class NeedsController < ApplicationController
     @need = load_need
     @need.update(prepare_need_params(params))
 
-    add_criteria(:edit) and return if params[:criteria_action]
-    remove_criteria(:edit) and return if remove_criteria_selected?
+    add_or_remove_criteria(:edit) and return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -104,26 +102,23 @@ private
     end
   end
 
-  def add_criteria(action)
+  def criteria_params_present?
+    params[:criteria_action].present? || params[:delete_criteria].present?
+  end
+
+  def add_or_remove_criteria(action)
+    add_criteria if params[:criteria_action]
+    remove_criteria if params[:delete_criteria]
+    render :action => action
+  end
+
+  def add_criteria
     @need.add_more_criteria
-    render :action => action
   end
 
-  def remove_criteria_selected?
-    key = params.keys.select { |k| k.include? "delete_criteria" }
-    if key.present?
-      @delete_criteria = Integer(key.first.split("_").last)
-    else
-      return false
-    end
-    true
+  def remove_criteria
+    index = Integer(params[:delete_criteria])
+    @need.remove_criteria(index)
   rescue ArgumentError
-    # there was a key but it's value was invalid.
-    true
-  end
-
-  def remove_criteria(action)
-    @need.remove_criteria(@delete_criteria) if @delete_criteria
-    render :action => action
   end
 end
