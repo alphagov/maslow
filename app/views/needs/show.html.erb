@@ -47,7 +47,11 @@
           <li>It’s straightforward advice that helps people to comply with their statutory obligations</li>
         </ul>
 
-        <p class="impact">If GOV.UK didn't meed this need it would have serious consequences for users and/or their customers.</p>
+        <% if @need.impact.present? %>
+          <p class="impact">
+            <%= format_need_impact @need.impact %>
+          </p>
+        <% end %>
       </div>
       <div class="span4">
         <h3>

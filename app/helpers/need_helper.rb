@@ -1,4 +1,6 @@
 module NeedHelper
+  include ActiveSupport::Inflector
+
   def format_need_goal(goal)
     words = goal.split(" ")
     words.first[0] = words.first[0].upcase
@@ -17,5 +19,12 @@ module NeedHelper
   # one.
   def criteria_with_blank_value(criteria)
     criteria.present? ? criteria : [""]
+  end
+
+  def format_need_impact(impact)
+    impact_key = impact.parameterize.underscore
+    translated = t("needs.show.impact.#{impact_key}")
+
+    "If GOV.UK didn't meet this need #{translated}."
   end
 end
