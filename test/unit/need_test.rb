@@ -43,9 +43,12 @@ class NeedTest < ActiveSupport::TestCase
         assert need.save_as(author)
       end
 
-      should "initialize met_when to an empty array when creating a new need" do
+      should "set the met_when and justifications fields to be empty arrays if not present" do
         assert_equal [], Need.new({}).met_when
         assert_equal [], Need.new({"met_when" => nil}).met_when
+
+        assert_equal [], Need.new({}).justifications
+        assert_equal [], Need.new({"justifications" => nil}).justifications
       end
 
       should "be able to add blank criteria" do
@@ -386,7 +389,7 @@ class NeedTest < ActiveSupport::TestCase
         "benefit" => "excellent things",
         "organisation_ids" => nil,
         "impact" => nil,
-        "justifications" => nil,
+        "justifications" => [],
         "met_when" => [],
         "currently_met" => nil,
         "other_evidence" => nil,

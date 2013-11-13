@@ -91,6 +91,7 @@ class Need
       send("#{f}=", attrs[f])
     end
     @met_when ||= []
+    @justifications ||= []
   end
 
   def as_json(options = {})
