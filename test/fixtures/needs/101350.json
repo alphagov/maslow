@@ -23,14 +23,14 @@
     "It's straightforward advice that helps people to comply with their statutory obligations"
   ],
   "met_when": [
-    "user can book their driving test",
-    "user can find out information about the format of the test and how much it costs"
+    "Users can book their driving test",
+    "Users can find out information about the format of the test and how much it costs"
   ],
   "currently_met": true,
   "other_evidence": "Primary service provided by the DVLA",
   "legislation": "Driving Test Act 1994, Schedule 8",
-  "monthly_user_contacts": "8000",
-  "monthly_site_views": "2530150",
-  "monthly_need_views": "823800",
-  "monthly_searches": "630100"
+  "monthly_user_contacts": 8000,
+  "monthly_site_views": 2530150,
+  "monthly_need_views": 823800,
+  "monthly_searches": 630100
 }

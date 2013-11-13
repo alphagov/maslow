@@ -31,24 +31,25 @@
   <div class="need-wrapper">
     <div class="row">
       <div class="span8">
-        <h3>
-          Need is met when
-        </h3>
-        <ul>
-          <li>Some item is done</li>
-          <li>Another item is done</li>
-        </ul>
+        <% if @need.met_when.any? %>
+          <h3>Need is met when</h3>
+          <ul class="met-when">
+            <% @need.met_when.each do |criterion| %>
+              <li><%= criterion %></li>
+            <% end %>
+          </ul>
 
         <hr>
+        <% end %>
 
-        <h3>
-          Need is on GOV.UK because
-        </h3>
-        <ul class="justifications">
-          <li>It’s something only government does</li>
-          <li>The government is legally obliged to provide it</li>
-          <li>It’s straightforward advice that helps people to comply with their statutory obligations</li>
-        </ul>
+        <% if @need.justifications.any? %>
+          <h3>Need is on GOV.UK because</h3>
+          <ul class="justifications">
+            <% @need.justifications.each do |justification| %>
+              <li><%= justification %></li>
+            <% end %>
+          </ul>
+        <% end %>
 
         <% if @need.impact.present? %>
           <p class="impact">
@@ -56,27 +57,41 @@
           </p>
         <% end %>
       </div>
-      <div class="span4">
-        <h3>
-          Evidence
-        </h3>
-        <div class="big-number">
-          10,000
-          <span>Average pageviews a month</span>
+
+      <% if show_evidence_column?(@need) %>
+        <div class="evidence span4">
+          <h3>Evidence</h3>
+
+          <% if @need.monthly_need_views.present? %>
+            <div class="big-number">
+              <%= format_friendly_integer @need.monthly_need_views %>
+              <span>Average pageviews a month</span>
+            </div>
+          <% end %>
+
+          <% if percentage = calculate_percentage(@need.monthly_need_views, @need.monthly_site_views) %>
+            <div class="big-number">
+              <%= percentage %>
+              <span>of site pageviews</span>
+            </div>
+          <% end %>
+
+          <% if @need.monthly_user_contacts.present? %>
+          <div class="big-number">
+            <%= format_friendly_integer @need.monthly_user_contacts %>
+            <span>Average contacts a month</span>
+          </div>
+          <% end %>
+
+          <% if @need.monthly_searches.present? %>
+            <div class="big-number">
+              <%= format_friendly_integer @need.monthly_searches %>
+              <span>Average searches a month</span>
+            </div>
+          <% end %>
         </div>
-        <div class="big-number">
-          3%
-          <span>of site pageviews</span>
-        </div>
-        <div class="big-number">
-          100
-          <span>Average contacts a month</span>
-        </div>
-        <div class="big-number">
-          300
-          <span>Average searches a month</span>
-        </div>
-      </div>
+      <% end %>
+
     </div>
   </div>
 
