@@ -69,7 +69,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit this need")
+      click_on("Edit need")
 
       assert page.has_field?("As a")
       assert page.has_field?("I need to")
@@ -96,7 +96,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on('100001')
-      click_on('Edit this need')
+      click_on('Edit need')
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
@@ -111,6 +111,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
+      click_on("Edit need")
 
       within "#met-when-criteria" do
         assert_equal("win", find_field("criteria-0").value)
@@ -136,6 +137,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       visit('/needs')
       click_on('100001')
+      click_on("Edit need")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -157,6 +159,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     should "be able to delete met_when criteria" do
       visit('/needs')
       click_on('100001')
+      click_on("Edit need")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -209,7 +212,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit this need")
+      click_on("Edit need")
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
