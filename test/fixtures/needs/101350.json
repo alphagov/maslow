@@ -6,8 +6,16 @@
   "role": "user",
   "goal": "book a driving test",
   "benefit": "I can get my driving licence",
-  "organisation_ids": ["driver-vehicle-licensing-agency"],
+  "organisation_ids": ["driver-vehicle-licensing-agency", "driving-standards-agency"],
   "organisations": [
+    {
+      "id": "driver-vehicle-licencing-agency",
+      "name": "Driver and Vehicle Licensing Agency"
+    },
+    {
+      "id": "driving-standards-agency",
+      "name": "Driving Standards Agency"
+    }
   ],
   "impact": "Noticed by the average member of the public",
   "justifications": [

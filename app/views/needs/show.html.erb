@@ -1,11 +1,14 @@
 <article id="single-need">
   <header>
     <ul class="need-breadcrumb">
-      <li><a href="/">All needs</a> <span class="divider">/</span></li>
+      <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
       <li class="active"><%= format_need_goal @need.goal %></li>
     </ul>
 
-    <p class="organisations">Department for Work &amp; Pensions</p>
+    <% if @need.organisations.any? %>
+    <p class="organisations"><%= @need.organisations.map(&:name).join(", ") %></p>
+    <% end %>
+
     <h1>
       <div class="row">
         <div class="span10">

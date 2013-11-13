@@ -5,7 +5,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
     need_api_has_organisations(
-      "driver-vehicle-licensing-agency" => "Driver and Vehicle Licensing Agency"
+      "driver-vehicle-licensing-agency" => "Driver and Vehicle Licensing Agency",
+      "driving-standards-agency" => "Driving Standards Agency",
     )
   end
 
@@ -18,10 +19,22 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "101350"
 
-      assert page.has_content?("Book a driving test")
-      assert page.has_content?("As a user I need to book a driving test so that I can get my driving licence")
+      within ".need-breadcrumb" do
+        assert page.has_link?("All needs", href: "/needs")
+        assert page.has_content?("Book a driving test")
+      end
 
-      assert page.has_link?("Edit this need", href: "/needs/101350/edit")
+      within "#single-need" do
+        within "header" do
+          within ".organisations" do
+            assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
+          end
+
+          assert page.has_content?("Book a driving test")
+          assert page.has_link?("Edit need", href: "/needs/101350/edit")
+        end
+
+      end
     end
   end
 
