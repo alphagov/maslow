@@ -1,81 +1,82 @@
-<ul class="breadcrumb add-top-margin">
-  <li><a href="/">All needs</a> <span class="divider">/</span></li>
-  <li class="active"><%= format_need_goal @need.goal %></li>
-</ul>
+<article id="single-need">
+  <header>
+    <ul class="need-breadcrumb">
+      <li><a href="/">All needs</a> <span class="divider">/</span></li>
+      <li class="active"><%= format_need_goal @need.goal %></li>
+    </ul>
 
-<p class="muted" style="font-size: 18px; margin-bottom: -16px">Department for Work &amp; Pensions</p>
-<h1 class="need-view page-header">
-  <div class="row">
-    <div class="span10">
-      <%= format_need_goal @need.goal %>
-    </div>
-    <div class="span2 text-right">
-      <%= link_to edit_need_path(@need), class: 'btn' do %>
-        <i class="icon-edit"></i> Edit need
-      <% end %>
+    <p class="organisations">Department for Work &amp; Pensions</p>
+    <h1>
+      <div class="row">
+        <div class="span10">
+          <%= format_need_goal @need.goal %>
+        </div>
+        <div class="span2 edit-need">
+          <%= link_to edit_need_path(@need), class: 'btn' do %>
+            <i class="icon-edit"></i> Edit need
+          <% end %>
+        </div>
+      </div>
+    </h1>
+  </header>
+
+  <p class="the-need">
+    As a <%= @need.role %><br />
+    I need to <%= @need.goal %><br />
+    So that <%= @need.benefit %>
+  </p>
+  <div class="need-wrapper">
+    <div class="row">
+      <div class="span8">
+        <h3>
+          Need is met when
+        </h3>
+        <ul>
+          <li>Some item is done</li>
+          <li>Another item is done</li>
+        </ul>
+
+        <hr>
+
+        <h3>
+          Need is on GOV.UK because
+        </h3>
+        <ul class="justifications">
+          <li>It’s something only government does</li>
+          <li>The government is legally obliged to provide it</li>
+          <li>It’s straightforward advice that helps people to comply with their statutory obligations</li>
+        </ul>
+
+        <p class="impact">If GOV.UK didn't meed this need it would have serious consequences for users and/or their customers.</p>
+      </div>
+      <div class="span4">
+        <h3>
+          Evidence
+        </h3>
+        <div class="big-number">
+          10,000
+          <span>Average pageviews a month</span>
+        </div>
+        <div class="big-number">
+          3%
+          <span>of site pageviews</span>
+        </div>
+        <div class="big-number">
+          100
+          <span>Average contacts a month</span>
+        </div>
+        <div class="big-number">
+          300
+          <span>Average searches a month</span>
+        </div>
+      </div>
     </div>
   </div>
-</h1>
 
-<p class="well well-large the-need">
-  As a <%= @need.role %><br />
-  I need to <%= @need.goal %><br />
-  So that <%= @need.benefit %>
-</p>
-<div class="need-wrapper">
-  <!-- <h2 class="visuallyhidden">More about this need</h2> -->
-
-  <div class="row">
-    <div class="span8">
-      <h3>
-        Need is met when
-      </h3>
-      <ul>
-        <li>Some item is done</li>
-        <li>Another item is done</li>
-      </ul>
-
-      <hr>
-
-      <h3>
-        Need is on GOV.UK because
-      </h3>
-      <ul class="add-bottom-margin">
-        <li>It’s something only government does</li>
-        <li>The government is legally obliged to provide it</li>
-        <li>It’s straightforward advice that helps people to comply with their statutory obligations</li>
-      </ul>
-
-      <p class="well">If GOV.UK didn't meed this need it would have serious consequences for users and/or their customers.</p>
-
-    </div>
-    <div class="span4">
-      <h3>
-        Evidence
-      </h3>
-      <div class="big-number">
-        10,000
-        <span>Average pageviews a month</span>
-      </div>
-      <div class="big-number">
-        3%
-        <span>Of site pageviews</span>
-      </div>
-      <div class="big-number">
-        100
-        <span>Average contacts a month</span>
-      </div>
-      <div class="big-number">
-        300
-        <span>Average searches a month</span>
-      </div>
-    </div>
+  <section id="revisions">
+    <h2>Recent changes</h2>
+    <ul>
+      <%= render partial: "revision", collection: @need.revisions %>
+    </ul>
   </div>
-</div>
-
-<div id="revisions">
-  <h2>Recent changes</h2>
-  <ul>
-    <%= render partial: "revision", collection: @need.revisions %>
-  </ul>
-</div>
+</article>
