@@ -91,4 +91,16 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "given a need which doesn't exist" do
+    setup do
+      need_api_has_no_need("101007")
+    end
+
+    should "display a not found error message" do
+      visit "/needs/101007"
+
+      assert page.has_content?("The page you were looking for doesn't exist.")
+    end
+  end
+
 end
