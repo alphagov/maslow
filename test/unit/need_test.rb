@@ -11,7 +11,7 @@ class NeedTest < ActiveSupport::TestCase
         "organisation_ids" => ["ministry-of-justice"],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => ["Winning"],
+        "met_when" => ["Winning","Winning More"],
         "currently_met" => true,
         "other_evidence" => "Ministerial priority",
         "legislation" => "Vehicle Excise and Registration Act 1994, schedule 4",
@@ -43,6 +43,34 @@ class NeedTest < ActiveSupport::TestCase
         assert need.save_as(author)
       end
 
+      should "initialize met_when to an empty array when creating a new need" do
+        assert_equal [], Need.new({}).met_when
+        assert_equal [], Need.new({"met_when" => nil}).met_when
+      end
+
+      should "be able to add blank criteria" do
+        need = Need.new({})
+
+        need.add_more_criteria
+        assert_equal [""], need.met_when
+
+        need.add_more_criteria
+        assert_equal ["",""], need.met_when
+      end
+
+      should "be able to delete criteria" do
+        need = Need.new({"met_when" => ["0","1","2"]})
+
+        need.remove_criteria(0)
+        assert_equal ["1","2"], need.met_when
+
+        need.remove_criteria(1)
+        assert_equal ["1"], need.met_when
+
+        need.remove_criteria(0)
+        assert_equal [], need.met_when
+      end
+
       context "preparing a need as json" do
         should "present attributes as json" do
           json = Need.new(@atts).as_json
@@ -54,7 +82,22 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal ["ministry-of-justice"], json["organisation_ids"]
           assert_equal "Endangers people", json["impact"]
           assert_equal ["It's something only government does", "The government is legally obliged to provide it"], json["justifications"]
+          assert_equal ["Winning","Winning More"], json["met_when"]
+        end
+
+        should "remove empty values from met_when when converted to json" do
+          @atts.merge!({"met_when" => ["","Winning",""]})
+          json = Need.new(@atts).as_json
+
           assert_equal ["Winning"], json["met_when"]
+        end
+
+        should "clear met_when if no values set when converted to json" do
+          @atts.merge!({"met_when" => ["","",""]})
+          json = Need.new(@atts).as_json
+
+          assert json.has_key?("met_when")
+          assert_equal [], json["met_when"]
         end
 
         should "ignore the errors attribute" do
@@ -304,23 +347,34 @@ class NeedTest < ActiveSupport::TestCase
       @need = Need.new(need_hash, existing = true)
     end
 
-    should "update fields" do
+    context "updating fields" do
+      should "update fields" do
 
-      @need.update(
-        "impact" => "Endangers people",
-        "monthly_searches" => 50000
-      )
+        @need.update(
+          "impact" => "Endangers people",
+          "monthly_searches" => 50000
+        )
 
-      assert_equal "person", @need.role
-      assert_equal "do things", @need.goal
-      assert_equal "good things", @need.benefit
-      assert_equal "Endangers people", @need.impact
-      assert_equal 50000, @need.monthly_searches
-    end
+        assert_equal "person", @need.role
+        assert_equal "do things", @need.goal
+        assert_equal "good things", @need.benefit
+        assert_equal "Endangers people", @need.impact
+        assert_equal 50000, @need.monthly_searches
+      end
 
-    should "reject unrecognised fields" do
-      assert_raises ArgumentError do
-        @need.update("cheese" => "obstinate")
+      should "strip leading newline characters from textareas" do
+        @need.update(
+          "legislation" => "\nRemove the newline from legislation",
+          "other_evidence" => "\nRemove the newline from other_evidence"
+        )
+        assert_equal "Remove the newline from legislation", @need.legislation
+        assert_equal "Remove the newline from other_evidence", @need.other_evidence
+      end
+
+      should "reject unrecognised fields" do
+        assert_raises ArgumentError do
+          @need.update("cheese" => "obstinate")
+        end
       end
     end
 
@@ -333,7 +387,7 @@ class NeedTest < ActiveSupport::TestCase
         "organisation_ids" => nil,
         "impact" => nil,
         "justifications" => nil,
-        "met_when" => nil,
+        "met_when" => [],
         "currently_met" => nil,
         "other_evidence" => nil,
         "legislation" => nil,

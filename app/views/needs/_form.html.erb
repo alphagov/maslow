@@ -7,7 +7,7 @@
     <%= f.actions %>
   <% end %>
 
-  <%= f.inputs "Give extra information about this need" do %>
+  <%= f.inputs "Give extra information about this need", :id => "extra-information" do %>
     <%= f.input :organisation_ids,
                   :as => :select,
                   :collection => Organisation.all,
@@ -18,7 +18,7 @@
                     :class => "organisation-select"
                   } %>
 
-    <%= f.input :met_when, :label => "Need is likely to be met when", :hint => "How will you know when this need has been met?", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+    <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
   <% end %>
 
   <%= f.inputs "Justify this need" do %>
@@ -37,4 +37,11 @@
   <% end %>
 
   <%= f.actions %>
+<% end %>
+<% if params[:delete_criteria].present? || params[:criteria_action].present? %>
+  <script>
+    $(document).ready(function() {
+        $(window).scrollTop($("#extra-information").offset().top);
+      });
+  </script>
 <% end %>

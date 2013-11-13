@@ -148,3 +148,13 @@ form.filter {
     }
   }
 }
+
+.btn-remove-criteria {
+  @extend .btn;
+  vertical-align: middle;
+  margin-left: 8px;
+
+  span {
+    text-indent: -9999px;
+  }
+}

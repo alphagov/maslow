@@ -11,6 +11,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
+      "met_when" => ["win","awesome","more"],
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
       "revisions" => [
@@ -76,18 +77,6 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       # Other fields are tested in create_a_need_test.rb
     end
 
-    should "split 'met when' criteria onto separate lines" do
-      need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
-      visit('/needs')
-      click_on('100001')
-      click_on('Edit this need')
-
-      assert page.has_field?(
-        "Need is likely to be met when",
-        with: "win\nawesome"
-      )
-    end
-
     should "be able to update a need" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
       request_body = blank_need_request.merge(
@@ -95,6 +84,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           "goal" => "apply for a primary school place",
           "benefit" => "my grandchild can start school",
           "legislation" => "",
+          "met_when" => ["win","awesome","more"],
           "author" => {
             "name" => stub_user.name,
             "email" => stub_user.email,
@@ -117,6 +107,81 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Need updated."), "No success message displayed"
     end
 
+    should "display met_when criteria on multiple lines" do
+      need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
+      visit('/needs')
+      click_on('100001')
+
+      within "#met-when-criteria" do
+        assert_equal("win", find_field("criteria-0").value)
+        assert_equal("awesome", find_field("criteria-1").value)
+      end
+    end
+
+    should "be able to add more met_when criteria" do
+      api_url = Plek.current.find('need-api') + '/needs/100001'
+      request_body = blank_need_request.merge(
+        "role" => "parent",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my child can start school",
+        "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      ).to_json
+      request = stub_request(:put, api_url).with(:body => request_body)
+
+      visit('/needs')
+      click_on('100001')
+
+      assert_equal("win", find_field("criteria-0").value)
+      assert_equal("awesome", find_field("criteria-1").value)
+
+      within "#met-when-criteria" do
+        click_on('Add criteria')
+      end
+
+      within "#met-when-criteria" do
+        fill_in("criteria-2", with: "more")
+      end
+
+      click_on_first("Update Need")
+
+      assert_requested request
+      assert page.has_text?("Need updated."), "No success message displayed"
+    end
+
+    should "be able to delete met_when criteria" do
+      visit('/needs')
+      click_on('100001')
+
+      assert_equal("win", find_field("criteria-0").value)
+      assert_equal("awesome", find_field("criteria-1").value)
+      assert_equal("more", find_field("criteria-2").value)
+
+      within "#met-when-criteria" do
+        # delete criteria buttons
+        assert page.has_selector?(:xpath, ".//button[@id='delete-criteria' and @value='0']")
+        assert page.has_selector?(:xpath, ".//button[@id='delete-criteria' and @value='1']")
+        assert page.has_selector?(:xpath, ".//button[@id='delete-criteria' and @value='2']")
+      end
+
+      within "#met-when-criteria" do
+        click_on_first('delete-criteria')
+      end
+
+      assert_equal("awesome", find_field("criteria-0").value)
+      assert_equal("more", find_field("criteria-1").value)
+
+      within "#met-when-criteria" do
+        assert page.has_no_selector?(:xpath, ".//button[@value='2']")
+        assert page.has_no_field?("criteria-2")
+      end
+    end
+
     should "handle 422 errors from the Need API" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
       request_body = blank_need_request.merge(
@@ -124,6 +189,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "goal" => "apply for a primary school place",
         "benefit" => "my grandchild can start school",
         "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,

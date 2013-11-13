@@ -69,7 +69,7 @@ class NeedsControllerTest < ActionController::TestCase
         "organisation_ids" => ["ministry-of-justice"],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => "Winning"
+        "met_when" => ["Winning","Awesome"]
       }
     end
 
@@ -88,11 +88,17 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "post to needs API when data is complete" do
-      Need.any_instance.expects(:save_as).with do |user|
+      mock_need = stub(:valid? => true)
+
+      Need.expects(:new).with(has_entries(complete_need_data))
+        .returns(mock_need)
+
+      mock_need.expects(:save_as).with do |user|
         user.name = stub_user.name
         user.email = stub_user.email
         user.uid = stub_user.uid
       end.returns(true)
+
       post(:create, need: complete_need_data)
       assert_redirected_to :action => :index
     end
@@ -119,28 +125,11 @@ class NeedsControllerTest < ActionController::TestCase
       post(:create, need: need_data)
     end
 
-    should "split 'Need is met' criteria into separate parts" do
-      need_data = complete_need_data.merge("met_when" => "Foo\nBar\nBaz")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("met_when", ["Foo", "Bar", "Baz"])
-      )
-      post(:create, need: need_data)
-    end
+    should "add a blank value to met_when if a 'Add criteria' is requested" do
+      post(:create, { criteria_action: "Add criteria", need: complete_need_data })
 
-    should "split out CRLF line breaks from 'Need is met' criteria" do
-      need_data = complete_need_data.merge("met_when" => "Foo\r\nBar\r\nBaz")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("met_when", ["Foo", "Bar", "Baz"])
-      )
-      post(:create, need: need_data)
-    end
-
-    should "legislation free text remains unchanged" do
-      need_data = complete_need_data.merge("legislation" => "link#1\nlink#2")
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
-        has_entry("legislation", "link#1\nlink#2")
-      )
-      post(:create, need: need_data)
+      assert_response 200
+      assert_equal ["Winning", "Awesome", ""], assigns[:need].met_when
     end
 
   end
@@ -267,7 +256,7 @@ class NeedsControllerTest < ActionController::TestCase
       assert_redirected_to need_path(100001)
     end
 
-    should "separate 'met when' criteria back into separate lines" do
+    should "leave met when criteria unchanged" do
       need = stub_need
       Need.expects(:find).with(100001).returns(need)
       # Forcing the validity check to false so we redisplay the form
@@ -276,10 +265,10 @@ class NeedsControllerTest < ActionController::TestCase
 
       post :update,
            :id => "100001",
-           :need => base_need_fields.merge(:met_when => "something\nsomething else")
+           :need => base_need_fields.merge(:met_when => ["something", "something else"])
 
       assert_response 422
-      assert_equal "something\nsomething else", assigns[:need].met_when
+      assert_equal ["something", "something else"], assigns[:need].met_when
     end
 
     should "return a 422 response if save fails" do
@@ -295,6 +284,33 @@ class NeedsControllerTest < ActionController::TestCase
       post(:update, id: 100001, need: need_data)
 
       assert_response 422
+    end
+  end
+
+  context "deleting met_when criteria" do
+    should "remove the only value" do
+      need = complete_need_data.merge("met_when" => ["Winning"])
+      post(:create, { delete_criteria: "0", need: need })
+
+      assert_response 200
+      assert_equal [], assigns[:need].met_when
+    end
+
+    should "remove one of many values" do
+      data = complete_need_data.merge({
+        "met_when" => ["0","1","2","3"]
+      })
+      post(:create, { delete_criteria: "2", need: data })
+
+      assert_response 200
+      assert_equal ["0","1","3"], assigns[:need].met_when
+    end
+
+    should "do nothing if an invalid request is made" do
+      post(:create, { delete_criteria: "foo", need: complete_need_data })
+
+      assert_response 200
+      assert_equal ["Winning", "Awesome"], assigns[:need].met_when
     end
   end
 
