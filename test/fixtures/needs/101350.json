@@ -32,5 +32,41 @@
   "monthly_user_contacts": 8000,
   "monthly_site_views": 2530150,
   "monthly_need_views": 823800,
-  "monthly_searches": 630100
+  "monthly_searches": 630100,
+  "revisions": [
+    {
+      "action_type": "update",
+      "author": {
+        "name": "Mickey Mouse",
+        "email": "mickey.mouse@test.com",
+        "uid": "m0u53"
+      },
+      "changes": {
+        "goal": [ "apply for a secondary school place" ,"apply for a primary school place" ],
+        "role": [ null, "parent" ]
+      },
+      "created_at": "2013-05-01T13:00:00+00:00"
+    },
+    {
+      "action_type": "update",
+      "author": null,
+      "changes": {
+        "legislation": [ "foo", "bar" ]
+      },
+      "created_at": "2013-04-01T13:00:00+00:00"
+    },
+    {
+      "action_type": "create",
+      "author": {
+        "name": "Donald Duck",
+        "email": null,
+        "uid": null
+      },
+      "changes": {
+        "goal": [ "apply for a school place", "apply for a secondary school place" ],
+        "role": [ "grandparent", null ]
+      },
+      "created_at": "2013-01-01T13:00:00+00:00"
+    }
+  ]
 }
