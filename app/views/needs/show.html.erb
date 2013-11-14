@@ -2,7 +2,7 @@
   <header>
     <ul class="need-breadcrumb">
       <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
-      <li class="active"><%= format_need_goal @need.goal %></li>
+      <li class="active"><%= @need.need_id %>: <%= format_need_goal @need.goal %></li>
     </ul>
 
     <% if @need.organisations.any? %>
@@ -11,13 +11,14 @@
 
     <h1>
       <div class="row">
-        <div class="span10">
+        <div class="span8">
           <%= format_need_goal @need.goal %>
         </div>
-        <div class="span2 edit-need">
+        <div class="span4 edit-need btn-group">
           <%= link_to edit_need_path(@need), class: 'btn' do %>
             <i class="icon-edit"></i> Edit need
           <% end %>
+          <a class="btn" href="#history"><i class="icon-time"></i> See history</a>
         </div>
       </div>
     </h1>
@@ -39,7 +40,6 @@
             <% end %>
           </ul>
 
-        <hr>
         <% end %>
 
         <% if @need.justifications.any? %>
@@ -52,15 +52,24 @@
         <% end %>
 
         <% if @need.impact.present? %>
-          <p class="impact">
-            <%= format_need_impact @need.impact %>
-          </p>
+          <div class="impact">
+            <p>
+              <%= format_need_impact @need.impact %>
+            </p>
+          </div>
         <% end %>
+        
+        <h3>Related legislation</h3>
+        <p>The Health and Social Care Act 2012 (Commencement No. 6) Order 2013</p>
+        
+        <h3>Further evidence</h3>
+        <p>Extra qualitative or quantitative evidence.</p>
+        
       </div>
 
       <% if show_evidence_column?(@need) %>
         <div class="evidence span4">
-          <h3>Evidence</h3>
+          <h3>Interactions</h3>
 
           <% if @need.monthly_need_views.present? %>
             <div class="big-number">
@@ -91,14 +100,6 @@
           <% end %>
         </div>
       <% end %>
-
     </div>
-  </div>
-
-  <section id="revisions">
-    <h2>Recent changes</h2>
-    <ul>
-      <%= render partial: "revision", collection: @need.revisions %>
-    </ul>
   </div>
 </article>

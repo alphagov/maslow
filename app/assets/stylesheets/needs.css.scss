@@ -31,7 +31,17 @@ $hm-government: #0076c0;
   }
 
   .impact {
-    @extend .well;
+    padding: 0.1em 0 0.1em 1em;
+    background-repeat: no-repeat;
+    
+    // Temporary asset hotlink for prototype
+    background-image: url(https://assets.digital.cabinet-office.gov.uk/static/icon-important-2x-0c51d21ae5b1e705c354d42bb1b5930a.png);
+    background-size: 34px 34px;
+  }
+
+  .impact p {
+    padding: 0 1em 0 2em;
+    font-weight: bold;
   }
 
   .justifications {
