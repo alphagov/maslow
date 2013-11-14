@@ -39,7 +39,7 @@ module NeedHelper
     (format % percent)
   end
 
-  def show_evidence_column?(need)
+  def show_interactions_column?(need)
     [ need.monthly_user_contacts, need.monthly_site_views, need.monthly_need_views, need.monthly_searches ].select(&:present?).any?
   end
 

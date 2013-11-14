@@ -53,7 +53,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("If GOV.UK didn't meet this need it would be noticed by the average member of the public")
         end
 
-        within ".evidence" do
+        within ".interactions" do
           assert page.has_content?("824k Average pageviews a month")
           assert page.has_content?("32.6% of site pageviews")
           assert page.has_content?("8k Average contacts a month")
@@ -146,7 +146,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         assert page.has_no_selector?(".met-when")
         assert page.has_no_selector?(".justifications")
         assert page.has_no_selector?(".impact")
-        assert page.has_no_selector?(".evidence")
+        assert page.has_no_selector?(".interactions")
       end
     end
   end

@@ -67,8 +67,8 @@
         
       </div>
 
-      <% if show_evidence_column?(@need) %>
-        <div class="evidence span4">
+      <% if show_interactions_column?(@need) %>
+        <div class="interactions span4">
           <h3>Interactions</h3>
 
           <% if @need.monthly_need_views.present? %>
@@ -100,6 +100,7 @@
           <% end %>
         </div>
       <% end %>
+
     </div>
   </div>
 </article>
