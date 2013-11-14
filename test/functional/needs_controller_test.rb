@@ -181,6 +181,53 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "GET revisions" do
+    context "given a valid need" do
+      setup do
+        @stub_need = Need.new({
+          "id" => 100001,
+          "role" => "person",
+          "goal" => "do things",
+          "benefit" => "good things"
+        }, true)
+
+        Need.expects(:find).with(100001).returns(@stub_need)
+      end
+
+      should "make a successful request" do
+        get :revisions, id: 100001
+
+        assert_response :ok
+      end
+
+      should "use the revisions template" do
+        get :revisions, id: 100001
+
+        assert_template :revisions
+      end
+
+      should "assign the need to the form" do
+        get :revisions, id: 100001
+
+        assert_equal @stub_need, assigns[:need]
+      end
+    end
+
+    should "404 if the need doesn't exist" do
+      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+      get :revisions, :id => 100001
+
+      assert_response :not_found
+    end
+
+    should "reject non-numeric IDs" do
+      Need.expects(:find).never
+      get :revisions, :id => "coffee"
+
+      assert_response :not_found
+    end
+  end
+
   context "GET edit" do
     context "given a valid need" do
       setup do

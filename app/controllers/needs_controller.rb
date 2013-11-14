@@ -22,6 +22,12 @@ class NeedsController < ApplicationController
     # show.html.erb
   end
 
+  def revisions
+    @need = load_need
+
+    # revisions.html.erb
+  end
+
   def edit
     @need = load_need
     @target = need_path(params[:id])

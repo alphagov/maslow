@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require_relative '../integration_test_helper'
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
@@ -57,6 +58,65 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("32.6% of site pageviews")
           assert page.has_content?("8k Average contacts a month")
           assert page.has_content?("630k Average searches a month")
+        end
+      end
+    end
+    should "show the recent revisions" do
+      visit "/needs"
+
+      click_on "101350"
+      click_on "See history"
+
+      within ".need-breadcrumb" do
+        assert page.has_link?("All needs", href: "/needs")
+        assert page.has_link?("101350: Book a driving test", href: "/needs/101350")
+        assert page.has_content?("History")
+      end
+
+      within "#single-need" do
+        within "header" do
+          within ".organisations" do
+            assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
+          end
+
+          assert page.has_content?("Book a driving test")
+          assert page.has_link?("Edit need", href: "/needs/101350/edit")
+          assert page.has_no_link?("See history")
+        end
+
+        within "#revisions" do
+          assert_equal 3, page.all("li.revision").count
+
+          within "li.revision:nth-child(1)" do
+            assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
+            assert page.has_content?("1 May 2013, 13:00")
+
+            within "ul.changes" do
+              assert_equal 2, page.all("li").count
+
+              assert page.has_content?("Goal: apply for a secondary school place → apply for a primary school place")
+              assert page.has_content?("Role: blank → parent")
+            end
+          end
+
+          within "li.revision:nth-child(2)" do
+            assert page.has_content?("Update by unknown author")
+            assert page.has_no_content?("<>") # catch missing email
+            assert page.has_content?("1 April 2013, 13:00")
+          end
+
+          within "li.revision:nth-child(3)" do
+            assert page.has_content?("Create by Donald Duck")
+            assert page.has_no_content?("<>") # catch an empty email string
+            assert page.has_content?("1 January 2013, 13:00")
+
+            within "ul.changes" do
+              assert_equal 2, page.all("li").count
+
+              assert page.has_content?("Goal: apply for a school place → apply for a secondary school place")
+              assert page.has_content?("Role: grandparent → blank")
+            end
+          end
         end
       end
     end

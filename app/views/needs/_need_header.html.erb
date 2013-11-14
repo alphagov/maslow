@@ -1,0 +1,24 @@
+<% if @need.organisations.any? %>
+<p class="organisations"><%= @need.organisations.map(&:name).join(", ") %></p>
+<% end %>
+
+<h1>
+  <div class="row">
+    <div class="span8">
+      <%= format_need_goal @need.goal %>
+    </div>
+    <div class="span4 edit-need btn-group">
+      <% if local_assigns[:actions].include?(:edit) %>
+        <%= link_to edit_need_path(@need), class: 'btn' do %>
+          <i class="icon-edit"></i> Edit need
+        <% end %>
+      <% end %>
+
+      <% if local_assigns[:actions].include?(:history) %>
+        <%= link_to revisions_need_path(@need), class: 'btn' do %>
+          <i class="icon-time"></i> See history
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</h1>
