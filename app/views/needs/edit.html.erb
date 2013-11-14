@@ -1,5 +1,17 @@
 <% content_for :page_title, "Edit a need" %>
 
-<h1 class="page-header">Edit a need</h1>
+<article id="single-need">
+  <header>
+    <ul class="need-breadcrumb">
+      <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
+      <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
+      <li>Edit</li>
+    </ul>
 
-<%= render partial: "form" %>
+    <%= render :partial => "need_header", locals: { actions: [:history] } %>
+  </header>
+
+  <h3>Edit need</h3>
+
+  <%= render partial: "form" %>
+</article>

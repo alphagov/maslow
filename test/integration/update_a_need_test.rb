@@ -36,6 +36,14 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       click_on("100001")
       click_on("Edit need")
 
+      within ".need-breadcrumb" do
+        assert page.has_link?("All needs", href: "/needs")
+        assert page.has_link?("100001: Apply for a primary school place", href: "/needs/100001")
+        assert page.has_content?("Edit")
+      end
+
+      assert page.has_content?("Edit need")
+
       assert page.has_field?("As a")
       assert page.has_field?("I need to")
       assert page.has_field?("So that")
@@ -183,7 +191,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       fill_in("So that", with: "my grandchild can start school")
       click_on_first('Update Need')
 
-      assert page.has_css?("h1", text: "Edit a need")
+      assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
     end
 
