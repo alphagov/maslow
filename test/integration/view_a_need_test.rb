@@ -60,8 +60,17 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("8k Average contacts a month")
           assert page.has_content?("630k Average searches a month")
         end
+
+        within ".legislation" do
+          assert page.has_content?("Driving Test Act 1994, Schedule 8")
+        end
+
+        within ".other-evidence" do
+          assert page.has_content?("Primary service provided by the DVLA")
+        end
       end
     end
+
     should "show the recent revisions" do
       visit "/needs"
 
@@ -148,6 +157,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         assert page.has_no_selector?(".justifications")
         assert page.has_no_selector?(".impact")
         assert page.has_no_selector?(".interactions")
+        assert page.has_no_selector?(".legislation")
+        assert page.has_no_selector?(".other-evidence")
       end
     end
   end
