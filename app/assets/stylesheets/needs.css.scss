@@ -33,9 +33,7 @@ $hm-government: #0076c0;
   .impact {
     padding: 0.1em 0 0.1em 1em;
     background-repeat: no-repeat;
-    
-    // Temporary asset hotlink for prototype
-    background-image: url(https://assets.digital.cabinet-office.gov.uk/static/icon-important-2x-0c51d21ae5b1e705c354d42bb1b5930a.png);
+    background-image: url('icon-important-2x.png');
     background-size: 34px 34px;
   }
 
@@ -130,30 +128,24 @@ form.filter {
   @extend .span8;
 }
 
-#revisions {
-  border-top: 1px solid #eee;
-  padding-top: 10px;
-  margin-top: 10px;
+#revisions > ul {
+  margin: 20px 0px;
 
-  > ul {
-    margin: 20px 0px;
+  li.revision {
+    @extend .well;
+    list-style: none;
 
-    li.revision {
-      @extend .well;
-      list-style: none;
+    h3 {
+      font-size: 16px;
+      line-height: 20px;
+      margin: 0 0 5px;
+    }
 
-      h3 {
-        font-size: 16px;
-        line-height: 20px;
-        margin: 0 0 5px;
-      }
-
-      ul.changes {
-        li span {
-          background: #fff;
-          display: inline-block;
-          font-family: monospace;
-        }
+    ul.changes {
+      li span {
+        background: #fff;
+        display: inline-block;
+        font-family: monospace;
       }
     }
   }
