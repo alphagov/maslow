@@ -3,6 +3,8 @@ module NeedHelper
   include ActionView::Helpers::NumberHelper
 
   def format_need_goal(goal)
+    return "" if goal.blank?
+
     words = goal.split(" ")
     words.first[0] = words.first[0].upcase
     words.join(" ")

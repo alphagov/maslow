@@ -12,6 +12,10 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_equal "Find out about VAT", format_need_goal("find out about VAT")
       assert_equal "Apply for Carers' Allowance", format_need_goal("apply for Carers' Allowance")
     end
+
+    should "return an empty string if provided with one" do
+      assert_equal "", format_need_goal("")
+    end
   end
 
   context "format_field_value" do
