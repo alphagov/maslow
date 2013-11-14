@@ -5,23 +5,7 @@
       <li class="active"><%= @need.need_id %>: <%= format_need_goal @need.goal %></li>
     </ul>
 
-    <% if @need.organisations.any? %>
-    <p class="organisations"><%= @need.organisations.map(&:name).join(", ") %></p>
-    <% end %>
-
-    <h1>
-      <div class="row">
-        <div class="span8">
-          <%= format_need_goal @need.goal %>
-        </div>
-        <div class="span4 edit-need btn-group">
-          <%= link_to edit_need_path(@need), class: 'btn' do %>
-            <i class="icon-edit"></i> Edit need
-          <% end %>
-          <a class="btn" href="#history"><i class="icon-time"></i> See history</a>
-        </div>
-      </div>
-    </h1>
+    <%= render :partial => "need_header", locals: { actions: [:edit, :history] } %>
   </header>
 
   <p class="the-need">

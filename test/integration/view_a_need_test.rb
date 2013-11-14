@@ -22,7 +22,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
       within ".need-breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
-        assert page.has_content?("Book a driving test")
+        assert page.has_content?("101350: Book a driving test")
       end
 
       within "#single-need" do
@@ -33,6 +33,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
           assert page.has_content?("Book a driving test")
           assert page.has_link?("Edit need", href: "/needs/101350/edit")
+          assert page.has_link?("See history", href: "/needs/101350/revisions")
         end
 
         within ".the-need" do
