@@ -8,10 +8,8 @@
   </nav>
   <%= render :partial => "need_header", locals: { actions: [:edit] } %>
 
-  <div id="revisions">
-    <h3>Recent changes</h3>
-    <ul>
-      <%= render partial: "revision", collection: @need.revisions %>
-    </ul>
-  </div>
+  <h3>Recent changes</h3>
+  <ul class="revisions">
+    <%= render partial: "revision", collection: @need.revisions %>
+  </ul>
 </article>

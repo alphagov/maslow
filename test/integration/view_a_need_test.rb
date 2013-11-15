@@ -94,14 +94,14 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_no_link?("See history")
         end
 
-        within "#revisions" do
-          assert_equal 3, page.all("li.revision").count
+        within ".revisions" do
+          assert_equal 3, page.all(".revision").count
 
-          within "li.revision:nth-child(1)" do
+          within ".revision:nth-child(1)" do
             assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
             assert page.has_content?("1 May 2013, 13:00")
 
-            within "ul.changes" do
+            within ".changes" do
               assert_equal 2, page.all("li").count
 
               assert page.has_content?("Goal: apply for a secondary school place → apply for a primary school place")
@@ -109,18 +109,18 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
             end
           end
 
-          within "li.revision:nth-child(2)" do
+          within ".revision:nth-child(2)" do
             assert page.has_content?("Update by unknown author")
             assert page.has_no_content?("<>") # catch missing email
             assert page.has_content?("1 April 2013, 13:00")
           end
 
-          within "li.revision:nth-child(3)" do
+          within ".revision:nth-child(3)" do
             assert page.has_content?("Create by Donald Duck")
             assert page.has_no_content?("<>") # catch an empty email string
             assert page.has_content?("1 January 2013, 13:00")
 
-            within "ul.changes" do
+            within ".changes" do
               assert_equal 2, page.all("li").count
 
               assert page.has_content?("Goal: apply for a school place → apply for a secondary school place")
