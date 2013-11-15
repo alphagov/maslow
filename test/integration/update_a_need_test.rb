@@ -36,7 +36,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       click_on("100001")
       click_on("Edit need")
 
-      within ".need-breadcrumb" do
+      within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
         assert page.has_link?("100001: Apply for a primary school place", href: "/needs/100001")
         assert page.has_content?("Edit")

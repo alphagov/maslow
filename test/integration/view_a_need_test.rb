@@ -20,14 +20,14 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "101350"
 
-      within ".need-breadcrumb" do
+      within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
         assert page.has_content?("101350: Book a driving test")
       end
 
-      within "#single-need" do
+      within ".need" do
         within "header" do
-          within ".organisations" do
+          within ".need-organisations" do
             assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
           end
 
@@ -77,15 +77,15 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       click_on "101350"
       click_on "See history"
 
-      within ".need-breadcrumb" do
+      within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
         assert page.has_link?("101350: Book a driving test", href: "/needs/101350")
         assert page.has_content?("History")
       end
 
-      within "#single-need" do
+      within ".need" do
         within "header" do
-          within ".organisations" do
+          within ".need-organisations" do
             assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
           end
 
@@ -141,9 +141,9 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "101500"
 
-      within "#single-need" do
+      within ".need" do
         within "header" do
-          assert page.has_no_selector?(".organisations")
+          assert page.has_no_selector?(".need-organisations")
 
           assert page.has_content?("Book a driving test")
           assert page.has_link?("Edit need", href: "/needs/101500/edit")

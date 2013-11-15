@@ -1,6 +1,3 @@
-@import '_theme';
-@import 'bootstrap/_variables';
-
 /* Base styles */
 body {
   background-color: #fff;
@@ -20,19 +17,25 @@ footer {
 }
 
 .add-top-margin {
-  margin-top: $baseLineHeight;
+  margin-top: $baseLineHeight !important;
 }
 
+.remove-vertical-margins,
 .remove-top-margin {
-  margin-bottom: 0;
+  margin-top: 0 !important;
 }
 
 .add-bottom-margin {
-  margin-bottom: $baseLineHeight;
+  margin-bottom: $baseLineHeight !important;
 }
 
+.remove-vertical-margins,
 .remove-bottom-margin {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
+}
+
+.relative {
+  position: relative;
 }
 
 main a {
@@ -70,4 +73,8 @@ main a {
   &.btn-inverse:visited {
     color: $inverseButtonColor;
   }
+}
+
+.block-border {
+  border-bottom: 10px solid $hm-government;
 }

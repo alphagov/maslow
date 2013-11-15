@@ -13,9 +13,11 @@
  *= require chosen
  */
 
+@import "bootstrap/variables";
+@import "theme";
+
 @import "bootstrap";
 @import "bootstrap-responsive";
-@import "_theme";
 @import "scaffolds";
 @import "navbar";
 @import "needs/need";

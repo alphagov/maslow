@@ -1,15 +1,14 @@
 <% content_for :page_title, "Edit a need" %>
 
 <article id="single-need">
-  <header>
-    <ul class="need-breadcrumb">
+  <nav class="add-top-margin">
+    <ul class="breadcrumb">
       <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
       <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
-      <li>Edit</li>
+      <li class="active">Edit</li>
     </ul>
-
-    <%= render :partial => "need_header", locals: { actions: [:history] } %>
-  </header>
+  </nav>
+  <%= render :partial => "need_header", locals: { actions: [:history] } %>
 
   <h3>Edit need</h3>
 

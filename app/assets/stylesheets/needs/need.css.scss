@@ -1,58 +1,47 @@
-@import '_theme';
-
-.need-breadcrumb {
-  @extend .breadcrumb;
-  @extend .add-top-margin;
+.need-title {
+  display: inline-block;
+  margin-right: 240px;
+  margin-top: 0;
 }
 
-#single-need {
-  header {
-    .organisations {
-      @extend .muted;
-      font-size: 18px;
-      margin-bottom: -16px
-    }
+.need-btn-group {
+  @extend .btn-group;
+  text-align: right;
+  position: absolute;
+  bottom: 14px;
+  right: 0;
+  width: 240px;
+}
 
-    h1 {
-      @extend .page-header;
-      border-bottom: 10px solid $hm-government;
-    }
+.need-organisations {
+  @extend .muted;
+  font-size: 19px;
+  line-height: 1.31579 !important;
+  margin-bottom: 5px;
+}
 
-    .edit-need {
-      @extend .text-right;
-    }
+.need-wrapper {
+  p, ul, li {
+    font-size: 19px;
+    line-height: 1.31579;
   }
+}
 
-  .need-wrapper {
-    p, ul, li {
-      font-size: 19px;
-      line-height: 1.31579 !important;
-    }
-  }
+.impact {
+  padding: 0.1em 0 0.1em 1em;
+  background-repeat: no-repeat;
+  background-image: url('icon-important-2x.png');
+  background-size: 34px 34px;
+}
 
-  .impact {
-    padding: 0.1em 0 0.1em 1em;
-    background-repeat: no-repeat;
-    background-image: url('icon-important-2x.png');
-    background-size: 34px 34px;
-  }
+.impact p {
+  padding: 0 1em 0 2em;
+  font-weight: bold;
+}
 
-  .impact p {
-    padding: 0 1em 0 2em;
-    font-weight: bold;
-  }
-
-  .justifications {
-    @extend .add-bottom-margin;
-  }
-
-  .the-need {
-    @extend .well;
-    @extend .well-large;
-
-    font-size: 28px;
-    line-height: 1.25;
-  }
+.the-need {
+  font-size: 28px;
+  line-height: 1.31579;
 }
 
 .big-number {
@@ -63,7 +52,7 @@
   margin-bottom: $baseLineHeight;
 }
 
-.big-number span {
+.big-number-detail {
   font-size: 19px;
   line-height: 1.25;
   font-weight: normal;
