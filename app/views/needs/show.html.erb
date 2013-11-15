@@ -60,12 +60,12 @@
 
     <% if show_interactions_column?(@need) %>
       <div class="interactions span4">
-        <h3>Interactions</h3>
+        <h3>Historical Interactions</h3>
 
         <% if @need.monthly_need_views.present? %>
           <div class="big-number">
             <%= format_friendly_integer @need.monthly_need_views %>
-            <span class="big-number-detail">Average pageviews a month</span>
+            <span class="big-number-detail">Approximate pageviews a month</span>
           </div>
         <% end %>
 
@@ -79,14 +79,14 @@
         <% if @need.monthly_user_contacts.present? %>
         <div class="big-number">
           <%= format_friendly_integer @need.monthly_user_contacts %>
-          <span class="big-number-detail">Average contacts a month</span>
+          <span class="big-number-detail">Approximate contacts a month</span>
         </div>
         <% end %>
 
         <% if @need.monthly_searches.present? %>
           <div class="big-number">
             <%= format_friendly_integer @need.monthly_searches %>
-            <span class="big-number-detail">Average searches a month</span>
+            <span class="big-number-detail">Approximate searches a month</span>
           </div>
         <% end %>
       </div>
