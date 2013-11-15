@@ -30,8 +30,8 @@
 .impact {
   padding: 0.1em 0 0.1em 1em;
   background-repeat: no-repeat;
-  background-image: url('icon-important-2x.png');
-  background-size: 34px 34px;
+  background-image: url("icon-important.png");
+  @include image-2x( "icon-important@2x.png", 34px, 34px);
 }
 
 .impact p {
