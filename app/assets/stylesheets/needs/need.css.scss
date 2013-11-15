@@ -1,0 +1,72 @@
+@import '_theme';
+
+.need-breadcrumb {
+  @extend .breadcrumb;
+  @extend .add-top-margin;
+}
+
+#single-need {
+  header {
+    .organisations {
+      @extend .muted;
+      font-size: 18px;
+      margin-bottom: -16px
+    }
+
+    h1 {
+      @extend .page-header;
+      border-bottom: 10px solid $hm-government;
+    }
+
+    .edit-need {
+      @extend .text-right;
+    }
+  }
+
+  .need-wrapper {
+    p, ul, li {
+      font-size: 19px;
+      line-height: 1.31579 !important;
+    }
+  }
+
+  .impact {
+    padding: 0.1em 0 0.1em 1em;
+    background-repeat: no-repeat;
+    background-image: url('icon-important-2x.png');
+    background-size: 34px 34px;
+  }
+
+  .impact p {
+    padding: 0 1em 0 2em;
+    font-weight: bold;
+  }
+
+  .justifications {
+    @extend .add-bottom-margin;
+  }
+
+  .the-need {
+    @extend .well;
+    @extend .well-large;
+
+    font-size: 28px;
+    line-height: 1.25;
+  }
+}
+
+.big-number {
+  font-size: 80px;
+  font-weight: bold;
+  line-height: 90px;
+  color: $hm-government;
+  margin-bottom: $baseLineHeight;
+}
+
+.big-number span {
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: normal;
+  display: block;
+  color: #000;
+}

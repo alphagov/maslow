@@ -1,0 +1,62 @@
+form.need {
+  @extend .form-horizontal;
+
+  .control-label {
+    width: 200px;
+  }
+
+  .controls {
+    margin-left: 220px;
+  }
+
+  input[type="text"], input[type="number"] {
+    @extend input.span2;
+  }
+
+  input.long-form, textarea.long-form {
+    /* Also works on textareas, but they take the same styling as .span8 inputs */
+    @extend input.span8;
+  }
+
+  .organisation-select {
+    @extend .span8;
+  }
+
+  .chosen-container + .help-block {
+    margin-top: 10px;
+  }
+
+  fieldset#user-story {
+    padding-bottom: 40px;
+  }
+}
+
+form.filter {
+  label {
+    display: inline;
+    vertical-align: middle;
+  }
+
+  .chosen-container {
+    text-align: left;
+    margin-right: 10px;
+  }
+  .organisation-select {
+    @extend .span4;
+  }
+
+  text-align: right;
+  display: block;
+  float: right;
+  @extend .span8;
+}
+
+.btn-remove-criteria {
+  @extend .btn;
+  vertical-align: middle;
+  margin-left: 8px;
+
+  span {
+    text-indent: -9999px;
+  }
+}

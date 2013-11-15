@@ -1,0 +1,22 @@
+#revisions > ul {
+  margin: 20px 0px;
+
+  li.revision {
+    @extend .well;
+    list-style: none;
+
+    h3 {
+      font-size: 16px;
+      line-height: 20px;
+      margin: 0 0 5px;
+    }
+
+    ul.changes {
+      li span {
+        background: #fff;
+        display: inline-block;
+        font-family: monospace;
+      }
+    }
+  }
+}
