@@ -84,7 +84,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "be able to navigate between pages of results" do
+  should "be able to navigate between pages of results" do
     page_one = File.read( Rails.root.join("test", "fixtures", "needs", "index_page_1.json") )
     need_api_has_raw_response_for_page(page_one, nil)
 
