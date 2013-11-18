@@ -54,4 +54,16 @@ module NeedHelper
       number.to_s
     end
   end
+
+  def paginate_needs(needs)
+    return unless needs.current_page.present? and needs.pages.present? and needs.page_size.present?
+
+    Kaminari::Helpers::Paginator.new(self,
+      current_page: needs.current_page,
+      total_pages: needs.pages,
+      per_page: needs.page_size,
+      param_name: "page",
+      remote: false
+    ).to_s
+  end
 end
