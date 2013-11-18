@@ -40,7 +40,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     context "filtering needs" do
-      should "sends the organisation id" do
+      should "send the organisation id" do
         GdsApi::NeedApi.any_instance.expects(:needs).with({"organisation_id" => "test"})
         get(:index, "organisation_id" => "test")
       end
@@ -48,6 +48,13 @@ class NeedsControllerTest < ActionController::TestCase
       should "not send any other values" do
         GdsApi::NeedApi.any_instance.expects(:needs).with({})
         get(:index, "fake" => "fake")
+      end
+    end
+
+    context "paginated needs" do
+      should "pass the 'page' parameter to the Need API" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with("page" => "three")
+        get :index, "page" => "three"
       end
     end
   end
