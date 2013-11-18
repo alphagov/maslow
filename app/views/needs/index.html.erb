@@ -25,3 +25,5 @@
     <%= render partial: "need_row", collection: @needs, as: :need %>
   </tbody>
 </table>
+
+<%= paginate_needs @needs %>
