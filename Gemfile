@@ -12,6 +12,8 @@ else
   gem 'gds-sso', '3.1.0'
 end
 
+gem 'kaminari', '0.14.1'
+
 group :test do
   gem 'capybara', '2.1.0'
   gem 'database_cleaner', '1.1.1', require: false
