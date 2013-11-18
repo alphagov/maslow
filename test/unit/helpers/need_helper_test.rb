@@ -103,6 +103,10 @@ class NeedHelperTest < ActiveSupport::TestCase
   end
 
   context "paginate_needs" do
+    should "return nil when the need parameter is nil" do
+      assert_nil paginate_needs(nil)
+    end
+
     should "return nil when the pagination metadata is missing from the response" do
       need = OpenStruct.new(current_page: nil, pages: 5, page_size: 10)
       assert_nil paginate_needs(need)
