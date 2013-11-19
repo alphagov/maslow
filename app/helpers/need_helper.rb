@@ -33,6 +33,7 @@ module NeedHelper
 
   def calculate_percentage(numerator, denominator)
     return unless numerator.present? and denominator.present?
+    return if denominator == 0
 
     percent = numerator.to_f / denominator.to_f * 100.0
 

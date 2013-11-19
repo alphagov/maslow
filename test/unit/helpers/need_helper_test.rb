@@ -78,6 +78,10 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_nil calculate_percentage(10, nil)
       assert_nil calculate_percentage(nil, 10)
     end
+
+    should "return nil if the denominator is zero" do
+      assert_nil calculate_percentage(10, 0)
+    end
   end
 
   context "format_friendly_integer" do
