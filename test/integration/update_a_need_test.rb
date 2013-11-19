@@ -14,42 +14,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "met_when" => ["win","awesome","more"],
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
-      "revisions" => [
-        {
-          "action_type" => "update",
-          "author" => {
-            "name" => "Mickey Mouse",
-            "email" => "mickey.mouse@test.com",
-            "uid" => "m0u53"
-          },
-          "changes" => {
-            "goal" => [ "apply for a secondary school place" ,"apply for a primary school place" ],
-            "role" => [ nil, "parent" ],
-          },
-          "created_at" => "2013-05-01T13:00:00+00:00"
-        },
-        {
-          "action_type" => "update",
-          "author" => nil,
-          "changes" => {
-            "legislation" => [ "foo", "bar" ]
-          },
-          "created_at" => "2013-04-01T13:00:00+00:00"
-        },
-        {
-          "action_type" => "create",
-          "author" => {
-            "name" => "Donald Duck",
-            "email" => nil,
-            "uid" => nil
-          },
-          "changes" => {
-            "goal" => [ "apply for a school place", "apply for a secondary school place" ],
-            "role" => [ "grandparent", nil ]
-          },
-          "created_at" => "2013-01-01T13:00:00+00:00"
-        }
-      ]
+      "revisions" => []
     }
   end
 
@@ -67,7 +32,17 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
   context "Updating a need" do
     should "be able to access edit form" do
       visit('/needs')
-      click_on('100001')
+
+      click_on("100001")
+      click_on("Edit need")
+
+      within ".breadcrumb" do
+        assert page.has_link?("All needs", href: "/needs")
+        assert page.has_link?("100001: Apply for a primary school place", href: "/needs/100001")
+        assert page.has_content?("Edit")
+      end
+
+      assert page.has_content?("Edit need")
 
       assert page.has_field?("As a")
       assert page.has_field?("I need to")
@@ -94,6 +69,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on('100001')
+      click_on('Edit need')
+
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
@@ -107,6 +84,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
+      click_on("Edit need")
 
       within "#met-when-criteria" do
         assert_equal("win", find_field("criteria-0").value)
@@ -132,6 +110,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       visit('/needs')
       click_on('100001')
+      click_on("Edit need")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -153,6 +132,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     should "be able to delete met_when criteria" do
       visit('/needs')
       click_on('100001')
+      click_on("Edit need")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -203,52 +183,16 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
                   )
 
       visit('/needs')
-      click_on('100001')
+
+      click_on("100001")
+      click_on("Edit need")
+
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       click_on_first('Update Need')
 
-      assert page.has_css?("h1", text: "Edit a need")
+      assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
-    end
-
-    should "see a list of recent revisions" do
-      visit "/needs/100001"
-
-      within "#revisions" do
-        assert_equal 3, page.all("li.revision").count
-
-        within "li.revision:nth-child(1)" do
-          assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
-          assert page.has_content?("1 May 2013, 13:00")
-
-          within "ul.changes" do
-            assert_equal 2, page.all("li").count
-
-            assert page.has_content?("Goal: apply for a secondary school place → apply for a primary school place")
-            assert page.has_content?("Role: blank → parent")
-          end
-        end
-
-        within "li.revision:nth-child(2)" do
-          assert page.has_content?("Update by unknown author")
-          assert page.has_no_content?("<>") # catch missing email
-          assert page.has_content?("1 April 2013, 13:00")
-        end
-
-        within "li.revision:nth-child(3)" do
-          assert page.has_content?("Create by Donald Duck")
-          assert page.has_no_content?("<>") # catch an empty email string
-          assert page.has_content?("1 January 2013, 13:00")
-
-          within "ul.changes" do
-            assert_equal 2, page.all("li").count
-
-            assert page.has_content?("Goal: apply for a school place → apply for a secondary school place")
-            assert page.has_content?("Role: grandparent → blank")
-          end
-        end
-      end
     end
 
   end

@@ -36,7 +36,7 @@ class Need
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "currently_met", "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
-  attr_reader :need_id, :revisions
+  attr_reader :need_id, :revisions, :organisations
 
   validates_presence_of ["role", "goal", "benefit"]
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -57,7 +57,7 @@ class Need
       # Discard fields from the API we don't understand. Coupling the fields
       # this app understands to the fields it expects from clients is fine, but
       # we don't want to couple that with the fields we can use in the API.
-      self.new(need_response.to_hash.slice(*FIELDS + ["id", "revisions"]), true)
+      self.new(need_response.to_hash.slice(*FIELDS + ["id", "revisions", "organisations"]), true)
     else
       raise NotFound, need_id
     end
@@ -67,6 +67,7 @@ class Need
     if existing
       @need_id = attrs.delete("id")
       @revisions = prepare_revisions(attrs.delete("revisions"))
+      @organisations = prepare_organisations(attrs.delete("organisations"))
     end
     @existing = existing
 
@@ -91,6 +92,7 @@ class Need
       send("#{f}=", attrs[f])
     end
     @met_when ||= []
+    @justifications ||= []
   end
 
   def as_json(options = {})
@@ -147,6 +149,11 @@ private
     #   `dom_id` from ActionController, which invokes
     #   `to_key` from ActiveModel, which falls over
     @need_id
+  end
+
+  def prepare_organisations(organisations)
+    return [] unless organisations.present?
+    GdsApi::Response.build_ostruct_recursively(organisations)
   end
 
   def prepare_revisions(revisions)

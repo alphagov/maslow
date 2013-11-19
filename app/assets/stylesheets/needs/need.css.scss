@@ -1,0 +1,61 @@
+.need-title {
+  display: inline-block;
+  margin-right: 240px;
+  margin-top: 0;
+}
+
+.need-btn-group {
+  @extend .btn-group;
+  text-align: right;
+  position: absolute;
+  bottom: 14px;
+  right: 0;
+  width: 240px;
+}
+
+.need-organisations {
+  @extend .muted;
+  font-size: 19px;
+  line-height: 1.31579 !important;
+  margin-bottom: 5px;
+}
+
+.need-wrapper {
+  p, ul, li {
+    font-size: 19px;
+    line-height: 1.31579;
+  }
+}
+
+.impact {
+  padding: 0.1em 0 0.1em 1em;
+  background-repeat: no-repeat;
+  background-image: url("icon-important.png");
+  @include image-2x( "icon-important@2x.png", 34px, 34px);
+}
+
+.impact p {
+  padding: 0 1em 0 2em;
+  font-weight: bold;
+}
+
+.the-need {
+  font-size: 28px;
+  line-height: 1.31579;
+}
+
+.big-number {
+  font-size: 80px;
+  font-weight: bold;
+  line-height: 90px;
+  color: $hm-government;
+  margin-bottom: $baseLineHeight;
+}
+
+.big-number-detail {
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: normal;
+  display: block;
+  color: #000;
+}

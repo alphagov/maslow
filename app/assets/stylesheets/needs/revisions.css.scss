@@ -1,0 +1,20 @@
+.revisions {
+  margin: $baseLineHeight 0;
+}
+
+.revision {
+  @extend .well;
+  list-style: none;
+}
+
+.revision-title {
+  font-size: 16px;
+  line-height: $baseLineHeight;
+  margin: 0 0 5px;
+}
+
+.changed-value {
+  background: #fff;
+  display: inline-block;
+  font-family: monospace;
+}

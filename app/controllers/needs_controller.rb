@@ -17,9 +17,15 @@ class NeedsController < ApplicationController
   end
 
   def show
-    flash.keep
     @need = load_need
-    redirect_to :action => :edit, :id => params[:id]
+
+    # show.html.erb
+  end
+
+  def revisions
+    @need = load_need
+
+    # revisions.html.erb
   end
 
   def edit

@@ -1,0 +1,25 @@
+<header class="block-border add-bottom-margin">
+  <% if @need.organisations.any? %>
+    <p class="need-organisations">
+      <%= @need.organisations.map(&:name).join(", ") %>
+    </p>
+  <% end %>
+  <div class="relative">
+    <h1 class="need-title">
+      <%= format_need_goal @need.goal %>
+    </h1>
+    <div class="need-btn-group">
+      <% if local_assigns[:actions].include?(:edit) %>
+        <%= link_to edit_need_path(@need), class: 'btn' do %>
+          <i class="icon-edit"></i> Edit need
+        <% end %>
+      <% end %>
+
+      <% if local_assigns[:actions].include?(:history) %>
+        <%= link_to revisions_need_path(@need), class: 'btn' do %>
+          <i class="icon-time"></i> See history
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</header>

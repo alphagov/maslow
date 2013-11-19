@@ -43,9 +43,12 @@ class NeedTest < ActiveSupport::TestCase
         assert need.save_as(author)
       end
 
-      should "initialize met_when to an empty array when creating a new need" do
+      should "set the met_when and justifications fields to be empty arrays if not present" do
         assert_equal [], Need.new({}).met_when
         assert_equal [], Need.new({"met_when" => nil}).met_when
+
+        assert_equal [], Need.new({}).justifications
+        assert_equal [], Need.new({"justifications" => nil}).justifications
       end
 
       should "be able to add blank criteria" do
@@ -277,6 +280,30 @@ class NeedTest < ActiveSupport::TestCase
       assert need.persisted?
     end
 
+    should "return organisations for a need" do
+      response = stub_response(
+        "organisations" => [
+          {
+            "id" => "ministry-of-joy",
+            "name" => "Ministry of Joy"
+          },
+          {
+            "id" => "ministry-of-plenty",
+            "name" => "Ministry of Plenty"
+          }
+        ]
+      )
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
+
+      need = Need.find(100001)
+      assert_equal 2, need.organisations.count
+
+      first_organisation = need.organisations.first
+
+      assert_equal "ministry-of-joy", first_organisation.id
+      assert_equal "Ministry of Joy", first_organisation.name
+    end
+
     should "return revisions for a need" do
       response = stub_response(
         "revisions" => [
@@ -386,7 +413,7 @@ class NeedTest < ActiveSupport::TestCase
         "benefit" => "excellent things",
         "organisation_ids" => nil,
         "impact" => nil,
-        "justifications" => nil,
+        "justifications" => [],
         "met_when" => [],
         "currently_met" => nil,
         "other_evidence" => nil,

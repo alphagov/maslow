@@ -13,9 +13,14 @@
  *= require chosen
  */
 
+@import "mixins";
+@import "bootstrap/variables";
+@import "theme";
+
 @import "bootstrap";
 @import "bootstrap-responsive";
-@import "_theme";
 @import "scaffolds";
 @import "navbar";
-@import "needs";
+@import "needs/need";
+@import "needs/form";
+@import "needs/revisions";

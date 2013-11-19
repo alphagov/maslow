@@ -2,4 +2,12 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  needs:
+    show:
+      impact:
+        no_impact: it would have no impact
+        noticed_only_by_an_expert_audience: it would be noticed only by an expert audience
+        noticed_by_the_average_member_of_the_public: it would be noticed by the average member of the public
+        has_consequences_for_the_majority_of_your_users: it would have consequences for the majority of your users
+        has_serious_consequences_for_your_users_and_or_their_customers: it would have serious consequences for your users and/or their customers
+        endangers_people: it would endanger the lives of people

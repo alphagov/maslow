@@ -1,0 +1,96 @@
+<article class="need">
+
+  <nav class="add-top-margin">
+    <ul class="breadcrumb">
+      <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
+      <li class="active"><%= @need.need_id %>: <%= format_need_goal @need.goal %></li>
+    </ul>
+  </nav>
+  <%= render :partial => "need_header", locals: { actions: [:edit, :history] } %>
+
+  <p class="the-need well well-large">
+    As a <%= @need.role %><br />
+    I need to <%= @need.goal %><br />
+    So that <%= @need.benefit %>
+  </p>
+
+  <div class="need-wrapper row">
+    <div class="span8">
+      <% if @need.met_when.any? %>
+        <h3>Need is met when</h3>
+        <ul class="met-when">
+          <% @need.met_when.each do |criterion| %>
+            <li><%= criterion %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if @need.justifications.any? %>
+        <h3>Need is on GOV.UK because</h3>
+        <ul class="justifications add-bottom-margin">
+          <% @need.justifications.each do |justification| %>
+            <li><%= justification %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if @need.impact.present? %>
+        <div class="impact">
+          <p>
+            <%= format_need_impact @need.impact %>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @need.legislation.present? %>
+        <div class="legislation">
+          <h3>Related legislation</h3>
+          <%= simple_format html_escape(@need.legislation) %>
+        </div>
+      <% end %>
+
+      <% if @need.other_evidence.present? %>
+        <div class="other-evidence">
+          <h3>Further evidence</h3>
+          <%= simple_format html_escape(@need.other_evidence) %>
+        </div>
+      <% end %>
+
+    </div>
+
+    <% if show_interactions_column?(@need) %>
+      <div class="interactions span4">
+        <h3>Historical Interactions</h3>
+
+        <% if @need.monthly_need_views.present? %>
+          <div class="big-number">
+            <%= format_friendly_integer @need.monthly_need_views %>
+            <span class="big-number-detail">Approximate pageviews a month</span>
+          </div>
+        <% end %>
+
+        <% if percentage = calculate_percentage(@need.monthly_need_views, @need.monthly_site_views) %>
+          <div class="big-number">
+            <%= percentage %>
+            <span class="big-number-detail">of site pageviews</span>
+          </div>
+        <% end %>
+
+        <% if @need.monthly_user_contacts.present? %>
+        <div class="big-number">
+          <%= format_friendly_integer @need.monthly_user_contacts %>
+          <span class="big-number-detail">Approximate contacts a month</span>
+        </div>
+        <% end %>
+
+        <% if @need.monthly_searches.present? %>
+          <div class="big-number">
+            <%= format_friendly_integer @need.monthly_searches %>
+            <span class="big-number-detail">Approximate searches a month</span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+</article>
