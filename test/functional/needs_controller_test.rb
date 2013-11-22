@@ -140,7 +140,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     context "CSRF protection" do
-      should "return a 422 status when not a verified request" do
+      should "return a 403 status when not a verified request" do
         # as allow_forgery_protection is disabled in the test environment, we're
         # stubbing the verified_request? method from
         # ActionController::RequestForgeryProtection::ClassMethods to return false
@@ -149,7 +149,8 @@ class NeedsControllerTest < ActionController::TestCase
 
         post :create, need: complete_need_data
 
-        assert_response 422
+        assert_response 403
+        assert_equal "Invalid authenticity token", response.body
       end
     end
 

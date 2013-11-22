@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   rescue_from ActionController::InvalidAuthenticityToken do
-    render "public/422", layout: false, status: 422
+    render text: "Invalid authenticity token", status: 403
   end
 
   include GDS::SSO::ControllerMethods
