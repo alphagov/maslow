@@ -354,6 +354,33 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal "2013-05-01T00:00:00+00:00", first_revision.created_at
     end
 
+    should "return artefacts for a need" do
+      artefacts = [
+        OpenStruct.new(
+          id: "http://contentapi.dev.gov.uk/pay-council-tax",
+          web_url: "http://www.dev.gov.uk/pay-council-tax",
+          title: "Pay your council tax",
+          format: "transaction"
+        ),
+        OpenStruct.new(
+          id: "http://contentapi.dev.gov.uk/council-tax",
+          web_url: "http://www.dev.gov.uk/council-tax",
+          title: "Council tax",
+          format: "guide"
+        )
+      ]
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
+      GdsApi::ContentApi.any_instance.expects(:for_need).once.with(100001).returns(artefacts)
+
+      need = Need.find(100001)
+
+      assert_equal 2, need.artefacts.count
+      assert_equal "http://contentapi.dev.gov.uk/pay-council-tax", need.artefacts[0].id
+      assert_equal "http://www.dev.gov.uk/pay-council-tax", need.artefacts[0].web_url
+      assert_equal "Pay your council tax", need.artefacts[0].title
+      assert_equal "transaction", need.artefacts[0].format
+    end
+
     should "raise an error when need not found" do
       GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(nil)
       assert_raises Need::NotFound do
