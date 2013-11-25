@@ -22,6 +22,11 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
+    should "set the X-Frame-Options header to SAMEORIGIN" do
+      get :index
+      assert_equal "SAMEORIGIN", response.headers["X-Frame-Options"]
+    end
+
     should "fetch needs from the need api and assign them to the template" do
       # given we're using mocked data, stub the render action so we don't
       # try and render the view. we're only testing here that the variables
