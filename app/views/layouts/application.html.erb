@@ -18,10 +18,12 @@
       <div class="container">
         <%= link_to 'GOV.UK Maslow', root_path, :class => "brand" %>
         <nav role="navigation" class="nav-collapse">
+          <ul class="nav pull-right">
+            <li><%= link_to 'Sign out', gds_sign_out_path %></li>
+          </ul>
+
           <p class="navbar-text pull-right">
             Hello, <%= link_to current_user.name, Plek.current.find('signon') %>
-            &mdash;
-            <%= link_to 'Sign out', gds_sign_out_path %>
           </p>
         </nav><!--/.nav-collapse -->
       </div>
