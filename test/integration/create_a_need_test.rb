@@ -1,8 +1,6 @@
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/need_api'
 
 class CreateANeedTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::NeedApi
 
   setup do
     login_as(stub_user)

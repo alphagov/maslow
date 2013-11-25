@@ -1,10 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/need_api'
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::NeedApi
-
   def need_hash
     {
       "id" => "100001",
