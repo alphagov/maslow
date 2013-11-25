@@ -97,6 +97,8 @@ class Need
 
   def artefacts
     @artefacts ||= Maslow.content_api.for_need(@need_id)
+  rescue GdsApi::BaseError
+    []
   end
 
   def as_json(options = {})
