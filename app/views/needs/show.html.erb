@@ -55,7 +55,6 @@
           <%= simple_format html_escape(@need.other_evidence) %>
         </div>
       <% end %>
-
     </div>
 
     <% if show_interactions_column?(@need) %>
@@ -91,6 +90,24 @@
         <% end %>
       </div>
     <% end %>
-
   </div>
+
+  <% if @need.artefacts.any? %>
+    <div id="artefacts" class="row">
+      <div class="span12">
+        <h3>GOV.UK content which meets this need</h3>
+
+        <ul>
+        <% @need.artefacts.each do |artefact| %>
+          <li>
+            <h4><%= link_to artefact.title, artefact.web_url %></h4>
+            <p><%= artefact.web_url %></p>
+          </li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+
 </article>
