@@ -12,7 +12,6 @@ class NeedTest < ActiveSupport::TestCase
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
         "met_when" => ["Winning","Winning More"],
-        "currently_met" => true,
         "other_evidence" => "Ministerial priority",
         "legislation" => "Vehicle Excise and Registration Act 1994, schedule 4",
         "monthly_user_contacts" => 500,
@@ -111,23 +110,6 @@ class NeedTest < ActiveSupport::TestCase
 
           assert json.has_key?("role")
           refute json.has_key?("errors")
-        end
-
-        should "set the correct boolean value for currently_met" do
-          need = Need.new("currently_met" => true)
-          assert_equal true, need.as_json["currently_met"]
-
-          need = Need.new("currently_met" => "true")
-          assert_equal true, need.as_json["currently_met"]
-
-          need = Need.new("currently_met" => false)
-          assert_equal false, need.as_json["currently_met"]
-
-          need = Need.new("currently_met" => "false")
-          assert_equal false, need.as_json["currently_met"]
-
-          need = Need.new("currently_met" => nil)
-          assert_nil need.as_json["currently_met"]
         end
 
         should "strip leading newlines from textarea fields" do
@@ -415,7 +397,6 @@ class NeedTest < ActiveSupport::TestCase
         "impact" => nil,
         "justifications" => [],
         "met_when" => [],
-        "currently_met" => nil,
         "other_evidence" => nil,
         "legislation" => nil,
         "monthly_user_contacts" => nil,
