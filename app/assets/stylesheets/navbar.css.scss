@@ -15,3 +15,7 @@
 .navbar .brand:focus {
   text-decoration: underline;
 }
+
+.navbar .sign-out:before {
+  content: "\2022  "
+}
