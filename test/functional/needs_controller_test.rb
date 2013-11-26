@@ -139,6 +139,21 @@ class NeedsControllerTest < ActionController::TestCase
       assert_equal ["Winning", "Awesome", ""], assigns[:need].met_when
     end
 
+    context "CSRF protection" do
+      should "return a 403 status when not a verified request" do
+        # as allow_forgery_protection is disabled in the test environment, we're
+        # stubbing the verified_request? method from
+        # ActionController::RequestForgeryProtection::ClassMethods to return false
+        # in order to test our override of the verify_authenticity_token method
+        @controller.stubs(:verified_request?).returns(false)
+
+        post :create, need: complete_need_data
+
+        assert_response 403
+        assert_equal "Invalid authenticity token", response.body
+      end
+    end
+
   end
 
   context "GET show" do
