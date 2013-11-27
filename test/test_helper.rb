@@ -53,7 +53,6 @@ class ActiveSupport::TestCase
       "impact" => nil,
       "justifications" => [],
       "met_when" => [],
-      "currently_met" => nil,
       "other_evidence" => "",
       "legislation" => "",
       "monthly_user_contacts" => "",

@@ -38,7 +38,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("Need is likely to be met when")
 
-      assert page.has_text?("Do you think GOV.UK currently has functionality that meets this need?")
       assert page.has_text?("Do you have any other qualitative or quantitative data that supports this need?")
       assert page.has_text?("Contacts in a month in relation to this need")
       assert page.has_text?("Page views for your site in a month")
@@ -58,7 +57,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "justifications" => ["It's something only government does",
                                "It's straightforward advice that helps people to comply with their statutory obligations"],
           "met_when" => ["Can download a birth certificate."],
-          "currently_met" => false,
           "other_evidence" => "Free text evidence with lots more evidence",
           "legislation" => "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff",
           "monthly_user_contacts" => 10000,
@@ -82,7 +80,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("It's straightforward advice that helps people to comply with their statutory obligations")
       check("It's something only government does")
       choose("Noticed by the average member of the public")
-      choose("No")
       fill_in("Do you have any other qualitative or quantitative data that supports this need?", with: "Free text evidence with lots more evidence")
       fill_in("Contacts in a month in relation to this need", with: 10000)
       fill_in("Page views for your site in a month", with: 1000000)
