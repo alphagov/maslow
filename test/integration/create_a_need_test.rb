@@ -39,10 +39,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Need is likely to be met when")
 
       assert page.has_text?("Do you have any other qualitative or quantitative data that supports this need?")
-      assert page.has_text?("Contacts in a month in relation to this need")
-      assert page.has_text?("Page views for your site in a month")
-      assert page.has_text?("Page views for the need in a month")
-      assert page.has_text?("Number of searches for this need in a month")
+      assert page.has_text?("User contacts in a month related to this need")
+      assert page.has_text?("Page views in a month for your whole site")
+      assert page.has_text?("Page views in a month related to this need")
+      assert page.has_text?("Searches in a month related to this need")
       assert page.has_text?("What legislation underpins this need?")
     end
 
@@ -81,10 +81,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("It's something only government does")
       choose("Noticed by the average member of the public")
       fill_in("Do you have any other qualitative or quantitative data that supports this need?", with: "Free text evidence with lots more evidence")
-      fill_in("Contacts in a month in relation to this need", with: 10000)
-      fill_in("Page views for your site in a month", with: 1000000)
-      fill_in("Page views for the need in a month", with: 1000)
-      fill_in("Number of searches for this need in a month", with: 2000)
+      fill_in("User contacts in a month related to this need", with: 10000)
+      fill_in("Page views in a month for your whole site", with: 1000000)
+      fill_in("Page views in a month related to this need", with: 1000)
+      fill_in("Searches in a month related to this need", with: 2000)
       fill_in("What legislation underpins this need?", with: "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff")
       within "#met-when-criteria" do
         fill_in("criteria-0", with: "Can download a birth certificate.")
