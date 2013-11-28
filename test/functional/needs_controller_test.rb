@@ -57,6 +57,13 @@ class NeedsControllerTest < ActionController::TestCase
         get :index, "page" => "three"
       end
     end
+
+    context "searching needs" do
+      should "send the search query" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({"q" => "citizenship"})
+        get(:index, "q" => "citizenship")
+      end
+    end
   end
 
   context "GET new" do

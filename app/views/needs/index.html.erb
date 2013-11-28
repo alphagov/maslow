@@ -11,6 +11,12 @@
       class: "organisation-select" %>
     <%= submit_tag "Filter", class: "btn" %>
   <% end %>
+  <%= form_tag("/needs", method: "get", class: "search") do %>
+    <%= label_tag "q", "Search needs:" %>
+    &nbsp;
+    <%= search_field_tag("q", params["q"], class: "search-term") %>
+    <%= submit_tag "Search", name: nil, class: "btn" %>
+  <% end %>
 </div>
 
 <table class="table table-striped" id="needs">

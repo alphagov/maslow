@@ -12,7 +12,7 @@ class NeedsController < ApplicationController
   end
 
   def index
-    opts = params.slice("organisation_id", "page")
+    opts = params.slice("organisation_id", "page", "q")
     @needs = Maslow.need_api.needs(opts)
   end
 
