@@ -19,3 +19,17 @@
 .navbar .sign-out:before {
   content: "\2022  "
 }
+
+.beta {
+  float: left;
+  min-width: 230px; 
+  
+  background: #EE7F52;
+  color: #FFF;
+  font-family: $gillSansFontStack;
+  font-size: 24px;
+  font-style: normal;
+  line-height: 40px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
