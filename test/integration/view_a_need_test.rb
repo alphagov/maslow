@@ -129,7 +129,83 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
         end
       end
-    end
+    end # should show recent revisions
+
+    context "showing artefacts which meet the need" do
+      should "display artefacts from the content api" do
+        content_api_has_artefacts_for_need_id(101350, [
+          {
+            id: "http://contentapi.dev.gov.uk/vat-rates.json",
+            web_url: "http://www.dev.gov.uk/vat-rates",
+            title: "VAT rates",
+            format: "answer"
+          },
+          {
+            id: "http://contentapi.dev.gov.uk/vat.json",
+            web_url: "http://www.dev.gov.uk/vat",
+            title: "VAT",
+            format: "business_support"
+          }
+        ])
+
+        visit "/needs"
+        click_on "101350"
+
+        within ".need" do
+          assert page.has_selector?("table#artefacts-for-need")
+
+          within "table#artefacts-for-need" do
+            assert page.has_selector?("tbody tr", count: 2)
+
+            within "tbody" do
+              within "tr:first-child" do
+                assert page.has_link?("VAT rates", href: "http://www.dev.gov.uk/vat-rates")
+                assert page.has_content?("Answer")
+                assert page.has_content?("http://www.dev.gov.uk/vat-rates")
+              end
+
+              within "tr:nth-child(2)" do
+                assert page.has_link?("VAT", href: "http://www.dev.gov.uk/vat")
+                assert page.has_content?("Business support")
+                assert page.has_content?("http://www.dev.gov.uk/vat")
+              end
+            end # within tbody
+          end # within table
+        end # within .need
+
+      end # should display artefacts from the content api
+
+      should "not display a table when there are no artefacts for this need" do
+        content_api_has_artefacts_for_need_id(101350, [])
+
+        visit "/needs"
+        click_on "101350"
+
+        # check the page has loaded correctly
+        assert page.has_content?("Book a driving test")
+
+        within ".need" do
+          assert page.has_no_selector?("table#artefacts-for-need")
+        end
+      end
+
+      should "not display a table when the Content API returns an error" do
+        GdsApi::ContentApi.any_instance.expects(:for_need).once
+                                  .with(101350)
+                                  .raises(GdsApi::HTTPErrorResponse.new(500))
+
+        visit "/needs"
+        click_on "101350"
+
+        # check the page has loaded correctly
+        assert page.has_content?("Book a driving test")
+
+        within ".need" do
+          assert page.has_no_selector?("table#artefacts-for-need")
+        end
+      end
+    end # context showing artefacts which meet the need
+
   end
 
   context "given a need with missing attributes" do
