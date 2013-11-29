@@ -37,6 +37,11 @@ form.filter, form.search {
     vertical-align: middle;
   }
 
+  /* Make submit buttons the same width, so the forms line up nicely */
+  input[type="submit"] {
+    width: 5em;
+  }
+
   text-align: right;
   display: block;
   float: right;
