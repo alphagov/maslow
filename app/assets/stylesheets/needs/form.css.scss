@@ -48,26 +48,18 @@ form.filter, form.search {
   @extend .span8;
 }
 
-form.filter {
-  .chosen-container {
-    text-align: left;
-    margin-right: 10px;
-  }
-
-  .organisation-select {
-    @extend .span4;
-  }
+form.filter .organisation-select, form.search input[type="search"] {
+  @extend .span4;
 }
 
-form.search {
-  input[type="search"] {
-    margin-bottom: 0;
-    margin-right: 10px;
-  }
+form.filter .chosen-container {
+  text-align: left;
+  margin-right: 10px;
+}
 
-  input[type="search"] {
-    @extend .span4;
-  }
+form.search input[type="search"] {
+  margin-bottom: 0;
+  margin-right: 10px;
 }
 
 .btn-remove-criteria {
