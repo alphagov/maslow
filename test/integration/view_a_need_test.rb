@@ -55,10 +55,10 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".interactions" do
-          assert page.has_content?("824k Approximate pageviews a month")
+          assert page.has_content?("824k Approximate pageviews a year")
           assert page.has_content?("32.6% of site pageviews")
-          assert page.has_content?("8k Approximate contacts a month")
-          assert page.has_content?("630k Approximate searches a month")
+          assert page.has_content?("8k Approximate contacts a year")
+          assert page.has_content?("630k Approximate searches a year")
         end
 
         within ".legislation" do

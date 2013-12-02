@@ -32,7 +32,7 @@ class Need
     "Has serious consequences for your users and/or their customers",
     "Endangers people"
   ]
-  NUMERIC_FIELDS = ["monthly_user_contacts", "monthly_site_views", "monthly_need_views", "monthly_searches"]
+  NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
