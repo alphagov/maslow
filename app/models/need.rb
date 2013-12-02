@@ -95,6 +95,12 @@ class Need
     @justifications ||= []
   end
 
+  def artefacts
+    @artefacts ||= Maslow.content_api.for_need(@need_id)
+  rescue GdsApi::BaseError
+    []
+  end
+
   def as_json(options = {})
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and

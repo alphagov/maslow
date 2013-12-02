@@ -1,10 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/need_api'
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::NeedApi
-
   def need_hash
     {
       "id" => "100001",
@@ -27,6 +24,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     )
     need_api_has_needs([need_hash])  # For need list
     need_api_has_need(need_hash)  # For individual need
+    content_api_has_artefacts_for_need_id("100001", [])
   end
 
   context "Updating a need" do

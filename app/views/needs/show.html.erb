@@ -56,6 +56,37 @@
         </div>
       <% end %>
 
+      <% if @need.artefacts.any? %>
+        <div class="add-top-margin">
+          <h3>GOV.UK content which meets this need</h3>
+
+          <table id="artefacts-for-need" class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">
+                  Title
+                </th>
+                <th scope="col">
+                  URL
+                </th>
+                <th scope="col">
+                  Format
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @need.artefacts.each do |artefact| %>
+                <tr>
+                  <td><%= link_to artefact.title, artefact.web_url %></td>
+                  <td><%= artefact.web_url %></td>
+                  <td><%= artefact.format.humanize %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <% end %>
     </div>
 
     <% if show_interactions_column?(@need) %>
@@ -91,6 +122,6 @@
         <% end %>
       </div>
     <% end %>
-
   </div>
+
 </article>

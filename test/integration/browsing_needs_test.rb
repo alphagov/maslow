@@ -1,10 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/need_api'
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::NeedApi
-
   setup do
     login_as_stub_user
     need_api_has_organisations([])

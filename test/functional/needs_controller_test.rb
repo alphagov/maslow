@@ -180,6 +180,11 @@ class NeedsControllerTest < ActionController::TestCase
           "benefit" => "good things"
         }, true)
 
+        # stub the artefacts method so that we don't make calls to
+        # the content api. we aren't really testing the view behaviour
+        # here so just return an empty array
+        @stub_need.expects(:artefacts).returns([])
+
         Need.expects(:find).with(100001).returns(@stub_need)
       end
 
