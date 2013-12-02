@@ -57,6 +57,20 @@ class NeedsControllerTest < ActionController::TestCase
         get :index, "page" => "three"
       end
     end
+
+    context "blank query parameter" do
+      should "not pass the query parameter on to the need API" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({})
+        get(:index, "q" => "")
+      end
+    end
+
+    context "searching needs" do
+      should "send the search query" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({"q" => "citizenship"})
+        get(:index, "q" => "citizenship")
+      end
+    end
   end
 
   context "GET new" do
