@@ -108,6 +108,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("Find out about becoming a British citizen")
       assert page.has_no_text?("Apply for a primary school place")
+      assert_equal("citizenship", find_field("Search needs:").value)
     end
   end
 end
