@@ -57,6 +57,20 @@ class NeedsControllerTest < ActionController::TestCase
         get :index, "page" => "three"
       end
     end
+
+    context "blank query parameter" do
+      should "not pass the query parameter on to the need API" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({})
+        get(:index, "q" => "")
+      end
+    end
+
+    context "searching needs" do
+      should "send the search query" do
+        GdsApi::NeedApi.any_instance.expects(:needs).with({"q" => "citizenship"})
+        get(:index, "q" => "citizenship")
+      end
+    end
   end
 
   context "GET new" do
@@ -137,6 +151,21 @@ class NeedsControllerTest < ActionController::TestCase
 
       assert_response 200
       assert_equal ["Winning", "Awesome", ""], assigns[:need].met_when
+    end
+
+    context "CSRF protection" do
+      should "return a 403 status when not a verified request" do
+        # as allow_forgery_protection is disabled in the test environment, we're
+        # stubbing the verified_request? method from
+        # ActionController::RequestForgeryProtection::ClassMethods to return false
+        # in order to test our override of the verify_authenticity_token method
+        @controller.stubs(:verified_request?).returns(false)
+
+        post :create, need: complete_need_data
+
+        assert_response 403
+        assert_equal "Invalid authenticity token", response.body
+      end
     end
 
   end

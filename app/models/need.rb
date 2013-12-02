@@ -34,7 +34,7 @@ class Need
   ]
   NUMERIC_FIELDS = ["monthly_user_contacts", "monthly_site_views", "monthly_need_views", "monthly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
-    "currently_met", "other_evidence", "legislation"] + NUMERIC_FIELDS
+    "other_evidence", "legislation"] + NUMERIC_FIELDS
   attr_accessor *FIELDS
   attr_reader :need_id, :revisions, :organisations
 
@@ -117,9 +117,6 @@ class Need
 
       hash[field] = value
     end
-
-    res["currently_met"] = (currently_met == true || currently_met == 'true') unless currently_met.nil?
-    res
   end
 
   def save

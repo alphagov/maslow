@@ -31,24 +31,35 @@ form.need {
   }
 }
 
-form.filter {
-  label {
+form.filter, form.search {
+  label, input {
     display: inline;
     vertical-align: middle;
   }
 
-  .chosen-container {
-    text-align: left;
-    margin-right: 10px;
-  }
-  .organisation-select {
-    @extend .span4;
+  /* Make submit buttons the same width, so the forms line up nicely */
+  input[type="submit"] {
+    width: 5em;
   }
 
   text-align: right;
   display: block;
   float: right;
   @extend .span8;
+}
+
+form.filter .organisation-select, form.search input[type="search"] {
+  @extend .span4;
+}
+
+form.filter .chosen-container {
+  text-align: left;
+  margin-right: 10px;
+}
+
+form.search input[type="search"] {
+  margin-bottom: 0;
+  margin-right: 10px;
 }
 
 .btn-remove-criteria {
