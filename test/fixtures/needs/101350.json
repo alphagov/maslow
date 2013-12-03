@@ -28,10 +28,10 @@
   ],
   "other_evidence": "Primary service provided by the DVLA",
   "legislation": "Driving Test Act 1994, Schedule 8",
-  "monthly_user_contacts": 8000,
-  "monthly_site_views": 2530150,
-  "monthly_need_views": 823800,
-  "monthly_searches": 630100,
+  "yearly_user_contacts": 8000,
+  "yearly_site_views": 2530150,
+  "yearly_need_views": 823800,
+  "yearly_searches": 630100,
   "revisions": [
     {
       "action_type": "update",

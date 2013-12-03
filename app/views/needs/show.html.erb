@@ -93,31 +93,31 @@
       <div class="interactions span4">
         <h3>Historical Interactions</h3>
 
-        <% if @need.monthly_need_views.present? %>
+        <% if @need.yearly_need_views.present? %>
           <div class="big-number">
-            <%= format_friendly_integer @need.monthly_need_views %>
-            <span class="big-number-detail">Approximate pageviews a month</span>
+            <%= format_friendly_integer @need.yearly_need_views %>
+            <span class="big-number-detail">Approximate pageviews a year</span>
           </div>
         <% end %>
 
-        <% if percentage = calculate_percentage(@need.monthly_need_views, @need.monthly_site_views) %>
+        <% if percentage = calculate_percentage(@need.yearly_need_views, @need.yearly_site_views) %>
           <div class="big-number">
             <%= percentage %>
             <span class="big-number-detail">of site pageviews</span>
           </div>
         <% end %>
 
-        <% if @need.monthly_user_contacts.present? %>
+        <% if @need.yearly_user_contacts.present? %>
         <div class="big-number">
-          <%= format_friendly_integer @need.monthly_user_contacts %>
-          <span class="big-number-detail">Approximate contacts a month</span>
+          <%= format_friendly_integer @need.yearly_user_contacts %>
+          <span class="big-number-detail">Approximate contacts a year</span>
         </div>
         <% end %>
 
-        <% if @need.monthly_searches.present? %>
+        <% if @need.yearly_searches.present? %>
           <div class="big-number">
-            <%= format_friendly_integer @need.monthly_searches %>
-            <span class="big-number-detail">Approximate searches a month</span>
+            <%= format_friendly_integer @need.yearly_searches %>
+            <span class="big-number-detail">Approximate searches a year</span>
           </div>
         <% end %>
       </div>

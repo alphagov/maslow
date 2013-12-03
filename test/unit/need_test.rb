@@ -14,10 +14,10 @@ class NeedTest < ActiveSupport::TestCase
         "met_when" => ["Winning","Winning More"],
         "other_evidence" => "Ministerial priority",
         "legislation" => "Vehicle Excise and Registration Act 1994, schedule 4",
-        "monthly_user_contacts" => 500,
-        "monthly_site_views" => 70000,
-        "monthly_need_views" => 15000,
-        "monthly_searches" => 2000,
+        "yearly_user_contacts" => 500,
+        "yearly_site_views" => 70000,
+        "yearly_need_views" => 15000,
+        "yearly_searches" => 2000,
       }
     end
 
@@ -170,54 +170,54 @@ class NeedTest < ActiveSupport::TestCase
       assert need.errors.has_key?(:impact)
     end
 
-    should "be invalid with a non-numeric value for monthly_user_contacts" do
-      need = Need.new(@atts.merge("monthly_user_contacts" => "foo"))
+    should "be invalid with a non-numeric value for yearly_user_contacts" do
+      need = Need.new(@atts.merge("yearly_user_contacts" => "foo"))
 
       refute need.valid?
-      assert need.errors.has_key?(:monthly_user_contacts)
+      assert need.errors.has_key?(:yearly_user_contacts)
     end
 
-    should "be invalid with a non-numeric value for monthly_site_views" do
-      need = Need.new(@atts.merge("monthly_site_views" => "foo"))
+    should "be invalid with a non-numeric value for yearly_site_views" do
+      need = Need.new(@atts.merge("yearly_site_views" => "foo"))
 
       refute need.valid?
-      assert need.errors.has_key?(:monthly_site_views)
+      assert need.errors.has_key?(:yearly_site_views)
     end
 
-    should "be invalid with a non-numeric value for monthly_need_views" do
-      need = Need.new(@atts.merge("monthly_need_views" => "foo"))
+    should "be invalid with a non-numeric value for yearly_need_views" do
+      need = Need.new(@atts.merge("yearly_need_views" => "foo"))
 
       refute need.valid?
-      assert need.errors.has_key?(:monthly_need_views)
+      assert need.errors.has_key?(:yearly_need_views)
     end
 
-    should "be invalid with a non-numeric value for monthly_searches" do
-      need = Need.new(@atts.merge("monthly_searches" => "foo"))
+    should "be invalid with a non-numeric value for yearly_searches" do
+      need = Need.new(@atts.merge("yearly_searches" => "foo"))
 
       refute need.valid?
-      assert need.errors.has_key?(:monthly_searches)
+      assert need.errors.has_key?(:yearly_searches)
     end
 
-    should "be valid with a blank value for monthly_user_contacts" do
-      need = Need.new(@atts.merge("monthly_user_contacts" => ""))
+    should "be valid with a blank value for yearly_user_contacts" do
+      need = Need.new(@atts.merge("yearly_user_contacts" => ""))
 
       assert need.valid?
     end
 
-    should "be valid with a blank value for monthly_site_views" do
-      need = Need.new(@atts.merge("monthly_site_views" => ""))
+    should "be valid with a blank value for yearly_site_views" do
+      need = Need.new(@atts.merge("yearly_site_views" => ""))
 
       assert need.valid?
     end
 
-    should "be valid with a blank value for monthly_need_views" do
-      need = Need.new(@atts.merge("monthly_need_views" => ""))
+    should "be valid with a blank value for yearly_need_views" do
+      need = Need.new(@atts.merge("yearly_need_views" => ""))
 
       assert need.valid?
     end
 
-    should "be valid with a blank value for monthly_searches" do
-      need = Need.new(@atts.merge("monthly_searches" => ""))
+    should "be valid with a blank value for yearly_searches" do
+      need = Need.new(@atts.merge("yearly_searches" => ""))
 
       assert need.valid?
     end
@@ -400,14 +400,14 @@ class NeedTest < ActiveSupport::TestCase
 
         @need.update(
           "impact" => "Endangers people",
-          "monthly_searches" => 50000
+          "yearly_searches" => 50000
         )
 
         assert_equal "person", @need.role
         assert_equal "do things", @need.goal
         assert_equal "good things", @need.benefit
         assert_equal "Endangers people", @need.impact
-        assert_equal 50000, @need.monthly_searches
+        assert_equal 50000, @need.yearly_searches
       end
 
       should "strip leading newline characters from textareas" do
@@ -438,10 +438,10 @@ class NeedTest < ActiveSupport::TestCase
         "met_when" => [],
         "other_evidence" => nil,
         "legislation" => nil,
-        "monthly_user_contacts" => nil,
-        "monthly_site_views" => nil,
-        "monthly_need_views" => nil,
-        "monthly_searches" => nil,
+        "yearly_user_contacts" => nil,
+        "yearly_site_views" => nil,
+        "yearly_need_views" => nil,
+        "yearly_searches" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }

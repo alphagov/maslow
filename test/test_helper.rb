@@ -55,10 +55,10 @@ class ActiveSupport::TestCase
       "met_when" => [],
       "other_evidence" => "",
       "legislation" => "",
-      "monthly_user_contacts" => "",
-      "monthly_site_views" => "",
-      "monthly_need_views" => "",
-      "monthly_searches" => ""
+      "yearly_user_contacts" => "",
+      "yearly_site_views" => "",
+      "yearly_need_views" => "",
+      "yearly_searches" => ""
     }
   end
 end

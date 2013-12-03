@@ -43,7 +43,7 @@ module NeedHelper
   end
 
   def show_interactions_column?(need)
-    [ need.monthly_user_contacts, need.monthly_site_views, need.monthly_need_views, need.monthly_searches ].select(&:present?).any?
+    [ need.yearly_user_contacts, need.yearly_site_views, need.yearly_need_views, need.yearly_searches ].select(&:present?).any?
   end
 
   def format_friendly_integer(number)
