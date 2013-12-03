@@ -28,6 +28,6 @@ From your host machine, you should be able to access the app at <http://maslow.d
 
 ## User accounts
 
-Authentication is provided by the [GDS-SSO](https://github.com/alphagov/gds-sso) gem, and in the production environemt an instance of [Signon](https://github.com/alphagov/signonotron2) must be running in order to sign in.
+Authentication is provided by the [GDS-SSO](https://github.com/alphagov/gds-sso) gem, and in the production environment an instance of [Signon](https://github.com/alphagov/signonotron2) must be running in order to sign in.
 
 In the development environment, the mock strategy is used by default. This removes the requirement for authentication, instead returning the first user in the database as the current user. For this to work, a user must exist - there's a user defined in `db/seeds.rb` which will be created with the bootstrap script.
