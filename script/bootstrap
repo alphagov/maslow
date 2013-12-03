@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+echo "Bundle start"
+bundle --quiet
+echo "Bundle complete"
+
+bundle exec rake db:setup
+echo "Database setup complete"
