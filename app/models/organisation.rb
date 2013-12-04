@@ -8,6 +8,18 @@ class Organisation
   def initialize(atts)
     @id = atts[:id]
     @name = atts[:name]
+    @abbreviation = atts[:abbreviation]
+  end
+
+  def display_name
+    if @abbreviation.present? && @abbreviation != @name
+      # Use square brackets around the abbreviation
+      # as Chosen doesn't like matching with
+      # parentheses at the start of a word
+      "#{@name} [#{@abbreviation}]"
+    else
+      @name
+    end
   end
 
   def self.all
