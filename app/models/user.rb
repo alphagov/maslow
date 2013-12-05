@@ -11,8 +11,9 @@ class User
   field "email",   type: String
   field "permissions", type: Array
   field "remotely_signed_out", type: Boolean, default: false
+  field "organisation_slug", type: String
 
-  attr_accessible :email, :name, :uid, :version
+  attr_accessible :email, :name, :uid, :version, :organisation_slug
   attr_accessible :uid, :email, :name, :permissions, as: :oauth
 
   def self.find_by_uid(uid)
