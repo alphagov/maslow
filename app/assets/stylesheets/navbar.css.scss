@@ -9,6 +9,7 @@
   font-family: $gillSansFontStack;
   margin-left: 0;
   padding-left: 2.25em;
+  padding-right: 15px;
 }
 
 .navbar .brand:hover,
@@ -21,15 +22,14 @@
 }
 
 .beta {
-  float: left;
-  min-width: 230px; 
-  
   background: #EE7F52;
+  display: inline-block;
   color: #FFF;
+  float: left;
   font-family: $gillSansFontStack;
-  font-size: 24px;
+  font-size: 18px;
   font-style: normal;
-  line-height: 40px;
-  letter-spacing: 0.04em;
-  text-align: center;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  margin-top: 7px;
 }
