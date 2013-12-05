@@ -40,7 +40,12 @@
     </main>
 
     <footer>
-      <p>&copy; GDS. <span class="pull-right">Maslow release: <%= CURRENT_RELEASE_SHA %></span></p>
+      <p>&copy; GDS.
+      <% if feedback_address %>
+        <a class="feedback" href="mailto:<%= feedback_address %>">Send feedback</a>
+      <% end %>
+      <span class="pull-right">Maslow release: <%= CURRENT_RELEASE_SHA %></span>
+      </p>
     </footer>
   </div><!-- /container -->
 
