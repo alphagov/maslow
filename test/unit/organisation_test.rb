@@ -40,17 +40,17 @@ class OrganisationTest < ActiveSupport::TestCase
 
     should "show the organisation abbreviation" do
       organisation = Organisation.new(id: "id", name: "name", abbreviation: "abbr")
-      assert_equal "name [abbr]", organisation.display_name
+      assert_equal "name [abbr]", organisation.name_with_abbreviation
     end
 
     should "not show the abbreviation if it is not present" do
       organisation = Organisation.new(id: "id", name: "name")
-      assert_equal "name", organisation.display_name
+      assert_equal "name", organisation.name_with_abbreviation
     end
 
     should "not show the abbreviation if it is the same as the name" do
       organisation = Organisation.new(id: "id", name: "name", abbreviation: "name")
-      assert_equal "name", organisation.display_name
+      assert_equal "name", organisation.name_with_abbreviation
     end
   end
 end

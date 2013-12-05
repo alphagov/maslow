@@ -6,7 +6,12 @@
     <%= label_tag "organisation_id", "Filter needs by organisation:" %>
     &nbsp;
     <%= select_tag "organisation_id",
-      options_from_collection_for_select(Organisation.all, "id", "display_name", params[:organisation_id]),
+      options_from_collection_for_select(
+        Organisation.all,
+        "id",
+        "name_with_abbreviation",
+        params[:organisation_id]
+      ),
       include_blank: true,
       class: "organisation-select" %>
     <%= submit_tag "Filter", name: nil, class: "btn" %>

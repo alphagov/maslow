@@ -11,7 +11,7 @@ class Organisation
     @abbreviation = atts[:abbreviation]
   end
 
-  def display_name
+  def name_with_abbreviation
     if abbreviation.present? && abbreviation != name
       # Use square brackets around the abbreviation
       # as Chosen doesn't like matching with
