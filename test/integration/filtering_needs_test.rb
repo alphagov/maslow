@@ -9,7 +9,9 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
   context "filtering the list of needs" do
     setup do
       need_api_has_organisations(
-        "department-for-education" => "Department for Education",
+        "department-for-education" => { "name" => "Department for Education",
+                                        "abbreviation" => "DfE"
+                                      },
         "hm-passport-office" => "HM Passport Office",
         "home-office" => "Home Office"
       )
@@ -25,6 +27,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
             {
               "id" => "department-for-education",
               "name" => "Department for Education",
+              "abbreviation" => "DfE"
             }
           ],
           "justifications" => [
@@ -63,21 +66,18 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         }
       ])
 
-      need_api_has_needs_for_organisation("home-office", [
+      need_api_has_needs_for_organisation("department-for-education", [
         {
-          "id" => "10002",
-          "role" => "user",
-          "goal" => "find out about becoming a British citizen",
-          "benefit" => "i can take the correct steps to apply for citizenship",
-          "organisation_ids" => ["home-office", "hm-passport-office"],
+          "id" => "10001",
+          "role" => "parent",
+          "goal" => "apply for a primary school place",
+          "benefit" => "my child can start school",
+          "organisation_ids" => ["department-for-education"],
           "organisations" => [
             {
-              "id" => "home-office",
-              "name" => "Home Office",
-            },
-            {
-              "id" => "hm-passport-office",
-              "name" => "HM Passport Office",
+              "id" => "department-for-education",
+              "name" => "Department for Education",
+              "abbreviation" => "DfE"
             }
           ],
           "justifications" => [
@@ -86,7 +86,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
           ],
           "impact" => "Has serious consequences for the day-to-day lives of your users",
           "met_when" => [
-            "The user finds information about the citizenship test and the next steps"
+            "The user applies for a school place"
           ]
         }
       ])
@@ -98,18 +98,21 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("10001")
       assert page.has_text?("Apply for a primary school place")
-      assert page.has_text?("Department for Education")
+      assert page.has_text?("Department for Education [DfE]")
 
       assert page.has_text?("10002")
       assert page.has_text?("Find out about becoming a British citizen")
       assert page.has_text?("Home Office")
       assert page.has_text?("HM Passport Office")
 
-      select("Home Office", from: "Filter needs by organisation:")
+      select("Department for Education [DfE]", from: "Filter needs by organisation:")
       click_on_first("Filter")
 
-      assert page.has_text?("Find out about becoming a British citizen")
-      assert page.has_no_text?("Apply for a primary school place")
+      within "#needs" do
+        assert page.has_text?("Department for Education")
+        assert page.has_text?("Apply for a primary school place")
+        assert page.has_no_text?("Find out about becoming a British citizen")
+      end
     end
   end
 end

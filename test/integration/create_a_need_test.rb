@@ -5,9 +5,12 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
   setup do
     login_as(stub_user)
     need_api_has_organisations(
-      "committee-on-climate-change" => "Committee on Climate Change",
-      "competition-commission" => "Competition Commission",
-      "ministry-of-justice" => "Ministry of Justice"
+      "committee-on-climate-change" => {"name"=>"Committee on Climate Change",
+                                        "abbreviation"=>"CCC"},
+      "competition-commission" => {"name"=>"Competition Commission",
+                                   "abbreviation"=>"CC"},
+      "ministry-of-justice" => {"name"=>"Ministry of Justice",
+                                "abbreviation"=>"MOJ"},
     )
     need_api_has_needs([])
   end
@@ -74,7 +77,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("As a", with: "User")
       fill_in("I need to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
-      select("Ministry of Justice", from: "Organisations")
+      select("Ministry of Justice [MOJ]", from: "Organisations")
       check("It's straightforward advice that helps people to comply with their statutory obligations")
       check("It's something only government does")
       choose("Noticed by the average member of the public")

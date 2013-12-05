@@ -11,6 +11,7 @@
     <%= f.input :organisation_ids,
                   :as => :select,
                   :collection => Organisation.all,
+                  :member_label => "name_with_abbreviation",
                   :hint => "Which government organisations own this need?",
                   :label => "Organisations",
                   :input_html => {
