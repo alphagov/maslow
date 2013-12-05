@@ -16,7 +16,7 @@ if defined?(Bundler)
 end
 
 module Maslow
-  mattr_accessor :need_api, :content_api
+  mattr_accessor :need_api, :content_api, :feedback_address
 
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
