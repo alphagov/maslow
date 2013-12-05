@@ -9,6 +9,7 @@
   font-family: $gillSansFontStack;
   margin-left: 0;
   padding-left: 2.25em;
+  padding-right: 15px;
 }
 
 .navbar .brand:hover,
@@ -18,4 +19,17 @@
 
 .navbar .sign-out:before {
   content: "\2022  "
+}
+
+.beta {
+  background: #EE7F52;
+  display: block;
+  color: #FFF;
+  float: left;
+  font-family: $gillSansFontStack;
+  font-size: 18px;
+  font-style: normal;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  margin-top: 7px;
 }
