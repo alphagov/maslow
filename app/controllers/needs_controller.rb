@@ -49,7 +49,7 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to "/needs", notice: "Need created."
+        redirect_to need_url(@need.need_id), notice: "Need created."
         return
       else
         flash[:error] = "There was a problem saving your need."

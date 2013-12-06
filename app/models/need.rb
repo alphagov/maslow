@@ -65,13 +65,18 @@ class Need
 
   def initialize(attrs, existing = false)
     if existing
-      @need_id = attrs.delete("id")
-      @revisions = prepare_revisions(attrs.delete("revisions"))
-      @organisations = prepare_organisations(attrs.delete("organisations"))
+      extract_values(attrs)
     end
     @existing = existing
-
     update(attrs)
+  end
+
+  def extract_values(attrs)
+    attrs.delete("_response_info")
+    attrs.delete("applies_to_all_organisations")
+    @need_id = attrs.delete("id")
+    @revisions = prepare_revisions(attrs.delete("revisions"))
+    @organisations = prepare_organisations(attrs.delete("organisations"))
   end
 
   def add_more_criteria
@@ -133,8 +138,12 @@ class Need
     if persisted?
       Maslow.need_api.update_need(@need_id, atts)
     else
-      Maslow.need_api.create_need(atts)
+      response_hash = Maslow.need_api.create_need(atts).to_hash
+      @existing = true
+      extract_values(response_hash)
+      update(response_hash)
     end
+    true
   rescue GdsApi::HTTPErrorResponse => err
     false
   end
