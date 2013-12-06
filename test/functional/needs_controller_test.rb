@@ -120,8 +120,10 @@ class NeedsControllerTest < ActionController::TestCase
         user.uid = stub_user.uid
       end.returns(true)
 
+      mock_need.expects(:need_id).returns(1)
+
       post(:create, need: complete_need_data)
-      assert_redirected_to :action => :index
+      assert_redirected_to "/needs/1"
     end
 
     should "return a 422 response if save fails" do
@@ -142,7 +144,8 @@ class NeedsControllerTest < ActionController::TestCase
 
       GdsApi::NeedApi.any_instance.expects(:create_need).with(
         has_entry("justifications", ["It's something only government does"])
-      )
+      ).returns("id"=>100001)
+
       post(:create, need: need_data)
     end
 

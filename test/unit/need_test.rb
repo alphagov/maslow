@@ -37,7 +37,7 @@ class NeedTest < ActiveSupport::TestCase
             "status" => "created"
           })
 
-        GdsApi::NeedApi.any_instance.expects(:create_need).with(request).returns(status: 201, body: response.to_json)
+        GdsApi::NeedApi.any_instance.expects(:create_need).with(request).returns(response)
 
         assert need.save_as(author)
       end
