@@ -123,7 +123,7 @@ class NeedsControllerTest < ActionController::TestCase
       mock_need.expects(:need_id).returns(1)
 
       post(:create, need: complete_need_data)
-      assert_redirected_to "/needs/1"
+      assert_redirected_to need_path(:id => 1)
     end
 
     should "return a 422 response if save fails" do
@@ -289,7 +289,7 @@ class NeedsControllerTest < ActionController::TestCase
 
         assert_response :ok
         assert_equal "do things", assigns[:need].goal
-        assert_equal "/needs/100001", assigns[:target]
+        assert_equal need_path(:id => 100001), assigns[:target]
       end
     end
 
