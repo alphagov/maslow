@@ -35,11 +35,15 @@ class NeedTest < ActiveSupport::TestCase
         response = @atts.merge(
           "_response_info" => {
             "status" => "created"
-          })
+          },
+          "id" => "123456"
+        )
 
         GdsApi::NeedApi.any_instance.expects(:create_need).with(request).returns(response)
 
         assert need.save_as(author)
+        assert need.persisted?
+        assert_equal "123456", need.need_id
       end
 
       should "set the met_when and justifications fields to be empty arrays if not present" do
