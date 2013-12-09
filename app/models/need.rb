@@ -35,8 +35,14 @@ class Need
   NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "other_evidence", "legislation"] + NUMERIC_FIELDS
+
+  # list non-writable fields returned from the API which we want to make accessible
+  READ_ONLY_FIELDS = [ :id, :revisions, :organisations, :applies_to_all_organisations ]
+
   attr_accessor *FIELDS
-  attr_reader :need_id, :revisions, :organisations
+  attr_reader *READ_ONLY_FIELDS
+
+  alias_method :need_id, :id
 
   validates_presence_of ["role", "goal", "benefit"]
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -57,7 +63,8 @@ class Need
       # Discard fields from the API we don't understand. Coupling the fields
       # this app understands to the fields it expects from clients is fine, but
       # we don't want to couple that with the fields we can use in the API.
-      self.new(need_response.to_hash.slice(*FIELDS + ["id", "revisions", "organisations"]), true)
+      accepted_fields = need_response.to_hash.with_indifferent_access.slice( *(FIELDS + READ_ONLY_FIELDS) )
+      self.new(accepted_fields, true)
     else
       raise NotFound, need_id
     end
@@ -65,9 +72,14 @@ class Need
 
   def initialize(attrs, existing = false)
     if existing
-      @need_id = attrs.delete("id")
-      @revisions = prepare_revisions(attrs.delete("revisions"))
-      @organisations = prepare_organisations(attrs.delete("organisations"))
+      # map the read only fields from the API to instance variables of
+      # the same name
+      READ_ONLY_FIELDS.map(&:to_s).each do |field|
+        instance_variable_set("@#{field}", attrs.delete(field))
+      end
+
+      @revisions = prepare_revisions(@revisions)
+      @organisations = prepare_organisations(@organisations)
     end
     @existing = existing
 
@@ -96,7 +108,7 @@ class Need
   end
 
   def artefacts
-    @artefacts ||= Maslow.content_api.for_need(@need_id)
+    @artefacts ||= Maslow.content_api.for_need(@id)
   rescue GdsApi::BaseError
     []
   end
@@ -131,7 +143,7 @@ class Need
     })
 
     if persisted?
-      Maslow.need_api.update_need(@need_id, atts)
+      Maslow.need_api.update_need(@id, atts)
     else
       Maslow.need_api.create_need(atts)
     end
@@ -144,16 +156,6 @@ class Need
   end
 
 private
-  def id
-    # This method is required, because otherwise:
-    #
-    #   `semantic_form_for` from Formtastic invokes
-    #   `form_for` from Rails, which invokes
-    #   `dom_id` from ActionController, which invokes
-    #   `to_key` from ActiveModel, which falls over
-    @need_id
-  end
-
   def prepare_organisations(organisations)
     return [] unless organisations.present?
     GdsApi::Response.build_ostruct_recursively(organisations)
