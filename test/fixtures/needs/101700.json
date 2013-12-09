@@ -2,13 +2,13 @@
   "_response_info": {
     "status": "ok"
   },
-  "id": 101500,
+  "id": 101700,
   "role": "user",
-  "goal": "book a driving test",
-  "benefit": "I can get my driving licence",
+  "goal": "find out news from government",
+  "benefit": "I know what government is doing",
   "organisation_ids": [],
   "organisations": [],
-  "applies_to_all_organisations": false,
+  "applies_to_all_organisations": true,
   "impact": null,
   "justifications": [],
   "met_when": [],

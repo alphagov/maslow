@@ -54,6 +54,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("If GOV.UK didn't meet this need it would be noticed by the average member of the public")
         end
 
+        assert page.has_no_content?("This need applies to all organisations.")
+
         within ".interactions" do
           assert page.has_content?("824k Approximate pageviews a year")
           assert page.has_content?("32.6% of site pageviews")
@@ -235,6 +237,32 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         assert page.has_no_selector?(".interactions")
         assert page.has_no_selector?(".legislation")
         assert page.has_no_selector?(".other-evidence")
+      end
+    end
+  end
+
+  context "given a need which applies to all organisations" do
+    setup do
+      setup_need_api_responses(101700)
+    end
+
+    should "show basic information about the need" do
+      visit "/needs"
+      click_on "101700"
+
+      within ".need" do
+        within "header" do
+          assert page.has_no_selector?(".need-organisations")
+
+          assert page.has_content?("Find out news from government")
+          assert page.has_link?("Edit need", href: "/needs/101700/edit")
+        end
+
+        within ".the-need" do
+          assert page.has_content?("As a user \nI need to find out news from government \nSo that I know what government is doing")
+        end
+
+        assert page.has_content?("This need applies to all organisations.")
       end
     end
   end

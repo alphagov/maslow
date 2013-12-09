@@ -2,8 +2,12 @@
   <td><%= link_to need.id, need_path(need.id) %></td>
   <td><%= link_to format_need_goal(need.goal), need_path(need.id) %></td>
   <td>
-    <% if need.organisations.any? %>
-      <%= need.organisations.map(&:name).join(", ") %>
+    <% if need.applies_to_all_organisations %>
+      <span class="all-organisations">Applies to all organisations</span>
+    <% else %>
+      <% if need.organisations.any? %>
+        <%= need.organisations.map(&:name).join(", ") %>
+      <% end %>
     <% end %>
   </td>
 </tr>

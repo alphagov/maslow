@@ -59,3 +59,8 @@
   display: block;
   color: #000;
 }
+
+p.all-organisations {
+  @extend .alert;
+  @extend .alert-info;
+}
