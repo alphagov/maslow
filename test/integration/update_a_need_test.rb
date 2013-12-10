@@ -11,7 +11,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "met_when" => ["win","awesome","more"],
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
-      "revisions" => []
+      "revisions" => [],
+      "applies_to_all_organisations" => false
     }
   end
 
@@ -22,12 +23,15 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "competition-commission" => "Competition Commission",
       "ministry-of-justice" => "Ministry of Justice"
     )
-    need_api_has_needs([need_hash])  # For need list
-    need_api_has_need(need_hash)  # For individual need
-    content_api_has_artefacts_for_need_id("100001", [])
   end
 
-  context "Updating a need" do
+  context "updating a need" do
+    setup do
+      need_api_has_needs([need_hash])  # For need list
+      need_api_has_need(need_hash)  # For individual need
+      content_api_has_artefacts_for_need_id("100001", [])
+    end
+
     should "be able to access edit form" do
       visit('/needs')
 
@@ -192,6 +196,52 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
     end
+  end
 
+  context "updating a need which applies to all organisations" do
+    setup do
+      @need = need_hash.merge(
+        "id" => 100200,
+        "applies_to_all_organisations" => true
+      )
+
+      need_api_has_needs([@need]) # For need list
+      need_api_has_need(@need) # For individual need
+      content_api_has_artefacts_for_need_id("100200", [])
+    end
+
+    should "not show the organisations field" do
+      # stub the put request to the Need API
+      request_body = blank_need_request.merge(
+        "role" => "parent",
+        "goal" => "apply for a primary school place",
+        "organisation_ids" => [],
+        "benefit" => "my child can start school",
+        "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      )
+      request = stub_request(:put, Plek.current.find('need-api') + '/needs/100200')
+                  .with(:body => request_body.to_json)
+
+      visit "/needs"
+      click_on "100200"
+
+      within ".need header" do
+        assert page.has_content? "Apply for a primary school place"
+        click_on "Edit need"
+      end
+
+      assert page.has_selector? "h3", text: "Edit need"
+      assert page.has_no_select? "Organisations"
+
+      click_on_first "Update Need"
+      assert_requested request
+      assert page.has_content? "Need updated."
+    end
   end
 end
