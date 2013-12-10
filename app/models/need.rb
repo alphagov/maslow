@@ -71,19 +71,10 @@ class Need
   end
 
   def initialize(attrs, existing = false)
-    if existing
-      # map the read only fields from the API to instance variables of
-      # the same name
-      READ_ONLY_FIELDS.map(&:to_s).each do |field|
-        instance_variable_set("@#{field}", attrs.delete(field))
-      end
+    filtered_attributes = assign_and_filter_values(attrs)# if existing
 
-      @revisions = prepare_revisions(@revisions)
-      @organisations = prepare_organisations(@organisations)
-    end
     @existing = existing
-
-    update(attrs)
+    update(filtered_attributes)
   end
 
   def add_more_criteria
@@ -145,8 +136,12 @@ class Need
     if persisted?
       Maslow.need_api.update_need(@id, atts)
     else
-      Maslow.need_api.create_need(atts)
+      response_hash = Maslow.need_api.create_need(atts).to_hash
+      @existing = true
+      filtered_values = assign_and_filter_values(response_hash)
+      update(filtered_values)
     end
+    true
   rescue GdsApi::HTTPErrorResponse => err
     false
   end
@@ -156,6 +151,27 @@ class Need
   end
 
 private
+  def assign_and_filter_values(original_attrs)
+    attrs = original_attrs.except("_response_info")
+
+    # map the read only fields from the API to instance variables of
+    # the same name
+    READ_ONLY_FIELDS.map(&:to_s).each do |field|
+      value = attrs.delete(field)
+      prepared_value = case field
+                       when 'revisions'
+                         prepare_revisions(value)
+                       when 'organisations'
+                         prepare_organisations(value)
+                       else
+                         value
+                       end
+
+      instance_variable_set("@#{field}", prepared_value)
+    end
+    attrs
+  end
+
   def prepare_organisations(organisations)
     return [] unless organisations.present?
     GdsApi::Response.build_ostruct_recursively(organisations)
