@@ -48,7 +48,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to create a new Need" do
-      request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
+      post_request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
         :body => {
           "role" => "User",
           "goal" => "find my local register office",
@@ -69,7 +69,25 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             "email" => stub_user.email,
             "uid" => stub_user.uid
           }
-      }.to_json)
+        }.to_json
+      ).to_return(
+        :body =>
+          { "_response_info" => { "status" => "created" },
+            "id" => "100001"
+          }.to_json
+      )
+
+      get_request = stub_request(:get, Plek.current.find('need-api')+'/needs/100001').to_return(
+        :body =>
+          { "_response_info" => { "status" => "ok" },
+            "id" => "100001",
+            "role" => "User",
+            "goal" => "find my local register office",
+            "benefit" => "I can find records of birth, marriage or death"
+          }.to_json
+      )
+
+      content_api_has_artefacts_for_need_id(100001, [])
 
       visit('/needs')
       click_on('Add a new need')
@@ -92,7 +110,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       end
 
       click_on_first("Create Need")
-      assert_requested request
+      assert_requested post_request
+      assert_requested get_request
+      assert_equal("Find my local register office", page.find("h1").text)
       assert page.has_text?("Need created.")
     end
 
