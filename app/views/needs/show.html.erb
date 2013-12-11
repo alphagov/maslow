@@ -42,6 +42,12 @@
         </div>
       <% end %>
 
+      <% if @need.applies_to_all_organisations %>
+        <p class="all-organisations">
+          <strong>This need applies to all organisations.</strong> This is because it's common across government. It will be met by a particular format of content rather than individual items.
+        </p>
+      <% end %>
+
       <% if @need.legislation.present? %>
         <div class="legislation">
           <h3>Related legislation</h3>

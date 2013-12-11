@@ -8,16 +8,22 @@
   <% end %>
 
   <%= f.inputs "Give extra information about this need", :id => "extra-information" do %>
-    <%= f.input :organisation_ids,
-                  :as => :select,
-                  :collection => Organisation.all,
-                  :member_label => "name_with_abbreviation",
-                  :hint => "Which government organisations own this need?",
-                  :label => "Organisations",
-                  :input_html => {
-                    :multiple => true,
-                    :class => "organisation-select"
-                  } %>
+    <% if f.object.applies_to_all_organisations %>
+      <p class="all-organisations">
+        This need applies to all organisations.
+      </p>
+    <% else %>
+      <%= f.input :organisation_ids,
+                    :as => :select,
+                    :collection => Organisation.all,
+                    :member_label => "name_with_abbreviation",
+                    :hint => "Which government organisations own this need?",
+                    :label => "Organisations",
+                    :input_html => {
+                      :multiple => true,
+                      :class => "organisation-select"
+                    } %>
+    <% end %>
 
     <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
   <% end %>

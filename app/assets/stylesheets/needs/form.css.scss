@@ -29,6 +29,11 @@ form.need {
   fieldset#user-story {
     padding-bottom: 40px;
   }
+
+  p.all-organisations {
+    @extend .span8;
+    @extend .controls;
+  }
 }
 
 form.filter, form.search {
@@ -70,4 +75,8 @@ form.search input[type="search"] {
   span {
     text-indent: -9999px;
   }
+}
+
+span.all-organisations {
+  font-style: italic;
 }

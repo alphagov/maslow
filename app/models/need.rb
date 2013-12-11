@@ -102,8 +102,10 @@ class Need
     attrs.keys.each do |f|
       send("#{f}=", attrs[f])
     end
+
     @met_when ||= []
     @justifications ||= []
+    @organisation_ids ||= []
   end
 
   def artefacts

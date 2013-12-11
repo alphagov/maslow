@@ -22,6 +22,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "Department for Education",
             }
           ],
+          "applies_to_all_organisations" => false,
           "justifications" => [
             "it's something only government does",
             "the government is legally obliged to provide it"
@@ -47,6 +48,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "HM Passport Office",
             }
           ],
+          "applies_to_all_organisations" => false,
           "justifications" => [
             "it's something only government does",
             "the government is legally obliged to provide it"
@@ -55,6 +57,21 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
           "met_when" => [
             "The user finds information about the citizenship test and the next steps"
           ]
+        },
+        {
+          "id" => "10003",
+          "role" => "user",
+          "goal" => "find out about government policy",
+          "benefit" => "i can keep up to date with what's happening in government",
+          "organisation_ids" => [],
+          "organisations" => [],
+          "applies_to_all_organisations" => true,
+          "justifications" => [
+            "it's something only government does",
+            "the government is legally obliged to provide it"
+          ],
+          "impact" => "Has serious consequences for the day-to-day lives of your users",
+          "met_when" => []
         }
       ])
     end
@@ -76,6 +93,12 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
           assert page.has_content?("10002")
           assert page.has_content?("Find out about becoming a British citizen")
           assert page.has_content?("Home Office, HM Passport Office")
+        end
+
+        within "tbody tr:nth-of-type(3)" do
+          assert page.has_content?("10003")
+          assert page.has_content?("Find out about government policy")
+          assert page.has_content?("Applies to all organisations")
         end
       end
     end

@@ -17,6 +17,7 @@
       "name": "Driving Standards Agency"
     }
   ],
+  "applies_to_all_organisations": false,
   "impact": "Noticed by the average member of the public",
   "justifications": [
     "It's something only government does",
