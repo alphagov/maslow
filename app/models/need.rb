@@ -60,29 +60,28 @@ class Need
   def self.find(need_id)
     need_response = Maslow.need_api.need(need_id)
     if need_response
-      # Discard fields from the API we don't understand. Coupling the fields
-      # this app understands to the fields it expects from clients is fine, but
-      # we don't want to couple that with the fields we can use in the API.
-      accepted_fields = need_response.to_hash.with_indifferent_access.slice( *(FIELDS + READ_ONLY_FIELDS) )
-      self.new(accepted_fields, true)
+      self.new(need_response.to_hash, true)
     else
       raise NotFound, need_id
     end
   end
 
   def initialize(attrs, existing = false)
-    if existing
-      # map the read only fields from the API to instance variables of
-      # the same name
-      READ_ONLY_FIELDS.map(&:to_s).each do |field|
-        instance_variable_set("@#{field}", attrs.delete(field))
-      end
-
-      @revisions = prepare_revisions(@revisions)
-      @organisations = prepare_organisations(@organisations)
-    end
     @existing = existing
 
+    if existing
+      assign_read_only_attributes(attrs)
+
+      # discard all the read-only fields and anything else from the API which
+      # we don't understand, before calling the update method below
+      #
+      # we only do this for initializing an existing need from the API so that
+      # we can raise an error when invalid fields are submitted through the
+      # Maslow forms.
+      attrs = filtered_attributes(attrs)
+    end
+
+    # assign all the writable attributes
     update(attrs)
   end
 
@@ -147,8 +146,13 @@ class Need
     if persisted?
       Maslow.need_api.update_need(@id, atts)
     else
-      Maslow.need_api.create_need(atts)
+      response_hash = Maslow.need_api.create_need(atts).to_hash
+      @existing = true
+
+      assign_read_only_attributes(response_hash)
+      update(filtered_attributes(response_hash))
     end
+    true
   rescue GdsApi::HTTPErrorResponse => err
     false
   end
@@ -158,6 +162,31 @@ class Need
   end
 
 private
+  def assign_read_only_attributes(attrs)
+    # map the read only fields from the API to instance variables of
+    # the same name
+    READ_ONLY_FIELDS.map(&:to_s).each do |field|
+      value = attrs[field]
+      prepared_value = case field
+                       when 'revisions'
+                         prepare_revisions(value)
+                       when 'organisations'
+                         prepare_organisations(value)
+                       else
+                         value
+                       end
+
+      instance_variable_set("@#{field}", prepared_value)
+    end
+  end
+
+  def filtered_attributes(original_attrs)
+    # Discard fields from the API we don't understand. Coupling the fields
+    # this app understands to the fields it expects from clients is fine, but
+    # we don't want to couple that with the fields we can use in the API.
+    original_attrs.slice(*FIELDS)
+  end
+
   def prepare_organisations(organisations)
     return [] unless organisations.present?
     GdsApi::Response.build_ostruct_recursively(organisations)
