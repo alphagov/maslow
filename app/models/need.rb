@@ -35,8 +35,14 @@ class Need
   NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "other_evidence", "legislation"] + NUMERIC_FIELDS
+
+  # list non-writable fields returned from the API which we want to make accessible
+  READ_ONLY_FIELDS = [ :id, :revisions, :organisations, :applies_to_all_organisations ]
+
   attr_accessor *FIELDS
-  attr_reader :need_id, :revisions, :organisations
+  attr_reader *READ_ONLY_FIELDS
+
+  alias_method :need_id, :id
 
   validates_presence_of ["role", "goal", "benefit"]
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -54,29 +60,29 @@ class Need
   def self.find(need_id)
     need_response = Maslow.need_api.need(need_id)
     if need_response
-      # Discard fields from the API we don't understand. Coupling the fields
-      # this app understands to the fields it expects from clients is fine, but
-      # we don't want to couple that with the fields we can use in the API.
-      self.new(need_response.to_hash.slice(*FIELDS + ["id", "revisions", "organisations"]), true)
+      self.new(need_response.to_hash, true)
     else
       raise NotFound, need_id
     end
   end
 
   def initialize(attrs, existing = false)
-    if existing
-      extract_values(attrs)
-    end
     @existing = existing
-    update(attrs)
-  end
 
-  def extract_values(attrs)
-    attrs.delete("_response_info")
-    attrs.delete("applies_to_all_organisations")
-    @need_id = attrs.delete("id")
-    @revisions = prepare_revisions(attrs.delete("revisions"))
-    @organisations = prepare_organisations(attrs.delete("organisations"))
+    if existing
+      assign_read_only_attributes(attrs)
+
+      # discard all the read-only fields and anything else from the API which
+      # we don't understand, before calling the update method below
+      #
+      # we only do this for initializing an existing need from the API so that
+      # we can raise an error when invalid fields are submitted through the
+      # Maslow forms.
+      attrs = filtered_attributes(attrs)
+    end
+
+    # assign all the writable attributes
+    update(attrs)
   end
 
   def add_more_criteria
@@ -101,7 +107,7 @@ class Need
   end
 
   def artefacts
-    @artefacts ||= Maslow.content_api.for_need(@need_id)
+    @artefacts ||= Maslow.content_api.for_need(@id)
   rescue GdsApi::BaseError
     []
   end
@@ -136,12 +142,13 @@ class Need
     })
 
     if persisted?
-      Maslow.need_api.update_need(@need_id, atts)
+      Maslow.need_api.update_need(@id, atts)
     else
       response_hash = Maslow.need_api.create_need(atts).to_hash
       @existing = true
-      extract_values(response_hash)
-      update(response_hash)
+
+      assign_read_only_attributes(response_hash)
+      update(filtered_attributes(response_hash))
     end
     true
   rescue GdsApi::HTTPErrorResponse => err
@@ -153,14 +160,29 @@ class Need
   end
 
 private
-  def id
-    # This method is required, because otherwise:
-    #
-    #   `semantic_form_for` from Formtastic invokes
-    #   `form_for` from Rails, which invokes
-    #   `dom_id` from ActionController, which invokes
-    #   `to_key` from ActiveModel, which falls over
-    @need_id
+  def assign_read_only_attributes(attrs)
+    # map the read only fields from the API to instance variables of
+    # the same name
+    READ_ONLY_FIELDS.map(&:to_s).each do |field|
+      value = attrs[field]
+      prepared_value = case field
+                       when 'revisions'
+                         prepare_revisions(value)
+                       when 'organisations'
+                         prepare_organisations(value)
+                       else
+                         value
+                       end
+
+      instance_variable_set("@#{field}", prepared_value)
+    end
+  end
+
+  def filtered_attributes(original_attrs)
+    # Discard fields from the API we don't understand. Coupling the fields
+    # this app understands to the fields it expects from clients is fine, but
+    # we don't want to couple that with the fields we can use in the API.
+    original_attrs.slice(*FIELDS)
   end
 
   def prepare_organisations(organisations)
