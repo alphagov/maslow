@@ -8,7 +8,11 @@
   <% end %>
 
   <%= f.inputs "Give extra information about this need", :id => "extra-information" do %>
-    <% unless f.object.persisted? and f.object.applies_to_all_organisations %>
+    <% if f.object.applies_to_all_organisations %>
+      <p class="all-organisations">
+        This need applies to all organisations.
+      </p>
+    <% else %>
       <%= f.input :organisation_ids,
                     :as => :select,
                     :collection => Organisation.all,

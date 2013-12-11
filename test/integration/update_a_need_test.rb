@@ -238,6 +238,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       assert page.has_selector? "h3", text: "Edit need"
       assert page.has_no_select? "Organisations"
+      assert page.has_content? "This need applies to all organisations"
 
       click_on_first "Update Need"
       assert_requested request
