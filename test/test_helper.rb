@@ -58,7 +58,8 @@ class ActiveSupport::TestCase
       "yearly_user_contacts" => "",
       "yearly_site_views" => "",
       "yearly_need_views" => "",
-      "yearly_searches" => ""
+      "yearly_searches" => "",
+      "in_scope" => nil
     }
   end
 end

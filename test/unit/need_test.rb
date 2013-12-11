@@ -27,6 +27,7 @@ class NeedTest < ActiveSupport::TestCase
         author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
 
         request = @atts.merge(
+          "in_scope" => nil,
           "author" => {
             "name" => "O'Brien",
             "email" => "obrien@alphagov.co.uk",
@@ -84,7 +85,10 @@ class NeedTest < ActiveSupport::TestCase
         should "present attributes as json" do
           json = Need.new(@atts).as_json
 
-          assert_equal @atts.keys.sort, json.keys.sort
+          # include protected fields in the list of keys to expect
+          expected_keys = (@atts.keys + ["in_scope"]).sort
+
+          assert_equal expected_keys, json.keys.sort
           assert_equal "user", json["role"]
           assert_equal "do stuff", json["goal"]
           assert_equal "get stuff", json["benefit"]
@@ -139,6 +143,12 @@ class NeedTest < ActiveSupport::TestCase
     should "raise an exception when non-whitelisted fields are present" do
       assert_raises(ArgumentError) do
         Need.new(@atts.merge("foo" => "bar", "bar" => "baz"))
+      end
+    end
+
+    should "raise an exception when protected fields are present" do
+      assert_raises ArgumentError do
+        Need.new(@atts.merge("in_scope" => "foo"))
       end
     end
 
@@ -343,6 +353,16 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal "2013-05-01T00:00:00+00:00", first_revision.created_at
     end
 
+    should "correctly assign protected fields" do
+      response = stub_response(
+        "in_scope" => false
+      )
+      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
+
+      need = Need.find(100001)
+      assert_equal false, need.in_scope
+    end
+
     context "returning artefacts for a need" do
       setup do
         GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
@@ -431,6 +451,17 @@ class NeedTest < ActiveSupport::TestCase
           @need.update("cheese" => "obstinate")
         end
       end
+
+      should "reject a protected field" do
+        assert_raises ArgumentError do
+          @need.update("in_scope" => "foo")
+        end
+      end
+
+      should "create an accessor to update the protected field" do
+        @need.in_scope = "foo"
+        assert_equal "foo", @need.in_scope
+      end
     end
 
     should "call the need API" do
@@ -449,6 +480,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_site_views" => nil,
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
+        "in_scope" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }
