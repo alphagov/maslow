@@ -58,7 +58,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           "role" => "grandparent",
           "goal" => "apply for a primary school place",
           "benefit" => "my grandchild can start school",
-          "legislation" => "",
+          "legislation" => nil,
           "met_when" => ["win","awesome","more"],
           "author" => {
             "name" => stub_user.name,

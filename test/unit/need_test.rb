@@ -137,6 +137,14 @@ class NeedTest < ActiveSupport::TestCase
           assert need.as_json.has_key?("goal")
           assert need.as_json.has_key?("benefit")
         end
+
+        should "return empty strings as nil in the hash" do
+          need = Need.new("role" => "", "goal" => "", "benefit" => "")
+
+          assert_equal nil, need.as_json["role"]
+          assert_equal nil, need.as_json["goal"]
+          assert_equal nil, need.as_json["benefit"]
+        end
       end
     end
 

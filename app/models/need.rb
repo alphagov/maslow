@@ -130,13 +130,16 @@ class Need
     # @validation_context.
     remove_blank_met_when_criteria
     res = (WRITABLE_FIELDS).each_with_object({}) do |field, hash|
-      if value = send(field) and value.present?
-
-
+      value = send(field)
+      if value.present?
         # if this is a numeric field, force the value we send to the API to be an
         # integer
         value = Integer(value) if NUMERIC_FIELDS.include?(field)
       end
+
+      # catch empty text fields and send them as null values instead for consistency
+      # with updates on other fields
+      value = nil if value == ""
 
       hash[field] = value
     end
