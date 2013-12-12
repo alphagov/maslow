@@ -11,7 +11,11 @@ module NeedHelper
   end
 
   def format_field_value(value)
-    value.present? ? value : "<em>blank</em>".html_safe
+    if value.nil? or value.to_s.strip == ""
+      "<em>blank</em>".html_safe
+    else
+      value.to_s
+    end
   end
 
   def format_field_name(name)
