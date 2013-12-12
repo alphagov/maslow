@@ -378,6 +378,89 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "PUT descope" do
+    context "given a valid need without a set value for in_scope" do
+      setup do
+        @stub_need = Need.new({
+            "id" => 100001,
+            "role" => "person",
+            "goal" => "do things",
+            "benefit" => "good things",
+            "in_scope" => nil
+          }, true)
+        Need.expects(:find).with(100001).returns(@stub_need)
+      end
+
+      should "set the in_scope attribute to false" do
+        # not testing the save method here
+        @stub_need.stubs(:save_as).returns(true)
+
+        @stub_need.expects(:in_scope=).with(false)
+
+        put :descope, id: 100001
+      end
+
+      should "save the need as the current user" do
+        @stub_need.expects(:save_as).with do |user|
+          user.name = stub_user.name
+          user.email = stub_user.email
+          user.uid = stub_user.uid
+        end.returns(true)
+
+        put :descope, id: 100001
+      end
+
+      should "redirect to the need with a success message once complete" do
+        @stub_need.stubs(:save_as).returns(true)
+
+        put :descope, id: 100001
+
+        refute @controller.flash[:error]
+        assert_equal "Need has been marked as out of scope", @controller.flash[:notice]
+        assert_redirected_to need_path(@stub_need)
+      end
+
+      should "redirect to the need with an error if the save fails" do
+        @stub_need.stubs(:save_as).returns(false)
+
+        put :descope, id: 100001
+
+        refute @controller.flash[:notice]
+        assert_equal "We had a problem marking the need as out of scope", @controller.flash[:error]
+        assert_redirected_to need_path(@stub_need)
+      end
+    end
+
+    context "given a valid need already marked as out of scope" do
+      setup do
+        @stub_need = Need.new({
+            "id" => 100001,
+            "role" => "person",
+            "goal" => "do things",
+            "benefit" => "good things",
+            "in_scope" => false
+          }, true)
+        Need.expects(:find).with(100001).returns(@stub_need)
+      end
+
+      should "redirect to the need with an error" do
+        put :descope, id: 100001
+
+        refute @controller.flash[:notice]
+        assert_equal "This need has already been marked as out of scope", @controller.flash[:error]
+        assert_redirected_to need_path(@stub_need)
+      end
+    end
+
+    should "404 if a need isn't found" do
+      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+
+      put :descope, id: 100001
+
+      assert_response :not_found
+    end
+  end
+
   context "deleting met_when criteria" do
     should "remove the only value" do
       need = complete_need_data.merge("met_when" => ["Winning"])

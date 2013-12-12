@@ -14,6 +14,18 @@
     So that <%= @need.benefit %>
   </p>
 
+  <% if @need.in_scope == false %>
+    <p>This need is not in scope for GOV.UK</p>
+  <% else %>
+    <p>
+      <%= button_to "Mark as out of scope",
+                    descope_need_path(@need),
+                    method: :put,
+                    class: "btn btn-danger",
+                    confirm: "Are you sure you want to mark this need as out of scope? This can't be changed." %>
+    </p>
+  <% end %>
+
   <div class="need-wrapper row">
     <div class="span8">
       <% if @need.met_when.any? %>

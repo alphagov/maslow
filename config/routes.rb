@@ -5,6 +5,7 @@ Maslow::Application.routes.draw do
   resources :needs, except: [:destroy], constraints: { id: /[0-9]+/ } do
     member do
       get :revisions
+      put :descope
     end
   end
 

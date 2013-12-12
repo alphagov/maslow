@@ -1,0 +1,22 @@
+{
+  "_response_info": {
+    "status": "ok"
+  },
+  "id": 101800,
+  "role": "user",
+  "goal": "find out news from government",
+  "benefit": "I know what government is doing",
+  "organisation_ids": [],
+  "organisations": [],
+  "applies_to_all_organisations": true,
+  "impact": null,
+  "justifications": [],
+  "met_when": [],
+  "other_evidence": null,
+  "legislation": null,
+  "yearly_user_contacts": null,
+  "yearly_site_views": null,
+  "yearly_need_views": null,
+  "yearly_searches": null,
+  "in_scope": false
+}
