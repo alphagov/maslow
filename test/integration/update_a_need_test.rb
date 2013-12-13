@@ -76,7 +76,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
-      click_on_first("Update Need")
+      click_on_first_button("Update Need")
 
       assert_requested request
       assert page.has_text?("Need updated."), "No success message displayed"
@@ -125,7 +125,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-2", with: "more")
       end
 
-      click_on_first("Update Need")
+      click_on_first_button("Update Need")
 
       assert_requested request
       assert page.has_text?("Need updated."), "No success message displayed"
@@ -148,7 +148,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
 
       within "#met-when-criteria" do
-        click_on_first('delete-criteria')
+        click_on_first_button('delete-criteria')
       end
 
       assert_equal("awesome", find_field("criteria-0").value)
@@ -191,7 +191,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
-      click_on_first('Update Need')
+      click_on_first_button('Update Need')
 
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
@@ -240,7 +240,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_no_select? "Organisations"
       assert page.has_content? "This need applies to all organisations"
 
-      click_on_first "Update Need"
+      click_on_first_button "Update Need"
       assert_requested request
       assert page.has_content? "Need updated."
     end
@@ -278,7 +278,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100001"
 
-      click_on "Mark as out of scope"
+      click_on_first_button "Mark as out of scope"
 
       assert page.has_content?("Need has been marked as out of scope")
     end
@@ -290,7 +290,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100001"
 
-      click_on "Mark as out of scope"
+      click_on_first_button "Mark as out of scope"
 
       assert page.has_content?("We had a problem marking the need as out of scope")
     end

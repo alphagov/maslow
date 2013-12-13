@@ -14,7 +14,7 @@ class ActionDispatch::IntegrationTest
     Capybara.current_session.driver.browser.clear_cookies
   end
 
-  def click_on_first(selector)
+  def click_on_first_button(selector)
     first(:button, selector).click
   end
 
