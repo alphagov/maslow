@@ -55,6 +55,7 @@ class ActiveSupport::TestCase
       "met_when" => [],
       "other_evidence" => "",
       "legislation" => "",
+      "duplicate_of" => nil,
       "yearly_user_contacts" => "",
       "yearly_site_views" => "",
       "yearly_need_views" => "",

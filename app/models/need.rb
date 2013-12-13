@@ -34,7 +34,7 @@ class Need
   ]
   NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
   FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
-    "other_evidence", "legislation"] + NUMERIC_FIELDS
+    "other_evidence", "legislation", "duplicate_of"] + NUMERIC_FIELDS
 
   # list non-writable fields returned from the API which we want to make accessible
   READ_ONLY_FIELDS = [ :id, :revisions, :organisations, :applies_to_all_organisations ]

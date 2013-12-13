@@ -18,6 +18,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_site_views" => 70000,
         "yearly_need_views" => 15000,
         "yearly_searches" => 2000,
+        "duplicate_of" => 12345
       }
     end
 
@@ -449,6 +450,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_site_views" => nil,
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
+        "duplicate_of" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }
