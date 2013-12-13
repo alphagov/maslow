@@ -81,6 +81,27 @@ class NeedsController < ApplicationController
     @target = need_path(params[:id])
     render "edit", :status => 422
   end
+
+  def closed
+    main_need_id = params["need"]["duplicate_of"]
+    @need = load_need
+    @need.duplicate_of = main_need_id
+
+    if @need.valid?
+      if @need.save_as(current_user)
+        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
+        return
+      else
+        flash[:error] = "There was a problem saving your need."
+      end
+    else
+      flash[:error] = "There were errors in the need form."
+    end
+
+    @target = need_path(params[:id])
+    render "edit", :status => 422
+  end
+
   private
 
   def prepare_need_params(params_hash)
@@ -94,8 +115,6 @@ class NeedsController < ApplicationController
     end
     params_hash["need"]
   end
-
-private
 
   def load_need
     begin

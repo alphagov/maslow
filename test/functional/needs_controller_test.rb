@@ -405,4 +405,30 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "PUT closed" do
+    setup do
+      @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
+    end
+
+    should "close the need and redirect to show it" do
+      Need.expects(:find).with(100002).returns(@need)
+      @need.expects(:save_as).with(is_a(User)).returns(true)
+
+      put :closed,
+          :id => "100002",
+          :need => { :duplicate_of => 100001 }
+      assert_redirected_to need_path(100002)
+    end
+
+    should "return a 422 response if save fails" do
+      Need.expects(:find).with(100002).returns(@need)
+      @need.expects(:save_as).returns(false)
+
+      put :closed,
+          :id => "100002",
+          :need => { :duplicate_of => 100000 }
+
+      assert_response 422
+    end
+  end
 end
