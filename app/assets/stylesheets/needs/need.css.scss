@@ -69,3 +69,12 @@ p.all-organisations {
   @extend .alert;
   @extend .alert-info;
 }
+
+.out-of-scope {
+  @extend .alert;
+  @extend .alert-block;
+
+  padding: 24px;
+  font-size: 24px;
+  line-height: 1.31579
+}

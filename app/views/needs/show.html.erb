@@ -15,7 +15,9 @@
   </p>
 
   <% if @need.in_scope == false %>
-    <p>This need is not in scope for GOV.UK</p>
+    <div class="out-of-scope">
+      <strong>This need is not in scope for GOV.UK</strong>
+    </div>
   <% end %>
 
   <div class="need-wrapper row">
