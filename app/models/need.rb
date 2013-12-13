@@ -174,6 +174,10 @@ class Need
     @existing
   end
 
+  def out_of_scope?
+    in_scope == false
+  end
+
 private
   def assign_read_only_and_protected_attributes(attrs)
     # map the read only and protected fields from the API to instance

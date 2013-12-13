@@ -261,7 +261,6 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
-
   context "loading needs" do
 
     def stub_response(additional_atts = {})
@@ -497,5 +496,13 @@ class NeedTest < ActiveSupport::TestCase
       @need.update("benefit" => "excellent things")
       @need.save_as(author)
     end
+  end
+
+  should "return whether a need is out of scope" do
+    need = Need.new({ "in_scope" => false }, true)
+    assert need.out_of_scope?
+
+    need = Need.new({ "in_scope" => nil }, true)
+    refute need.out_of_scope?
   end
 end
