@@ -36,7 +36,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit need")
+      click_on("Edit")
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
@@ -71,7 +71,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on('100001')
-      click_on('Edit need')
+      click_on('Edit')
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
@@ -86,7 +86,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
-      click_on("Edit need")
+      click_on("Edit")
 
       within "#met-when-criteria" do
         assert_equal("win", find_field("criteria-0").value)
@@ -112,7 +112,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       visit('/needs')
       click_on('100001')
-      click_on("Edit need")
+      click_on("Edit")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -134,7 +134,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     should "be able to delete met_when criteria" do
       visit('/needs')
       click_on('100001')
-      click_on("Edit need")
+      click_on("Edit")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -187,7 +187,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit need")
+      click_on("Edit")
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
@@ -233,7 +233,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       within ".need header" do
         assert page.has_content? "Apply for a primary school place"
-        click_on "Edit need"
+        click_on "Edit"
       end
 
       assert page.has_selector? "h3", text: "Edit need"
