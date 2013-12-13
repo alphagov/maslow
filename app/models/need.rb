@@ -137,14 +137,23 @@ class Need
   end
 
   def save_as(author)
-    atts = as_json.merge("author" => {
+    author_atts = {
       "name" => author.name,
       "email" => author.email,
       "uid" => author.uid
-    })
+    }
+    atts = as_json.merge("author" => author_atts)
 
     if persisted?
-      Maslow.need_api.update_need(@id, atts)
+      if duplicate_of.nil?
+        Maslow.need_api.update_need(@id, atts)
+      else
+        duplicate_atts = {
+          "duplicate_of" => @duplicate_of,
+          "author" => author_atts
+        }
+        Maslow.need_api.closed(@id, duplicate_atts)
+      end
     else
       response_hash = Maslow.need_api.create_need(atts).to_hash
       @existing = true

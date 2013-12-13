@@ -460,4 +460,32 @@ class NeedTest < ActiveSupport::TestCase
       @need.save_as(author)
     end
   end
+
+  context "closing needs as duplicates" do
+    setup do
+      need_hash = {
+        "id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      Need.new(need_hash, existing = true)
+      @need = Need.new(need_hash.merge("id" => 100002), existing = true)
+    end
+
+    should "call Need API with the correct values" do
+      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      duplicate_atts = {
+        "duplicate_of" => 100001,
+        "author" => {
+          "name" => "O'Brien",
+          "email" => "obrien@alphagov.co.uk",
+          "uid" => "user-1234"
+        }
+      }
+      GdsApi::NeedApi.any_instance.expects(:closed).once.with(100002, duplicate_atts)
+      @need.duplicate_of = 100001
+      @need.save_as(author)
+    end
+  end
 end
