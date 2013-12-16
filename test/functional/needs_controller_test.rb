@@ -491,25 +491,66 @@ class NeedsControllerTest < ActionController::TestCase
   context "PUT closed" do
     setup do
       @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
+      Need.expects(:find).with(100002).returns(@need)
     end
 
-    should "close the need and redirect to show it" do
-      Need.expects(:find).with(100002).returns(@need)
-      @need.expects(:save_as).with(is_a(User)).returns(true)
+    should "call duplicate_of with the correct value" do
+      # not testing the save method here
+      @need.stubs(:save_as).returns(true)
+
+      @need.expects(:duplicate_of=).with("100001")
 
       put :closed,
           :id => "100002",
           :need => { :duplicate_of => 100001 }
+    end
+
+    should "close the need and redirect to show it" do
+      @need.expects(:save_as).with do |user|
+        user.name = stub_user.name
+        user.email = stub_user.email
+        user.uid = stub_user.uid
+      end.returns(true)
+
+      put :closed,
+          :id => "100002",
+          :need => { :duplicate_of => 100001 }
+    end
+
+    should "redirect to the need with a success message once complete" do
+      @need.stubs(:save_as).returns(true)
+
+      put :closed,
+          :id => "100002",
+          :need => { :duplicate_of => 100001 }
+
+      refute @controller.flash[:error]
+      assert_equal "Need closed as a duplicate of 100001", @controller.flash[:notice]
       assert_redirected_to need_path(100002)
     end
 
+    should "display an error if the duplicate_of id is invalid" do
+      @need.expects(:valid?).returns(false)
+
+      put :closed,
+          :id => "100002",
+          :need => { :duplicate_of => 1 }
+
+      refute @controller.flash[:notice]
+      assert_equal "The Need ID entered is invalid", @controller.flash[:error]
+
+      assert_response 422
+    end
+
     should "return a 422 response if save fails" do
-      Need.expects(:find).with(100002).returns(@need)
       @need.expects(:save_as).returns(false)
 
       put :closed,
           :id => "100002",
           :need => { :duplicate_of => 100000 }
+
+      refute @controller.flash[:notice]
+      assert_equal "There was a problem closing the need as a duplicate", @controller.flash[:error]
 
       assert_response 422
     end

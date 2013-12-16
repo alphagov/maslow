@@ -95,7 +95,7 @@ class NeedsController < ApplicationController
         flash[:error] = "There was a problem closing the need as a duplicate"
       end
     else
-      flash[:error] = "There were errors in the need form."
+      flash[:error] = "The Need ID entered is invalid"
     end
 
     @target = need_path(params[:id])
