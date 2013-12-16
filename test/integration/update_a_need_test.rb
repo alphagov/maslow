@@ -343,5 +343,18 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Need closed as a duplicate of 100001")
       assert page.has_no_button?("Edit")
     end
+
+    should "show an error message if there's a problem closing the need as a duplicate" do
+      need_api_has_need(@duplicate) # For individual need
+      request = stub_request(:put, @api_url+'/closed').to_return(status: 422)
+
+      visit "/needs"
+      click_on "100002"
+      click_on "Edit"
+      fill_in("Duplicate of", with: 100001)
+      click_on_first_button "Close as duplicate"
+
+      assert page.has_content?("There was a problem closing the need as a duplicate")
+    end
   end
 end

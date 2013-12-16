@@ -92,7 +92,7 @@ class NeedsController < ApplicationController
         redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
         return
       else
-        flash[:error] = "There was a problem saving your need."
+        flash[:error] = "There was a problem closing the need as a duplicate"
       end
     else
       flash[:error] = "There were errors in the need form."
