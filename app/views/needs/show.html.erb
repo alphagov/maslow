@@ -6,7 +6,11 @@
       <li class="active"><%= @need.need_id %>: <%= format_need_goal @need.goal %></li>
     </ul>
   </nav>
-  <%= render :partial => "need_header", locals: { actions: [:edit, :history] } %>
+
+  <%= render partial: "need_header",
+             locals: {
+               actions: @need.duplicate_of.present? ? [:history] : [:edit, :history]
+             } %>
 
   <p class="the-need well well-large">
     As a <%= @need.role %><br />
