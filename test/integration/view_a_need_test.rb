@@ -32,13 +32,15 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
 
           assert page.has_content?("Book a driving test")
-          assert page.has_link?("Edit need", href: "/needs/101350/edit")
+          assert page.has_link?("Edit", href: "/needs/101350/edit")
           assert page.has_link?("See history", href: "/needs/101350/revisions")
         end
 
         within ".the-need" do
           assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
         end
+
+        assert page.has_button?("Mark as out of scope")
 
         within ".met-when" do
           assert page.has_content?("Users can book their driving test")
@@ -92,7 +94,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
 
           assert page.has_content?("Book a driving test")
-          assert page.has_link?("Edit need", href: "/needs/101350/edit")
+          assert page.has_link?("Edit", href: "/needs/101350/edit")
           assert page.has_no_link?("See history")
         end
 
@@ -224,7 +226,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_no_selector?(".need-organisations")
 
           assert page.has_content?("Book a driving test")
-          assert page.has_link?("Edit need", href: "/needs/101500/edit")
+          assert page.has_link?("Edit", href: "/needs/101500/edit")
         end
 
         within ".the-need" do
@@ -255,7 +257,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_no_selector?(".need-organisations")
 
           assert page.has_content?("Find out news from government")
-          assert page.has_link?("Edit need", href: "/needs/101700/edit")
+          assert page.has_link?("Edit", href: "/needs/101700/edit")
         end
 
         within ".the-need" do
@@ -264,6 +266,20 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
         assert page.has_content?("This need applies to all organisations.")
       end
+    end
+  end
+
+  context "given a need which is out of scope" do
+    setup do
+      setup_need_api_responses(101800)
+    end
+
+    should "indicate that it is out of scope" do
+      visit "/needs"
+      click_on "101800"
+
+      assert page.has_content?("This need is not in scope for GOV.UK")
+      assert page.has_no_button?("Mark as out of scope")
     end
   end
 

@@ -102,6 +102,26 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def descope
+    @need = load_need
+
+    unless @need.in_scope.nil?
+      flash[:error] = "This need has already been marked as out of scope"
+      redirect_to need_path(@need)
+      return
+    end
+
+    @need.in_scope = false
+
+    if @need.save_as(current_user)
+      flash[:notice] = "Need has been marked as out of scope"
+    else
+      flash[:error] = "We had a problem marking the need as out of scope"
+    end
+
+    redirect_to need_path(@need)
+  end
+
   private
 
   def prepare_need_params(params_hash)

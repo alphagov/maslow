@@ -106,7 +106,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       assert page.has_text?("HM Passport Office")
 
       select("Department for Education [DfE]", from: "Filter needs by organisation:")
-      click_on_first("Filter")
+      click_on_first_button("Filter")
 
       within "#needs" do
         assert page.has_text?("Department for Education")

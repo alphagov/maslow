@@ -104,7 +104,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       assert page.has_text?("HM Passport Office")
 
       fill_in("Search needs:", with: "citizenship")
-      click_on_first("Search")
+      click_on_first_button("Search")
 
       assert page.has_text?("Find out about becoming a British citizen")
       assert page.has_no_text?("Apply for a primary school place")

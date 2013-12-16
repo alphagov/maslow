@@ -32,14 +32,24 @@ class Need
     "Has serious consequences for your users and/or their customers",
     "Endangers people"
   ]
+
   NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
-  FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
+  MASS_ASSIGNABLE_FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
     "other_evidence", "legislation", "duplicate_of"] + NUMERIC_FIELDS
 
-  # list non-writable fields returned from the API which we want to make accessible
+  # fields which should not be updated through mass-assignment.
+  # this is equivalent to using ActiveModel's attr_protected
+  PROTECTED_FIELDS = ["in_scope"]
+
+  # fields which we should create read and write accessors for
+  # and which we should send back to the Need API
+  WRITABLE_FIELDS = MASS_ASSIGNABLE_FIELDS + PROTECTED_FIELDS
+
+  # non-writable fields returned from the API which we want to make accessible
+  # but which we don't want to send back to the Need API
   READ_ONLY_FIELDS = [ :id, :revisions, :organisations, :applies_to_all_organisations ]
 
-  attr_accessor *FIELDS
+  attr_accessor *WRITABLE_FIELDS
   attr_reader *READ_ONLY_FIELDS
 
   alias_method :need_id, :id
@@ -70,7 +80,7 @@ class Need
     @existing = existing
 
     if existing
-      assign_read_only_attributes(attrs)
+      assign_read_only_and_protected_attributes(attrs)
 
       # discard all the read-only fields and anything else from the API which
       # we don't understand, before calling the update method below
@@ -96,7 +106,7 @@ class Need
   def update(attrs)
     strip_newline_from_textareas(attrs)
 
-    unless (attrs.keys - FIELDS).empty?
+    unless (attrs.keys - MASS_ASSIGNABLE_FIELDS).empty?
       raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
     end
     attrs.keys.each do |f|
@@ -119,14 +129,17 @@ class Need
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
     remove_blank_met_when_criteria
-    res = (FIELDS + NUMERIC_FIELDS).each_with_object({}) do |field, hash|
-      if value = send(field) and value.present?
-
-
+    res = (WRITABLE_FIELDS).each_with_object({}) do |field, hash|
+      value = send(field)
+      if value.present?
         # if this is a numeric field, force the value we send to the API to be an
         # integer
         value = Integer(value) if NUMERIC_FIELDS.include?(field)
       end
+
+      # catch empty text fields and send them as null values instead for consistency
+      # with updates on other fields
+      value = nil if value == ""
 
       hash[field] = value
     end
@@ -158,7 +171,7 @@ class Need
       response_hash = Maslow.need_api.create_need(atts).to_hash
       @existing = true
 
-      assign_read_only_attributes(response_hash)
+      assign_read_only_and_protected_attributes(response_hash)
       update(filtered_attributes(response_hash))
     end
     true
@@ -170,11 +183,15 @@ class Need
     @existing
   end
 
+  def out_of_scope?
+    in_scope == false
+  end
+
 private
-  def assign_read_only_attributes(attrs)
-    # map the read only fields from the API to instance variables of
-    # the same name
-    READ_ONLY_FIELDS.map(&:to_s).each do |field|
+  def assign_read_only_and_protected_attributes(attrs)
+    # map the read only and protected fields from the API to instance
+    # variables of the same name
+    (READ_ONLY_FIELDS + PROTECTED_FIELDS).map(&:to_s).each do |field|
       value = attrs[field]
       prepared_value = case field
                        when 'revisions'
@@ -193,7 +210,7 @@ private
     # Discard fields from the API we don't understand. Coupling the fields
     # this app understands to the fields it expects from clients is fine, but
     # we don't want to couple that with the fields we can use in the API.
-    original_attrs.slice(*FIELDS)
+    original_attrs.slice(*MASS_ASSIGNABLE_FIELDS)
   end
 
   def prepare_organisations(organisations)
