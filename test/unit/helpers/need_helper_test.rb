@@ -36,6 +36,10 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_equal "<em>blank</em>", output
       assert output.html_safe?
     end
+
+    should "return 'false' when false" do
+      assert_equal "false", format_field_value(false)
+    end
   end
 
   context "format_field_name" do

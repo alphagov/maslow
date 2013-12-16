@@ -80,3 +80,11 @@ form.search input[type="search"] {
 span.all-organisations {
   font-style: italic;
 }
+
+form.button_to {
+  display: inline;
+
+  > div {
+    display: inline;
+  }
+}

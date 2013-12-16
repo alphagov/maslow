@@ -46,19 +46,20 @@ class ActiveSupport::TestCase
 
   def blank_need_request
     {
-      "role" => "",
-      "goal" => "",
-      "benefit" => "",
+      "role" => nil,
+      "goal" => nil,
+      "benefit" => nil,
       "organisation_ids" => [],
       "impact" => nil,
       "justifications" => [],
       "met_when" => [],
-      "other_evidence" => "",
-      "legislation" => "",
-      "yearly_user_contacts" => "",
-      "yearly_site_views" => "",
-      "yearly_need_views" => "",
-      "yearly_searches" => ""
+      "other_evidence" => nil,
+      "legislation" => nil,
+      "yearly_user_contacts" => nil,
+      "yearly_site_views" => nil,
+      "yearly_need_views" => nil,
+      "yearly_searches" => nil,
+      "in_scope" => nil
     }
   end
 end

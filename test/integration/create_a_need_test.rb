@@ -64,6 +64,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "yearly_site_views" => 1000000,
           "yearly_need_views" => 1000,
           "yearly_searches" => 2000,
+          "in_scope" => nil,
           "author" => {
             "name" => stub_user.name,
             "email" => stub_user.email,
@@ -109,7 +110,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-0", with: "Can download a birth certificate.")
       end
 
-      click_on_first("Create Need")
+      click_on_first_button("Create Need")
       assert_requested post_request
       assert_requested get_request
       assert_equal("Find my local register office", page.find("h1").text)
@@ -144,7 +145,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-0", with: "Can download a birth certificate.")
       end
 
-      click_on_first("Create Need")
+      click_on_first_button("Create Need")
 
       assert page.has_text?("Please fill in the required fields.")
       within "#met-when-criteria" do
@@ -157,7 +158,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
       click_on('Add a new need')
 
-      click_on_first("Create Need")
+      click_on_first_button("Create Need")
 
       within "#met-when-criteria" do
         assert_equal("", find_field("criteria-0").value)
@@ -187,7 +188,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("I need to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
 
-      click_on_first("Create Need")
+      click_on_first_button("Create Need")
 
       assert page.has_text?("There was a problem saving your need.")
     end

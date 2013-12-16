@@ -14,6 +14,12 @@
     So that <%= @need.benefit %>
   </p>
 
+  <% if @need.in_scope == false %>
+    <div class="out-of-scope">
+      <strong>This need is not in scope for GOV.UK</strong>
+    </div>
+  <% end %>
+
   <div class="need-wrapper row">
     <div class="span8">
       <% if @need.met_when.any? %>

@@ -36,7 +36,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit need")
+      click_on("Edit")
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
@@ -58,7 +58,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           "role" => "grandparent",
           "goal" => "apply for a primary school place",
           "benefit" => "my grandchild can start school",
-          "legislation" => "",
+          "legislation" => nil,
           "met_when" => ["win","awesome","more"],
           "author" => {
             "name" => stub_user.name,
@@ -71,12 +71,12 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on('100001')
-      click_on('Edit need')
+      click_on('Edit')
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
-      click_on_first("Update Need")
+      click_on_first_button("Update Need")
 
       assert_requested request
       assert page.has_text?("Need updated."), "No success message displayed"
@@ -86,7 +86,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
-      click_on("Edit need")
+      click_on("Edit")
 
       within "#met-when-criteria" do
         assert_equal("win", find_field("criteria-0").value)
@@ -112,7 +112,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       visit('/needs')
       click_on('100001')
-      click_on("Edit need")
+      click_on("Edit")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -125,7 +125,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-2", with: "more")
       end
 
-      click_on_first("Update Need")
+      click_on_first_button("Update Need")
 
       assert_requested request
       assert page.has_text?("Need updated."), "No success message displayed"
@@ -134,7 +134,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     should "be able to delete met_when criteria" do
       visit('/needs')
       click_on('100001')
-      click_on("Edit need")
+      click_on("Edit")
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -148,7 +148,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
 
       within "#met-when-criteria" do
-        click_on_first('delete-criteria')
+        click_on_first_button('delete-criteria')
       end
 
       assert_equal("awesome", find_field("criteria-0").value)
@@ -187,11 +187,11 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit need")
+      click_on("Edit")
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
-      click_on_first('Update Need')
+      click_on_first_button('Update Need')
 
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
@@ -233,16 +233,66 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       within ".need header" do
         assert page.has_content? "Apply for a primary school place"
-        click_on "Edit need"
+        click_on "Edit"
       end
 
       assert page.has_selector? "h3", text: "Edit need"
       assert page.has_no_select? "Organisations"
       assert page.has_content? "This need applies to all organisations"
 
-      click_on_first "Update Need"
+      click_on_first_button "Update Need"
       assert_requested request
       assert page.has_content? "Need updated."
+    end
+  end
+
+  context "marking a need as out of scope" do
+    setup do
+      @need = need_hash.merge(
+        "in_scope" => nil
+      )
+      need_api_has_needs([@need]) # For need list
+      content_api_has_artefacts_for_need_id("100001", [])
+
+      @api_url = Plek.current.find('need-api') + '/needs/100001'
+    end
+
+    should "be able to mark a need as out of scope" do
+      need_api_has_need(@need) # For individual need
+
+      request_body = blank_need_request.merge(
+        "role" => "parent",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my child can start school",
+        "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
+        "in_scope" => false,
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      )
+      request = stub_request(:put, @api_url).with(:body => request_body.to_json)
+
+      visit "/needs"
+      click_on "100001"
+
+      click_on_first_button "Mark as out of scope"
+
+      assert page.has_content?("Need has been marked as out of scope")
+    end
+
+    should "show an error message if there's a problem marking a need as out of scope" do
+      need_api_has_need(@need) # For individual need
+      request = stub_request(:put, @api_url).to_return(status: 422)
+
+      visit "/needs"
+      click_on "100001"
+
+      click_on_first_button "Mark as out of scope"
+
+      assert page.has_content?("We had a problem marking the need as out of scope")
     end
   end
 end
