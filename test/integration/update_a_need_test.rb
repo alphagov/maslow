@@ -373,7 +373,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       need_api_has_need(@duplicate)
       visit "/needs/100002/revisions"
 
-      assert page.has_content?("This need has been closed as a duplicate")
+      assert page.has_content?("This need is a duplicate of 100001")
+      assert page.has_link?("100001", href: "/needs/100001")
       assert page.has_no_button?("Edit")
     end
   end
