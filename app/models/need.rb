@@ -150,15 +150,9 @@ class Need
   end
 
   def close_as(author)
-    author_atts = {
-      "name" => author.name,
-      "email" => author.email,
-      "uid" => author.uid
-    }
-
     duplicate_atts = {
       "duplicate_of" => @duplicate_of,
-      "author" => author_atts
+      "author" => author_atts(author)
     }
     Maslow.need_api.closed(@id, duplicate_atts)
     true
@@ -167,12 +161,7 @@ class Need
   end
 
   def save_as(author)
-    author_atts = {
-      "name" => author.name,
-      "email" => author.email,
-      "uid" => author.uid
-    }
-    atts = as_json.merge("author" => author_atts)
+    atts = as_json.merge("author" => author_atts(author))
 
     if persisted?
       Maslow.need_api.update_need(@id, atts)
@@ -197,6 +186,14 @@ class Need
   end
 
 private
+  def author_atts(author)
+    {
+      "name" => author.name,
+      "email" => author.email,
+      "uid" => author.uid
+    }
+  end
+
   def assign_read_only_and_protected_attributes(attrs)
     # map the read only and protected fields from the API to instance
     # variables of the same name
