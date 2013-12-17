@@ -6,7 +6,12 @@
       <li class="active">History</li>
     </ul>
   </nav>
-  <%= render :partial => "need_header", locals: { actions: [:edit] } %>
+
+  <% if @need.duplicate_of.present? %>
+    <p>This need has been closed as a duplicate</p>
+  <% else %>
+    <%= render :partial => "need_header", locals: { actions: [:edit] } %>
+  <% end %>
 
   <h3>Recent changes</h3>
   <ul class="revisions">

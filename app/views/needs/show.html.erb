@@ -7,6 +7,9 @@
     </ul>
   </nav>
 
+  <% if @need.duplicate_of.present? %>
+    <p>This need has been closed as a duplicate</p>
+  <% end %>
   <%= render partial: "need_header",
              locals: {
                actions: @need.duplicate_of.present? ? [:history] : [:edit, :history]

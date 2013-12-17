@@ -356,5 +356,24 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       assert page.has_content?("There was a problem closing the need as a duplicate")
     end
+
+    should "not be able to edit a closed need" do
+      @duplicate.merge!("duplicate_of" => "100001")
+      need_api_has_need(@duplicate)
+      visit "/needs/100002/edit"
+
+      assert page.has_content?("Closed needs cannot be edited")
+      assert page.has_content?("This need has been closed as a duplicate")
+      assert page.has_no_button?("Edit")
+    end
+
+    should "not be able to edit a closed need from the history page" do
+      @duplicate.merge!("duplicate_of" => "100001")
+      need_api_has_need(@duplicate)
+      visit "/needs/100002/revisions"
+
+      assert page.has_content?("This need has been closed as a duplicate")
+      assert page.has_no_button?("Edit")
+    end
   end
 end

@@ -30,6 +30,12 @@ class NeedsController < ApplicationController
 
   def edit
     @need = load_need
+    if @need.duplicate_of.present?
+      redirect_to need_url(@need.need_id),
+                  notice: "Closed needs cannot be edited",
+                  status: 303
+      return
+    end
     @target = need_path(params[:id])
 
     # edit.html.erb

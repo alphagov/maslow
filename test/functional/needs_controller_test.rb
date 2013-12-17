@@ -529,6 +529,14 @@ class NeedsControllerTest < ActionController::TestCase
       assert_redirected_to need_path(100002)
     end
 
+    should "not be able to edit a need closed as a duplicate" do
+      @need.duplicate_of = "100002"
+      get :edit,
+          :id => "100002"
+      assert_equal "Closed needs cannot be edited", @controller.flash[:notice]
+      assert_response 303
+    end
+
     should "display an error if the duplicate_of id is invalid" do
       @need.expects(:valid?).returns(false)
 
