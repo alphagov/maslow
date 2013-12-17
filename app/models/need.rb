@@ -149,6 +149,23 @@ class Need
     raise("The save_as method must be used when persisting a need, providing details about the author.")
   end
 
+  def close_as(author)
+    author_atts = {
+      "name" => author.name,
+      "email" => author.email,
+      "uid" => author.uid
+    }
+
+    duplicate_atts = {
+      "duplicate_of" => @duplicate_of,
+      "author" => author_atts
+    }
+    Maslow.need_api.closed(@id, duplicate_atts)
+    true
+  rescue GdsApi::HTTPErrorResponse => err
+    false
+  end
+
   def save_as(author)
     author_atts = {
       "name" => author.name,
@@ -158,15 +175,7 @@ class Need
     atts = as_json.merge("author" => author_atts)
 
     if persisted?
-      if duplicate_of.nil?
-        Maslow.need_api.update_need(@id, atts)
-      else
-        duplicate_atts = {
-          "duplicate_of" => @duplicate_of,
-          "author" => author_atts
-        }
-        Maslow.need_api.closed(@id, duplicate_atts)
-      end
+      Maslow.need_api.update_need(@id, atts)
     else
       response_hash = Maslow.need_api.create_need(atts).to_hash
       @existing = true

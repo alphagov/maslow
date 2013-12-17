@@ -496,7 +496,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "call duplicate_of with the correct value" do
       # not testing the save method here
-      @need.stubs(:save_as).returns(true)
+      @need.stubs(:close_as).returns(true)
 
       @need.expects(:duplicate_of=).with("100001")
 
@@ -506,7 +506,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "close the need and redirect to show it" do
-      @need.expects(:save_as).with do |user|
+      @need.expects(:close_as).with do |user|
         user.name = stub_user.name
         user.email = stub_user.email
         user.uid = stub_user.uid
@@ -518,7 +518,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "redirect to the need with a success message once complete" do
-      @need.stubs(:save_as).returns(true)
+      @need.stubs(:close_as).returns(true)
 
       put :closed,
           :id => "100002",
@@ -551,7 +551,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "return a 422 response if save fails" do
-      @need.expects(:save_as).returns(false)
+      @need.expects(:close_as).returns(false)
 
       put :closed,
           :id => "100002",

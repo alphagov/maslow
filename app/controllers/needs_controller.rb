@@ -94,7 +94,7 @@ class NeedsController < ApplicationController
     @need.duplicate_of = main_need_id
 
     if @need.valid?
-      if @need.save_as(current_user)
+      if @need.close_as(current_user)
         redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
         return
       else
