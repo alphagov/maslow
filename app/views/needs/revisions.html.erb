@@ -8,7 +8,10 @@
   </nav>
 
   <% if @need.duplicate_of.present? %>
-    <p>This need has been closed as a duplicate</p>
+    <p class="need-alert">This need is a duplicate of
+    <%= link_to @need.duplicate_of,
+                need_path(@need.duplicate_of) %>
+    </p>
   <% else %>
     <%= render :partial => "need_header", locals: { actions: [:edit] } %>
   <% end %>

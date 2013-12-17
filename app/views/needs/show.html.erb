@@ -19,13 +19,13 @@
   </p>
 
   <% if @need.duplicate_of.present? %>
-    <p class="closed-need">This need is a duplicate of
+    <p class="need-alert">This need is a duplicate of
     <%= link_to @need.duplicate_of,
                 need_path(@need.duplicate_of) %>
     </p>
   <% end %>
   <% if @need.in_scope == false %>
-    <div class="out-of-scope">
+    <div class="need-alert">
       <strong>This need is not in scope for GOV.UK</strong>
     </div>
   <% end %>
