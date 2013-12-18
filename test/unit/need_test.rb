@@ -17,7 +17,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_user_contacts" => 500,
         "yearly_site_views" => 70000,
         "yearly_need_views" => 15000,
-        "yearly_searches" => 2000,
+        "yearly_searches" => 2000
       }
     end
 
@@ -28,6 +28,7 @@ class NeedTest < ActiveSupport::TestCase
 
         request = @atts.merge(
           "in_scope" => nil,
+          "duplicate_of" => nil,
           "author" => {
             "name" => "O'Brien",
             "email" => "obrien@alphagov.co.uk",
@@ -86,7 +87,7 @@ class NeedTest < ActiveSupport::TestCase
           json = Need.new(@atts).as_json
 
           # include protected fields in the list of keys to expect
-          expected_keys = (@atts.keys + ["in_scope"]).sort
+          expected_keys = (@atts.keys + ["in_scope", "duplicate_of"]).sort
 
           assert_equal expected_keys, json.keys.sort
           assert_equal "user", json["role"]
@@ -487,6 +488,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_site_views" => nil,
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
+        "duplicate_of" => nil,
         "in_scope" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
@@ -504,5 +506,32 @@ class NeedTest < ActiveSupport::TestCase
 
     need = Need.new({ "in_scope" => nil }, true)
     refute need.out_of_scope?
+  end
+
+  context "closing needs as duplicates" do
+    setup do
+      need_hash = {
+        "id" => 100002,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }
+      @need = Need.new(need_hash, existing = true)
+    end
+
+    should "call Need API with the correct values" do
+      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      duplicate_atts = {
+        "duplicate_of" => 100001,
+        "author" => {
+          "name" => "O'Brien",
+          "email" => "obrien@alphagov.co.uk",
+          "uid" => "user-1234"
+        }
+      }
+      GdsApi::NeedApi.any_instance.expects(:close).once.with(100002, duplicate_atts)
+      @need.duplicate_of = 100001
+      @need.close_as(author)
+    end
   end
 end

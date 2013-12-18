@@ -70,7 +70,7 @@ p.all-organisations {
   @extend .alert-info;
 }
 
-.out-of-scope {
+.need-alert {
   @extend .alert;
   @extend .alert-block;
 

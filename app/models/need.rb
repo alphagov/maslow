@@ -39,7 +39,7 @@ class Need
 
   # fields which should not be updated through mass-assignment.
   # this is equivalent to using ActiveModel's attr_protected
-  PROTECTED_FIELDS = ["in_scope"]
+  PROTECTED_FIELDS = ["in_scope", "duplicate_of"]
 
   # fields which we should create read and write accessors for
   # and which we should send back to the Need API
@@ -149,12 +149,19 @@ class Need
     raise("The save_as method must be used when persisting a need, providing details about the author.")
   end
 
+  def close_as(author)
+    duplicate_atts = {
+      "duplicate_of" => @duplicate_of,
+      "author" => author_atts(author)
+    }
+    Maslow.need_api.close(@id, duplicate_atts)
+    true
+  rescue GdsApi::HTTPErrorResponse => err
+    false
+  end
+
   def save_as(author)
-    atts = as_json.merge("author" => {
-      "name" => author.name,
-      "email" => author.email,
-      "uid" => author.uid
-    })
+    atts = as_json.merge("author" => author_atts(author))
 
     if persisted?
       Maslow.need_api.update_need(@id, atts)
@@ -179,6 +186,14 @@ class Need
   end
 
 private
+  def author_atts(author)
+    {
+      "name" => author.name,
+      "email" => author.email,
+      "uid" => author.uid
+    }
+  end
+
   def assign_read_only_and_protected_attributes(attrs)
     # map the read only and protected fields from the API to instance
     # variables of the same name
