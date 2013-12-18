@@ -511,13 +511,12 @@ class NeedTest < ActiveSupport::TestCase
   context "closing needs as duplicates" do
     setup do
       need_hash = {
-        "id" => 100001,
+        "id" => 100002,
         "role" => "person",
         "goal" => "do things",
         "benefit" => "good things"
       }
-      Need.new(need_hash, existing = true)
-      @need = Need.new(need_hash.merge("id" => 100002), existing = true)
+      @need = Need.new(need_hash, existing = true)
     end
 
     should "call Need API with the correct values" do
