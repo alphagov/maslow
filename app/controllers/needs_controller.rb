@@ -89,7 +89,7 @@ class NeedsController < ApplicationController
   end
 
   def closed
-    main_need_id = params["need"]["duplicate_of"]
+    main_need_id = prepare_need_params(params)["duplicate_of"]
     @need = load_need
     @need.duplicate_of = main_need_id
 
