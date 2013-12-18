@@ -30,6 +30,12 @@ class NeedsController < ApplicationController
 
   def edit
     @need = load_need
+    if @need.duplicate_of.present?
+      redirect_to need_url(@need.need_id),
+                  notice: "Closed needs cannot be edited",
+                  status: 303
+      return
+    end
     @target = need_path(params[:id])
 
     # edit.html.erb
@@ -82,6 +88,26 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def closed
+    main_need_id = prepare_need_params(params)["duplicate_of"]
+    @need = load_need
+    @need.duplicate_of = main_need_id
+
+    if @need.valid?
+      if @need.close_as(current_user)
+        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
+        return
+      else
+        flash[:error] = "There was a problem closing the need as a duplicate"
+      end
+    else
+      flash[:error] = "The Need ID entered is invalid"
+    end
+
+    @target = need_path(params[:id])
+    render "edit", :status => 422
+  end
+
   def descope
     @need = load_need
 
@@ -115,8 +141,6 @@ class NeedsController < ApplicationController
     end
     params_hash["need"]
   end
-
-private
 
   def load_need
     begin

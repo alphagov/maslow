@@ -6,6 +6,7 @@ Maslow::Application.routes.draw do
     member do
       get :revisions
       put :descope
+      put :closed
     end
   end
 

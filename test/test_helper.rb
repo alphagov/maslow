@@ -59,7 +59,8 @@ class ActiveSupport::TestCase
       "yearly_site_views" => nil,
       "yearly_need_views" => nil,
       "yearly_searches" => nil,
-      "in_scope" => nil
+      "in_scope" => nil,
+      "duplicate_of" => nil
     }
   end
 end
