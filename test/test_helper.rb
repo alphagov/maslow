@@ -55,12 +55,12 @@ class ActiveSupport::TestCase
       "met_when" => [],
       "other_evidence" => nil,
       "legislation" => nil,
-      "duplicate_of" => nil,
       "yearly_user_contacts" => nil,
       "yearly_site_views" => nil,
       "yearly_need_views" => nil,
       "yearly_searches" => nil,
-      "in_scope" => nil
+      "in_scope" => nil,
+      "duplicate_of" => nil
     }
   end
 end

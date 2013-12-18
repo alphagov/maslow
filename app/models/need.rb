@@ -35,11 +35,11 @@ class Need
 
   NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
   MASS_ASSIGNABLE_FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
-    "other_evidence", "legislation", "duplicate_of"] + NUMERIC_FIELDS
+    "other_evidence", "legislation"] + NUMERIC_FIELDS
 
   # fields which should not be updated through mass-assignment.
   # this is equivalent to using ActiveModel's attr_protected
-  PROTECTED_FIELDS = ["in_scope"]
+  PROTECTED_FIELDS = ["in_scope", "duplicate_of"]
 
   # fields which we should create read and write accessors for
   # and which we should send back to the Need API
