@@ -154,7 +154,7 @@ class Need
       "duplicate_of" => @duplicate_of,
       "author" => author_atts(author)
     }
-    Maslow.need_api.closed(@id, duplicate_atts)
+    Maslow.need_api.close(@id, duplicate_atts)
     true
   rescue GdsApi::HTTPErrorResponse => err
     false

@@ -530,7 +530,7 @@ class NeedTest < ActiveSupport::TestCase
           "uid" => "user-1234"
         }
       }
-      GdsApi::NeedApi.any_instance.expects(:closed).once.with(100002, duplicate_atts)
+      GdsApi::NeedApi.any_instance.expects(:close).once.with(100002, duplicate_atts)
       @need.duplicate_of = 100001
       @need.close_as(author)
     end
