@@ -19,10 +19,13 @@
   </p>
 
   <% if @need.duplicate_of.present? %>
-    <p class="need-alert">This need is a duplicate of
-    <%= link_to @need.duplicate_of,
-                need_path(@need.duplicate_of) %>
-    </p>
+    <%= form_tag reopen_need_path(@need), method: "delete" do %>
+      <p class="need-alert">This need is closed as a duplicate of
+        <%= link_to @need.duplicate_of,
+                    need_path(@need.duplicate_of) %>
+        <%= submit_tag "Reopen", class: 'btn btn-danger reopen' %>
+      </p>
+    <% end %>
   <% end %>
   <% if @need.in_scope == false %>
     <div class="need-alert">

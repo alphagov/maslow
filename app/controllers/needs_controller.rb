@@ -108,6 +108,24 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def reopen
+    @need = load_need
+
+    if @need.valid?
+      if @need.reopen_as(current_user)
+        redirect_to need_url(@need.need_id), notice: "Need #{@need.need_id} has been reopened"
+        return
+      else
+        flash[:error] = "There was a problem reopening the need"
+      end
+    else
+      flash[:error] = "This need is invalid"
+    end
+
+    @target = need_path(params[:id])
+    render "show", :status => 422
+  end
+
   def out_of_scope
     @need = load_need
     unless @need.in_scope.nil?

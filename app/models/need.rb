@@ -160,6 +160,13 @@ class Need
     false
   end
 
+  def reopen_as(author)
+    Maslow.need_api.reopen(@id, "author" => author_atts(author))
+    true
+  rescue GdsApi::HTTPErrorResponse => err
+    false
+  end
+
   def save_as(author)
     atts = as_json.merge("author" => author_atts(author))
 
