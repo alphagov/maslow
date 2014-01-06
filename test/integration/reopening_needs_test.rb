@@ -50,9 +50,22 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
       click_on_first_button "Reopen"
       assert_requested delete_request
 
-      assert page.has_no_content?("This need is a duplicate of 100001")
+      assert page.has_no_content?("This need is closed as a duplicate of 100001")
       assert page.has_no_link?("100001", href: "/needs/100001")
-      assert page.has_no_button?("Edit")
+      assert page.has_link?("Edit")
+    end
+
+    should "show an error if there's a problem reopening the need" do
+      request = stub_request(:delete, @api_url+'/closed').to_return(status: 422)
+
+      visit "/needs"
+      click_on "100002"
+      click_on "Reopen"
+
+      assert page.has_content?("There was a problem reopening the need")
+      assert page.has_content?("This need is closed as a duplicate of 100001")
+      assert page.has_link?("100001", href: "/needs/100001")
+      assert page.has_no_link?("Edit")
     end
   end
 end
