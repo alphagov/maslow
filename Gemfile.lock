@@ -111,7 +111,7 @@ GEM
     kgio (2.8.1)
     link_header (0.0.8)
     logstash-event (1.1.5)
-    logstasher (0.4.0)
+    logstasher (0.4.1)
       logstash-event (~> 1.1.0)
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
@@ -239,7 +239,7 @@ DEPENDENCIES
   gds-sso (= 9.1.0)
   jquery-rails
   kaminari (= 0.14.1)
-  logstasher (= 0.4.0)
+  logstasher (= 0.4.1)
   mocha (= 0.14.0)
   mongoid (= 3.0.23)
   plek (= 1.4.0)

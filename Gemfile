@@ -13,7 +13,7 @@ else
 end
 
 gem 'kaminari', '0.14.1'
-gem 'logstasher', '0.4.0'
+gem 'logstasher', '0.4.1'
 
 group :test do
   gem 'capybara', '2.1.0'
