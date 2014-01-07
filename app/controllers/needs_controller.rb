@@ -111,15 +111,11 @@ class NeedsController < ApplicationController
   def reopen
     @need = load_need
 
-    if @need.valid?
-      if @need.reopen_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need #{@need.need_id} has been reopened"
-        return
-      else
-        flash[:error] = "There was a problem reopening the need"
-      end
+    if @need.reopen_as(current_user)
+      redirect_to need_url(@need.need_id), notice: "Need #{@need.need_id} has been reopened"
+      return
     else
-      flash[:error] = "This need is invalid"
+      flash[:error] = "There was a problem reopening the need"
     end
 
     @target = need_path(params[:id])

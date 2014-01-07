@@ -627,18 +627,6 @@ class NeedsControllerTest < ActionController::TestCase
       assert_redirected_to need_path(@need)
     end
 
-    should "display an error if need is invalid" do
-      @need.expects(:valid?).returns(false)
-
-      delete :reopen,
-          :id => "100002"
-
-      refute @controller.flash[:notice]
-      assert_equal "This need is invalid", @controller.flash[:error]
-
-      assert_response 422
-    end
-
     should "return a 422 response if reopening fails" do
       @need.stubs(:reopen_as).returns(false)
 
