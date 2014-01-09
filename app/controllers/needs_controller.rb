@@ -16,6 +16,18 @@ class NeedsController < ApplicationController
     @needs = Maslow.need_api.needs(opts)
   end
 
+  def export
+    opts = params.slice("organisation_id").select { |k, v| v.present? }
+    @needs = Maslow.need_api.needs(opts).to_a
+    result_csv = CSV.generate do |csv|
+      csv << ["Role", "Goal", "Benefit"]
+      @needs.each do |n|
+        csv << [n.role, n.goal, n.benefit]
+      end
+    end
+    send_data result_csv
+  end
+
   def show
     @need = load_need
 
