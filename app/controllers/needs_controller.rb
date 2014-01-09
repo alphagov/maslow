@@ -118,7 +118,6 @@ class NeedsController < ApplicationController
       flash[:error] = "There was a problem reopening the need"
     end
 
-    @target = need_path(params[:id])
     render "show", :status => 422
   end
 
