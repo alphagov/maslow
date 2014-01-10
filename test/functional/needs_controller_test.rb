@@ -378,6 +378,47 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "GET out-of-scope" do
+    # For the case when the user has no JS
+    context "given a valid need without a set value for in_scope" do
+      setup do
+        @stub_need = Need.new({
+            "id" => 100001,
+            "role" => "person",
+            "goal" => "do things",
+            "benefit" => "good things"
+          }, true)
+        Need.expects(:find).with(100001).returns(@stub_need)
+      end
+
+      should "be successful" do
+        get :out_of_scope, id: 100001
+        assert_response :success
+      end
+    end
+
+    context "given a valid need already marked as out of scope" do
+      setup do
+        @stub_need = Need.new({
+            "id" => 100001,
+            "role" => "person",
+            "goal" => "do things",
+            "benefit" => "good things",
+            "in_scope" => false
+          }, true)
+        Need.expects(:find).with(100001).returns(@stub_need)
+      end
+
+      should "redirect to the need with an error" do
+        get :out_of_scope, id: 100001
+
+        refute @controller.flash[:notice]
+        assert_equal "This need has already been marked as out of scope", @controller.flash[:error]
+        assert_redirected_to need_path(@stub_need)
+      end
+    end
+  end
+
   context "PUT descope" do
     context "given a valid need without a set value for in_scope" do
       setup do

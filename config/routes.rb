@@ -8,6 +8,7 @@ Maslow::Application.routes.draw do
       get :revisions
       put :descope
       put :closed
+      get :out_of_scope, path: 'out-of-scope'
     end
   end
 
