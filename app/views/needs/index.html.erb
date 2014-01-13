@@ -37,8 +37,4 @@
   </tbody>
 </table>
 
-<% unless params[:organisation_id].blank? %>
-  <span><a href="/needs/export?organisation_id=<%= params[:organisation_id] %>">Export needs as CSV</a></span>
-<% end %>
-
 <%= paginate_needs @needs %>
