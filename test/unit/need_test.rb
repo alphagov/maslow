@@ -28,7 +28,6 @@ class NeedTest < ActiveSupport::TestCase
 
         request = @atts.merge(
           "in_scope" => nil,
-          "duplicate_of" => nil,
           "author" => {
             "name" => "O'Brien",
             "email" => "obrien@alphagov.co.uk",
@@ -488,7 +487,6 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_site_views" => nil,
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
-        "duplicate_of" => nil,
         "in_scope" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"

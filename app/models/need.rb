@@ -161,7 +161,9 @@ class Need
   end
 
   def save_as(author)
-    atts = as_json.merge("author" => author_atts(author))
+    atts = as_json
+      .reject{|k,v| k == "duplicate_of"}
+      .merge("author" => author_atts(author))
 
     if persisted?
       Maslow.need_api.update_need(@id, atts)
