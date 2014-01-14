@@ -7,14 +7,7 @@
     </ul>
   </nav>
 
-  <% if @need.duplicate_of.present? %>
-    <p class="need-alert">This need is a duplicate of
-    <%= link_to @need.duplicate_of,
-                need_path(@need.duplicate_of) %>
-    </p>
-  <% else %>
-    <%= render :partial => "need_header", locals: { actions: [:edit, :history] } %>
-  <% end %>
+  <%= render :partial => "need_header", locals: { actions: [:edit, :history] } %>
 
   <h3>Mark as out of scope</h3>
   <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
