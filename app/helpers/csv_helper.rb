@@ -1,8 +1,8 @@
 require 'csv'
 
 module CsvHelper
-  def csv_from_need_ids(need_ids)
-    needs = need_ids.map {|id| Need.find(id)}
+  def csv_from_needs(needs)
+    needs ||= []
     length = longest_acceptance_criteria(needs)
     generate_csv(csv_fields(length), needs)
   end
@@ -22,11 +22,11 @@ module CsvHelper
   end
 
   def csv_fields(length)
-    ["Link", "Role", "Goal", "Benefit"] + acceptance_field_names(length)
+    ["Maslow URL", "As a", "I need to", "So that"] + acceptance_field_names(length)
   end
 
   def acceptance_field_names(length)
-    (1..length).map {|n| "Acceptance Criteria #{n}"}
+    (1..length).map {|n| "Met when criteria #{n}"}
   end
 
   def longest_acceptance_criteria(needs)
