@@ -13,5 +13,4 @@ Maslow::Application.routes.draw do
   end
 
   root :to => redirect('/needs')
-
 end
