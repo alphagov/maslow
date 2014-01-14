@@ -16,7 +16,9 @@ class NeedsController < ApplicationController
     @needs = Maslow.need_api.needs(opts)
     respond_to do |format|
       format.html
-      format.csv
+      format.csv do
+        render locals: { needs: @needs.map{|n| Need.find(n.id)} }
+      end
     end
   end
 
