@@ -3,7 +3,11 @@ require_relative '../../test_helper'
 class CsvHelperTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
   include CsvHelper
-  default_url_options[:host] = "link"
+  default_url_options[:host] = "www.example.com"
+
+  def csv_file(n)
+    File.read(Rails.root.join("test", "fixtures", "needs", "needs-#{n}.csv"))[0...-1]
+  end
 
   context "csv_from_need_ids" do
     setup do
@@ -23,25 +27,16 @@ class CsvHelperTest < ActiveSupport::TestCase
     end
 
     should "return only headers if no ids given" do
-      assert_equal "Maslow URL,As a,I need to,So that\n", csv_from_needs([])
+      assert_equal csv_file(1), csv_from_needs([])
     end
 
     should "return a single row if only one need id given" do
-      url = need_url(@need_1["id"])
-      expected = "Maslow URL,As a,I need to,So that\n#{url},Foo,Bar,Baz\n"
-
-      assert_equal expected,
+      assert_equal csv_file(2),
                    csv_from_needs([Need.new(@need_1,true)])
     end
 
     should "return rows with acceptance criteria, if present" do
-      url_1 = need_url(@need_1["id"])
-      url_2 = need_url(@need_2["id"])
-      expected = """Maslow URL,As a,I need to,So that,Met when criteria 1,Met when criteria 2
-#{url_1},Foo,Bar,Baz
-#{url_2},Foo,Bar,Baz,a,b\n"""
-
-      assert_equal expected,
+      assert_equal csv_file(3),
                    csv_from_needs([Need.new(@need_1,true),
                                    Need.new(@need_2,true)])
     end
