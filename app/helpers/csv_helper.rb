@@ -1,8 +1,7 @@
 require 'csv'
 
 module CsvHelper
-  def csv_from_needs(needs)
-    needs ||= []
+  def csv_from_needs(needs = [])
     length = longest_acceptance_criteria(needs)
     generate_csv(csv_fields(length), needs)
   end
@@ -13,12 +12,16 @@ module CsvHelper
     CSV.generate do |csv|
       csv << fields
       values.each do |need|
-        csv << [need_url(need),
-                need.role,
-                need.goal,
-                need.benefit] + need.met_when.to_a
+        csv << row_values(need)
       end
     end
+  end
+
+  def row_values(need)
+    [need_url(need),
+     need.role,
+     need.goal,
+     need.benefit] + need.met_when.to_a
   end
 
   def csv_fields(length)
