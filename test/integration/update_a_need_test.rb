@@ -118,7 +118,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert_equal("awesome", find_field("criteria-1").value)
 
       within "#met-when-criteria" do
-        click_on('Add criteria')
+        click_on('Enter another criteria')
       end
 
       within "#met-when-criteria" do

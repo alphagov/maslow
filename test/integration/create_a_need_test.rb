@@ -127,7 +127,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       within "#met-when-criteria" do
         fill_in("criteria-0", with: "New Criteria")
-        click_on('Add criteria')
+        click_on('Enter another criteria')
       end
 
       within "#met-when-criteria" do
