@@ -4,10 +4,6 @@
     <%= f.input :goal, :label => "I need to…", :hint => "What does the user want to do?", :input_html => { :class => 'long-form' } %>
     <%= f.input :benefit, :label => "So that…", :hint => "Why does the user want to do this?", :input_html => { :class => 'long-form' } %>
 
-    <%= f.actions %>
-  <% end %>
-
-  <%= f.inputs "Give extra information about this need", :id => "extra-information" do %>
     <% if f.object.applies_to_all_organisations %>
       <p class="all-organisations">
         This need applies to all organisations.
@@ -25,13 +21,12 @@
                     } %>
     <% end %>
 
-    <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
+    <%= f.actions %>
   <% end %>
 
-  <%= f.inputs "Justify this need" do %>
-    <%= f.input :justifications, :label => "Is this need in proposition for GOV.UK? You can tick more than one.", :hint => "Why should this need be on GOV.UK?", :as => :check_boxes, :collection => Need::JUSTIFICATIONS %>
-    <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
-  <% end %>
+  <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
+
+  <%= f.input :justifications, :label => "Is this need in proposition for GOV.UK? You can tick more than one.", :hint => "Why should this need be on GOV.UK?", :as => :check_boxes, :collection => Need::JUSTIFICATIONS %>
 
   <%= f.inputs "Provide evidence for this need", :id => "evidence" do %>
     <p class="hint-text">This helps us understand how important this need is in context of all the needs GOV.UK meets.</p>
@@ -42,6 +37,8 @@
     <%= f.input :yearly_searches, :label => "How many searches relevant to this need are carried out per year", :hint => "Include external and internal searches.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
     <%= f.input :other_evidence, :label => "Do you have any other evidence to support this need?", :hint => "E.g. user research, campaigns, user demand.", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
   <% end %>
+
+  <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
 
   <%= f.actions %>
 <% end %>
