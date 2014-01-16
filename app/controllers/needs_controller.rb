@@ -17,7 +17,9 @@ class NeedsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        render locals: { needs: @needs.map{|n| Need.find(n.id)} }
+        send_data NeedsCsvPresenter.new(needs_url, @needs.map{|n| Need.find(n.id)}).to_csv,
+                  filename: "#{params["organisation_id"]}.csv",
+                  type: "text/csv; charset=utf-8"
       end
     end
   end

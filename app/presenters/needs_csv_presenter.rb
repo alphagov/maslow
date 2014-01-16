@@ -1,9 +1,14 @@
 require 'csv'
 
-module CsvHelper
-  def csv_from_needs(needs = [])
-    length = longest_acceptance_criteria(needs)
-    generate_csv(csv_fields(length), needs)
+class NeedsCsvPresenter
+  def initialize(base_url, needs = [])
+    @base_url = base_url
+    @needs = needs
+    @criteria_length = longest_criteria(needs)
+  end
+
+  def to_csv
+    generate_csv(csv_fields(@criteria_length), @needs)
   end
 
   private
@@ -18,7 +23,7 @@ module CsvHelper
   end
 
   def row_values(need)
-    [need_url(need),
+    [@base_url+"/#{need.need_id}",
      need.role,
      need.goal,
      need.benefit] + need.met_when.to_a
@@ -32,9 +37,10 @@ module CsvHelper
     (1..length).map {|n| "Met when criteria #{n}"}
   end
 
-  def longest_acceptance_criteria(needs)
+  def longest_criteria(needs)
     needs.map(&:met_when)
          .sort_by{|x| x.length}.reverse
          .first.try(:size) || 0
   end
+
 end
