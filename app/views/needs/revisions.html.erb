@@ -13,7 +13,7 @@
                 need_path(@need.duplicate_of) %>
     </p>
   <% else %>
-    <%= render :partial => "need_header", locals: { actions: [:edit] } %>
+    <%= render :partial => "need_header", locals: { actions: [:edit, :out_of_scope] } %>
   <% end %>
 
   <h3>Recent changes</h3>

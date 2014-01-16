@@ -278,7 +278,15 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100001"
 
-      click_on_first_button "Mark as out of scope"
+      # There are two 'Mark as out of scope' buttons
+      # The second is a confirmation modal drop down when JavaScript is on
+      # The first is an action initiator in the header
+      within ".need header" do
+        click_on "Mark as out of scope"
+      end
+
+      # This is a confirmation on a separate page when JavaScript is off
+      click_on "Mark as out of scope"
 
       assert page.has_content?("Need has been marked as out of scope")
     end
@@ -290,7 +298,11 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100001"
 
-      click_on_first_button "Mark as out of scope"
+      within ".need header" do
+        click_on "Mark as out of scope"
+      end
+
+      click_on "Mark as out of scope"
 
       assert page.has_content?("We had a problem marking the need as out of scope")
     end

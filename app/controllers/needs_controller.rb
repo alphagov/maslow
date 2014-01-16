@@ -108,6 +108,15 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def out_of_scope
+    @need = load_need
+    unless @need.in_scope.nil?
+      flash[:error] = "This need has already been marked as out of scope"
+      redirect_to need_path(@need)
+      return
+    end
+  end
+
   def descope
     @need = load_need
 

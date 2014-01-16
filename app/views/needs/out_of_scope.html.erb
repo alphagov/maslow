@@ -1,0 +1,20 @@
+<article class="need">
+  <nav class="add-top-margin">
+    <ul class="breadcrumb">
+      <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
+      <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
+      <li class="active">Mark as out of scope</li>
+    </ul>
+  </nav>
+
+  <%= render :partial => "need_header", locals: { actions: [:edit, :history] } %>
+
+  <h3>Mark as out of scope</h3>
+  <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
+  <%= button_to "Mark as out of scope",
+                  descope_need_path(@need),
+                  method: :put,
+                  class: "btn btn-danger" %>
+  <br/>
+  <br/>
+</article>

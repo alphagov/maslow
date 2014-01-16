@@ -40,7 +40,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
         end
 
-        assert page.has_button?("Mark as out of scope")
+        assert page.has_link?("Mark as out of scope")
 
         within ".met-when" do
           assert page.has_content?("Users can book their driving test")
