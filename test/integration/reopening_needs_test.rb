@@ -35,17 +35,8 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
 
-      stub_request(:get, @api_url).to_return(
-        :body =>
-          { "_response_info" => { "status" => "ok" },
-            "id" => "100002",
-            "role" => "parent",
-            "goal" => "apply for a primary school place",
-            "benefit" => "my child can start school",
-            "organisations" => [],
-            "duplicate_of" => nil
-          }.to_json
-      )
+      # re-stub request ready for reopen completing and the need is re-shown
+      need_api_has_need(need_hash.merge("duplicate_of" => nil))
 
       click_on_first_button "Reopen"
       assert_requested delete_request
