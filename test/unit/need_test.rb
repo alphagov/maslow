@@ -534,4 +534,30 @@ class NeedTest < ActiveSupport::TestCase
       @need.close_as(author)
     end
   end
+
+  context "reopening needs" do
+    setup do
+      need_hash = {
+        "id" => 100002,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things",
+        "duplicate_of" => 100001
+      }
+      @need = Need.new(need_hash, existing = true)
+    end
+
+    should "call Need API with the correct values" do
+      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      GdsApi::NeedApi.any_instance.expects(:reopen).once
+        .with(100002, {
+          "author"=> {
+            "name" => "O'Brien",
+            "email" => "obrien@alphagov.co.uk",
+            "uid" => "user-1234"
+          }
+        })
+      @need.reopen_as(author)
+    end
+  end
 end

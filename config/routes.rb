@@ -8,9 +8,9 @@ Maslow::Application.routes.draw do
       put :descope
       put :closed
       get :out_of_scope, path: 'out-of-scope'
+      delete :closed, to: 'needs#reopen', as: :reopen
     end
   end
-
 
   root :to => redirect('/needs')
 

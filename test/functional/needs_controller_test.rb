@@ -604,4 +604,39 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 422
     end
   end
+
+  context "Reopening needs" do
+    setup do
+      @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
+      @need.stubs(:artefacts).returns([])
+      Need.expects(:find).with(100002).returns(@need)
+    end
+
+    should "reopen the need" do
+      @need.expects(:reopen_as).with do |user|
+        user.name = stub_user.name
+        user.email = stub_user.email
+        user.uid = stub_user.uid
+      end.returns(true)
+
+      delete :reopen,
+             :id => @need.need_id
+
+      refute @controller.flash[:error]
+      assert_equal "Need 100002 has been reopened", @controller.flash[:notice]
+      assert_redirected_to need_path(@need)
+    end
+
+    should "return a 422 response if reopening fails" do
+      @need.stubs(:reopen_as).returns(false)
+
+      delete :reopen,
+             :id => @need.need_id
+
+      refute @controller.flash[:notice]
+      assert_equal "There was a problem reopening the need", @controller.flash[:error]
+
+      assert_response 422
+    end
+  end
 end

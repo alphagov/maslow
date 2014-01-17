@@ -375,7 +375,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs/100002/edit"
 
       assert page.has_content?("Closed needs cannot be edited")
-      assert page.has_content?("This need is a duplicate of 100001")
+      assert page.has_content?("This need is closed as a duplicate of 100001")
       assert page.has_link?("100001", href: "/needs/100001")
       assert page.has_no_button?("Edit")
     end
