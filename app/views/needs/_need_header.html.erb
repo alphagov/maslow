@@ -1,7 +1,9 @@
 <header class="block-border add-bottom-margin">
   <% if @need.organisations.any? %>
     <p class="need-organisations">
-      <%= @need.organisations.map(&:name).join(", ") %>
+      <% @need.organisations.each_with_index do |o, i| %>
+        <%= link_to o.name, needs_url(organisation_id: o.id) %><%= ", " if i < @need.organisations.length - 1 %>
+      <% end %>
     </p>
   <% end %>
   <div class="relative">

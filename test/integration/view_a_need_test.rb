@@ -29,6 +29,10 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         within "header" do
           within ".need-organisations" do
             assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
+            assert page.has_link?("Driver and Vehicle Licensing Agency",
+                                  href: needs_url(organisation_id: "driver-vehicle-licencing-agency"))
+            assert page.has_link?("Driving Standards Agency",
+                                  href: needs_url(organisation_id: "driving-standards-agency"))
           end
 
           assert page.has_content?("Book a driving test")
@@ -91,6 +95,10 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         within "header" do
           within ".need-organisations" do
             assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
+            assert page.has_link?("Driver and Vehicle Licensing Agency",
+                                  href: needs_url(organisation_id: "driver-vehicle-licencing-agency"))
+            assert page.has_link?("Driving Standards Agency",
+                                  href: needs_url(organisation_id: "driving-standards-agency"))
           end
 
           assert page.has_content?("Book a driving test")
