@@ -10,29 +10,23 @@
     <h1 class="need-title">
       <%= format_need_goal @need.goal %>
     </h1>
-    <div class="need-btn-group">
-      <% if local_assigns[:actions].include?(:edit) %>
-        <%= link_to edit_need_path(@need), class: 'btn' do %>
-          <i class="icon-edit"></i> Edit
-        <% end %>
-      <% end %>
-
-      <% if local_assigns[:actions].include?(:history) %>
-        <%= link_to revisions_need_path(@need), class: 'btn' do %>
-          <i class="icon-time"></i> See history
-        <% end %>
-      <% end %>
-
-      <% if local_assigns[:actions].include?(:out_of_scope) %>
-        <% unless @need.out_of_scope? %>
-          <%= link_to out_of_scope_need_path(@need), id: 'out-of-scope', class: 'btn' do %>
-            Mark as out of scope
-          <% end %>
-        <% end %>
-      <% end %>
-    </div>
   </div>
 </header>
+
+<%= bootstrap_flavour_tabs(
+      (unless @need.duplicate_of
+        {
+          "View" => need_path(@need),
+          "Edit" => edit_need_path(@need),
+          "History" => revisions_need_path(@need),
+        }
+      else
+        {
+          "View" => need_path(@need),
+          "History" => revisions_need_path(@need),
+        }
+      end), active: active
+    ) %>
 
 <script>
   $('#out-of-scope').
@@ -41,23 +35,21 @@
   attr('role', 'button')
 </script>
 
-<% if local_assigns[:actions].include?(:out_of_scope) %>
-  <% unless @need.out_of_scope? %>
-  <div id="out-of-scope-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="modal-out-of-scope-label">Mark as out of scope</h3>
-    </div>
-    <div class="modal-body">
-      <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-      <%= button_to "Mark as out of scope",
-                      descope_need_path(@need),
-                      method: :put,
-                      class: "btn btn-danger" %>
-    </div>
+<% unless @need.out_of_scope? %>
+<div id="out-of-scope-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="modal-out-of-scope-label">Mark as out of scope</h3>
   </div>
-  <% end %>
+  <div class="modal-body">
+    <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <%= button_to "Mark as out of scope",
+                    descope_need_path(@need),
+                    method: :put,
+                    class: "btn btn-danger" %>
+  </div>
+</div>
 <% end %>

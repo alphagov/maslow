@@ -36,15 +36,16 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
 
           assert page.has_content?("Book a driving test")
+        end
+
+        within ".nav-tabs" do
           assert page.has_link?("Edit", href: "/needs/101350/edit")
-          assert page.has_link?("See history", href: "/needs/101350/revisions")
+          assert page.has_link?("History", href: "/needs/101350/revisions")
         end
 
         within ".the-need" do
           assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
         end
-
-        assert page.has_link?("Mark as out of scope")
 
         within ".met-when" do
           assert page.has_content?("Users can book their driving test")
@@ -83,7 +84,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
 
       click_on "101350"
-      click_on "See history"
+      click_on "History"
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
@@ -102,6 +103,9 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
 
           assert page.has_content?("Book a driving test")
+        end
+
+        within ".nav-tabs" do
           assert page.has_link?("Edit", href: "/needs/101350/edit")
           assert page.has_no_link?("See history")
         end
@@ -234,6 +238,9 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_no_selector?(".need-organisations")
 
           assert page.has_content?("Book a driving test")
+        end
+
+        within ".nav-tabs" do
           assert page.has_link?("Edit", href: "/needs/101500/edit")
         end
 
@@ -265,6 +272,9 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_no_selector?(".need-organisations")
 
           assert page.has_content?("Find out news from government")
+        end
+
+        within ".nav-tabs" do
           assert page.has_link?("Edit", href: "/needs/101700/edit")
         end
 

@@ -15,7 +15,7 @@
                 need_path(@need.duplicate_of) %>
     </p>
   <% else %>
-    <%= render :partial => "need_header", locals: { actions: [:edit, :out_of_scope] } %>
+    <%= render :partial => "need_header", locals: { active: "History" } %>
   <% end %>
 
   <h3>Recent changes</h3>
