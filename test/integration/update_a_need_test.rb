@@ -76,7 +76,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
-      click_on_first_button("Update Need")
+      click_on_first_button("Save")
 
       assert_requested request
       assert page.has_text?("Need updated."), "No success message displayed"
@@ -125,7 +125,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-2", with: "more")
       end
 
-      click_on_first_button("Update Need")
+      click_on_first_button("Save")
 
       assert_requested request
       assert page.has_text?("Need updated."), "No success message displayed"
@@ -191,7 +191,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
-      click_on_first_button('Update Need')
+      click_on_first_button("Save")
 
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
@@ -240,7 +240,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_no_select? "Organisations"
       assert page.has_content? "This need applies to all organisations"
 
-      click_on_first_button "Update Need"
+      click_on_first_button "Save"
       assert_requested request
       assert page.has_content? "Need updated."
     end
@@ -337,7 +337,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
       click_on "Edit"
-      fill_in("Duplicate of", with: 100001)
+      fill_in("This need is a duplicate of", with: 100001)
 
       get_request = stub_request(:get, @api_url).to_return(
         :body =>
@@ -363,7 +363,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
       click_on "Edit"
-      fill_in("Duplicate of", with: 100001)
+      fill_in("This need is a duplicate of", with: 100001)
       click_on_first_button "Close as duplicate"
 
       assert page.has_content?("There was a problem closing the need as a duplicate")

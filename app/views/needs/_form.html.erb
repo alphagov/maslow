@@ -20,8 +20,6 @@
                       :class => "organisation-select"
                     } %>
     <% end %>
-
-    <%= f.actions %>
   <% end %>
 
   <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
@@ -40,7 +38,7 @@
 
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
 
-  <%= f.actions %>
+  <%= render partial: "workflow_buttons", locals: { f: f, edit: true } %>
 <% end %>
 <% if params[:delete_criteria].present? || params[:criteria_action].present? %>
   <script>
