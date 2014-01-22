@@ -1,13 +1,9 @@
 <%= semantic_form_for @need, { url: @target } do |f| %>
   <%= f.inputs "User story", :id => "user-story" do %>
-    <%= f.input :role, :label => "As a…", :hint => "What type of user of GOV.UK are you?" %>
-    <%= f.input :goal, :label => "I need to…", :hint => "What need of government do you have?", :input_html => { :class => 'long-form' } %>
-    <%= f.input :benefit, :label => "So that…", :hint => "What are you trying to achieve?", :input_html => { :class => 'long-form' } %>
+    <%= f.input :role, :label => "As a…", :hint => "Who is the user? E.g. a small business, a tax agent, a healthcare practitioner. Put 'user' when there's more than one type of user.", :input_html => { :class => 'long-form' } %>
+    <%= f.input :goal, :label => "I need to…", :hint => "What does the user want to do?", :input_html => { :class => 'long-form' } %>
+    <%= f.input :benefit, :label => "So that…", :hint => "Why does the user want to do this?", :input_html => { :class => 'long-form' } %>
 
-    <%= f.actions %>
-  <% end %>
-
-  <%= f.inputs "Give extra information about this need", :id => "extra-information" do %>
     <% if f.object.applies_to_all_organisations %>
       <p class="all-organisations">
         This need applies to all organisations.
@@ -17,30 +13,32 @@
                     :as => :select,
                     :collection => Organisation.all,
                     :member_label => "name_with_abbreviation",
-                    :hint => "Which government organisations own this need?",
-                    :label => "Organisations",
+                    :hint => "Which government departments and agencies meet this need? You can select more than one.",
+                    :label => "Departments and agencies",
                     :input_html => {
                       :multiple => true,
                       :class => "organisation-select"
                     } %>
     <% end %>
 
-    <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
+    <%= f.actions %>
   <% end %>
 
-  <%= f.inputs "Justify this need" do %>
-    <%= f.input :justifications, :label => "Why is this needed?", :hint => "Why should this need be on GOV.UK?", :as => :check_boxes, :collection => Need::JUSTIFICATIONS %>
-    <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
-  <% end %>
+  <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
+
+  <%= f.input :justifications, :label => "Is this need in proposition for GOV.UK? You can tick more than one.", :hint => "Why should this need be on GOV.UK?", :as => :check_boxes, :collection => Need::JUSTIFICATIONS %>
 
   <%= f.inputs "Provide evidence for this need", :id => "evidence" do %>
-    <%= f.input :legislation, :label => "What legislation underpins this need?", :hint => "Please supply the law (including part and relevant section)", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
-    <%= f.input :yearly_user_contacts, :label => "User contacts in a year related to this need", :hint => "Calls to contact centres, email feedback, etc", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_site_views, :label => "Page views in a year for your whole site", :hint => "As this is the overall total for your site, it will be the same for all your user needs", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_need_views, :label => "Page views in a year related to this need", :hint => "This may require combining the page views for several pieces of content", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_searches, :label => "Searches in a year related to this need", :hint => "This may require combining several search terms and data from both internal and external search. If it would be useful, record the keywords and phrases below", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :other_evidence, :label => "Do you have any other qualitative or quantitative data that supports this need?", :hint => "Is there any user research that you have completed? Any search keywords that are important?", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+    <p class="hint-text">This helps us understand how important this need is in context of all the needs GOV.UK meets.</p>
+    <%= f.input :legislation, :label => "What legislation underpins this need?", :hint => "Please supply a URL, e.g. on legislation.gov.uk", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+    <%= f.input :yearly_user_contacts, :label => "Roughly how many user contacts do you get about this need per year", :hint => "Include calls to contact centres, emails, customer service tickets, etc.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
+    <%= f.input :yearly_need_views, :label => "Pageviews specific to this need per year ", :hint => "Combine the pageviews for all relevant content.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
+    <%= f.input :yearly_site_views, :label => "Pageviews for your website per year", :hint => "This is for your whole website, not just this user need.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
+    <%= f.input :yearly_searches, :label => "How many searches relevant to this need are carried out per year", :hint => "Include external and internal searches.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
+    <%= f.input :other_evidence, :label => "Do you have any other evidence to support this need?", :hint => "E.g. user research, campaigns, user demand.", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
   <% end %>
+
+  <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
 
   <%= f.actions %>
 <% end %>

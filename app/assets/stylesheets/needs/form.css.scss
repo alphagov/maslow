@@ -3,6 +3,8 @@ form.need {
 
   .control-label {
     width: 200px;
+    font-weight: bold;
+    padding-top: 0;
   }
 
   .controls {
@@ -33,6 +35,14 @@ form.need {
   p.all-organisations {
     @extend .span8;
     @extend .controls;
+  }
+
+  .control-group {
+    margin-bottom: 40px;
+  }
+
+  .help-block {
+    color: #aaa;
   }
 }
 
@@ -91,4 +101,9 @@ form.button_to {
 
 .reopen {
   float: right;
+}
+
+.hint-text {
+  color: #aaa;
+  margin-bottom: 40px;
 }
