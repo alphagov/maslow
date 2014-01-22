@@ -31,9 +31,9 @@
   <%= f.inputs "Provide evidence for this need", :id => "evidence" do %>
     <p class="hint-text">This helps us understand how important this need is in context of all the needs GOV.UK meets.</p>
     <%= f.input :legislation, :label => "What legislation underpins this need?", :hint => "Please supply a URL, e.g. on legislation.gov.uk", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
-    <%= f.input :yearly_user_contacts, :label => "Roughly how many user contacts do you get per year about this need?", :hint => "Include calls to contact centres, emails, customer service tickets, etc.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
+    <%= f.input :yearly_user_contacts, :label => "Roughly how many user contacts do you get about this need per year", :hint => "Include calls to contact centres, emails, customer service tickets, etc.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
+    <%= f.input :yearly_need_views, :label => "Pageviews specific to this need per year ", :hint => "Combine the pageviews for all relevant content.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
     <%= f.input :yearly_site_views, :label => "Pageviews for your website per year", :hint => "This is for your whole website, not just this user need.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_need_views, :label => "Pageviews per year specific to this need", :hint => "Combine the pageviews for all relevant content.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
     <%= f.input :yearly_searches, :label => "How many searches relevant to this need are carried out per year", :hint => "Include external and internal searches.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
     <%= f.input :other_evidence, :label => "Do you have any other evidence to support this need?", :hint => "E.g. user research, campaigns, user demand.", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
   <% end %>

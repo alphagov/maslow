@@ -40,9 +40,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Need is likely to be met when")
 
       assert page.has_text?("Do you have any other evidence to support this need?")
-      assert page.has_text?("Roughly how many user contacts do you get per year about this need?")
+      assert page.has_text?("Roughly how many user contacts do you get about this need per year")
+      assert page.has_text?("Pageviews specific to this need per year")
       assert page.has_text?("Pageviews for your website per year")
-      assert page.has_text?("Pageviews per year specific to this need")
       assert page.has_text?("How many searches relevant to this need are carried out per year")
       assert page.has_text?("What legislation underpins this need?")
     end
@@ -102,9 +102,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("It's something only government does")
       choose("Noticed by the average member of the public")
       fill_in("Do you have any other evidence to support this need?", with: "Free text evidence with lots more evidence")
-      fill_in("Roughly how many user contacts do you get per year about this need?", with: 10000)
+      fill_in("Roughly how many user contacts do you get about this need per year", with: 10000)
+      fill_in("Pageviews specific to this need per year", with: 1000)
       fill_in("Pageviews for your website per year", with: 1000000)
-      fill_in("Pageviews per year specific to this need", with: 1000)
       fill_in("How many searches relevant to this need are carried out per year", with: 2000)
       fill_in("What legislation underpins this need?", with: "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff")
       within "#met-when-criteria" do
