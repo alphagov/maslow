@@ -100,7 +100,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       end
 
       should "filter when clicking on an organisation while showing a need" do
-        visit"/needs"
+        visit "/needs"
         click_on "10001"
 
         within ".need-organisations" do
