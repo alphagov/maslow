@@ -99,7 +99,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Closed needs cannot be edited")
       assert page.has_content?("This need is closed as a duplicate of 100001")
       assert page.has_link?("100001", href: "/needs/100001")
-      assert page.has_no_button?("Edit")
+      assert page.has_no_link?("Edit")
     end
 
     should "not be able to edit a closed need from the history page" do
@@ -107,9 +107,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       need_api_has_need(@duplicate)
       visit "/needs/100002/revisions"
 
-      assert page.has_content?("This need is a duplicate of 100001")
-      assert page.has_link?("100001", href: "/needs/100001")
-      assert page.has_no_button?("Edit")
+      assert page.has_no_link?("Edit")
     end
   end
 end
