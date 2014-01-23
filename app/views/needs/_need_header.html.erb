@@ -19,37 +19,13 @@
           "View" => need_path(@need),
           "Edit" => edit_need_path(@need),
           "History" => revisions_need_path(@need),
+          "Actions" => actions_need_path(@need)
         }
       else
         {
           "View" => need_path(@need),
           "History" => revisions_need_path(@need),
+          "Actions" => actions_need_path(@need)
         }
       end), active: active
     ) %>
-
-<script>
-  $('#out-of-scope').
-  attr('href', '#out-of-scope-modal').
-  attr('data-toggle', 'modal').
-  attr('role', 'button')
-</script>
-
-<% unless @need.out_of_scope? %>
-<div id="out-of-scope-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="modal-out-of-scope-label">Mark as out of scope</h3>
-  </div>
-  <div class="modal-body">
-    <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-    <%= button_to "Mark as out of scope",
-                    descope_need_path(@need),
-                    method: :put,
-                    class: "btn btn-danger" %>
-  </div>
-</div>
-<% end %>

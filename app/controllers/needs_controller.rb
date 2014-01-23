@@ -30,6 +30,12 @@ class NeedsController < ApplicationController
     # show.html.erb
   end
 
+  def actions
+    @need = load_need
+
+    # actions.html.erb
+  end
+
   def revisions
     @need = load_need
 
