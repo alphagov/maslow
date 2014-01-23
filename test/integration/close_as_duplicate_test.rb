@@ -109,5 +109,14 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
 
       assert page.has_no_link?("Edit")
     end
+
+    should "not be able to access close page if already closed" do
+      @duplicate.merge!("duplicate_of" => "100001")
+      need_api_has_need(@duplicate)
+      visit "/needs/100002/close-as-duplicate"
+
+      assert page.has_no_link?("Edit")
+      assert page.has_content?("This need is already closed")
+    end
   end
 end
