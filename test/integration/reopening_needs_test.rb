@@ -34,6 +34,7 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
 
       visit "/needs"
       click_on "100002"
+      click_on "Actions"
 
       # re-stub request ready for reopen completing and the need is re-shown
       need_api_has_need(need_hash.merge("duplicate_of" => nil))
@@ -51,6 +52,7 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
 
       visit "/needs"
       click_on "100002"
+      click_on "Actions"
       click_on "Reopen"
 
       assert page.has_content?("There was a problem reopening the need")

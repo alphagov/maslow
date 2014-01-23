@@ -34,14 +34,13 @@
                   id: 'out-of-scope',
                   class: "btn btn-danger" %>
     <% else %>
-      <%= link_to "Close as a duplicate",
-                  "#",
-                  id: 'close-as-duplicate',
-                  disabled: "",
-                  class: "btn btn-disabled" %>
-      <strong>This need is closed as a duplicate of <%= @need.duplicate_of %></strong>
+      <%= button_to "Reopen",
+                    reopen_need_path(@need),
+                    method: "delete",
+                    class: "btn btn-danger" %>
+      <strong>This need is closed as a duplicate of <%= link_to @need.duplicate_of, need_path(@need.duplicate_of) %></strong>
     <% end %>
-
+    </p>
   </div>
 
   <script>
