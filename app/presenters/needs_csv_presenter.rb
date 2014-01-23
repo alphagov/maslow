@@ -39,8 +39,8 @@ class NeedsCsvPresenter
 
   def longest_criteria(needs)
     needs.map(&:met_when)
-         .sort_by{|x| x.length}.reverse
-         .first.try(:size) || 0
+         .max_by(&:length)
+         .try(:size) || 0
   end
 
 end
