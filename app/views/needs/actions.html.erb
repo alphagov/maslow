@@ -27,6 +27,21 @@
                   class: "btn btn-danger" %>
     <% end %>
     </p>
+    <p>
+    <% if @need.duplicate_of.blank? %>
+      <%= link_to "Close as a duplicate",
+                  close_as_duplicate_need_path(@need),
+                  id: 'out-of-scope',
+                  class: "btn btn-danger" %>
+    <% else %>
+      <%= link_to "Close as a duplicate",
+                  "#",
+                  id: 'close-as-duplicate',
+                  disabled: "",
+                  class: "btn btn-disabled" %>
+      <strong>This need is closed as a duplicate of <%= @need.duplicate_of %></strong>
+    <% end %>
+
   </div>
 
   <script>

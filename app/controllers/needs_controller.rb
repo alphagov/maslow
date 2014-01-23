@@ -102,6 +102,12 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def close_as_duplicate
+    @need = load_need
+
+    # close_as_duplicate.html.erb
+  end
+
   def closed
     main_need_id = prepare_need_params(params)["duplicate_of"]
     @need = load_need
@@ -119,7 +125,8 @@ class NeedsController < ApplicationController
     end
 
     @target = need_path(params[:id])
-    render "edit", :status => 422
+    @need.duplicate_of = nil
+    render "actions", :status => 422
   end
 
   def reopen

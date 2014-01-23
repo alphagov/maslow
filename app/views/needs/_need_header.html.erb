@@ -14,7 +14,7 @@
 </header>
 
 <%= bootstrap_flavour_tabs(
-      (unless @need.duplicate_of
+      (if @need.duplicate_of.blank?
         {
           "View" => need_path(@need),
           "Edit" => edit_need_path(@need),
