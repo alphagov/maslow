@@ -9,17 +9,12 @@
     </ul>
   </nav>
 
-  <% if @need.duplicate_of.present? %>
-    <p class="need-alert">This need is a duplicate of
-    <%= link_to @need.duplicate_of,
-                need_path(@need.duplicate_of) %>
-    </p>
-  <% else %>
-    <%= render :partial => "need_header", locals: { active: "History" } %>
-  <% end %>
+  <%= render :partial => "need_header", locals: { active: "History" } %>
 
   <h3>Recent changes</h3>
   <ul class="revisions">
     <%= render partial: "revision", collection: @need.revisions %>
   </ul>
+
+  <%= render partial: "workflow_buttons", locals: { edit: false } %>
 </article>
