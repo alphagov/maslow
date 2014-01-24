@@ -26,6 +26,9 @@ class NeedsController < ApplicationController
 
   def show
     @need = load_need
+    if @need.duplicate_of.present?
+      @canonical_need_goal = Need.find(@need.duplicate_of).goal
+    end
 
     # show.html.erb
   end
@@ -69,7 +72,10 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need created."
+        flash[:need_id] = @need.need_id
+        flash[:goal] = @need.goal
+        redirect_to need_url(@need.need_id),
+                    notice: "Need created"
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -89,7 +95,9 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need updated."
+        flash[:need_id] = @need.need_id
+        flash[:goal] = @need.goal
+        redirect_to need_url(@need.need_id), notice: "Need updated"
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -114,13 +122,16 @@ class NeedsController < ApplicationController
   end
 
   def closed
-    main_need_id = prepare_need_params(params)["duplicate_of"]
+    canonical_need = prepare_need_params(params)["duplicate_of"]
     @need = load_need
-    @need.duplicate_of = main_need_id
+    @need.duplicate_of = canonical_need
 
     if @need.valid?
       if @need.close_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
+        @canonical_need = Need.find(canonical_need)
+        flash[:need_id] = @canonical_need.need_id
+        flash[:goal] = @canonical_need.goal
+        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of"
         return
       else
         flash[:error] = "There was a problem closing the need as a duplicate"
@@ -136,9 +147,13 @@ class NeedsController < ApplicationController
 
   def reopen
     @need = load_need
+    old_canonical_id = @need.duplicate_of
 
     if @need.reopen_as(current_user)
-      redirect_to need_url(@need.need_id), notice: "Need #{@need.need_id} has been reopened"
+      flash[:need_id] = old_canonical_id
+      flash[:goal] = Need.find(old_canonical_id).goal
+
+      redirect_to need_url(@need.need_id), notice: "Need is no longer a duplicate of"
       return
     else
       flash[:error] = "There was a problem reopening the need"
@@ -168,6 +183,8 @@ class NeedsController < ApplicationController
     @need.in_scope = false
 
     if @need.save_as(current_user)
+      flash[:need_id] = @need.need_id
+      flash[:goal] = @need.goal
       flash[:notice] = "Need has been marked as out of scope"
     else
       flash[:error] = "We had a problem marking the need as out of scope"

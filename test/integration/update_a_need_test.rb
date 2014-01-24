@@ -79,7 +79,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       click_on_first_button("Save")
 
       assert_requested request
-      assert page.has_text?("Need updated."), "No success message displayed"
+      assert page.has_text?("Need updated 100001: apply for a primary school"), "No success message displayed"
+      assert page.has_link?("100001: apply for a primary school", href: "/needs/100001")
     end
 
     should "display met_when criteria on multiple lines" do
@@ -128,7 +129,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       click_on_first_button("Save")
 
       assert_requested request
-      assert page.has_text?("Need updated."), "No success message displayed"
+      assert page.has_text?("Need updated 100001: apply for a primary school"), "No success message displayed"
+      assert page.has_link?("100001: apply for a primary school", href: "/needs/100001")
     end
 
     should "be able to delete met_when criteria" do
@@ -245,7 +247,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       click_on_first_button "Save"
       assert_requested request
-      assert page.has_content? "Need updated."
+      assert page.has_text?("Need updated 100200: apply for a primary school place"), "No success message displayed"
+      assert page.has_link?("100200: apply for a primary school place", href: "/needs/100200")
     end
   end
 

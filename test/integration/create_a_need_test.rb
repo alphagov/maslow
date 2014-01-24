@@ -115,7 +115,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert_requested post_request
       assert_requested get_request
       assert_equal("Find my local register office", page.find("h1").text)
-      assert page.has_text?("Need created.")
+      assert page.has_text?("Need created 100001: find my local register office")
+      assert page.has_link?("100001: find my local register office", href: "/needs/100001")
     end
 
     should "be able to add more met_when criteria" do

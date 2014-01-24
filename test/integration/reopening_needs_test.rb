@@ -13,10 +13,15 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
   end
 
   setup do
+    @canonical = need_hash.merge({
+      "id" => "100001",
+      "duplicate_of" => nil
+    })
     login_as(stub_user)
     need_api_has_organisations({})
     need_api_has_needs([need_hash])  # For need list
     need_api_has_need(need_hash)  # For individual need
+    need_api_has_need(@canonical)  # For individual need
     content_api_has_artefacts_for_need_id("100002", [])
     @api_url = Plek.current.find('need-api') + '/needs/100002'
   end
@@ -38,12 +43,14 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
 
       # re-stub request ready for reopen completing and the need is re-shown
       need_api_has_need(need_hash.merge("duplicate_of" => nil))
+      Need.any_instance.expects(:duplicate_of).at_least(2).returns("100001", nil)
 
       click_on_first_button "Reopen"
       assert_requested delete_request
 
       assert page.has_no_content?("This need is closed as a duplicate of 100001")
-      assert page.has_no_link?("100001", href: "/needs/100001")
+      assert page.has_content?("Need is no longer a duplicate of 100001: apply for a primary school place")
+      assert page.has_link?("100001: apply for a primary school place", href: "/needs/100001")
       assert page.has_link?("Edit")
     end
 

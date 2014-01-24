@@ -68,10 +68,11 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
             "duplicate_of" => "100001"
           }.to_json
       )
-
+      need_api_has_need(@need)
       click_on_first_button("Close as a duplicate")
 
-      assert page.has_content?("Need closed as a duplicate of 100001")
+
+      assert page.has_content?("Need closed as a duplicate of 100001: apply for a primary school place")
       assert page.has_no_button?("Edit")
     end
 
@@ -94,6 +95,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     should "not be able to edit a closed need" do
       @duplicate.merge!("duplicate_of" => "100001")
       need_api_has_need(@duplicate)
+      need_api_has_need(@need)
       visit "/needs/100002/edit"
 
       assert page.has_content?("Closed needs cannot be edited")
@@ -113,6 +115,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     should "not be able to access close page if already closed" do
       @duplicate.merge!("duplicate_of" => "100001")
       need_api_has_need(@duplicate)
+      need_api_has_need(@need)
       visit "/needs/100002/close-as-duplicate"
 
       assert page.has_no_link?("Edit")
