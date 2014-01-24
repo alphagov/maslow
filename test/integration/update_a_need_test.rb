@@ -76,7 +76,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
-      click_on_first_button("Save")
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
 
       assert_requested request
       assert page.has_text?("Need updated 100001: apply for a primary school"), "No success message displayed"
@@ -126,7 +128,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-2", with: "more")
       end
 
-      click_on_first_button("Save")
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
 
       assert_requested request
       assert page.has_text?("Need updated 100001: apply for a primary school"), "No success message displayed"
@@ -193,7 +197,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
-      click_on_first_button("Save")
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
 
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
@@ -245,7 +251,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_no_select? "Organisations"
       assert page.has_content? "This need applies to all organisations"
 
-      click_on_first_button "Save"
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
       assert_requested request
       assert page.has_text?("Need updated 100200: apply for a primary school place"), "No success message displayed"
       assert page.has_link?("100200: apply for a primary school place", href: "/needs/100200")
