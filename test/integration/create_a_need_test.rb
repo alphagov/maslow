@@ -18,7 +18,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
   context "Creating a need" do
     should "be able to access 'Add a Need' page" do
       visit('/needs')
-      click_on('Add a new need')
+      within "#workflow" do
+        click_on('Add a new need')
+      end
 
       assert page.has_field?("As a")
       assert page.has_field?("I need to")
@@ -92,7 +94,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       content_api_has_artefacts_for_need_id(100001, [])
 
       visit('/needs')
-      click_on('Add a new need')
+      within "#workflow" do
+        click_on('Add a new need')
+      end
 
       fill_in("As a", with: "User")
       fill_in("I need to", with: "find my local register office")
@@ -121,7 +125,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to add more met_when criteria" do
       visit('/needs')
-      click_on("Add a new need")
+      within "#workflow" do
+        click_on('Add a new need')
+      end
 
       assert page.has_field?("criteria-0")
       assert page.has_no_field?("delete-criteria")
@@ -139,7 +145,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
     should "retain previous values when the need content is incomplete" do
       visit('/needs')
-      click_on('Add a new need')
+      within "#workflow" do
+        click_on('Add a new need')
+      end
 
       fill_in("As a", with: "User")
       check("It's something only government does")
@@ -158,7 +166,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
     should "not have any fields filled in when submitting a blank form" do
       visit('/needs')
-      click_on('Add a new need')
+      within "#workflow" do
+        click_on('Add a new need')
+      end
 
       click_on_first_button("Save")
 
@@ -184,7 +194,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
                     .to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
 
       visit('/needs')
-      click_on('Add a new need')
+      within "#workflow" do
+        click_on('Add a new need')
+      end
 
       fill_in("As a", with: "User")
       fill_in("I need to", with: "find my local register office")

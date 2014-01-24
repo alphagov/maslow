@@ -3,7 +3,7 @@
 <h1 class="page-header">All needs</h1>
 
 <div>
-  <%= link_to "Add a new need", new_need_path, class: "btn" %>
+  <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
   <%= form_tag("/needs", method: "get", class: "filter") do %>
     <%= label_tag "organisation_id", "Filter needs by organisation:" %>
     &nbsp;
@@ -45,3 +45,5 @@
 <% end %>
 
 <%= paginate_needs @needs %>
+
+<%= render partial: "workflow_buttons", locals: { edit: false } %>
