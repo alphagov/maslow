@@ -88,7 +88,13 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       assert page.has_content?("We had a problem marking the need as out of scope")
     end
 
-
+    should "be able to add a new need from this page" do
+      need_api_has_need(@need) # For individual need
+      visit "/needs/100001/out-of-scope"
+      within "#workflow" do
+        assert page.has_link?("Add a new need", href: "/needs/new")
+      end
+    end
   end
 
   context "Need is already out of scope" do
