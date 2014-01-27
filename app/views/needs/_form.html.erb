@@ -38,7 +38,7 @@
 
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this?", :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
 
-  <%= render partial: "workflow_buttons", locals: { f: f, edit: true } %>
+  <%= render partial: "workflow_buttons", locals: { f: f, edit_page: true } %>
 <% end %>
 <% if params[:delete_criteria].present? || params[:criteria_action].present? %>
   <script>
