@@ -157,6 +157,13 @@ class NeedsControllerTest < ActionController::TestCase
       assert_equal ["Winning", "Awesome", ""], assigns[:need].met_when
     end
 
+    should "create the need and redirect to add new need if 'add_new' provided" do
+      Need.any_instance.expects(:save_as).returns(true)
+      post(:create, { add_new: "", need: complete_need_data })
+
+      assert_redirected_to new_need_path
+    end
+
     context "CSRF protection" do
       should "return a 403 status when not a verified request" do
         # as allow_forgery_protection is disabled in the test environment, we're
@@ -346,6 +353,18 @@ class NeedsControllerTest < ActionController::TestCase
            :id => "100001",
            :need => base_need_fields.merge(:benefit => "be awesome")
       assert_redirected_to need_path(100001)
+    end
+
+    should "update the need and redirect to add new need if 'add_new' provided" do
+      need = stub_need
+      Need.expects(:find).with(100001).returns(need)
+      need.expects(:save_as).with(is_a(User)).returns(true)
+
+      post :update,
+           :id => "100001",
+           :need => base_need_fields.merge(:benefit => "be awesome"),
+           :add_new => ""
+      assert_redirected_to new_need_path
     end
 
     should "leave met when criteria unchanged" do

@@ -206,6 +206,45 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("There was a problem saving your need.")
     end
+
+    should "be able to save and add a new need" do
+      post_request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
+        :body => blank_need_request.merge({
+          "role" => "User",
+          "goal" => "find my local register office",
+          "benefit" => "I can find records of birth, marriage or death",
+          "author" => {
+            "name" => stub_user.name,
+            "email" => stub_user.email,
+            "uid" => stub_user.uid
+          }
+        }).to_json
+      ).to_return(
+        :body =>
+          { "_response_info" => { "status" => "created" },
+            "id" => "100001"
+          }.to_json
+      )
+
+      visit('/needs')
+      within "#workflow" do
+        click_on('Add a new need')
+      end
+
+      fill_in("As a", with: "User")
+      fill_in("I need to", with: "find my local register office")
+      fill_in("So that", with: "I can find records of birth, marriage or death")
+
+      within "#workflow" do
+        click_on("Save and add a new need")
+      end
+
+      assert_requested post_request
+      assert page.has_content?("Add a new need")
+      assert page.has_content?("Need created 100001: find my local register office")
+      assert page.has_link?("100001: find my local register office",
+                            href: "/needs/100001")
+    end
   end
 
 end

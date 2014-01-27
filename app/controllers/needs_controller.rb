@@ -66,6 +66,7 @@ class NeedsController < ApplicationController
   end
 
   def create
+    add_new = params["add_new"]
     @need = Need.new( prepare_need_params(params) )
 
     add_or_remove_criteria(:new) and return if criteria_params_present?
@@ -74,8 +75,12 @@ class NeedsController < ApplicationController
       if @need.save_as(current_user)
         flash[:need_id] = @need.need_id
         flash[:goal] = @need.goal
-        redirect_to need_url(@need.need_id),
-                    notice: "Need created"
+        if add_new
+          redirect_to new_need_path, notice: "Need created"
+        else
+          redirect_to need_url(@need.need_id),
+                      notice: "Need created"
+        end
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -88,6 +93,7 @@ class NeedsController < ApplicationController
   end
 
   def update
+    add_new = params["add_new"]
     @need = load_need
     @need.update(prepare_need_params(params))
 
@@ -97,7 +103,12 @@ class NeedsController < ApplicationController
       if @need.save_as(current_user)
         flash[:need_id] = @need.need_id
         flash[:goal] = @need.goal
-        redirect_to need_url(@need.need_id), notice: "Need updated"
+        if add_new
+          redirect_to new_need_path, notice: "Need updated"
+        else
+          redirect_to need_url(@need.need_id),
+                      notice: "Need updated"
+        end
         return
       else
         flash[:error] = "There was a problem saving your need."

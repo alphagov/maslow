@@ -204,6 +204,40 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
     end
+
+    should "be able to save and add a new need" do
+      api_url = Plek.current.find('need-api') + '/needs/100001'
+      request_body = blank_need_request.merge(
+        "role" => "Person",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my child can start school",
+        "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      ).to_json
+      request = stub_request(:put, api_url).with(:body => request_body)
+
+      visit('/needs')
+
+      click_on("100001")
+      click_on("Edit")
+
+      fill_in("As a", with: "Person")
+
+      within "#workflow" do
+        click_on("Save and add a new need")
+      end
+
+      assert_requested request
+      assert page.has_content?("Add a new need")
+      assert page.has_content?("Need updated 100001: apply for a primary school place")
+      assert page.has_link?("100001: apply for a primary school place",
+                            href: "/needs/100001")
+    end
   end
 
   context "updating a need which applies to all organisations" do
