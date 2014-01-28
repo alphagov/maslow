@@ -31,7 +31,7 @@
     <% if @need.duplicate_of.blank? %>
       <%= link_to "Close as a duplicate",
                   close_as_duplicate_need_path(@need),
-                  id: 'out-of-scope',
+                  id: 'close-as-duplicate',
                   class: "btn btn-danger" %>
     <% else %>
       <%= button_to "Reopen",
@@ -46,6 +46,12 @@
   <script>
     $('#out-of-scope').
     attr('href', '#out-of-scope-modal').
+    attr('data-toggle', 'modal').
+    attr('role', 'button')
+  </script>
+  <script>
+    $('#close-as-duplicate').
+    attr('href', '#close-as-duplicate-modal').
     attr('data-toggle', 'modal').
     attr('role', 'button')
   </script>
@@ -67,6 +73,20 @@
                       class: "btn btn-danger" %>
     </div>
   </div>
+  <% end %>
+
+  <% if @need.duplicate_of.blank? %>
+    <div id="close-as-duplicate-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="close-as-duplicate-label" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="close-as-duplicate-label">Close as a duplicate</h3>
+      </div>
+      <div class="modal-body">
+
+        <%= render partial: "duplicate_of_need" %>
+
+      </div>
+    </div>
   <% end %>
 
   <%= render partial: "workflow_buttons", locals: { edit_page: false, view_page: false } %>

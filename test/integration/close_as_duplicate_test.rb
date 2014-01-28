@@ -54,7 +54,9 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
       click_on "Actions"
-      click_on "Close as a duplicate"
+      within "#actions" do
+        click_on "Close as a duplicate"
+      end
 
       fill_in("This need is a duplicate of", with: 100001)
 
@@ -69,7 +71,8 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
           }.to_json
       )
       need_api_has_need(@need)
-      click_on_first_button("Close as a duplicate")
+
+      click_on "Close as a duplicate"
 
 
       assert page.has_content?("Need closed as a duplicate of 100001: apply for a primary school place")
@@ -83,10 +86,12 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
       click_on "Actions"
-      click_on "Close as a duplicate"
+      within "#actions" do
+        click_on "Close as a duplicate"
+      end
 
       fill_in("This need is a duplicate of", with: 100001)
-      click_on_first_button "Close as a duplicate"
+      click_on "Close as a duplicate"
 
       assert page.has_content?("There was a problem closing the need as a duplicate")
       assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
@@ -132,7 +137,10 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
         assert page.has_link?("Add a new need", href: "/needs/new")
       end
 
-      click_on "Close as a duplicate"
+      within "#actions" do
+        click_on "Close as a duplicate"
+      end
+
       within "#workflow" do
         assert page.has_link?("Add a new need", href: "/needs/new")
       end
