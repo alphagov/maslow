@@ -24,7 +24,7 @@ form.need {
   }
 
   .control-group {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   .help-block {
@@ -103,6 +103,9 @@ form.need .control-label {
   text-align: left;
   display: block;
   float: none;
-  margin-left: 180px;
   width: auto;
+}
+
+form.need .controls {
+  margin-left: 0px;
 }
