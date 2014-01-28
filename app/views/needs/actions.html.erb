@@ -12,22 +12,41 @@
   <%= render :partial => "need_header", locals: { active: "Actions" } %>
 
   <div id="actions">
-    <p>
+    <h2>
+      Mark as out of scope
+      <br/>
+      <small>
+        <% if @need.out_of_scope? %>
+          <strong>This need is not in scope for GOV.UK</strong>
+        <% else %>
+          This need will be editable, but won't be considered for adding to GOV.UK content
+        <% end %>
+      </small>
+    </h2>
     <% if @need.out_of_scope? %>
       <%= link_to "Mark as out of scope",
                   "#",
                   id: 'out-of-scope',
                   disabled: "",
                   class: "btn btn-disabled" %>
-      <strong>This need is not in scope for GOV.UK</strong>
     <% else %>
       <%= link_to "Mark as out of scope",
                   out_of_scope_need_path(@need),
                   id: 'out-of-scope',
                   class: "btn btn-danger" %>
     <% end %>
-    </p>
-    <p>
+    <hr/>
+    <h2>
+      Close as a duplicate
+      <br/>
+      <small>
+        <% if @need.duplicate_of.blank? %>
+          This need won't be editable as there is already an existing need that is better
+        <% else %>
+          <strong>This need is closed as a duplicate of <%= link_to @need.duplicate_of, need_path(@need.duplicate_of) %></strong>
+        <% end %>
+      </small>
+    </h2>
     <% if @need.duplicate_of.blank? %>
       <%= link_to "Close as a duplicate",
                   close_as_duplicate_need_path(@need),
@@ -38,7 +57,6 @@
                     reopen_need_path(@need),
                     method: "delete",
                     class: "btn btn-danger" %>
-      <strong>This need is closed as a duplicate of <%= link_to @need.duplicate_of, need_path(@need.duplicate_of) %></strong>
     <% end %>
     </p>
   </div>
