@@ -17,7 +17,7 @@
                    %>
       <% else %>
         <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
-        <% if view_page && @need.duplicate_of.blank? %>
+        <% if @need && @need.duplicate_of.blank? %>
           <%= link_to "Edit", edit_need_path(@need), class: "btn btn-success" %>
         <% end %>
       <% end %>
