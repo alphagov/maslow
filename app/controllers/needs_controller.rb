@@ -35,6 +35,9 @@ class NeedsController < ApplicationController
 
   def actions
     @need = load_need
+    if @need.duplicate_of.present?
+      @canonical_need_goal = Need.find(@need.duplicate_of).goal
+    end
 
     # actions.html.erb
   end

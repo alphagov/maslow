@@ -37,13 +37,16 @@
     <% end %>
     <hr/>
     <h2>
-      Close as a duplicate
-      <br/>
-      <small>
         <% if @need.duplicate_of.blank? %>
           This need won't be editable as there is already an existing need that is better
+          Close as a duplicate
+          <br/>
+          <small>
         <% else %>
-          <strong>This need is closed as a duplicate of <%= link_to @need.duplicate_of, need_path(@need.duplicate_of) %></strong>
+          Reopen duplicate
+          <br/>
+          <small>
+            <strong>This need is closed as a duplicate of <%= link_to "#{@need.duplicate_of}: #{@canonical_need_goal}", need_path(@need.duplicate_of) %></strong>
         <% end %>
       </small>
     </h2>
