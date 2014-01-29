@@ -34,7 +34,7 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
         click_on("Export as CSV")
 
         assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
-        assert_equal(csv_file(1),page.source)
+        assert_equal csv_file(1), page.source
       end
     end
 
