@@ -39,4 +39,9 @@
   </tbody>
 </table>
 
+<% unless params[:organisation_id].blank? %>
+  <span><%= link_to "Export as CSV", needs_path(organisation_id: params[:organisation_id],
+                                                format: :csv) %></span>
+<% end %>
+
 <%= paginate_needs @needs %>
