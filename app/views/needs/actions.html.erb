@@ -18,12 +18,14 @@
       <small>
         <% if @need.out_of_scope? %>
           <strong>This need is not in scope for GOV.UK</strong>
+        <% elsif @need.duplicate_of.present? %>
+          You can't mark this need as 'out of scope' because it's already closed as a duplicate
         <% else %>
-          This need will be editable, but won't be considered for adding to GOV.UK content
+          No solution to this need will be created on GOV.UK, although you can still edit the need
         <% end %>
       </small>
     </h2>
-    <% if @need.out_of_scope? %>
+    <% if @need.out_of_scope? || @need.duplicate_of.present? %>
       <%= link_to "Mark as out of scope",
                   "#",
                   id: 'out-of-scope',
@@ -38,10 +40,10 @@
     <hr/>
     <h2>
         <% if @need.duplicate_of.blank? %>
-          This need won't be editable as there is already an existing need that is better
           Close as a duplicate
           <br/>
           <small>
+            This need duplicates an existing eed, you can't edit after it's closed
         <% else %>
           Reopen duplicate
           <br/>
@@ -59,7 +61,7 @@
       <%= button_to "Reopen",
                     reopen_need_path(@need),
                     method: "delete",
-                    class: "btn btn-danger" %>
+                    class: "btn btn-success" %>
     <% end %>
     </p>
   </div>
