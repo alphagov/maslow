@@ -26,18 +26,14 @@ class NeedsController < ApplicationController
 
   def show
     @need = load_need
-    if @need.duplicate_of.present?
-      @canonical_need_goal = Need.find(@need.duplicate_of).goal
-    end
+    set_canonical_need_goal
 
     # show.html.erb
   end
 
   def actions
     @need = load_need
-    if @need.duplicate_of.present?
-      @canonical_need_goal = Need.find(@need.duplicate_of).goal
-    end
+    set_canonical_need_goal
 
     # actions.html.erb
   end
@@ -203,6 +199,12 @@ class NeedsController < ApplicationController
     else
       redirect_to need_url(@need.need_id),
         notice: flash_notice
+    end
+  end
+
+  def set_canonical_need_goal
+    if @need.duplicate_of.present?
+      @canonical_need_goal = Need.find(@need.duplicate_of).goal
     end
   end
 
