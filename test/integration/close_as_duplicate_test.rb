@@ -54,7 +54,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
       click_on "Actions"
-      within "#actions" do
+      within "#actions #duplicate" do
         click_on "Close as a duplicate"
       end
 
@@ -86,7 +86,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100002"
       click_on "Actions"
-      within "#actions" do
+      within "#actions #duplicate" do
         click_on "Close as a duplicate"
       end
 
@@ -137,7 +137,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
         assert page.has_link?("Add a new need", href: "/needs/new")
       end
 
-      within "#actions" do
+      within "#actions #duplicate" do
         click_on "Close as a duplicate"
       end
 

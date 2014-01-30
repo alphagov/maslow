@@ -61,7 +61,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       # There are two 'Mark as out of scope' buttons
       # The second is a confirmation modal drop down when JavaScript is on
       # The first is an action initiator in the header
-      within "#actions" do
+      within "#actions #scope" do
         click_on "Mark as out of scope"
       end
 
@@ -79,7 +79,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      within "#actions" do
+      within "#actions #scope" do
         click_on "Mark as out of scope"
       end
 
