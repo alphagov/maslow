@@ -76,14 +76,7 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        flash[:need_id] = @need.need_id
-        flash[:goal] = @need.goal
-        if add_new
-          redirect_to new_need_path, notice: "Need created"
-        else
-          redirect_to need_url(@need.need_id),
-                      notice: "Need created"
-        end
+        set_flash_and_redirect(add_new, "Need created")
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -104,14 +97,7 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        flash[:need_id] = @need.need_id
-        flash[:goal] = @need.goal
-        if add_new
-          redirect_to new_need_path, notice: "Need updated"
-        else
-          redirect_to need_url(@need.need_id),
-                      notice: "Need updated"
-        end
+        set_flash_and_redirect(add_new, "Need updated")
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -208,6 +194,17 @@ class NeedsController < ApplicationController
   end
 
   private
+
+  def set_flash_and_redirect(add_new, flash_notice)
+    flash[:need_id] = @need.need_id
+    flash[:goal] = @need.goal
+    if add_new
+      redirect_to new_need_path, notice: flash_notice
+    else
+      redirect_to need_url(@need.need_id),
+        notice: flash_notice
+    end
+  end
 
   def prepare_need_params(params_hash)
     if params_hash["need"]
