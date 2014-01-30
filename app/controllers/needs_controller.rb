@@ -26,8 +26,16 @@ class NeedsController < ApplicationController
 
   def show
     @need = load_need
+    set_canonical_need_goal
 
     # show.html.erb
+  end
+
+  def actions
+    @need = load_need
+    set_canonical_need_goal
+
+    # actions.html.erb
   end
 
   def revisions
@@ -57,13 +65,14 @@ class NeedsController < ApplicationController
   end
 
   def create
+    add_new = params["add_new"]
     @need = Need.new( prepare_need_params(params) )
 
     add_or_remove_criteria(:new) and return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need created."
+        set_flash_and_redirect(add_new, "Need created")
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -76,6 +85,7 @@ class NeedsController < ApplicationController
   end
 
   def update
+    add_new = params["add_new"]
     @need = load_need
     @need.update(prepare_need_params(params))
 
@@ -83,7 +93,7 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need updated."
+        set_flash_and_redirect(add_new, "Need updated")
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -96,14 +106,28 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
-  def closed
-    main_need_id = prepare_need_params(params)["duplicate_of"]
+  def close_as_duplicate
     @need = load_need
-    @need.duplicate_of = main_need_id
+    if @need.duplicate_of.present?
+      redirect_to need_url(@need.need_id),
+                  notice: "This need is already closed",
+                  status: 303
+      return
+    end
+    # close_as_duplicate.html.erb
+  end
+
+  def closed
+    canonical_need = prepare_need_params(params)["duplicate_of"]
+    @need = load_need
+    @need.duplicate_of = canonical_need
 
     if @need.valid?
       if @need.close_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
+        @canonical_need = Need.find(canonical_need)
+        flash[:need_id] = @canonical_need.need_id
+        flash[:goal] = @canonical_need.goal
+        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of"
         return
       else
         flash[:error] = "There was a problem closing the need as a duplicate"
@@ -113,14 +137,19 @@ class NeedsController < ApplicationController
     end
 
     @target = need_path(params[:id])
-    render "edit", :status => 422
+    @need.duplicate_of = nil
+    render "actions", :status => 422
   end
 
   def reopen
     @need = load_need
+    old_canonical_id = @need.duplicate_of
 
     if @need.reopen_as(current_user)
-      redirect_to need_url(@need.need_id), notice: "Need #{@need.need_id} has been reopened"
+      flash[:need_id] = old_canonical_id
+      flash[:goal] = Need.find(old_canonical_id).goal
+
+      redirect_to need_url(@need.need_id), notice: "Need is no longer a duplicate of"
       return
     else
       flash[:error] = "There was a problem reopening the need"
@@ -150,6 +179,8 @@ class NeedsController < ApplicationController
     @need.in_scope = false
 
     if @need.save_as(current_user)
+      flash[:need_id] = @need.need_id
+      flash[:goal] = @need.goal
       flash[:notice] = "Need has been marked as out of scope"
     else
       flash[:error] = "We had a problem marking the need as out of scope"
@@ -159,6 +190,23 @@ class NeedsController < ApplicationController
   end
 
   private
+
+  def set_flash_and_redirect(add_new, flash_notice)
+    flash[:need_id] = @need.need_id
+    flash[:goal] = @need.goal
+    if add_new
+      redirect_to new_need_path, notice: flash_notice
+    else
+      redirect_to need_url(@need.need_id),
+        notice: flash_notice
+    end
+  end
+
+  def set_canonical_need_goal
+    if @need.duplicate_of.present?
+      @canonical_need_goal = Need.find(@need.duplicate_of).goal
+    end
+  end
 
   def prepare_need_params(params_hash)
     if params_hash["need"]

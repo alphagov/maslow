@@ -9,6 +9,8 @@ Maslow::Application.routes.draw do
       put :closed
       get :out_of_scope, path: 'out-of-scope'
       delete :closed, to: 'needs#reopen', as: :reopen
+      get :actions
+      get :close_as_duplicate, path: 'close-as-duplicate'
     end
   end
 

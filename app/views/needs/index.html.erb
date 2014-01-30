@@ -3,7 +3,6 @@
 <h1 class="page-header">All needs</h1>
 
 <div>
-  <%= link_to "Add a new need", new_need_path, class: "btn" %>
   <%= form_tag("/needs", method: "get", class: "filter") do %>
     <%= label_tag "organisation_id", "Filter needs by organisation:" %>
     &nbsp;
@@ -14,7 +13,7 @@
         "name_with_abbreviation",
         params[:organisation_id]
       ),
-      include_blank: true,
+      prompt: "All organisations",
       class: "organisation-select" %>
     <%= submit_tag "Filter", name: nil, class: "btn" %>
   <% end %>
@@ -45,3 +44,5 @@
 <% end %>
 
 <%= paginate_needs @needs %>
+
+<%= render partial: "workflow_buttons", locals: { edit_page: false, view_page: false } %>

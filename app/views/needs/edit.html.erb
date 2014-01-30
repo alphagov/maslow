@@ -8,13 +8,9 @@
       <li class="active">Edit</li>
     </ul>
   </nav>
-  <%= render :partial => "need_header", locals: { actions: [:history, :out_of_scope] } %>
+  <%= render :partial => "need_header", locals: { active: "Edit" } %>
 
   <h3>Edit need</h3>
 
   <%= render partial: "form" %>
-
-  <h3>Close need as duplicate</h3>
-
-  <%= render partial: "duplicate_of_need" %>
 </article>

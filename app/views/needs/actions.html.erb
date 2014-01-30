@@ -1,20 +1,22 @@
-<% content_for :page_title, "History" %>
+<% content_for :page_title, "Actions" %>
 
-<article class="need">
+<article id="single-need">
   <nav class="add-top-margin">
     <ul class="breadcrumb">
       <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
       <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
-      <li class="active">History</li>
+      <li class="active">Actions</li>
     </ul>
   </nav>
 
-  <%= render :partial => "need_header", locals: { active: "History" } %>
+  <%= render :partial => "need_header", locals: { active: "Actions" } %>
 
-  <h3>Recent changes</h3>
-  <ul class="revisions">
-    <%= render partial: "revision", collection: @need.revisions %>
-  </ul>
+  <div id="actions">
+    <%= render partial: "mark_as_out_of_scope" %>
+    <hr/>
+    <%= render partial: "actions_duplicate_of" %>
+  </div>
 
   <%= render partial: "workflow_buttons", locals: { edit_page: false, view_page: false } %>
+
 </article>

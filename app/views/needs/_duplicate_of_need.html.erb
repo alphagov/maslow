@@ -1,18 +1,15 @@
 <%= semantic_form_for @need, { url: closed_need_path(@need) } do |f| %>
-  <%= f.input :duplicate_of,
-              :hint => "ID of the need that this duplicates",
-              :input_html => { :type => :text,
-                :pattern => "[0-9]*"
-              }
-            %>
-
-  <%= f.actions do %>
+    <%= f.input :duplicate_of,
+                :label => "This need is a duplicate of",
+                :hint => "ID of the need that this duplicates",
+                :input_html => { :type => :text,
+                  :pattern => "[0-9]*"
+                }
+              %>
     <%= f.action :submit,
                  :button_html => {
-                   :value => "Close as duplicate",
+                   :value => "Close as a duplicate",
                    :class => "btn btn-danger"
                  }
                %>
-  <% end %>
-
 <% end %>
