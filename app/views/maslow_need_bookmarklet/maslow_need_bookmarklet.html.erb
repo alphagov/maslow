@@ -10,6 +10,6 @@
     <li>Go to a page on GOV.UK</li>
     <li>Click the bookmarklet to go to the corresponding need in Maslow</li>
   </ol>
-  <a class="btn btn-info" href='javascript:(function(){$.getJSON(document.location+".json",function(data){if(data.details.need_id){window.location="https://maslow.production.alphagov.co.uk/needs/"+data.details.need_id}})})();'>Maslow need</a>
+  <a class="btn btn-info bookmarklet-btn" href='javascript:(function(){$.getJSON(document.location+".json",function(data){if(data.details.need_id && parseInt(data.details.need_id)>100000){window.location="https://maslow.production.alphagov.co.uk/needs/"+data.details.need_id;}else{alert("No Maslow need can be found for this GOV.UK page");}});})();' title="Drag me to your bookmarks bar">Maslow need</a>
 </div>
 <br/>

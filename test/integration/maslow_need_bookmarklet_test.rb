@@ -12,8 +12,9 @@ class MaslowNeedBookmarkletTest < ActionDispatch::IntegrationTest
       visit "/needs"
       assert page.has_link?("Maslow need bookmarklet", href: "/maslow-need-bookmarklet")
       click_on("Maslow need bookmarklet")
+
+      assert page.has_selector?("ol")
       assert page.has_link?("Maslow need")
-      # Is there a nice way of testing the bookmarklet link? It's javascript...
       assert find_link("Maslow need")["href"].include?("https://maslow.production.alphagov.co.uk/needs/")
     end
   end
