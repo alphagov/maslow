@@ -10,8 +10,8 @@ class MaslowNeedBookmarkletTest < ActionDispatch::IntegrationTest
   context "on the navbar" do
     should "link to 'Maslow need' bookmarklet" do
       visit "/needs"
-      assert page.has_link?("Maslow need bookmarklet", href: "/maslow-need-bookmarklet")
-      click_on("Maslow need bookmarklet")
+      assert page.has_link?("Maslow browser tools", href: "/maslow-need-bookmarklet")
+      click_on("Maslow browser tools")
 
       assert page.has_selector?("ol")
       assert page.has_link?("Maslow need")

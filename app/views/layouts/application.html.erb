@@ -18,7 +18,6 @@
       <div class="container">
         <%= link_to 'GOV.UK Maslow', root_path, :class => "brand" %>
         <i class="beta">Beta</i>
-        <%= link_to 'Maslow need bookmarklet', maslow_need_bookmarklet_path, :class => "bookmarklet" %>
         <nav role="navigation" class="nav-collapse">
           <p class="navbar-text pull-right">
             Hello, <%= link_to current_user.name, Plek.current.find('signon') %> <span class="sign-out"><%= link_to 'Sign out', gds_sign_out_path %></span>
