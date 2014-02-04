@@ -1,6 +1,6 @@
 require_relative '../integration_test_helper'
 
-class MaslowNeedBookmarkletTest < ActionDispatch::IntegrationTest
+class BookmarkletTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
     need_api_has_organisations([])
@@ -10,7 +10,7 @@ class MaslowNeedBookmarkletTest < ActionDispatch::IntegrationTest
   context "on the navbar" do
     should "link to 'Maslow need' bookmarklet" do
       visit "/needs"
-      assert page.has_link?("Maslow browser tools", href: "/maslow-need-bookmarklet")
+      assert page.has_link?("Maslow browser tools", href: "/bookmarklet")
       click_on("Maslow browser tools")
 
       assert page.has_selector?("ol")

@@ -1,6 +1,6 @@
 require_relative '../integration_test_helper'
 
-class MaslowNeedBookmarkletControllerTest < ActionController::TestCase
+class BookmarkletControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
 
   setup do
@@ -8,13 +8,13 @@ class MaslowNeedBookmarkletControllerTest < ActionController::TestCase
     need_api_has_organisations({})
   end
 
-  context "GET maslow_need_bookmarklet" do
+  context "GET bookmarklet" do
     setup do
       need_api_has_needs([])
     end
 
     should "be successful" do
-      get :maslow_need_bookmarklet
+      get :bookmarklet
       assert_response :success
     end
   end
