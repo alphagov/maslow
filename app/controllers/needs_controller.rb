@@ -63,13 +63,14 @@ class NeedsController < ApplicationController
   end
 
   def create
+    add_new = params["add_new"]
     @need = Need.new( prepare_need_params(params) )
 
     add_or_remove_criteria(:new) and return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need created."
+        set_flash_and_redirect(add_new, "Need created")
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -82,6 +83,7 @@ class NeedsController < ApplicationController
   end
 
   def update
+    add_new = params["add_new"]
     @need = load_need
     @need.update(prepare_need_params(params))
 
@@ -89,7 +91,7 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need updated."
+        set_flash_and_redirect(add_new, "Need updated")
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -176,6 +178,15 @@ class NeedsController < ApplicationController
   end
 
   private
+
+  def set_flash_and_redirect(add_new, flash_notice)
+    if add_new
+      redirect_to new_need_path, notice: flash_notice
+    else
+      redirect_to need_url(@need.need_id),
+        notice: flash_notice
+    end
+  end
 
   def prepare_need_params(params_hash)
     if params_hash["need"]
