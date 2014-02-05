@@ -121,4 +121,23 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     assert page.has_no_link?("Edit")
     assert page.has_content?("This need is already closed")
   end
+
+  should "be able to add a new need from this page" do
+    need_api_has_need(@duplicate) # For individual need
+    visit "/needs"
+    click_on "100002"
+
+    click_on "Actions"
+    within "#workflow" do
+      assert page.has_link?("Add a new need", href: "/needs/new")
+    end
+
+    within "#actions #duplicate" do
+      click_on "Close as a duplicate"
+    end
+
+    within "#workflow" do
+      assert page.has_link?("Add a new need", href: "/needs/new")
+    end
+  end
 end
