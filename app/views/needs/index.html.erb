@@ -14,7 +14,7 @@
         "name_with_abbreviation",
         params[:organisation_id]
       ),
-      include_blank: true,
+      prompt: "All organisations",
       class: "organisation-select" %>
     <%= submit_tag "Filter", name: nil, class: "btn" %>
   <% end %>
