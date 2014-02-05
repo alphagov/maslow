@@ -1,16 +1,6 @@
 form.need {
   @extend .form-horizontal;
 
-  .control-label {
-    width: 200px;
-    font-weight: bold;
-    padding-top: 0;
-  }
-
-  .controls {
-    margin-left: 220px;
-  }
-
   input[type="text"], input[type="number"] {
     @extend input.span2;
   }
@@ -28,17 +18,13 @@ form.need {
     margin-top: 10px;
   }
 
-  fieldset#user-story {
-    padding-bottom: 40px;
-  }
-
   p.all-organisations {
     @extend .span8;
     @extend .controls;
   }
 
   .control-group {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   .help-block {
@@ -106,4 +92,20 @@ form.button_to {
 .hint-text {
   color: #aaa;
   margin-bottom: 40px;
+}
+
+.navbar-fixed-bottom {
+  text-align: center;
+}
+
+form.need .control-label {
+  font-weight: bold;
+  text-align: left;
+  display: block;
+  float: none;
+  width: auto;
+}
+
+form.need .controls {
+  margin-left: 0px;
 }
