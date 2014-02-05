@@ -120,7 +120,8 @@ class NeedsControllerTest < ActionController::TestCase
         user.uid = stub_user.uid
       end.returns(true)
 
-      mock_need.expects(:need_id).returns(1)
+      mock_need.expects(:need_id).twice.returns(1)
+      mock_need.expects(:goal).returns(:goal)
 
       post(:create, need: complete_need_data)
       assert_redirected_to need_path(:id => 1)
@@ -551,14 +552,18 @@ class NeedsControllerTest < ActionController::TestCase
   context "PUT closed" do
     setup do
       @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
+      @canonical = Need.new(base_need_fields.merge("id" => 100001), true)  # duplicate
       Need.expects(:find).with(100002).returns(@need)
     end
 
     should "call duplicate_of with the correct value" do
       # not testing the save method here
       @need.stubs(:close_as).returns(true)
-
       @need.expects(:duplicate_of=).with("100001")
+
+      Need.expects(:find).with("100001").returns(@canonical)
+      @canonical.expects(:need_id).returns(:id)
+      @canonical.expects(:goal).returns(:goal)
 
       put :closed,
           :id => "100002",
@@ -571,6 +576,9 @@ class NeedsControllerTest < ActionController::TestCase
         user.email = stub_user.email
         user.uid = stub_user.uid
       end.returns(true)
+      Need.expects(:find).with("100001").returns(@canonical)
+      @canonical.expects(:need_id).returns("need_id")
+      @canonical.expects(:goal).returns("goal")
 
       put :closed,
           :id => "100002",
@@ -579,13 +587,16 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "redirect to the need with a success message once complete" do
       @need.stubs(:close_as).returns(true)
+      Need.expects(:find).with("100001").returns(@canonical)
 
       put :closed,
           :id => "100002",
           :need => { :duplicate_of => 100001 }
 
       refute @controller.flash[:error]
-      assert_equal "Need closed as a duplicate of 100001", @controller.flash[:notice]
+      assert_equal "Need closed as a duplicate of", @controller.flash[:notice]
+      assert_equal 100001, @controller.flash[:need_id]
+      assert_equal "do things", @controller.flash[:goal]
       assert_redirected_to need_path(100002)
     end
 
@@ -628,21 +639,26 @@ class NeedsControllerTest < ActionController::TestCase
     setup do
       @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
       @need.stubs(:artefacts).returns([])
+      @was_canonical = Need.new(base_need_fields.merge("id" => 100001), true)  # duplicate
       Need.expects(:find).with(100002).returns(@need)
     end
 
     should "reopen the need" do
+      @need.expects(:duplicate_of).returns(100001)
       @need.expects(:reopen_as).with do |user|
         user.name = stub_user.name
         user.email = stub_user.email
         user.uid = stub_user.uid
       end.returns(true)
+      Need.expects(:find).with(100001).returns(@was_canonical)
 
       delete :reopen,
              :id => @need.need_id
 
       refute @controller.flash[:error]
-      assert_equal "Need 100002 has been reopened", @controller.flash[:notice]
+      assert_equal "Need is no longer a duplicate of", @controller.flash[:notice]
+      assert_equal 100001, @controller.flash[:need_id]
+      assert_equal "do things", @controller.flash[:goal]
       assert_redirected_to need_path(@need)
     end
 

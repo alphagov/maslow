@@ -72,7 +72,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
 
 
     assert page.has_no_button?("Edit")
-    assert page.has_content?("Need closed as a duplicate")
+    assert page.has_content?("Need closed as a duplicate of 100001: apply for a primary school place")
   end
 
   should "show an error message if there's a problem closing the need as a duplicate" do
@@ -90,6 +90,9 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     click_on "Close as a duplicate"
 
     assert page.has_content?("There was a problem closing the need as a duplicate")
+    assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
+  end
+
   end
 
   should "not be able to edit a closed need" do
@@ -138,25 +141,6 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
 
     within "#workflow" do
       assert page.has_link?("Add a new need", href: "/needs/new")
-    end
-
-    should "be able to add a new need from this page" do
-      need_api_has_need(@duplicate) # For individual need
-      visit "/needs"
-      click_on "100002"
-
-      click_on "Actions"
-      within "#workflow" do
-        assert page.has_link?("Add a new need", href: "/needs/new")
-      end
-
-      within "#actions #duplicate" do
-        click_on "Close as a duplicate"
-      end
-
-      within "#workflow" do
-        assert page.has_link?("Add a new need", href: "/needs/new")
-      end
     end
   end
 end
