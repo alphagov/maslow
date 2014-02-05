@@ -1,16 +1,16 @@
-<% content_for :page_title, "Edit" %>
+<% content_for :page_title, "Close as a duplicate" %>
 
-<article id="single-need">
+<article class="need">
   <nav class="add-top-margin">
     <ul class="breadcrumb">
       <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
       <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
-      <li class="active">Edit</li>
+      <li class="active">Close as a duplicate</li>
     </ul>
   </nav>
-  <%= render :partial => "need_header", locals: { active: "Edit" } %>
 
-  <h3>Edit need</h3>
+  <%= render :partial => "need_header", locals: { active: nil } %>
+  <h3>Close as a duplicate</h3>
 
-  <%= render partial: "form" %>
+  <%= render partial: "duplicate_of_need" %>
 </article>

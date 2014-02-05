@@ -32,6 +32,7 @@ class NeedsController < ApplicationController
 
   def actions
     @need = load_need
+    set_canonical_need_goal
 
     # actions.html.erb
   end
@@ -102,6 +103,17 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def close_as_duplicate
+    @need = load_need
+    if @need.duplicate_of.present?
+      redirect_to need_url(@need.need_id),
+                  notice: "This need is already closed",
+                  status: 303
+      return
+    end
+    # close_as_duplicate.html.erb
+  end
+
   def closed
     main_need_id = prepare_need_params(params)["duplicate_of"]
     @need = load_need
@@ -165,6 +177,12 @@ class NeedsController < ApplicationController
   end
 
   private
+
+  def set_canonical_need_goal
+    if @need.duplicate_of.present?
+      @canonical_need_goal = Need.find(@need.duplicate_of).goal
+    end
+  end
 
   def prepare_need_params(params_hash)
     if params_hash["need"]
