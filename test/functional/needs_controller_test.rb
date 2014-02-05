@@ -655,5 +655,46 @@ class NeedsControllerTest < ActionController::TestCase
       get :actions, id: 100001
       assert_response :success
     end
+
+    context "for a need closed as a duplicate" do
+      setup do
+        @stub_need.expects(:duplicate_of).at_least(1).returns(100002)
+        @canonical = Need.new({
+            "id" => 100002,
+            "role" => "person",
+            "goal" => "do things",
+            "benefit" => "good things"
+          }, true)
+        Need.expects(:find).with(100002).returns(@canonical)
+      end
+
+      should "successful" do
+        get :actions, id: 100001
+        assert_response :success
+      end
+    end
+  end
+
+  context "GET close-as-duplicate" do
+    setup do
+      @stub_need = Need.new({
+        "id" => 100001,
+        "role" => "person",
+        "goal" => "do things",
+        "benefit" => "good things"
+      }, true)
+      Need.expects(:find).with(100001).returns(@stub_need)
+    end
+
+    should "be successful" do
+      get :close_as_duplicate, id: 100001
+      assert_response :success
+    end
+
+    should "redirect if already closed" do
+      @stub_need.expects(:duplicate_of).returns(:duplicate_of_id)
+      get :close_as_duplicate, id: 100001
+      assert_response 303
+    end
   end
 end
