@@ -9,10 +9,7 @@
     </ul>
   </nav>
 
-  <%= render partial: "need_header",
-             locals: {
-               actions: @need.duplicate_of.present? ? [:history] : [:edit, :history, :out_of_scope]
-             } %>
+  <%= render partial: "need_header", locals: { active: "View" } %>
 
   <p class="the-need well well-large">
     As a <%= @need.role %><br />
