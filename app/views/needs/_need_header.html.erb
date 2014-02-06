@@ -18,11 +18,13 @@
         {
           "View" => need_path(@need),
           "Edit" => edit_need_path(@need),
+          "Actions" => actions_need_path(@need),
           "History" => revisions_need_path(@need)
         }
       else
         {
           "View" => need_path(@need),
+          "Actions" => actions_need_path(@need),
           "History" => revisions_need_path(@need)
         }
       end), active: active
