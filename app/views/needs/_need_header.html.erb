@@ -13,19 +13,11 @@
   </div>
 </header>
 
-<%= bootstrap_flavour_tabs(
-      (if @need.duplicate_of.blank?
-        {
-          "View" => need_path(@need),
-          "Edit" => edit_need_path(@need),
-          "Actions" => actions_need_path(@need),
-          "History" => revisions_need_path(@need)
-        }
-      else
-        {
-          "View" => need_path(@need),
-          "Actions" => actions_need_path(@need),
-          "History" => revisions_need_path(@need)
-        }
-      end), active: active
-    ) %>
+<%= tabs = {
+      "View" => need_path(@need),
+      "Edit" => edit_need_path(@need),
+      "Actions" => actions_need_path(@need),
+      "History" => revisions_need_path(@need)
+    }
+    tabs.delete("Edit") if @need.duplicate_of.present?
+    bootstrap_flavour_tabs(tabs, active: active) %>
