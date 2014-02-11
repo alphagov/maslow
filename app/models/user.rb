@@ -14,7 +14,6 @@ class User
   field "organisation_slug", type: String
 
   attr_accessible :email, :name, :uid, :version, :organisation_slug
-  attr_accessible :uid, :email, :name, :permissions, as: :oauth
 
   def self.find_by_uid(uid)
     where(uid: uid).first
