@@ -2,6 +2,8 @@ Maslow::Application.routes.draw do
 
   get "/healthcheck" => Proc.new { [200, {"Content-type" => "text/plain"}, ["OK"]] }
 
+  get :bookmarklet, controller: :bookmarklet, path: 'bookmarklet'
+
   resources :needs, except: [:destroy], constraints: { id: /[0-9]+/ } do
     member do
       get :revisions
