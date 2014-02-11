@@ -1,14 +1,13 @@
 <% content_for :page_title, "Maslow need bookmarklet" %>
 
 <h1 class="page-header">
-  Go to a need in Maslow from a GOV.UK page
+  Match GOV.UK pages to needs in Maslow
 </h1>
 
 <div>
   <ol>
-    <li>Drag the 'Maslow need' bookmarklet to your bookmarks bar</li>
-    <li>Go to a page on GOV.UK</li>
-    <li>Click the bookmarklet to go to the corresponding need in Maslow</li>
+    <li>Drag the blue button below to your bookmarks bar</li>
+    <li>Go to a GOV.UK page and click on the Maslow bookmarklet. It will take you to the related need in Maslow.</li>
   </ol>
   <a class="btn btn-info bookmarklet-btn" href='javascript:(function(){$.getJSON(document.location+".json",function(data){if(data.details.need_id && parseInt(data.details.need_id)>100000){window.location="https://maslow.production.alphagov.co.uk/needs/"+data.details.need_id;}else{alert("No Maslow need can be found for this GOV.UK page");}});})();' title="Drag me to your bookmarks bar">Maslow need</a>
 </div>
