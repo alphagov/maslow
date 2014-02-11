@@ -9,7 +9,7 @@ gem 'aws-ses', :require => 'aws/ses'
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '9.2.1'
+  gem 'gds-sso', '9.2.2'
 end
 
 gem 'kaminari', '0.14.1'
