@@ -639,4 +639,21 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 422
     end
   end
+
+  context "GET actions" do
+    setup do
+      @stub_need = Need.new({
+          "id" => 100001,
+          "role" => "person",
+          "goal" => "do things",
+          "benefit" => "good things"
+        }, true)
+      Need.expects(:find).with(100001).returns(@stub_need)
+    end
+
+    should "be successful" do
+      get :actions, id: 100001
+      assert_response :success
+    end
+  end
 end

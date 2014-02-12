@@ -1,20 +1,17 @@
-<% content_for :page_title, "Edit" %>
+<% content_for :page_title, "Actions" %>
 
 <article id="single-need">
   <nav class="add-top-margin">
     <ul class="breadcrumb">
       <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
       <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
-      <li class="active">Edit</li>
+      <li class="active">Actions</li>
     </ul>
   </nav>
-  <%= render :partial => "need_header", locals: { active: "Edit" } %>
 
-  <h3>Edit need</h3>
+  <%= render :partial => "need_header", locals: { active: "Actions" } %>
 
-  <%= render partial: "form" %>
-
-  <h3>Close need as duplicate</h3>
-
-  <%= render partial: "duplicate_of_need" %>
+  <div id="actions">
+    <%= render partial: "mark_as_out_of_scope" %>
+  </div>
 </article>
