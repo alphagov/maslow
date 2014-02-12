@@ -73,8 +73,6 @@ module NeedHelper
   end
 
   def canonical_need_goal
-    if @need.duplicate_of.present?
-      @canonical_need_goal = Need.find(@need.duplicate_of).goal
-    end
+    Need.find(@need.duplicate_of).goal
   end
 end
