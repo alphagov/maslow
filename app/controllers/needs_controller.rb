@@ -32,7 +32,6 @@ class NeedsController < ApplicationController
 
   def actions
     @need = load_need
-    set_canonical_need_goal
 
     # actions.html.erb
   end
@@ -177,12 +176,6 @@ class NeedsController < ApplicationController
   end
 
   private
-
-  def set_canonical_need_goal
-    if @need.duplicate_of.present?
-      @canonical_need_goal = Need.find(@need.duplicate_of).goal
-    end
-  end
 
   def prepare_need_params(params_hash)
     if params_hash["need"]

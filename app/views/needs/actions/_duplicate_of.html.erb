@@ -15,7 +15,7 @@
       Reopen duplicate
       <br/>
       <small>
-        <strong>This need is closed as a duplicate of <%= link_to "#{@need.duplicate_of}: #{@canonical_need_goal}", need_path(@need.duplicate_of) %></strong>
+        <strong>This need is closed as a duplicate of <%= link_to "#{@need.duplicate_of}: #{canonical_need_goal}", need_path(@need.duplicate_of) %></strong>
       </small>
     </h2>
       <%= button_to "Reopen",
