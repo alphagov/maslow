@@ -80,7 +80,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
       visit "/needs"
 
       assert page.has_content?("All needs")
-      assert page.has_link?("Add a new need")
+      within "#workflow" do
+        assert page.has_link?("Add a new need")
+      end
 
       within "table#needs" do
         within "tbody tr:nth-of-type(1)" do

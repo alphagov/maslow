@@ -36,7 +36,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit")
+      within "#workflow" do
+        click_on("Edit")
+      end
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
@@ -71,22 +73,28 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on('100001')
-      click_on('Edit')
+      within "#workflow" do
+        click_on("Edit")
+      end
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
       fill_in("What legislation underpins this need?", with: "")
-      click_on_first_button("Update Need")
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
 
       assert_requested request
-      assert page.has_text?("Need updated."), "No success message displayed"
+      assert page.has_text?("Need updated"), "No success message displayed"
     end
 
     should "display met_when criteria on multiple lines" do
       need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
       visit('/needs')
       click_on('100001')
-      click_on("Edit")
+      within "#workflow" do
+        click_on("Edit")
+      end
 
       within "#met-when-criteria" do
         assert_equal("win", find_field("criteria-0").value)
@@ -112,7 +120,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       visit('/needs')
       click_on('100001')
-      click_on("Edit")
+      within "#workflow" do
+        click_on("Edit")
+      end
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -125,16 +135,20 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         fill_in("criteria-2", with: "more")
       end
 
-      click_on_first_button("Update Need")
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
 
       assert_requested request
-      assert page.has_text?("Need updated."), "No success message displayed"
+      assert page.has_text?("Need updated"), "No success message displayed"
     end
 
     should "be able to delete met_when criteria" do
       visit('/needs')
       click_on('100001')
-      click_on("Edit")
+      within "#workflow" do
+        click_on("Edit")
+      end
 
       assert_equal("win", find_field("criteria-0").value)
       assert_equal("awesome", find_field("criteria-1").value)
@@ -187,14 +201,51 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit('/needs')
 
       click_on("100001")
-      click_on("Edit")
+      within "#workflow" do
+        click_on("Edit")
+      end
 
       fill_in("As a", with: "grandparent")
       fill_in("So that", with: "my grandchild can start school")
-      click_on_first_button('Update Need')
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
 
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
+    end
+
+    should "be able to save and add a new need" do
+      api_url = Plek.current.find('need-api') + '/needs/100001'
+      request_body = blank_need_request.merge(
+        "role" => "Person",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my child can start school",
+        "legislation" => "Blank Fields Act 2013",
+        "met_when" => ["win","awesome","more"],
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
+      ).to_json
+      request = stub_request(:put, api_url).with(:body => request_body)
+
+      visit('/needs')
+
+      click_on("100001")
+      within "#workflow" do
+        click_on("Edit")
+      end
+
+      fill_in("As a", with: "Person")
+
+      within "#workflow" do
+        click_on("Save and add a new need")
+      end
+
+      assert_requested request
+      assert page.has_content?("Add a new need")
     end
   end
 
@@ -231,16 +282,23 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
       click_on "100200"
 
-      assert page.has_content? "Apply for a primary school place"
-      click_on "Edit"
+      within "header h1" do
+        assert page.has_content? "Apply for a primary school place"
+      end
+
+      within ".nav-tabs" do
+        click_on "Edit"
+      end
 
       assert page.has_selector? "h3", text: "Edit need"
       assert page.has_no_select? "Organisations"
       assert page.has_content? "This need applies to all organisations"
 
-      click_on_first_button "Update Need"
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
       assert_requested request
-      assert page.has_content? "Need updated."
+      assert page.has_content? "Need updated"
     end
   end
 
