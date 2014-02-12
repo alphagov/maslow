@@ -19,7 +19,7 @@
 
   <% if @need.duplicate_of.present? %>
     <p class="need-alert">This need is closed as a duplicate of
-      <%= link_to "#{@need.duplicate_of}: #{@canonical_need_goal}",
+      <%= link_to "#{@need.duplicate_of}: #{canonical_need_goal}",
                   need_path(@need.duplicate_of) %>
     </p>
   <% end %>
@@ -41,7 +41,7 @@
       <% end %>
 
       <% if @need.justifications.any? %>
-        <h3>Need is on GOV.UK because</h3>
+        <h3>Need should be met on GOV.UK because</h3>
         <ul class="justifications add-bottom-margin">
           <% @need.justifications.each do |justification| %>
             <li><%= justification %></li>

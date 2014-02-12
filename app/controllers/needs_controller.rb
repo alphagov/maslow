@@ -26,7 +26,6 @@ class NeedsController < ApplicationController
 
   def show
     @need = load_need
-    set_canonical_need_goal
 
     # show.html.erb
   end
@@ -64,7 +63,6 @@ class NeedsController < ApplicationController
   end
 
   def create
-    add_new = params["add_new"]
     @need = Need.new( prepare_need_params(params) )
 
     add_or_remove_criteria(:new) and return if criteria_params_present?
@@ -86,7 +84,6 @@ class NeedsController < ApplicationController
   end
 
   def update
-    add_new = params["add_new"]
     @need = load_need
     @need.update(prepare_need_params(params))
 

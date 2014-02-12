@@ -93,8 +93,6 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
   end
 
-  end
-
   should "not be able to edit a closed need" do
     @duplicate.merge!("duplicate_of" => "100001")
     need_api_has_need(@duplicate)
