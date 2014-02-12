@@ -71,4 +71,8 @@ module NeedHelper
       remote: false
     ).to_s
   end
+
+  def canonical_need_goal
+    Need.find(@need.duplicate_of).goal
+  end
 end

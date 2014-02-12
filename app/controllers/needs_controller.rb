@@ -102,6 +102,17 @@ class NeedsController < ApplicationController
     render "edit", :status => 422
   end
 
+  def close_as_duplicate
+    @need = load_need
+    if @need.duplicate_of.present?
+      redirect_to need_url(@need.need_id),
+                  notice: "This need is already closed",
+                  status: 303
+      return
+    end
+    # close_as_duplicate.html.erb
+  end
+
   def closed
     main_need_id = prepare_need_params(params)["duplicate_of"]
     @need = load_need
