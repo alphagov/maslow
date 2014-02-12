@@ -668,7 +668,7 @@ class NeedsControllerTest < ActionController::TestCase
         Need.expects(:find).with(100002).returns(@canonical)
       end
 
-      should "successful" do
+      should "be successful" do
         get :actions, id: 100001
         assert_response :success
       end
