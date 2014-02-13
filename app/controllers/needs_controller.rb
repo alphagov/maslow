@@ -69,7 +69,8 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to redirect_url, notice: "Need created"
+        redirect_to redirect_url, notice: "Need created",
+          flash: { need_id: @need.need_id, goal: @need.goal }
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -89,7 +90,8 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save_as(current_user)
-        redirect_to redirect_url, notice: "Need updated"
+        redirect_to redirect_url, notice: "Need updated",
+          flash: { need_id: @need.need_id, goal: @need.goal }
         return
       else
         flash[:error] = "There was a problem saving your need."
@@ -114,13 +116,14 @@ class NeedsController < ApplicationController
   end
 
   def closed
-    main_need_id = prepare_need_params(params)["duplicate_of"]
     @need = load_need
-    @need.duplicate_of = main_need_id
+    @need.duplicate_of = Integer(params["need"]["duplicate_of"])
 
     if @need.valid?
       if @need.close_as(current_user)
-        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of #{main_need_id}"
+        @canonical_need = Need.find(@need.duplicate_of)
+        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of",
+          flash: { need_id: @canonical_need.need_id, goal: @canonical_need.goal }
         return
       else
         flash[:error] = "There was a problem closing the need as a duplicate"
@@ -130,14 +133,17 @@ class NeedsController < ApplicationController
     end
 
     @target = need_path(params[:id])
-    render "edit", :status => 422
+    @need.duplicate_of = nil
+    render "actions", :status => 422
   end
 
   def reopen
     @need = load_need
+    old_canonical_id = @need.duplicate_of
 
     if @need.reopen_as(current_user)
-      redirect_to need_url(@need.need_id), notice: "Need #{@need.need_id} has been reopened"
+      redirect_to need_url(@need.need_id), notice: "Need is no longer a duplicate of",
+        flash: { need_id: old_canonical_id, goal: Need.find(old_canonical_id).goal }
       return
     else
       flash[:error] = "There was a problem reopening the need"
@@ -167,6 +173,8 @@ class NeedsController < ApplicationController
     @need.in_scope = false
 
     if @need.save_as(current_user)
+      flash[:need_id] = @need.need_id
+      flash[:goal] = @need.goal
       flash[:notice] = "Need has been marked as out of scope"
     else
       flash[:error] = "We had a problem marking the need as out of scope"

@@ -37,7 +37,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
   should "be able to close a need as a duplicate" do
     need_api_has_need(@duplicate) # For individual need
     request_body = {
-      "duplicate_of" => "100001",
+      "duplicate_of" => 100001,
       "author" => {
         "name" => stub_user.name,
         "email" => stub_user.email,
@@ -72,7 +72,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
 
 
     assert page.has_no_button?("Edit")
-    assert page.has_content?("Need closed as a duplicate")
+    assert page.has_content?("Need closed as a duplicate of 100001: apply for a primary school place")
   end
 
   should "show an error message if there's a problem closing the need as a duplicate" do
@@ -90,6 +90,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     click_on "Close as a duplicate"
 
     assert page.has_content?("There was a problem closing the need as a duplicate")
+    assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
   end
 
   should "not be able to edit a closed need" do
