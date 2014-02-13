@@ -75,4 +75,11 @@ module NeedHelper
   def canonical_need_goal
     Need.find(@need.duplicate_of).goal
   end
+
+  def format_decision_made(need)
+    decision = []
+    decision << "Out of scope" if need.in_scope == false
+    decision << "Duplicate" if need.duplicate_of.present?
+    decision.join(", ")
+  end
 end

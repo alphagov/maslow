@@ -71,7 +71,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
             "the government is legally obliged to provide it"
           ],
           "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => []
+          "met_when" => [],
+          "duplicate_of" => 10001,
+          "in_scope" => false
         }
       ])
     end
@@ -100,6 +102,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
         within "tbody tr:nth-of-type(3)" do
           assert page.has_content?("10003")
           assert page.has_content?("Find out about government policy")
+          assert page.has_content?("Out of scope, Duplicate")
           assert page.has_content?("Applies to all organisations")
         end
       end
