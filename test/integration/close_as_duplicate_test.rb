@@ -37,7 +37,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
   should "be able to close a need as a duplicate" do
     need_api_has_need(@duplicate) # For individual need
     request_body = {
-      "duplicate_of" => "100001",
+      "duplicate_of" => 100001,
       "author" => {
         "name" => stub_user.name,
         "email" => stub_user.email,
