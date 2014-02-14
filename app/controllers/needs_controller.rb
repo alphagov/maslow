@@ -50,14 +50,12 @@ class NeedsController < ApplicationController
                   status: 303
       return
     end
-    @target = need_path(params[:id])
 
     # edit.html.erb
   end
 
   def new
     @need = Need.new({})
-    @target = needs_path
 
     # new.html.erb
   end
@@ -100,7 +98,6 @@ class NeedsController < ApplicationController
       flash[:error] = "There were errors in the need form."
     end
 
-    @target = need_path(params[:id])
     render "edit", :status => 422
   end
 
@@ -132,7 +129,6 @@ class NeedsController < ApplicationController
       flash[:error] = "The Need ID entered is invalid"
     end
 
-    @target = need_path(params[:id])
     @need.duplicate_of = nil
     render "actions", :status => 422
   end
