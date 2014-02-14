@@ -1,4 +1,4 @@
-<%= semantic_form_for @need, { url: @target } do |f| %>
+<%= semantic_form_for @need do |f| %>
   <%= f.inputs "User story", :id => "user-story" do %>
     <%= f.input :role, :label => "As a…", :hint => "Who is the user? E.g. a small business, a tax agent, a healthcare practitioner. Put 'user' when there's more than one type of user.", :required => false, :input_html => { :class => 'long-form' } %>
     <%= f.input :goal, :label => "I need to…", :hint => "What does the user want to do?", :required => false, :input_html => { :class => 'long-form' } %>

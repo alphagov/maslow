@@ -73,13 +73,6 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET new" do
-    should "target the new need endpoint" do
-      get :new
-      assert_equal "/needs", assigns[:target]
-    end
-  end
-
   context "POST create" do
 
     def complete_need_data
@@ -297,7 +290,6 @@ class NeedsControllerTest < ActionController::TestCase
 
         assert_response :ok
         assert_equal "do things", assigns[:need].goal
-        assert_equal need_path(:id => 100001), assigns[:target]
       end
     end
 
