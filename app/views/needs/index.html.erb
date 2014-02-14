@@ -18,6 +18,12 @@
       class: "organisation-select" %>
     <%= submit_tag "Filter", name: nil, class: "btn" %>
   <% end %>
+  <script>
+    $('select').change(function () {
+      $(this.form).submit();
+    });
+    $('.filter .btn').hide();
+  </script>
   <%= form_tag("/needs", method: "get", class: "search") do %>
     <%= label_tag "q", "Search needs:" %>
     &nbsp;
