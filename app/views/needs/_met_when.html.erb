@@ -21,3 +21,10 @@
     </div>
   </div>
 </div>
+<% if params[:delete_criteria].present? || params[:criteria_action].present? %>
+  <script>
+    $(document).ready(function() {
+      $(window).scrollTop($("#met-when-criteria").offset().top);
+    });
+  </script>
+<% end %>
