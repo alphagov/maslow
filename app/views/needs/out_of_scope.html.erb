@@ -13,11 +13,16 @@
 
   <h3>Mark as out of scope</h3>
   <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-  <%= button_to "Mark as out of scope",
-                  descope_need_path(@need),
-                  method: :put,
-                  class: "btn btn-danger" %>
   <br/>
-  <br/>
-  <%= render partial: "workflow_buttons", locals: { edit_page: false } %>
+  <%= semantic_form_for @need, { url: descope_need_path(@need) } do |f| %>
+    <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+    <%= f.action :submit,
+                 :method => :put,
+                 :button_html => {
+                   :value => "Mark as out of scope",
+                   :class => "btn btn-danger"
+                 }
+               %>
+  <% end %>
+  <%= render partial: "workflow_buttons", locals: { edit_page: false, view_page: false } %>
 </article>
