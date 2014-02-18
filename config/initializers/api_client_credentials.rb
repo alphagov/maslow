@@ -3,5 +3,6 @@
 #
 API_CLIENT_CREDENTIALS = {
   content_api: { },
-  need_api: { }
+  need_api: { },
+  support: { }
 }

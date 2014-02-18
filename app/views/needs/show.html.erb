@@ -91,6 +91,9 @@
                   URL
                 </th>
                 <th scope="col">
+                  Feedback
+                </th>
+                <th scope="col">
                   Format
                 </th>
               </tr>
@@ -100,6 +103,9 @@
                 <tr>
                   <td><%= link_to artefact.title, artefact.web_url %></td>
                   <td><%= artefact.web_url %></td>
+                  <td><% if artefact.web_url.present? %>
+                        <%= link_to 'View feedback', feedback_for_page(artefact) %>
+                      <% end %></td>
                   <td><%= artefact.format.humanize %></td>
                 </tr>
               <% end %>
