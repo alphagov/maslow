@@ -5,6 +5,8 @@
     <small>
       <% if @need.out_of_scope? %>
         <strong>This need is not in scope for GOV.UK</strong>
+        <br/>
+        <%= @need.out_of_scope_reason %>
       <% elsif @need.duplicate_of.present? %>
         You can't mark this need as 'out of scope' because it's already closed as a duplicate
       <% else %>
