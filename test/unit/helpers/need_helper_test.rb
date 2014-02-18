@@ -142,4 +142,12 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_equal "pagination", paginate_needs(need)
     end
   end
+
+  context "feedback_for_page" do
+    should "return correct support URL" do
+      GdsApi::Support.any_instance.expects(:feedback_url).once.with('/sample-item').returns('support?path=/sample-item')
+      artefact = OpenStruct.new(web_url: "http://www.dev.gov.uk/sample-item")
+      assert_equal('support?path=/sample-item', feedback_for_page(artefact))
+    end
+  end
 end
