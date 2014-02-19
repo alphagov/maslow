@@ -1,11 +1,11 @@
-<% content_for :page_title, "History" %>
+<% content_for :page_title, "History & Notes" %>
 
 <article class="need">
   <nav class="add-top-margin">
     <ul class="breadcrumb">
       <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
       <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
-      <li class="active">History</li>
+      <li class="active">History &amp; Notes</li>
     </ul>
   </nav>
 
@@ -15,7 +15,7 @@
                 need_path(@need.duplicate_of) %>
     </p>
   <% else %>
-    <%= render :partial => "need_header", locals: { active: "History" } %>
+    <%= render :partial => "need_header", locals: { active: "History & Notes" } %>
   <% end %>
 
   <h3>Recent changes</h3>

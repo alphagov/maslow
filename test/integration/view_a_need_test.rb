@@ -40,7 +40,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
         within ".nav-tabs" do
           assert page.has_link?("Edit", href: "/needs/101350/edit")
-          assert page.has_link?("History", href: "/needs/101350/revisions")
+          assert page.has_link?("History & Notes", href: "/needs/101350/revisions")
         end
 
         within ".the-need" do
@@ -92,12 +92,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
 
       click_on "101350"
-      click_on "History"
+      click_on "History & Notes"
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
         assert page.has_link?("101350: Book a driving test", href: "/needs/101350")
-        assert page.has_content?("History")
+        assert page.has_content?("History & Notes")
       end
 
       within ".need" do

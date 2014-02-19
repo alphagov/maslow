@@ -17,7 +17,7 @@
       "View" => need_path(@need),
       "Edit" => edit_need_path(@need),
       "Actions" => actions_need_path(@need),
-      "History" => revisions_need_path(@need)
+      "History & Notes" => revisions_need_path(@need)
     }
     tabs.delete("Edit") if @need.duplicate_of.present?
     bootstrap_flavour_tabs(tabs, active: active) %>
