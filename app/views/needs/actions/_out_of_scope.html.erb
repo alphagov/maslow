@@ -5,6 +5,8 @@
     <small>
       <% if @need.out_of_scope? %>
         <strong>This need is not in scope for GOV.UK</strong>
+        <br/>
+        <%= @need.out_of_scope_reason %>
       <% elsif @need.duplicate_of.present? %>
         You can't mark this need as 'out of scope' because it's already closed as a duplicate
       <% else %>
@@ -40,14 +42,20 @@
       <h3 id="modal-out-of-scope-label">Mark as out of scope</h3>
     </div>
     <div class="modal-body">
-      <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-      <%= button_to "Mark as out of scope",
-                      descope_need_path(@need),
-                      method: :put,
-                      class: "btn btn-danger" %>
+      <%= semantic_form_for @need, { url: descope_need_path(@need) } do |f| %>
+          <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
+          <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          <%= f.action :submit,
+                       :method => :put,
+                       :button_html => {
+                         :value => "Mark as out of scope",
+                         :class => "btn btn-danger"
+                       }
+                   %>
+      <% end %>
     </div>
   </div>
 <% end %>

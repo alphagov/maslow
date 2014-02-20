@@ -46,6 +46,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         "legislation" => "Blank Fields Act 2013",
         "met_when" => ["win","awesome","more"],
         "in_scope" => false,
+        "out_of_scope_reason" => "Whitespace is not acceptable",
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
@@ -66,6 +67,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       end
 
       # This is a confirmation on a separate page when JavaScript is off
+      fill_in "Why is this need out of scope?", with: "Whitespace is not acceptable"
       click_on "Mark as out of scope"
 
       assert page.has_content?("Need has been marked as out of scope")
@@ -83,9 +85,30 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         click_on "Mark as out of scope"
       end
 
+      fill_in "Why is this need out of scope?", with: "foo"
       click_on "Mark as out of scope"
 
       assert page.has_content?("We had a problem marking the need as out of scope")
+    end
+
+    should "show an error message if there is no reason why the need is out of scope" do
+      need_api_has_need(@need) # For individual need
+      request = stub_request(:put, @api_url).with(
+        id: "100001",
+        need: { out_of_scope_reason: "" }
+      )
+
+      visit "/needs"
+      click_on "100001"
+      click_on "Actions"
+
+      within "#actions #scope" do
+        click_on "Mark as out of scope"
+      end
+
+      click_on "Mark as out of scope"
+
+      assert page.has_content?("A reason is required to mark a need as out of scope")
     end
   end
 
