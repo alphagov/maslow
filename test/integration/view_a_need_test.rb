@@ -190,13 +190,11 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
               within "tr:first-child" do
                 assert page.has_link?("VAT rates", href: "http://www.dev.gov.uk/vat-rates")
                 assert page.has_content?("Answer")
-                assert page.has_content?("http://www.dev.gov.uk/vat-rates")
               end
 
               within "tr:nth-child(2)" do
                 assert page.has_link?("VAT", href: "http://www.dev.gov.uk/vat")
                 assert page.has_content?("Business support")
-                assert page.has_content?("http://www.dev.gov.uk/vat")
               end
             end # within tbody
           end # within table
