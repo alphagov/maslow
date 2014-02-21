@@ -18,10 +18,27 @@
     <%= render :partial => "need_header", locals: { active: "History & Notes" } %>
   <% end %>
 
-  <h3>Recent changes</h3>
-  <ul class="revisions">
-    <%= render partial: "revision", collection: @need.revisions %>
-  </ul>
+  <div class="row-fluid">
+    <div id="notes" class="span6">
+      <%= semantic_form_for(:notes, url: notes_url) do |f| %>
+        <%= f.inputs do %>
+          <%= hidden_field_tag :need_id, @need.need_id %>
+          <%= f.input :text, :label => 'Note', :as => :text, :hint => "Don't forget to save your note when you have finished.", input_html: { class: "span12" } %>
+        <% end %>
+        <%= f.action :submit,
+                     :button_html => {
+                       :value => "Add note",
+                       :class => "btn btn-primary"
+                     } %>
+      <% end %>
+    </div>
+    <div id="revision-history" class="span6 accordion">
+      <h3>Recent changes</h3>
+      <ul class="revisions">
+        <%= render partial: "revision", collection: @need.revisions %>
+      </ul>
+    </div>
+  </div>
 
   <%= render partial: "workflow_buttons", locals: { edit_page: false } %>
 </article>
