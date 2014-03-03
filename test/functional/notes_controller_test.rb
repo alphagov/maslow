@@ -16,7 +16,7 @@ class NotesControllerTest < ActionController::TestCase
 
   context "POST create" do
     should "be successful" do
-      GdsApi::NeedApi.any_instance.expects(:create_note).with(
+      stub_create_note(
         "text" => "test",
         "need_id" => "100001",
         "author" => {
@@ -35,10 +35,11 @@ class NotesControllerTest < ActionController::TestCase
 
     should "return an error message if the save fails" do
       Note.any_instance.expects(:save).returns(false)
+      Note.any_instance.expects(:errors).returns("Text can't be blank")
 
       post :create, @note_atts
 
-      assert_equal "Error saving note", @controller.flash[:error]
+      assert_equal "Note couldn't be saved: Text can't be blank", @controller.flash[:error]
       refute @controller.flash[:notice]
     end
   end
