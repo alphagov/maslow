@@ -40,7 +40,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
         within ".nav-tabs" do
           assert page.has_link?("Edit", href: "/needs/101350/edit")
-          assert page.has_link?("History", href: "/needs/101350/revisions")
+          assert page.has_link?("History & Notes", href: "/needs/101350/revisions")
         end
 
         within ".the-need" do
@@ -92,12 +92,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       visit "/needs"
 
       click_on "101350"
-      click_on "History"
+      click_on "History & Notes"
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
         assert page.has_link?("101350: Book a driving test", href: "/needs/101350")
-        assert page.has_content?("History")
+        assert page.has_content?("History & Notes")
       end
 
       within ".need" do
@@ -119,9 +119,15 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".revisions" do
-          assert_equal 3, page.all(".revision").count
+          assert_equal 6, page.all(".revision").count
 
           within ".revision:nth-child(1)" do
+            assert page.has_content?("Note by Donald Duck")
+            assert page.has_content?("2 May 2013, 13:00")
+            assert page.has_content?("hello")
+          end
+
+          within ".revision:nth-child(2)" do
             assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
             assert page.has_content?("1 May 2013, 13:00")
 
@@ -133,13 +139,25 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
             end
           end
 
-          within ".revision:nth-child(2)" do
+          within ".revision:nth-child(3)" do
+            assert page.has_content?("Note by Minnie Mouse")
+            assert page.has_content?("3 April 2013, 13:00")
+            assert page.has_content?("goodbye")
+          end
+
+          within ".revision:nth-child(4)" do
             assert page.has_content?("Update by unknown author")
             assert page.has_no_content?("<>") # catch missing email
             assert page.has_content?("1 April 2013, 13:00")
           end
 
-          within ".revision:nth-child(3)" do
+          within ".revision:nth-child(5)" do
+            assert page.has_content?("Note by Goofy")
+            assert page.has_content?("2 January 2013, 13:00")
+            assert page.has_content?("oops")
+          end
+
+          within ".revision:nth-child(6)" do
             assert page.has_content?("Create by Donald Duck")
             assert page.has_no_content?("<>") # catch an empty email string
             assert page.has_content?("1 January 2013, 13:00")

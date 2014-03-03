@@ -46,7 +46,18 @@
         "goal": [ "apply for a secondary school place" ,"apply for a primary school place" ],
         "role": [ null, "parent" ]
       },
-      "created_at": "2013-05-01T13:00:00+00:00"
+      "created_at": "2013-05-01T13:00:00+00:00",
+      "notes": [
+        {
+          "text": "hello",
+          "author": {
+            "name": "Donald Duck",
+            "email": null,
+            "uid": null
+          },
+        "created_at": "2013-05-02T13:00:00+00:00"
+        }
+      ]
     },
     {
       "action_type": "update",
@@ -54,7 +65,18 @@
       "changes": {
         "legislation": [ "foo", "bar" ]
       },
-      "created_at": "2013-04-01T13:00:00+00:00"
+      "created_at": "2013-04-01T13:00:00+00:00",
+      "notes": [
+        {
+          "text": "goodbye",
+          "author": {
+            "name": "Minnie Mouse",
+            "email": null,
+            "uid": null
+          },
+        "created_at": "2013-04-03T13:00:00+00:00"
+        }
+      ]
     },
     {
       "action_type": "create",
@@ -67,7 +89,18 @@
         "goal": [ "apply for a school place", "apply for a secondary school place" ],
         "role": [ "grandparent", null ]
       },
-      "created_at": "2013-01-01T13:00:00+00:00"
+      "created_at": "2013-01-01T13:00:00+00:00",
+      "notes": [
+        {
+          "text": "oops",
+          "author": {
+            "name": "Goofy",
+            "email": null,
+            "uid": null
+          },
+        "created_at": "2013-01-02T13:00:00+00:00"
+        }
+      ]
     }
   ]
 }
