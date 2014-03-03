@@ -26,14 +26,20 @@ class NeedsController < ApplicationController
 
   def show
     @need = load_need
+
+    # show.html.erb
   end
 
   def actions
     @need = load_need
+
+    # actions.html.erb
   end
 
   def revisions
     @need = load_need
+
+    # revisions.html.erb
   end
 
   def edit
@@ -44,10 +50,14 @@ class NeedsController < ApplicationController
                   status: 303
       return
     end
+
+    # edit.html.erb
   end
 
   def new
     @need = Need.new({})
+
+    # new.html.erb
   end
 
   def create
@@ -99,6 +109,7 @@ class NeedsController < ApplicationController
                   status: 303
       return
     end
+    # close_as_duplicate.html.erb
   end
 
   def closed
