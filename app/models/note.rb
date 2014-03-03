@@ -1,6 +1,7 @@
 class Note
 
   attr_reader :text, :need_id, :author
+  attr_reader :errors
 
   def initialize(text, need_id, author)
     @text = text
@@ -17,6 +18,7 @@ class Note
     Maslow.need_api.create_note(note_atts)
     true
   rescue GdsApi::HTTPErrorResponse => err
+    @errors = err.error_details["errors"].first
     false
   end
 

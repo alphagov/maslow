@@ -11,7 +11,7 @@ class NotesController < ApplicationController
     if @note.save
       flash[:notice] = "Note saved"
     else
-      flash[:error] = "Error saving note"
+      flash[:error] = "Note couldn't be saved: #{@note.errors}"
     end
     redirect_to revisions_need_path(need_id)
   end
