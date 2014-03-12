@@ -1,6 +1,6 @@
 <div id="duplicate">
   <h2>
-    <% if @need.duplicate_of.blank? %>
+    <% unless @need.duplicate? %>
       Close as a duplicate
       <br/>
       <small>
@@ -34,7 +34,7 @@
   attr('role', 'button')
 </script>
 
-<% if @need.duplicate_of.blank? %>
+<% unless @need.duplicate? %>
   <div id="close-as-duplicate-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="close-as-duplicate-label" aria-hidden="true">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

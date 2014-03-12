@@ -38,7 +38,7 @@ class NeedsController < ApplicationController
 
   def edit
     @need = load_need
-    if @need.duplicate_of.present?
+    if @need.duplicate?
       redirect_to need_url(@need.need_id),
                   notice: "Closed needs cannot be edited",
                   status: 303
@@ -93,7 +93,7 @@ class NeedsController < ApplicationController
 
   def close_as_duplicate
     @need = load_need
-    if @need.duplicate_of.present?
+    if @need.duplicate?
       redirect_to need_url(@need.need_id),
                   notice: "This need is already closed",
                   status: 303
