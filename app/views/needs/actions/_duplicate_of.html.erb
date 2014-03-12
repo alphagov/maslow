@@ -1,17 +1,6 @@
 <div id="duplicate">
   <h2>
-    <% unless @need.duplicate? %>
-      Close as a duplicate
-      <br/>
-      <small>
-        This need duplicates an existing need, you can't edit after it's closed
-      </small>
-    </h2>
-      <%= link_to "Close as a duplicate",
-                  close_as_duplicate_need_path(@need),
-                  id: 'close-as-duplicate',
-                  class: "btn btn-danger" %>
-    <% else %>
+    <% if @need.duplicate? %>
       Reopen duplicate
       <br/>
       <small>
@@ -22,6 +11,17 @@
                     reopen_need_path(@need),
                     method: "delete",
                     class: "btn btn-success" %>
+    <% else %>
+      Close as a duplicate
+      <br/>
+      <small>
+        This need duplicates an existing need, you can't edit after it's closed
+      </small>
+    </h2>
+      <%= link_to "Close as a duplicate",
+                  close_as_duplicate_need_path(@need),
+                  id: 'close-as-duplicate',
+                  class: "btn btn-danger" %>
     <% end %>
   <br/>
   <br/>
