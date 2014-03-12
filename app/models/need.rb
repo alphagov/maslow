@@ -103,6 +103,10 @@ class Need
     @met_when.delete_at(index)
   end
 
+  def duplicate?
+    duplicate_of.present?
+  end
+
   def update(attrs)
     strip_newline_from_textareas(attrs)
 

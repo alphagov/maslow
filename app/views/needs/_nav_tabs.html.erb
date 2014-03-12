@@ -1,0 +1,8 @@
+<ul class="nav nav-tabs">
+  <% titles_to_links.each do |title, href| %>
+    <% class_name = current_page?(href) ? 'active' : '' %>
+    <li class="<%= class_name %>">
+      <%= link_to title, current_page?(href) ? "#" : href %>
+    </li>
+  <% end %>
+</ul>

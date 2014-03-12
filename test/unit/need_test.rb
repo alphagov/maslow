@@ -534,6 +534,7 @@ class NeedTest < ActiveSupport::TestCase
       GdsApi::NeedApi.any_instance.expects(:close).once.with(100002, duplicate_atts)
       @need.duplicate_of = 100001
       @need.close_as(author)
+      assert @need.duplicate?
     end
   end
 
