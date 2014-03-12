@@ -9,7 +9,7 @@
     </ul>
   </nav>
 
-  <% if @need.duplicate_of.present? %>
+  <% if @need.duplicate? %>
     <p class="need-alert">This need is a duplicate of
     <%= link_to @need.duplicate_of,
                 need_path(@need.duplicate_of) %>

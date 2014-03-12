@@ -79,6 +79,9 @@ module NeedHelper
   def format_decision_made(need)
     decision = []
     decision << "Out of scope" if need.in_scope == false
+    # the line below isn't using Need#duplicate? because
+    # the object stored in the 'need' variable isn't a Need object,
+    # but an OpenStruct
     decision << "Duplicate" if need.duplicate_of.present?
     decision.join(", ")
   end

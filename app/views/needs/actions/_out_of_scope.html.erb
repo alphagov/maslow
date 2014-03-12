@@ -7,14 +7,14 @@
         <strong>This need is not in scope for GOV.UK</strong>
         <br/>
         <%= @need.out_of_scope_reason %>
-      <% elsif @need.duplicate_of.present? %>
+      <% elsif @need.duplicate? %>
         You can't mark this need as 'out of scope' because it's already closed as a duplicate
       <% else %>
         No solution to this need will be created on GOV.UK, although you can still edit the need
       <% end %>
     </small>
   </h2>
-  <% if @need.out_of_scope? || @need.duplicate_of.present? %>
+  <% if @need.out_of_scope? || @need.duplicate? %>
     <%= link_to "Mark as out of scope",
                 "#",
                 id: 'out-of-scope',
