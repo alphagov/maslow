@@ -263,6 +263,35 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
+  context "listing needs" do
+
+    def stub_need
+      stub("need", to_hash: {"id" => 100001})
+    end
+
+    should "call the need API adapter" do
+      GdsApi::NeedApi.any_instance.expects(:needs).with({}).returns([])
+      Need.list
+    end
+
+    should "pass parameters to the API adapter" do
+      GdsApi::NeedApi.any_instance.expects(:needs).with({page: 2}).returns([])
+      Need.list(page: 2)
+    end
+
+    should "return a list of Need objects" do
+      GdsApi::NeedApi.any_instance.expects(:needs).once.returns([stub_need])
+      need_list = Need.list
+      assert_equal 1, need_list.length
+      assert need_list.all? { |need| need.is_a? Need }
+    end
+
+    should "report each need as existing" do
+      GdsApi::NeedApi.any_instance.expects(:needs).once.returns([stub_need])
+      assert Need.list.all?(&:persisted?)
+    end
+  end
+
   context "loading needs" do
 
     def stub_response(additional_atts = {})

@@ -63,6 +63,15 @@ class Need
     validates_numericality_of field, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
   end
 
+  # Retrieve a list of needs from the Need API
+  #
+  # The parameters are the same as passed through to the Need API: as of
+  # 2014-03-12, they are `organisation_id`, `page` and `q`.
+  def self.list(options={})
+    needs = Maslow.need_api.needs(options)
+    needs.map { |need_response| self.new(need_response.to_hash, true) }
+  end
+
   # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
   #
   # This works in roughly the same way as an ActiveRecord-style `find` method,
