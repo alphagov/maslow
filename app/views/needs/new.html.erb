@@ -1,10 +1,7 @@
 <% content_for :page_title, "Add a new need" %>
 
 <nav class="add-top-margin">
-  <ul class="breadcrumb">
-    <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
-    <li class="active">Add a new need</li>
-  </ul>
+  <%= render partial: "needs/breadcrumb", locals: { action: "Add a new need" } %>
 </nav>
 
 <header class="block-border add-bottom-margin">

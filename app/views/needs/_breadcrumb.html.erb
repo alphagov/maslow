@@ -1,0 +1,14 @@
+<nav class="add-top-margin">
+  <ul class="breadcrumb">
+    <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
+
+    <% if defined?(action) and defined?(need) %>
+      <li><%= breadcrumb_link_for(need) %> <span class="divider">/</span></li>
+      <li class="active"><%= action %></li>
+    <% elsif defined?(action) and not defined?(need) %>
+      <li class="active"><%= action %></li>
+    <% else %>
+      <li class="active"><%= breadcrumb_label_for(need) %></li>
+    <% end %>
+  </ul>
+</nav>
