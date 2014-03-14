@@ -1,26 +1,6 @@
-<div id="workflow" class="navbar navbar-inverse navbar-fixed-bottom">
-  <div class="navbar-inner">
-    <div class="container-fluid">
-      <% if edit_page %>
-        <%= f.action :submit,
-                     :button_html => {
-                       :value => "Save",
-                       :class => "btn btn-primary"
-                     }
-                   %>
-        <%= f.action :submit,
-                     :button_html => {
-                       :name => "add_new",
-                       :value => "Save and add a new need",
-                       :class => "btn btn-primary"
-                     }
-                   %>
-      <% else %>
-        <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
-        <% if @need && !@need.duplicate? %>
-          <%= link_to "Edit", edit_need_path(@need), class: "btn btn-success" %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render layout: 'workflow_footer' do %>
+  <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
+  <% if defined?(need) && !need.duplicate? %>
+    <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
+  <% end %>
+<% end %>

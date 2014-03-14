@@ -38,5 +38,19 @@
 
   <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this? <br/><span class='optional'>(optional)</span>".html_safe, :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
 
-  <%= render partial: "workflow_buttons", locals: { f: f, edit_page: true } %>
+  <%= render layout: 'workflow_footer' do %>
+    <%= f.action :submit,
+                 :button_html => {
+                   :value => "Save",
+                   :class => "btn btn-primary"
+                 }
+               %>
+    <%= f.action :submit,
+                 :button_html => {
+                   :name => "add_new",
+                   :value => "Save and add a new need",
+                   :class => "btn btn-primary"
+                 }
+               %>
+  <% end %>
 <% end %>
