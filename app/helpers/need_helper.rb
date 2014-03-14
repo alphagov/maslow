@@ -2,6 +2,14 @@ module NeedHelper
   include ActiveSupport::Inflector
   include ActionView::Helpers::NumberHelper
 
+  def breadcrumb_link_for(need)
+    link_to breadcrumb_label_for(need), need_path(need)
+  end
+
+  def breadcrumb_label_for(need)
+    "#{need.need_id}: #{format_need_goal(need.goal)}"
+  end
+
   def format_need_goal(goal)
     return "" if goal.blank?
 

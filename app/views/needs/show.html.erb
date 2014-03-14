@@ -3,10 +3,7 @@
 <article class="need">
 
   <nav class="add-top-margin">
-    <ul class="breadcrumb">
-      <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
-      <li class="active"><%= @need.need_id %>: <%= format_need_goal @need.goal %></li>
-    </ul>
+    <%= render partial: "needs/breadcrumb", locals: { need: @need } %>
   </nav>
 
   <%= render partial: "need_header" %>

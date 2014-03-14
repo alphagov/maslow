@@ -2,11 +2,7 @@
 
 <article class="need">
   <nav class="add-top-margin">
-    <ul class="breadcrumb">
-      <li><%= link_to "All needs", needs_path %> <span class="divider">/</span></li>
-      <li><%= link_to "#{@need.need_id}: #{format_need_goal @need.goal}", need_path(@need) %> <span class="divider">/</span></li>
-      <li class="active">Close as a duplicate</li>
-    </ul>
+    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Close as a duplicate" } %>
   </nav>
 
   <%= render :partial => "need_header" %>
