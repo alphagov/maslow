@@ -39,7 +39,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".nav-tabs" do
-          assert page.has_link?("Edit", href: "/needs/101350/edit")
           assert page.has_link?("History & Notes", href: "/needs/101350/revisions")
         end
 
@@ -114,7 +113,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".nav-tabs" do
-          assert page.has_link?("Edit", href: "/needs/101350/edit")
           assert page.has_no_link?("See history")
         end
 
@@ -269,10 +267,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("Book a driving test")
         end
 
-        within ".nav-tabs" do
-          assert page.has_link?("Edit", href: "/needs/101500/edit")
-        end
-
         within ".the-need" do
           assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
         end
@@ -301,10 +295,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_no_selector?(".need-organisations")
 
           assert page.has_content?("Find out news from government")
-        end
-
-        within ".nav-tabs" do
-          assert page.has_link?("Edit", href: "/needs/101700/edit")
         end
 
         within ".the-need" do
