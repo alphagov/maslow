@@ -248,4 +248,23 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "given a need which exists" do
+    setup do
+      setup_need_api_responses(101350)
+    end
+
+    should "be able to add a new need from the need page" do
+      visit "/needs/101350"
+      within "#workflow" do
+        assert page.has_link?("Add a new need", href: "/needs/new")
+      end
+    end
+
+    should "be able to add a new need from the history page" do
+      visit "/needs/101350/revisions"
+      within "#workflow" do
+        assert page.has_link?("Add a new need", href: "/needs/new")
+      end
+    end
+  end
 end

@@ -77,14 +77,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           assert page.has_content?("Primary service provided by the DVLA")
         end
       end
-
-    end
-
-    should "be able to add a new need from this page" do
-      visit "/needs/101350"
-      within "#workflow" do
-        assert page.has_link?("Add a new need", href: "/needs/new")
-      end
     end
 
     should "show the recent revisions" do
@@ -169,11 +161,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
         end
       end
-
-      within "#workflow" do
-        assert page.has_link?("Add a new need", href: "/needs/new")
-      end
-
     end # should show recent revisions
 
     context "showing artefacts which meet the need" do
