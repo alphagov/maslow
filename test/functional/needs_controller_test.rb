@@ -107,11 +107,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:new).with(has_entries(complete_need_data))
         .returns(mock_need)
 
-      mock_need.expects(:save_as).with do |user|
-        user.name = stub_user.name
-        user.email = stub_user.email
-        user.uid = stub_user.uid
-      end.returns(true)
+      mock_need.expects(:save_as).with(stub_user).returns(true)
 
       mock_need.expects(:need_id).twice.returns(1)
       mock_need.expects(:goal).returns(:goal)
@@ -454,11 +450,7 @@ class NeedsControllerTest < ActionController::TestCase
       end
 
       should "save the need as the current user" do
-        @stub_need.expects(:save_as).with do |user|
-          user.name = stub_user.name
-          user.email = stub_user.email
-          user.uid = stub_user.uid
-        end.returns(true)
+        @stub_need.expects(:save_as).with(stub_user).returns(true)
 
         put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
       end
@@ -562,11 +554,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "close the need" do
-      @need.expects(:close_as).with do |user|
-        user.name = stub_user.name
-        user.email = stub_user.email
-        user.uid = stub_user.uid
-      end.returns(true)
+      @need.expects(:close_as).with(stub_user).returns(true)
 
       put :closed,
           :id => "100002",
@@ -631,11 +619,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "reopen the need" do
       @need.expects(:duplicate_of).returns(100001)
-      @need.expects(:reopen_as).with do |user|
-        user.name = stub_user.name
-        user.email = stub_user.email
-        user.uid = stub_user.uid
-      end.returns(true)
+      @need.expects(:reopen_as).with(stub_user).returns(true)
       was_canonical = Need.new(base_need_fields.merge("id" => 100001), true)  # duplicate
       Need.stubs(:find).with(100001).returns(was_canonical)
 

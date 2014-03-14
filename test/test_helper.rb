@@ -31,7 +31,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_user
-    @stub_user ||= create(:user, :name => 'Stub User', :email => "stub@alphagov.co.uk", :uid => "stub-user-uid-123")
+    @stub_user ||= create(:user)
   end
 
   def login_as_stub_user
