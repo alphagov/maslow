@@ -317,7 +317,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "404 if need not found" do
       Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
-      post :update, :id => "100001", :need => { :goal => "do things" }
+      put :update, :id => "100001", :need => { :goal => "do things" }
       assert_response :not_found
     end
 
@@ -326,9 +326,9 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).never
 
-      post :update,
-           :id => "100001",
-           :need => base_need_fields.merge(:goal => "")
+      put :update,
+          :id => "100001",
+          :need => base_need_fields.merge(:goal => "")
       assert_response 422
     end
 
@@ -337,9 +337,9 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).with(is_a(User)).returns(true)
 
-      post :update,
-           :id => "100001",
-           :need => base_need_fields.merge(:benefit => "be awesome")
+      put :update,
+          :id => "100001",
+          :need => base_need_fields.merge(:benefit => "be awesome")
       assert_redirected_to need_path(100001)
     end
 
@@ -348,10 +348,10 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).with(is_a(User)).returns(true)
 
-      post :update,
-           :id => "100001",
-           :need => base_need_fields.merge(:benefit => "be awesome"),
-           :add_new => ""
+      put :update,
+          :id => "100001",
+          :need => base_need_fields.merge(:benefit => "be awesome"),
+          :add_new => ""
       assert_redirected_to new_need_path
     end
 
@@ -362,9 +362,9 @@ class NeedsControllerTest < ActionController::TestCase
       need.expects(:valid?).returns(false)
       need.expects(:save_as).never
 
-      post :update,
-           :id => "100001",
-           :need => base_need_fields.merge(:met_when => ["something", "something else"])
+      put :update,
+          :id => "100001",
+          :need => base_need_fields.merge(:met_when => ["something", "something else"])
 
       assert_response 422
       assert_equal ["something", "something else"], assigns[:need].met_when
@@ -380,7 +380,7 @@ class NeedsControllerTest < ActionController::TestCase
         "goal" => "Do Stuff",
         "benefit" => "test"
       }
-      post(:update, id: 100001, need: need_data)
+      put(:update, id: 100001, need: need_data)
 
       assert_response 422
     end
