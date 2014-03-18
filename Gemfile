@@ -14,6 +14,7 @@ end
 
 gem 'kaminari', '0.14.1'
 gem 'logstasher', '0.4.8'
+gem 'cancan', '1.6.10'
 
 group :test do
   gem 'capybara', '2.1.0'
