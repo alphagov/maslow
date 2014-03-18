@@ -18,4 +18,16 @@ class User
   def self.find_by_uid(uid)
     where(uid: uid).first
   end
+
+  def viewer?
+    has_permission?('signin')
+  end
+
+  def editor?
+    has_permission?('editor') || admin?
+  end
+
+  def admin?
+    viewer? && has_permission?('admin')
+  end
 end
