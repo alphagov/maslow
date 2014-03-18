@@ -17,7 +17,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
   end
 
   setup do
-    login_as(stub_user)
+    login_as_stub_admin
     need_api_has_organisations(
       "committee-on-climate-change" => "Committee on Climate Change",
       "competition-commission" => "Competition Commission",

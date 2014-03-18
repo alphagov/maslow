@@ -3,19 +3,39 @@ require_relative '../../test_helper'
 class NavTabsHelperTest < ActiveSupport::TestCase
   include NavTabsHelper
   include Rails.application.routes.url_helpers
+  attr_reader :current_user
 
   setup do
     @need = Need.new({"id" => 100001}, true)
   end
 
-  should "include all possible tabs" do
-    assert_equal ["View", "Edit", "Actions", "History & Notes"],
-                 tab_names_on_needs_page_for(@need)
+  context "for an editor" do
+    setup do
+      @current_user = stub(:user)
+      @current_user.stubs(:can?).with(:update, Need).returns(true)
+      @current_user.stubs(:can?).with(:perform_actions_on, Need).returns(true)
+    end
+
+    should "include all possible tabs" do
+      assert_equal ["View", "Edit", "Actions", "History & Notes"],
+                   tab_names_on_needs_page_for(@need)
+    end
+
+    should "not include an Edit link if the need is duplicated" do
+      @need.duplicate_of = 12345
+      refute tab_names_on_needs_page_for(@need).include?("Edit")
+    end
   end
 
-  should "not include an Edit link if the need is duplicated" do
-    @need.duplicate_of = 12345
-    refute tab_names_on_needs_page_for(@need).include?("Edit")
+  context "for a viewer" do
+    setup do
+      @current_user = stub(:can? => false)
+    end
+
+    should "not include Edit or Actions links" do
+      assert_equal ["View", "History & Notes"],
+                   tab_names_on_needs_page_for(@need)
+    end
   end
 
   private

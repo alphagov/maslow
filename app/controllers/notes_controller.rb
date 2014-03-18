@@ -4,6 +4,7 @@ require 'json'
 
 class NotesController < ApplicationController
   def create
+    authorize! :create, Note
     text = params["notes"]["text"]
     need_id = params["need_id"]
     @note = Note.new(text, need_id, current_user)

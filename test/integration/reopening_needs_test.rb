@@ -27,6 +27,10 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
   end
 
   context "reopening a need that was closed as a duplicate" do
+    setup do
+      login_as_stub_editor
+    end
+
     should "be able to reopen a need" do
       request_body = {
         "author" => {
@@ -57,6 +61,7 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
     end
 
     should "not allow descoping the need" do
+      login_as_stub_admin
       visit "/needs/100002/actions"
 
       # 'Out of scope' functionality is disabled if need is closed

@@ -1,4 +1,5 @@
 require "gds-sso/user"
+require 'ability'
 
 class User
   include Mongoid::Document
@@ -14,6 +15,12 @@ class User
   field "organisation_slug", type: String
 
   attr_accessible :email, :name, :uid, :version, :organisation_slug
+
+  delegate :can?, :cannot?, :to => :ability
+
+  def ability
+    @ability ||= Ability.new(self)
+  end
 
   def self.find_by_uid(uid)
     where(uid: uid).first

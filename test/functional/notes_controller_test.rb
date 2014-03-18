@@ -5,7 +5,7 @@ class NotesControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
 
   setup do
-    login_as stub_user
+    login_as_stub_editor
     @note_atts = {
       "notes" => {
         "text" => "test"
@@ -41,6 +41,12 @@ class NotesControllerTest < ActionController::TestCase
 
       assert_equal "Note couldn't be saved: Text can't be blank", @controller.flash[:error]
       refute @controller.flash[:notice]
+    end
+
+    should "stop viewers from creating notes" do
+      login_as_stub_user
+      post :create, @note_atts
+      assert_redirected_to needs_path
     end
   end
 end

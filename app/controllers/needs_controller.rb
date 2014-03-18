@@ -12,6 +12,7 @@ class NeedsController < ApplicationController
   end
 
   def index
+    authorize! :index, Need
     opts = params.slice("organisation_id", "page", "q").select { |k, v| v.present? }
     @needs = Maslow.need_api.needs(opts)
     respond_to do |format|
@@ -25,18 +26,22 @@ class NeedsController < ApplicationController
   end
 
   def show
+    authorize! :read, Need
     @need = load_need
   end
 
   def actions
+    authorize! :perform_actions_on, Need
     @need = load_need
   end
 
   def revisions
+    authorize! :see_revisions_of, Need
     @need = load_need
   end
 
   def edit
+    authorize! :update, Need
     @need = load_need
     if @need.duplicate?
       redirect_to need_url(@need.need_id),
@@ -47,10 +52,12 @@ class NeedsController < ApplicationController
   end
 
   def new
+    authorize! :create, Need
     @need = Need.new({})
   end
 
   def create
+    authorize! :create, Need
     @need = Need.new( prepare_need_params(params) )
 
     add_or_remove_criteria(:new) and return if criteria_params_present?
@@ -71,6 +78,7 @@ class NeedsController < ApplicationController
   end
 
   def update
+    authorize! :update, Need
     @need = load_need
     @need.update(prepare_need_params(params))
 
@@ -92,6 +100,7 @@ class NeedsController < ApplicationController
   end
 
   def close_as_duplicate
+    authorize! :close, Need
     @need = load_need
     if @need.duplicate?
       redirect_to need_url(@need.need_id),
@@ -102,6 +111,7 @@ class NeedsController < ApplicationController
   end
 
   def closed
+    authorize! :close, Need
     @need = load_need
     @need.duplicate_of = Integer(params["need"]["duplicate_of"])
 
@@ -123,6 +133,7 @@ class NeedsController < ApplicationController
   end
 
   def reopen
+    authorize! :reopen, Need
     @need = load_need
     old_canonical_id = @need.duplicate_of
 
@@ -138,6 +149,7 @@ class NeedsController < ApplicationController
   end
 
   def out_of_scope
+    authorize! :descope, Need
     @need = load_need
     unless @need.in_scope.nil?
       flash[:error] = "This need has already been marked as out of scope"
@@ -147,6 +159,7 @@ class NeedsController < ApplicationController
   end
 
   def descope
+    authorize! :descope, Need
     @need = load_need
 
     unless @need.in_scope.nil?

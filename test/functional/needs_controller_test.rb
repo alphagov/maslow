@@ -5,7 +5,7 @@ class NeedsControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
 
   setup do
-    login_as stub_user
+    login_as_stub_user
     need_api_has_organisations(
       "ministry-of-justice" => "Ministry of Justice",
       "competition-commission" => "Competition Commission"
@@ -74,6 +74,9 @@ class NeedsControllerTest < ActionController::TestCase
   end
 
   context "POST create" do
+    setup do
+      login_as_stub_editor
+    end
 
     def complete_need_data
       {
@@ -168,6 +171,11 @@ class NeedsControllerTest < ActionController::TestCase
       end
     end
 
+    should "stop viewers from creating needs" do
+      login_as_stub_user
+      post(:create, need: complete_need_data)
+      assert_redirected_to needs_path
+    end
   end
 
   context "GET show" do
@@ -270,6 +278,10 @@ class NeedsControllerTest < ActionController::TestCase
   end
 
   context "GET edit" do
+    setup do
+      login_as_stub_editor
+    end
+
     context "given a valid need" do
       setup do
         @stub_need = Need.new({
@@ -300,6 +312,12 @@ class NeedsControllerTest < ActionController::TestCase
       get :edit, :id => "coffee"
       assert_response :not_found
     end
+
+    should "stop viewers from editing needs" do
+      login_as_stub_user
+      get :edit, :id => 100001
+      assert_redirected_to needs_path
+    end
   end
 
   context "PUT update" do
@@ -313,6 +331,10 @@ class NeedsControllerTest < ActionController::TestCase
 
     def stub_need
       Need.new(base_need_fields.merge("id" => 100001), true)  # existing need
+    end
+
+    setup do
+      login_as_stub_editor
     end
 
     should "404 if need not found" do
@@ -384,9 +406,19 @@ class NeedsControllerTest < ActionController::TestCase
 
       assert_response 422
     end
+
+    should "stop viewers from updating needs" do
+      login_as_stub_user
+      put(:update, id: 100001, need: {})
+      assert_redirected_to needs_path
+    end
   end
 
   context "GET out-of-scope" do
+    setup do
+      login_as_stub_admin
+    end
+
     # For the case when the user has no JS
     context "given a valid need without a set value for in_scope" do
       setup do
@@ -425,9 +457,19 @@ class NeedsControllerTest < ActionController::TestCase
         assert_redirected_to need_path(@stub_need)
       end
     end
+
+    should "stop editors from descoping needs" do
+      login_as_stub_editor
+      get :out_of_scope, id: 100001
+      assert_redirected_to needs_path
+    end
   end
 
   context "PUT descope" do
+    setup do
+      login_as_stub_admin
+    end
+
     context "given a valid need without a set value for in_scope" do
       setup do
         @stub_need = Need.new({
@@ -504,9 +546,19 @@ class NeedsControllerTest < ActionController::TestCase
 
       assert_response :not_found
     end
+
+    should "stop editors from descoping needs" do
+      login_as_stub_editor
+      put :descope, id: 100001
+      assert_redirected_to needs_path
+    end
   end
 
   context "deleting met_when criteria" do
+    setup do
+      login_as_stub_editor
+    end
+
     should "remove the only value" do
       need = complete_need_data.merge("met_when" => ["Winning"])
       post(:create, { delete_criteria: "0", need: need })
@@ -535,6 +587,7 @@ class NeedsControllerTest < ActionController::TestCase
 
   context "PUT closed" do
     setup do
+      login_as_stub_editor
       @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
       Need.stubs(:find).with(100002).returns(@need)
 
@@ -608,10 +661,19 @@ class NeedsControllerTest < ActionController::TestCase
       assert_equal "There was a problem closing the need as a duplicate", @controller.flash[:error]
       assert_response 422
     end
+
+    should "stop viewers from marking needs as duplicates" do
+      login_as_stub_user
+      put :closed,
+          :id => "100002",
+          :need => { :duplicate_of => "100000" }
+      assert_redirected_to needs_path
+    end
   end
 
   context "DELETE reopen" do
     setup do
+      login_as_stub_editor
       @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
       @need.stubs(:artefacts).returns([])
       Need.stubs(:find).with(100002).returns(@need)
@@ -643,10 +705,18 @@ class NeedsControllerTest < ActionController::TestCase
       assert_equal "There was a problem reopening the need", @controller.flash[:error]
       assert_response 422
     end
+
+    should "stop viewers from reopening needs" do
+      login_as_stub_user
+      delete :reopen,
+             :id => @need.need_id
+      assert_redirected_to needs_path
+    end
   end
 
   context "GET actions" do
     setup do
+      login_as_stub_editor
       @stub_need = Need.new({
           "id" => 100001,
           "role" => "person",
@@ -682,6 +752,7 @@ class NeedsControllerTest < ActionController::TestCase
 
   context "GET close-as-duplicate" do
     setup do
+      login_as_stub_editor
       @stub_need = Need.new({
         "id" => 100001,
         "role" => "person",

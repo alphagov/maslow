@@ -17,7 +17,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
   end
 
   setup do
-    login_as(stub_user)
+    login_as_stub_editor
     need_api_has_organisations(
       "committee-on-climate-change" => "Committee on Climate Change",
       "competition-commission" => "Competition Commission",
@@ -94,6 +94,8 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
   end
 
   should "not be able to edit a closed need" do
+    login_as_stub_editor
+
     @duplicate.merge!("duplicate_of" => "100001")
     need_api_has_need(@duplicate)
     need_api_has_need(@need)
