@@ -74,6 +74,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       click_on('100001')
       within "#workflow" do
+        assert page.has_link?("Edit", href: "/needs/100001/edit")
         click_on("Edit")
       end
 
@@ -292,6 +293,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
 
       within ".nav-tabs" do
+        assert page.has_link?("Edit", href: "/needs/100200/edit")
         click_on "Edit"
       end
 

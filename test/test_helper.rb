@@ -19,6 +19,8 @@ DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 class ActiveSupport::TestCase
+  include FactoryGirl::Syntax::Methods
+
   setup do
     Organisation.organisations = nil
   end
@@ -29,7 +31,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_user
-    @stub_user ||= FactoryGirl.create(:user, :name => 'Stub User', :email => "stub@alphagov.co.uk", :uid => "stub-user-uid-123")
+    @stub_user ||= create(:user)
   end
 
   def login_as_stub_user

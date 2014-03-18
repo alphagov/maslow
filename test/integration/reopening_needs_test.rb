@@ -43,9 +43,6 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
 
       assert page.has_content?("Reopen duplicate")
 
-      # 'Out of scope' functionality is disabled if need is closed
-      assert page.has_selector?("a[id=out-of-scope][disabled]")
-
       # re-stub request ready for reopen completing and the need is re-shown
       need_api_has_need(need_hash.merge("duplicate_of" => nil))
       Need.any_instance.expects(:duplicate_of).at_least(2).returns("100001", nil)
@@ -57,6 +54,13 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Need is no longer a duplicate of 100001: apply for a primary school place")
       assert page.has_link?("100001: apply for a primary school place", href: "/needs/100001")
       assert page.has_link?("Edit")
+    end
+
+    should "not allow descoping the need" do
+      visit "/needs/100002/actions"
+
+      # 'Out of scope' functionality is disabled if need is closed
+      assert page.has_selector?("a[id=out-of-scope][disabled]")
     end
 
     should "show an error if there's a problem reopening the need" do
