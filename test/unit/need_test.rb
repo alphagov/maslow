@@ -265,30 +265,54 @@ class NeedTest < ActiveSupport::TestCase
 
   context "listing needs" do
 
-    def stub_need
-      stub("need", to_hash: {"id" => 100001})
+    def stub_need_response
+      stub("need response",
+        to_hash: {"results" => [{"id" => 100001}]},
+        pages: 2,
+        total: 60,
+        page_size: 50,
+        current_page: 1,
+        start_index: 1,
+      )
     end
 
     should "call the need API adapter" do
-      GdsApi::NeedApi.any_instance.expects(:needs).with({}).returns([])
+      GdsApi::NeedApi.any_instance.expects(:needs)
+          .with({})
+          .returns(stub_need_response)
+
       Need.list
     end
 
     should "pass parameters to the API adapter" do
-      GdsApi::NeedApi.any_instance.expects(:needs).with({page: 2}).returns([])
+      GdsApi::NeedApi.any_instance.expects(:needs)
+          .with({page: 2})
+          .returns(stub_need_response)
+
       Need.list(page: 2)
     end
 
     should "return a list of Need objects" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns([stub_need])
+      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
       need_list = Need.list
       assert_equal 1, need_list.length
       assert need_list.all? { |need| need.is_a? Need }
     end
 
     should "report each need as existing" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns([stub_need])
+      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
       assert Need.list.all?(&:persisted?)
+    end
+
+    should "retain pagination info" do
+      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
+      need_list = Need.list
+
+      assert_equal 2, need_list.pages
+      assert_equal 60, need_list.total
+      assert_equal 50, need_list.page_size
+      assert_equal 1, need_list.current_page
+      assert_equal 1, need_list.start_index
     end
   end
 

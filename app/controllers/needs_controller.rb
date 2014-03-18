@@ -13,7 +13,7 @@ class NeedsController < ApplicationController
 
   def index
     opts = params.slice("organisation_id", "page", "q").select { |k, v| v.present? }
-    @needs = Maslow.need_api.needs(opts)
+    @needs = Need.list(opts)
     respond_to do |format|
       format.html
       format.csv do

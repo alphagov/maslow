@@ -22,17 +22,14 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    should "fetch needs from the need api and assign them to the template" do
+    should "fetch a list of needs and assign them to the template" do
       # given we're using mocked data, stub the render action so we don't
       # try and render the view. we're only testing here that the variables
       # are actually being assigned correctly.
       @controller.stubs(:render)
 
-      needs_collection = [
-        OpenStruct.new(id: "foo"),
-        OpenStruct.new(id: "bar")
-      ]
-      GdsApi::NeedApi.any_instance.expects(:needs).returns(needs_collection)
+      needs_collection = [stub(id: "foo"), stub(id: "bar")]
+      Need.expects(:list).returns(needs_collection)
 
       get :index
 
@@ -41,33 +38,33 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "filtering needs" do
       should "send the organisation id" do
-        GdsApi::NeedApi.any_instance.expects(:needs).with({"organisation_id" => "test"})
+        Need.expects(:list).with({"organisation_id" => "test"})
         get(:index, "organisation_id" => "test")
       end
 
       should "not send any other values" do
-        GdsApi::NeedApi.any_instance.expects(:needs).with({})
+        Need.expects(:list).with({})
         get(:index, "fake" => "fake")
       end
     end
 
     context "paginated needs" do
-      should "pass the 'page' parameter to the Need API" do
-        GdsApi::NeedApi.any_instance.expects(:needs).with("page" => "three")
+      should "pass the 'page' parameter to Need.list" do
+        Need.expects(:list).with("page" => "three")
         get :index, "page" => "three"
       end
     end
 
     context "blank query parameter" do
       should "not pass the query parameter on to the need API" do
-        GdsApi::NeedApi.any_instance.expects(:needs).with({})
+        Need.expects(:list).with({})
         get(:index, "q" => "")
       end
     end
 
     context "searching needs" do
       should "send the search query" do
-        GdsApi::NeedApi.any_instance.expects(:needs).with({"q" => "citizenship"})
+        Need.expects(:list).with({"q" => "citizenship"})
         get(:index, "q" => "citizenship")
       end
     end
