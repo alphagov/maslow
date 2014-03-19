@@ -13,6 +13,7 @@ class User
   field "permissions", type: Array
   field "remotely_signed_out", type: Boolean, default: false
   field "organisation_slug", type: String
+  field "bookmarks", type: Array, default: Array.new
 
   attr_accessible :email, :name, :uid, :version, :organisation_slug
 
