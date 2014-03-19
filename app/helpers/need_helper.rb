@@ -95,4 +95,12 @@ module NeedHelper
     path = URI(artefact.web_url).path
     Maslow.support_api.feedback_url path
   end
+
+  def bookmark_icon(bookmarks = [], need_id)
+    if bookmarks.include?(need_id)
+      "icon-star"
+    else
+      "icon-star-empty"
+    end
+  end
 end
