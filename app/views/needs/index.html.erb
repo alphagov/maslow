@@ -32,19 +32,7 @@
   <% end %>
 </div>
 
-<table class="table table-striped table-bordered" id="needs">
-  <thead>
-    <tr>
-      <th>Need ID</th>
-      <th>I need to&hellip;</th>
-      <th>Decision made</th>
-      <th>Organisations</th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= render partial: "need_row", collection: @needs, as: :need %>
-  </tbody>
-</table>
+<%= render partial: "collection" %>
 
 <% unless params[:organisation_id].blank? %>
   <span><%= link_to "Export as CSV", needs_path(organisation_id: params[:organisation_id],
