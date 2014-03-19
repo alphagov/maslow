@@ -4,6 +4,9 @@ Maslow::Application.routes.draw do
 
   get :bookmarklet, controller: :bookmarklet, path: 'bookmarklet'
 
+  post :bookmark, controller: :bookmarks, path: 'bookmark'
+  get :bookmarks, controller: :bookmarks, path: 'bookmarks'
+
   resources :notes, only: [:create]
 
   resources :needs, except: [:destroy], constraints: { id: /[0-9]+/ } do
