@@ -15,6 +15,30 @@ class Need
     end
   end
 
+  # Allow us to convert the API response to a list of Need objects, but still
+  # retain the pagination information
+  class PaginatedList < Array
+    PAGINATION_PARAMS = [:pages, :total, :page_size, :current_page, :start_index]
+    attr_reader *PAGINATION_PARAMS
+
+    def initialize(needs, pagination_info)
+      super(needs)
+
+      @pages = pagination_info.pages
+      @total = pagination_info.total
+      @page_size = pagination_info.page_size
+      @current_page = pagination_info.current_page
+      @start_index = pagination_info.start_index
+    end
+
+    def inspect
+      pagination_params = Hash[
+        PAGINATION_PARAMS.map { |param_name| [param_name, send(param_name)] }
+      ]
+      "#<#{self.class} #{super}, #{pagination_params}>"
+    end
+  end
+
   JUSTIFICATIONS = [
     "It's something only government does",
     "The government is legally obliged to provide it",
@@ -61,6 +85,22 @@ class Need
   end
   NUMERIC_FIELDS.each do |field|
     validates_numericality_of field, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
+  end
+
+  # Retrieve a list of needs from the Need API
+  #
+  # The parameters are the same as passed through to the Need API: as of
+  # 2014-03-12, they are `organisation_id`, `page` and `q`.
+  def self.list(options={})
+    need_response = Maslow.need_api.needs(options)
+
+    # Sadly, the `to_hash` method is only defined on the response object, not
+    # on the individual need results, so we currently have to bake this
+    # knowledge of the response format in here.
+    need_hashes = need_response.to_hash["results"]
+
+    need_objects = need_hashes.map { |need_hash| self.new(need_hash, true) }
+    PaginatedList.new(need_objects, need_response)
   end
 
   # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
