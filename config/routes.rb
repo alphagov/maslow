@@ -4,8 +4,7 @@ Maslow::Application.routes.draw do
 
   get :bookmarklet, controller: :bookmarklet, path: 'bookmarklet'
 
-  post :bookmark, controller: :bookmarks, path: 'bookmark'
-  get :bookmarks, controller: :bookmarks, path: 'bookmarks'
+  resources :bookmarks, only: [:create, :index]
 
   resources :notes, only: [:create]
 

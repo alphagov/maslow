@@ -60,18 +60,18 @@ class BookmarksControllerTest < ActionController::TestCase
       should "be successful" do
         stub_user.expects(:bookmarks).returns([10001])
 
-        get :bookmarks
+        get :index
         assert_response :success
       end
     end
 
-    context "POST bookmark" do
+    context "POST bookmarks" do
       should "add needs to the bookmarks" do
         bookmarks = [10002]
         stub_user.expects(:bookmarks).returns(bookmarks)
         stub_user.expects(:save!)
 
-        post :bookmark, {
+        post :create, {
           "bookmark" => {
             "need_id" => "10001",
             "redirect_to" => "/foo"
@@ -86,7 +86,7 @@ class BookmarksControllerTest < ActionController::TestCase
         stub_user.expects(:bookmarks).returns(bookmarks)
         stub_user.expects(:save!)
 
-        post :bookmark, {
+        post :create, {
           "bookmark" => {
             "need_id" => "10001",
             "redirect_to" => "/foo"
@@ -97,7 +97,7 @@ class BookmarksControllerTest < ActionController::TestCase
       end
 
       should "redirect to the correct page" do
-        post :bookmark, {
+        post :create, {
           "bookmark" => {
             "need_id" => "10001",
             "redirect_to" => "/foo"

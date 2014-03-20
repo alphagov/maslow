@@ -1,6 +1,6 @@
 class BookmarksController < ApplicationController
 
-  def bookmarks
+  def index
     @bookmarks = current_user.bookmarks
     @needs = @bookmarks.map do |need_id|
       Need.find(need_id)
@@ -8,7 +8,7 @@ class BookmarksController < ApplicationController
     @current_page = bookmarks_path
   end
 
-  def bookmark
+  def create
     need_id = Integer(params["bookmark"]["need_id"])
     @bookmarks = current_user.bookmarks
     if @bookmarks.include?(need_id)
