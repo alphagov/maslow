@@ -3,7 +3,7 @@ require_relative '../integration_test_helper'
 class CreateANeedTest < ActionDispatch::IntegrationTest
 
   setup do
-    login_as(stub_user)
+    login_as_stub_editor
     need_api_has_organisations(
       "committee-on-climate-change" => {"name"=>"Committee on Climate Change",
                                         "abbreviation"=>"CCC"},

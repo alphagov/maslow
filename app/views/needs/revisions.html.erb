@@ -15,9 +15,11 @@
   <% end %>
 
   <div class="row-fluid">
-    <div id="notes" class="span6">
-      <%= render partial: "needs/revisions/new_note_form", locals: { need: @need } %>
-    </div>
+    <% if current_user.can?(:create, Note) %>
+      <div id="notes" class="span6">
+        <%= render partial: "needs/revisions/new_note_form", locals: { need: @need } %>
+      </div>
+    <% end %>
     <div id="revision-history" class="span6 accordion">
       <%= render partial: "needs/revisions/recent_changes", locals: { need: @need } %>
     </div>

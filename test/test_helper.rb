@@ -35,7 +35,18 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    login_as stub_user
+    @stub_user = create(:user)
+    login_as @stub_user
+  end
+
+  def login_as_stub_editor
+    @stub_user = create(:editor)
+    login_as @stub_user
+  end
+
+  def login_as_stub_admin
+    @stub_user = create(:admin)
+    login_as @stub_user
   end
 
   def login_as(user)
