@@ -109,10 +109,10 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
 
     should "show bookmarked needs with a star icon" do
       visit "/needs"
-      assert page.has_css?("#bookmark_10001 span.icon-star-empty")
+      assert page.has_no_css?("#bookmark_10001 .bookmarked")
 
       click_button "bookmark_10001"
-      assert page.has_css?("#bookmark_10001 span.icon-star")
+      assert page.has_css?("#bookmark_10001 .bookmarked")
     end
   end
 end

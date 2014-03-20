@@ -97,10 +97,8 @@ module NeedHelper
   end
 
   def bookmark_icon(bookmarks = [], need_id)
-    if bookmarks.include?(need_id)
-      "icon-star"
-    else
-      "icon-star-empty"
+    if bookmarks.include?(need_id.to_i)
+      "bookmarked"
     end
   end
 end
