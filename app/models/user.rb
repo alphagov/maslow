@@ -38,4 +38,12 @@ class User
   def admin?
     viewer? && has_permission?('admin')
   end
+
+  def toggle_bookmark(need_id)
+    if bookmarks.include?(need_id)
+      bookmarks.delete(need_id)
+    else
+      bookmarks << need_id
+    end
+  end
 end

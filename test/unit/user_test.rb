@@ -35,4 +35,16 @@ class UserTest < ActiveModel::TestCase
       assert admin.admin?
     end
   end
+
+  context "toggle bookmarks" do
+    should "update the users bookmarked needs" do
+      user = create(:user)
+
+      user.toggle_bookmark(10001)
+      assert_equal [10001], user.bookmarks
+
+      user.toggle_bookmark(10001)
+      assert_equal [], user.bookmarks
+    end
+  end
 end
