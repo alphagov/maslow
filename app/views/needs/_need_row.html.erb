@@ -1,6 +1,6 @@
 <tr>
   <td>
-    <%= semantic_form_for :bookmark, :url => '/bookmarks' do |f| %>
+    <%= semantic_form_for :bookmark, :url => toggle_bookmarks_path do |f| %>
       <%= f.input :need_id, :as => :hidden, :input_html => { :value => need.id } %>
       <%= f.input :redirect_to, :as => :hidden, :input_html => { :value => @current_page } %>
       <button id="bookmark_<%= need.id %>" type="submit" class="btn bookmark-button">
