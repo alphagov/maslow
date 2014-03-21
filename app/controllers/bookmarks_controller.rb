@@ -1,6 +1,7 @@
 class BookmarksController < ApplicationController
-
   def index
+    authorize! :index, :bookmark
+
     @bookmarks = current_user.bookmarks
     @needs = @bookmarks.map do |need_id|
       Need.find(need_id)
@@ -9,6 +10,8 @@ class BookmarksController < ApplicationController
   end
 
   def create
+    authorize! :create, :bookmark
+
     need_id = Integer(params["bookmark"]["need_id"])
     @bookmarks = current_user.bookmarks
     if @bookmarks.include?(need_id)

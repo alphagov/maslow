@@ -4,7 +4,7 @@ class BookmarksControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
 
   setup do
-    login_as stub_user
+    login_as_stub_user
     need_api_has_needs([
       {
         "id" => "10001",
