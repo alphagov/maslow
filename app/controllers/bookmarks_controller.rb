@@ -16,6 +16,17 @@ class BookmarksController < ApplicationController
     current_user.toggle_bookmark(need_id.to_i)
     current_user.save!
 
-    redirect_to params["bookmark"]["redirect_to"]
+    redirect_to whitelist_redirect_to
+  end
+
+  private
+
+  def whitelist_redirect_to
+    path = params["bookmark"]["redirect_to"]
+    if ["/needs","/bookmarks"].include?(path)
+      path
+    else
+      "/needs"
+    end
   end
 end

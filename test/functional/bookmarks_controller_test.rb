@@ -60,11 +60,28 @@ class BookmarksControllerTest < ActionController::TestCase
       post :toggle, {
         "bookmark" => {
           "need_id" => "10001",
-          "redirect_to" => "/foo"
+          "redirect_to" => "/needs"
         }
       }
+      assert_redirected_to "/needs"
 
-      assert_redirected_to "/foo"
+      post :toggle, {
+        "bookmark" => {
+          "need_id" => "10001",
+          "redirect_to" => "/bookmarks"
+        }
+      }
+      assert_redirected_to "/bookmarks"
+    end
+
+    should "redirect unknown paths to /needs" do
+      post :toggle, {
+        "bookmark" => {
+          "need_id" => "10001",
+          "redirect_to" => "http://foo.com"
+        }
+      }
+      assert_redirected_to "/needs"
     end
   end
 end
