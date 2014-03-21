@@ -44,39 +44,20 @@ class BookmarksControllerTest < ActionController::TestCase
     end
   end
 
-  context "POST bookmarks" do
-    should "add needs to the bookmarks" do
-      bookmarks = [10002]
-      stub_user.expects(:bookmarks).returns(bookmarks)
-      stub_user.expects(:save!)
+  context "POST toggle_bookmarks" do
+    should "toggle the bookmark" do
+      stub_user.expects(:toggle_bookmark).with(10001)
 
-      post :create, {
+      post :toggle, {
         "bookmark" => {
           "need_id" => "10001",
           "redirect_to" => "/foo"
         }
       }
-
-      assert_equal [10002,10001], bookmarks
-    end
-
-    should "remove needs from bookmarks" do
-      bookmarks = [10001,10002]
-      stub_user.expects(:bookmarks).returns(bookmarks)
-      stub_user.expects(:save!)
-
-      post :create, {
-        "bookmark" => {
-          "need_id" => "10001",
-          "redirect_to" => "/foo"
-        }
-      }
-
-      assert_equal [10002], bookmarks
     end
 
     should "redirect to the correct page" do
-      post :create, {
+      post :toggle, {
         "bookmark" => {
           "need_id" => "10001",
           "redirect_to" => "/foo"

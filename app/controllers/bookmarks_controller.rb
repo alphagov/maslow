@@ -9,17 +9,13 @@ class BookmarksController < ApplicationController
     @current_page = bookmarks_path
   end
 
-  def create
+  def toggle
     authorize! :create, :bookmark
 
-    need_id = Integer(params["bookmark"]["need_id"])
-    @bookmarks = current_user.bookmarks
-    if @bookmarks.include?(need_id)
-      @bookmarks.delete(need_id)
-    else
-      @bookmarks << need_id
-    end
+    need_id = params["bookmark"]["need_id"]
+    current_user.toggle_bookmark(need_id.to_i)
     current_user.save!
+
     redirect_to params["bookmark"]["redirect_to"]
   end
 end
