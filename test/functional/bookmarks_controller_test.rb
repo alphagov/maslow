@@ -83,5 +83,15 @@ class BookmarksControllerTest < ActionController::TestCase
       }
       assert_redirected_to "/needs"
     end
+
+    should "should not accept an invalid need id" do
+      post :toggle, {
+        "bookmark" => {
+          "need_id" => :foo,
+          "redirect_to" => "/needs"
+        }
+      }
+      assert_equal "Cannot bookmark invalid need id", @controller.flash[:error]
+    end
   end
 end

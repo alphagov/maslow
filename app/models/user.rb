@@ -40,6 +40,7 @@ class User
   end
 
   def toggle_bookmark(need_id)
+    return if need_id <= 0
     if bookmarks.include?(need_id)
       bookmarks.delete(need_id)
     else

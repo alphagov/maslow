@@ -49,5 +49,15 @@ class UserTest < ActiveModel::TestCase
       user.toggle_bookmark(10001)
       assert_equal [10002], user.bookmarks
     end
+
+    should "not accept an invalid number as a need id" do
+      user = create(:user)
+
+      user.toggle_bookmark(0)
+      assert_equal [], user.bookmarks
+
+      user.toggle_bookmark(-1)
+      assert_equal [], user.bookmarks
+    end
   end
 end

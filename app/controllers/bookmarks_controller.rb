@@ -12,9 +12,13 @@ class BookmarksController < ApplicationController
   def toggle
     authorize! :create, :bookmark
 
-    need_id = params["bookmark"]["need_id"]
-    current_user.toggle_bookmark(need_id.to_i)
-    current_user.save!
+    need_id = params["bookmark"]["need_id"].to_i
+    if need_id > 0
+      current_user.toggle_bookmark(need_id)
+      current_user.save!
+    else
+      flash[:error] = "Cannot bookmark invalid need id"
+    end
 
     redirect_to whitelist_redirect_to
   end
