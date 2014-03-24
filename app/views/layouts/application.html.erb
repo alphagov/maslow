@@ -29,6 +29,9 @@
 
   <div class="container">
 
+    <br/>
+    <%= link_to "My bookmarked needs", bookmarks_path %>
+
     <main role="main">
       <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
         <div class="main-alert <%= k %>">

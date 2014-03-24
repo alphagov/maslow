@@ -13,6 +13,7 @@ class User
   field "permissions", type: Array
   field "remotely_signed_out", type: Boolean, default: false
   field "organisation_slug", type: String
+  field "bookmarks", type: Array, default: Array.new
 
   attr_accessible :email, :name, :uid, :version, :organisation_slug
 
@@ -36,5 +37,14 @@ class User
 
   def admin?
     viewer? && has_permission?('admin')
+  end
+
+  def toggle_bookmark(need_id)
+    return if need_id <= 0
+    if bookmarks.include?(need_id)
+      bookmarks.delete(need_id)
+    else
+      bookmarks << need_id
+    end
   end
 end
