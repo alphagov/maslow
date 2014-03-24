@@ -43,8 +43,11 @@ class UserTest < ActiveModel::TestCase
       user.toggle_bookmark(10001)
       assert_equal [10001], user.bookmarks
 
+      user.toggle_bookmark(10002)
+      assert_equal [10001, 10002], user.bookmarks
+
       user.toggle_bookmark(10001)
-      assert_equal [], user.bookmarks
+      assert_equal [10002], user.bookmarks
     end
   end
 end
