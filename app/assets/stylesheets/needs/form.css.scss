@@ -30,6 +30,13 @@ form.need {
   .help-block {
     color: #aaa;
   }
+
+  /* Avoid using "display: none" so that form still submits with this input */
+  input[type="submit"].hide {
+    visibility: hidden;
+    display: inline;
+    position: absolute;
+  }
 }
 
 form.filter, form.search {
