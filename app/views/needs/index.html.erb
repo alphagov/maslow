@@ -11,7 +11,7 @@
       options_from_collection_for_select(
         Organisation.all,
         "id",
-        "name_with_abbreviation",
+        "name_with_abbreviation_and_status",
         params[:organisation_id]
       ),
       prompt: "All organisations",

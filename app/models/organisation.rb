@@ -3,22 +3,23 @@ require 'gds_api/need_api'
 class Organisation
   cattr_writer :organisations
 
-  attr_reader :id, :name, :abbreviation
+  attr_reader :id, :name, :abbreviation, :status
 
   def initialize(atts)
     @id = atts[:id]
     @name = atts[:name]
     @abbreviation = atts[:abbreviation]
+    @status = atts[:govuk_status]
   end
 
-  def name_with_abbreviation
+  def name_with_abbreviation_and_status
     if abbreviation.present? && abbreviation != name
       # Use square brackets around the abbreviation
       # as Chosen doesn't like matching with
       # parentheses at the start of a word
-      "#{name} [#{abbreviation}]"
+      "#{name} [#{abbreviation}] (#{status})"
     else
-      name
+      "#{name} (#{status})"
     end
   end
 
