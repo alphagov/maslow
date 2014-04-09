@@ -3,9 +3,7 @@ class BookmarksController < ApplicationController
     authorize! :index, :bookmark
 
     @bookmarks = current_user.bookmarks
-    @needs = @bookmarks.map do |need_id|
-      Need.find(need_id)
-    end
+    @needs = Need.by_ids(@bookmarks)
     @current_page = bookmarks_path
   end
 

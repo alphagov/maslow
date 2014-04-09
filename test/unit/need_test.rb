@@ -1,6 +1,8 @@
 require_relative '../test_helper'
+require 'gds_api/test_helpers/need_api'
 
 class NeedTest < ActiveSupport::TestCase
+  include GdsApi::TestHelpers::NeedApi
 
   context "saving need data to the Need API" do
     setup do
@@ -313,6 +315,32 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal 50, need_list.page_size
       assert_equal 1, need_list.current_page
       assert_equal 1, need_list.start_index
+    end
+  end
+
+  context "requesting needs by IDs" do
+    setup do
+      @need1 = {
+        "id" => "10001",
+        "role" => "parent",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my child can start school" }
+
+      @need2 = {
+        "id" => "10002",
+        "role" => "person",
+        "goal" => "do stuff",
+        "benefit" => "get stuff done" }
+
+      need_api_has_need_ids([@need1, @need2])
+    end
+
+    should "return an array of matching Need objects" do
+      needs = Need.by_ids(10001,10002)
+
+      assert_equal 2, needs.size
+      assert_equal %w(10001 10002), needs.map(&:id)
+      assert_equal %w(parent person), needs.map(&:role)
     end
   end
 
