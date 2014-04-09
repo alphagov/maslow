@@ -94,10 +94,9 @@ class Need
   def self.list(options={})
     need_response = Maslow.need_api.needs(options)
 
-    # Sadly, the `to_hash` method is only defined on the response object, not
-    # on the individual need results, so we currently have to bake this
-    # knowledge of the response format in here.
-    need_hashes = need_response.to_hash["results"]
+    # The response can be treated either as nested `OpenStruct`s or as a hash;
+    # to get the result hashes back out, we can access the key directly.
+    need_hashes = need_response["results"]
 
     need_objects = need_hashes.map { |need_hash| self.new(need_hash, true) }
     PaginatedList.new(need_objects, need_response)

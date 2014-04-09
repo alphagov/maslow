@@ -268,14 +268,15 @@ class NeedTest < ActiveSupport::TestCase
   context "listing needs" do
 
     def stub_need_response
-      stub("need response",
-        to_hash: {"results" => [{"id" => 100001}]},
+      response = stub("need response",
         pages: 2,
         total: 60,
         page_size: 50,
         current_page: 1,
         start_index: 1,
       )
+      response.stubs(:[]).with("results").returns([{"id" => 100001}])
+      response
     end
 
     should "call the need API adapter" do
