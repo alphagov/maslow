@@ -103,6 +103,16 @@ class Need
     PaginatedList.new(need_objects, need_response)
   end
 
+  # Retrieve a list of needs matching an array of ids
+
+  # Note that this returns the entire set of matching ids and not a
+  # PaginatedList
+  def self.by_ids(*ids)
+    response = Maslow.need_api.needs_by_id(ids.flatten)
+
+    response.with_subsequent_pages.map { |need| self.new(need.marshal_dump.stringify_keys, true) }
+  end
+
   # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
   #
   # This works in roughly the same way as an ActiveRecord-style `find` method,
