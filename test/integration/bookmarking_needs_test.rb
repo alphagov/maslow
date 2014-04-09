@@ -58,7 +58,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
     need_api_has_organisations([])
-    need_api_has_need(need_1)
+    need_api_has_need_ids([need_1])
     need_api_has_needs([need_1, need_2])
   end
 

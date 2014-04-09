@@ -30,8 +30,7 @@ class BookmarksControllerTest < ActionController::TestCase
 
   setup do
     login_as_stub_user
-    need_api_has_needs([need])
-    need_api_has_need(need)
+    need_api_has_need_ids([need])
     need_api_has_organisations({})
   end
 
