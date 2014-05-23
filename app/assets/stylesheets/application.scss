@@ -13,14 +13,12 @@
  *= require chosen
  */
 
+@import "govuk_admin_template";
 @import "mixins";
-@import "bootstrap/variables";
-@import "theme";
-
-@import "bootstrap";
-@import "bootstrap-responsive";
+@import "maslow_theme";
 @import "scaffolds";
-@import "navbar";
+
+// Components
 @import "needs/need";
 @import "needs/form";
 @import "needs/revisions";
