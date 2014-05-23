@@ -55,16 +55,6 @@ form.search input[type="search"] {
   margin-right: 10px;
 }
 
-.btn-remove-criteria {
-  @extend .btn;
-  vertical-align: middle;
-  margin-left: 8px;
-
-  span {
-    text-indent: -9999px;
-  }
-}
-
 span.all-organisations {
   font-style: italic;
 }
