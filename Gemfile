@@ -34,12 +34,11 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-gem 'jquery-rails'
 gem 'chosen-rails'
 
+gem 'govuk_admin_template', '0.0.4'
 gem 'unicorn'
 gem 'exception_notification', '2.6.1'
-gem 'bootstrap-sass', '2.3.2.2'
 gem 'formtastic', '2.2.1'
 gem 'formtastic-bootstrap', '2.1.3'
 
