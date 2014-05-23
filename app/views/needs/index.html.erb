@@ -16,7 +16,7 @@
       ),
       prompt: "All organisations",
       class: "organisation-select" %>
-    <%= submit_tag "Filter", name: nil, class: "btn" %>
+    <%= submit_tag "Filter", name: nil, class: "btn btn-default" %>
   <% end %>
   <script>
     $('select').change(function () {
@@ -28,7 +28,7 @@
     <%= label_tag "q", "Search needs:" %>
     &nbsp;
     <%= search_field_tag("q", params["q"], class: "search-term") %>
-    <%= submit_tag "Search", name: nil, class: "btn" %>
+    <%= submit_tag "Search", name: nil, class: "btn btn-default" %>
   <% end %>
 </div>
 

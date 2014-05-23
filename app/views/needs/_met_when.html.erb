@@ -2,7 +2,7 @@
 <%= f.action  :submit,
               :button_html => {
                 :value => "Save",
-                :class => "btn btn-primary hide"
+                :class => "btn btn-default btn-primary hide"
               } %>
 
 <div class="string input optional stringish control-group">
@@ -23,7 +23,7 @@
 
       <% end %>
 
-      <%= f.submit "Enter another criteria", :name => "criteria_action", :class => "btn" %>
+      <%= f.submit "Enter another criteria", :name => "criteria_action", :class => "btn btn-default" %>
       <span class="help-block">How will you know when this need has been met?</span>
     </div>
   </div>
