@@ -28,15 +28,45 @@
 
   <%= f.inputs "Provide evidence for this need", :id => "evidence" do %>
     <p class="hint-text">This helps us understand how important this need is in context of all the needs GOV.UK meets.</p>
-    <%= f.input :legislation, :label => "What legislation underpins this need? <br/><span class='optional'>(optional)</span>".html_safe, :hint => "Please supply a URL, e.g. on legislation.gov.uk", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
-    <%= f.input :yearly_user_contacts, :label => "Roughly how many user contacts do you get about this need per year <br/><span class='optional'>(optional)</span>".html_safe, :hint => "Include calls to contact centres, emails, customer service tickets, etc.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_need_views, :label => "Pageviews specific to this need per year <br/><span class='optional'>(optional)</span>".html_safe, :hint => "Combine the pageviews for all relevant content.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_site_views, :label => "Pageviews for your website per year <br/><span class='optional'>(optional)</span>".html_safe, :hint => "This is for your whole website, not just this user need.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :yearly_searches, :label => "How many searches relevant to this need are carried out per year <br/><span class='optional'>(optional)</span>".html_safe, :hint => "Include external and internal searches.", :input_html => { :type => :text, :pattern =>"[0-9]*" } %>
-    <%= f.input :other_evidence, :label => "Do you have any other evidence to support this need? <br/><span class='optional'>(optional)</span>".html_safe, :hint => "E.g. user research, campaigns, user demand.", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+    <%= f.input :legislation,
+      :label => "What legislation underpins this need? <br/><span class='optional'>(optional)</span>".html_safe,
+      :hint => "Please supply a URL, e.g. on legislation.gov.uk",
+      :as => :text,
+      :input_html => { :class => 'long-form', :rows => 3 }
+    %>
+    <%= f.input :yearly_user_contacts,
+      :label => "Roughly how many user contacts do you get about this need per year <br/><span class='optional'>(optional)</span>".html_safe,
+      :hint => "Include calls to contact centres, emails, customer service tickets, etc.",
+      :input_html => { :type => :text, :class => 'number-text-input', :pattern =>"[0-9]*" }
+    %>
+    <%= f.input :yearly_need_views,
+      :label => "Pageviews specific to this need per year <br/><span class='optional'>(optional)</span>".html_safe,
+      :hint => "Combine the pageviews for all relevant content.",
+      :input_html => { :type => :text, :class => 'number-text-input', :pattern =>"[0-9]*" }
+    %>
+    <%= f.input :yearly_site_views,
+      :label => "Pageviews for your website per year <br/><span class='optional'>(optional)</span>".html_safe,
+      :hint => "This is for your whole website, not just this user need.",
+      :input_html => { :type => :text, :class => 'number-text-input', :pattern =>"[0-9]*" }
+    %>
+    <%= f.input :yearly_searches,
+      :label => "How many searches relevant to this need are carried out per year <br/><span class='optional'>(optional)</span>".html_safe,
+      :hint => "Include external and internal searches.",
+      :input_html => { :type => :text, :class => 'number-text-input', :pattern =>"[0-9]*" }
+    %>
+    <%= f.input :other_evidence,
+      :label => "Do you have any other evidence to support this need? <br/><span class='optional'>(optional)</span>".html_safe,
+      :hint => "E.g. user research, campaigns, user demand.",
+      :as => :text,
+      :input_html => { :class => 'long-form', :rows => 3 }
+    %>
   <% end %>
 
-  <%= f.input :impact, :label => "What is the impact of GOV.UK not doing this? <br/><span class='optional'>(optional)</span>".html_safe, :hint => "What is the impact of GOV.UK not doing this?", :as => :radio, :collection => Need::IMPACT %>
+  <%= f.input :impact,
+    :label => "What is the impact of GOV.UK not doing this? <br/><span class='optional'>(optional)</span>".html_safe, :hint => "What is the impact of GOV.UK not doing this?",
+    :as => :radio,
+    :collection => Need::IMPACT
+  %>
 
   <%= render layout: 'workflow_footer' do %>
     <%= f.action :submit,

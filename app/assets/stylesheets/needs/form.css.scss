@@ -1,41 +1,27 @@
 form.need {
-  @extend .form-horizontal;
-
-  input[type="text"], input[type="number"] {
-    @extend input.span2;
-  }
-
-  input.long-form, textarea.long-form {
-    /* Also works on textareas, but they take the same styling as .span8 inputs */
-    @extend input.span8;
-  }
-
-  .organisation-select {
-    @extend .span8;
-  }
-
-  .chosen-container + .help-block {
-    margin-top: 10px;
-  }
-
-  p.all-organisations {
-    @extend .span8;
-    @extend .controls;
-  }
-
-  .control-group {
-    margin-bottom: 20px;
-  }
-
-  .help-block {
-    color: #aaa;
-  }
-
   /* Avoid using "display: none" so that form still submits with this input */
   input[type="submit"].hide {
     visibility: hidden;
     display: inline;
     position: absolute;
+  }
+
+  .long-form {
+    @extend .col-md-8;
+    float: none;
+  }
+
+  .number-text-input {
+    @extend .col-md-2;
+    float: none;
+  }
+
+  .help-block {
+    @extend .text-muted;
+  }
+
+  .form-group {
+    margin-bottom: $default-vertical-margin;
   }
 }
 
@@ -102,18 +88,6 @@ form.button_to {
 
 .navbar-fixed-bottom {
   text-align: center;
-}
-
-form.need .control-label {
-  font-weight: bold;
-  text-align: left;
-  display: block;
-  float: none;
-  width: auto;
-}
-
-form.need .controls {
-  margin-left: 0px;
 }
 
 .optional {
