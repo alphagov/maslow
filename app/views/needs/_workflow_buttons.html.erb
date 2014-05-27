@@ -1,8 +1,10 @@
 <% if current_user.can?(:create, Need) || current_user.can?(:update, Need) %>
   <%= render layout: 'workflow_footer' do %>
-    <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
-    <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
-      <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
-    <% end %>
+    <div class="navbar-btn">
+      <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
+      <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
+        <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
+      <% end %>
+    </div>
   <% end %>
 <% end %>

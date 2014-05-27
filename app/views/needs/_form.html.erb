@@ -69,6 +69,7 @@
   %>
 
   <%= render layout: 'workflow_footer' do %>
+    <div class="navbar-btn">
     <%= f.action :submit,
                  :button_html => {
                    :value => "Save",
@@ -82,5 +83,6 @@
                    :class => "btn btn-primary"
                  }
                %>
+    </div>
   <% end %>
 <% end %>
