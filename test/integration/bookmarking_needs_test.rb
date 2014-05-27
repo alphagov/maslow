@@ -66,7 +66,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
     should "add needs to a bookmarks list" do
       visit "/needs"
       click_button "bookmark_10001"
-      click_link "My bookmarked needs"
+      click_link "Bookmarked needs"
 
       assert page.has_content?("10001")
       assert page.has_content?("Apply for a primary school place")
