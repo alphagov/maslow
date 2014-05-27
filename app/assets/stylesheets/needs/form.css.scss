@@ -25,29 +25,18 @@ form.need {
   }
 }
 
-form.filter, form.search {
-  label, input {
-    display: inline;
-    vertical-align: middle;
-  }
-
-  /* Make submit buttons the same width, so the forms line up nicely */
-  input[type="submit"] {
-    width: 5em;
-  }
-
+.form-filter-needs,
+.form-search-needs {
   text-align: right;
-  display: block;
-  float: right;
 }
 
-form.filter .chosen-container {
+.form-filter-needs .organisation-select,
+.form-search-needs .search-term {
+  width: 370px;
+}
+
+.form-filter-needs .chosen-container {
   text-align: left;
-}
-
-form.search input[type="search"] {
-  margin-bottom: 0;
-  margin-right: 10px;
 }
 
 span.all-organisations {
