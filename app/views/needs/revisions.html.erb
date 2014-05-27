@@ -14,13 +14,13 @@
     </p>
   <% end %>
 
-  <div class="row-fluid">
+  <div class="row">
     <% if current_user.can?(:create, Note) %>
-      <div id="notes" class="span6">
+      <div id="notes" class="add-top-margin col-md-6">
         <%= render partial: "needs/revisions/new_note_form", locals: { need: @need } %>
       </div>
     <% end %>
-    <div id="revision-history" class="span6 accordion">
+    <div id="revision-history" class="col-md-6 accordion">
       <%= render partial: "needs/revisions/recent_changes", locals: { need: @need } %>
     </div>
   </div>

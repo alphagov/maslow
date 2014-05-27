@@ -39,11 +39,6 @@ form.filter, form.search {
   text-align: right;
   display: block;
   float: right;
-  @extend .span8;
-}
-
-form.filter .organisation-select, form.search input[type="search"] {
-  @extend .span4;
 }
 
 form.filter .chosen-container {
