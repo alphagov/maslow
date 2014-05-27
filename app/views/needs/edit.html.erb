@@ -1,9 +1,7 @@
 <% content_for :page_title, "Edit" %>
 
 <article id="single-need">
-  <nav class="add-top-margin">
-    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Edit" } %>
-  </nav>
+  <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Edit" } %>
   <%= render :partial => "need_header" %>
 
   <h3>Edit need</h3>

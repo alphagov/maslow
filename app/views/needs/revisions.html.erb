@@ -1,10 +1,7 @@
 <% content_for :page_title, "History & Notes" %>
 
 <article class="need">
-  <nav class="add-top-margin">
-    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "History & Notes" } %>
-  </nav>
-
+  <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "History & Notes" } %>
   <%= render :partial => "need_header" %>
 
   <% if @need.duplicate? %>
