@@ -36,7 +36,7 @@ end
 
 gem 'chosen-rails'
 
-gem 'govuk_admin_template', '0.0.4'
+gem 'govuk_admin_template', '0.0.5'
 gem 'unicorn'
 gem 'exception_notification', '2.6.1'
 gem 'formtastic', '2.3.0.rc3'
