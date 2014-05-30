@@ -1,26 +1,23 @@
 <% content_for :page_title, "History & Notes" %>
 
 <article class="need">
-  <nav class="add-top-margin">
-    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "History & Notes" } %>
-  </nav>
-
+  <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "History & Notes" } %>
   <%= render :partial => "need_header" %>
 
   <% if @need.duplicate? %>
-    <p class="need-alert">This need is a duplicate of
+    <p class="need-alert add-top-margin">This need is a duplicate of
     <%= link_to @need.duplicate_of,
                 need_path(@need.duplicate_of) %>
     </p>
   <% end %>
 
-  <div class="row-fluid">
+  <div class="row">
     <% if current_user.can?(:create, Note) %>
-      <div id="notes" class="span6">
+      <div id="notes" class="add-top-margin col-md-6">
         <%= render partial: "needs/revisions/new_note_form", locals: { need: @need } %>
       </div>
     <% end %>
-    <div id="revision-history" class="span6 accordion">
+    <div id="revision-history" class="col-md-6 accordion">
       <%= render partial: "needs/revisions/recent_changes", locals: { need: @need } %>
     </div>
   </div>

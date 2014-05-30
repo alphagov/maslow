@@ -126,7 +126,6 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     end
 
     within ".pagination" do
-      assert page.has_content?("Page 1 of 3")
       assert page.has_selector?("li.active", text: "1")
 
       assert page.has_link?("2", href: "/needs?page=2")
@@ -146,7 +145,6 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     end
 
     within ".pagination" do
-      assert page.has_content?("Page 2 of 3")
       assert page.has_selector?("li.active", text: "2")
 
       assert page.has_link?("1", href: "/needs")
@@ -166,7 +164,6 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     end
 
     within ".pagination" do
-      assert page.has_content?("Page 3 of 3")
       assert page.has_selector?("li.active", text: "3")
 
       assert page.has_link?("1", href: "/needs")

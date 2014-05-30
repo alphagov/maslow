@@ -1,64 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title><%= yield :page_title %> | GOV.UK Maslow</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<%# blocks for govuk_admin_template %>
+<% content_for :head do %>
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
-</head>
-<body>
-<script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-
-  <header class="navbar navbar-inverse navbar-static-top" role="banner">
-    <div class="navbar-inner">
-      <div class="container">
-        <%= link_to 'GOV.UK Maslow', root_path, :class => "brand" %>
-        <i class="beta">Beta</i>
-        <nav role="navigation" class="nav-collapse">
-          <p class="navbar-text pull-right">
-            Hello, <%= link_to current_user.name, Plek.current.find('signon') %> <span class="sign-out"><%= link_to 'Sign out', gds_sign_out_path %></span>
-          </p>
-        </nav><!--/.nav-collapse -->
-      </div>
-    </div>
-  </header>
-
-  <div class="container">
-
-    <br/>
-    <%= link_to "My bookmarked needs", bookmarks_path %>
-
-    <main role="main">
-      <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
-        <div class="main-alert <%= k %>">
-          <%= flash[k] %>
-          <% if flash[:need_id] %>
-            <%= link_to "#{flash[:need_id]}: #{flash[:goal]}",
-                        need_path(flash[:need_id]) %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <%= yield %>
-
-    </main>
-
-    <footer>
-      <p>&copy; GDS.
-      <% if feedback_address %>
-        <a class="feedback" href="mailto:<%= feedback_address %>">Send feedback</a>
-      <% end %>
-      <span class="pull-right">Maslow release: <%= CURRENT_RELEASE_SHA %></span>
-      </p>
-    </footer>
-  </div><!-- /container -->
-
   <% if Rails.env.production? %>
-    <script type="text/javascript">
+    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -68,5 +15,35 @@
       ga('send', 'pageview');
     </script>
   <% end %>
-</body>
-</html>
+<% end %>
+
+<% #content_for concatenates successive calls %>
+<% content_for :page_title do %> | GOV.UK Maslow<% end %>
+<% content_for :navbar_items do %>
+  <li <% if current_page?(bookmarks_path) %> class="active" <% end %>>
+    <%= link_to "Bookmarked needs", bookmarks_path %>
+  </li>
+  <li <% if current_page?(bookmarklet_path) %> class="active" <% end %>>
+    <%= link_to 'Browser tools', bookmarklet_path %>
+  </li>
+<% end %>
+<% content_for :navbar_right do %>
+  Hello, <%= link_to current_user.name, Plek.current.find('signon') %>
+  &bull; <%= link_to 'Sign out', gds_sign_out_path %>
+<% end %>
+<% content_for :footer_version do %><%= CURRENT_RELEASE_SHA %><% end %>
+<% content_for :app_title do %>GOV.UK Maslow<% end %>
+<% content_for :content do %>
+  <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
+    <div class="main-alert <%= k %>">
+      <%= flash[k] %>
+      <% if flash[:need_id] %>
+        <%= link_to "#{flash[:need_id]}: #{flash[:goal]}",
+                    need_path(flash[:need_id]) %>
+      <% end %>
+    </div>
+  <% end %>
+  <%= yield %>
+<% end %>
+<%# use the govuk_admin_foundation layout %>
+<%= render :template => 'layouts/govuk_admin_template' %>

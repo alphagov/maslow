@@ -2,30 +2,36 @@
 <%= f.action  :submit,
               :button_html => {
                 :value => "Save",
-                :class => "btn btn-primary hide"
+                :class => "btn btn-default btn-primary hide"
               } %>
 
-<div class="string input optional stringish control-group">
+<div class="string input optional stringish form-group">
   <label class="control-label" for="met-when-criteria">Need is likely to be met when the user:<br/><span class="optional">(optional)</span></label>
-  <div class="controls">
-    <div id="met-when-criteria">
-
-      <% met_when_criteria.each_with_index do |c, i| %>
-
-        <div class="add-bottom-margin">
-          <%= text_field_tag("need[met_when][]", c, :id => "criteria-#{i}", :class => "long-form") %>
+  <div id="met-when-criteria">
+    <% met_when_criteria.each_with_index do |c, i| %>
+      <div class="row">
+        <div class="add-bottom-margin col-md-8">
           <% if met_when_criteria.length > 1 %>
-            <%= button_tag(:name => "delete_criteria", :id => "delete-criteria", :class => "btn-remove-criteria", :value => i) do %>
-              <span class="icon-remove" title="Remove criteria">Remove criteria</span>
-            <% end %>
+            <div class="input-group">
+              <%= text_field_tag("need[met_when][]", c, :id => "criteria-#{i}", :class => "form-control") %>
+              <span class="input-group-btn">
+                <%= button_tag(
+                      :name => "delete_criteria",
+                      :id => "delete-criteria",
+                      :class => "btn btn-default",
+                      :value => i) do %>
+                  <span class="glyphicon glyphicon-remove" title="Remove criteria"></span>
+                <% end %>
+              </span>
+            </div>
+          <% else %>
+            <%= text_field_tag("need[met_when][]", c, :id => "criteria-#{i}", :class => "form-control") %>
           <% end %>
         </div>
-
-      <% end %>
-
-      <%= f.submit "Enter another criteria", :name => "criteria_action", :class => "btn" %>
-      <span class="help-block">How will you know when this need has been met?</span>
-    </div>
+      </div>
+    <% end %>
+    <%= f.submit "Enter another criteria", :name => "criteria_action", :class => "btn btn-default add-label-margin" %>
+    <p class="text-muted">How will you know when this need has been met?</p>
   </div>
 </div>
 <% if params[:delete_criteria].present? || params[:criteria_action].present? %>

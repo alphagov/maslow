@@ -47,6 +47,7 @@
 .the-need {
   font-size: 28px;
   line-height: 1.31579;
+  margin: $default-vertical-margin 0;
 }
 
 .big-number {
@@ -54,7 +55,7 @@
   font-weight: bold;
   line-height: 90px;
   color: $hm-government;
-  margin-bottom: $baseLineHeight;
+  margin-bottom: $default-vertical-margin;
 }
 
 .big-number-detail {
@@ -72,7 +73,7 @@ p.all-organisations {
 
 .need-alert {
   @extend .alert;
-  @extend .alert-block;
+  @extend .alert-warning;
 
   padding: 24px;
   font-size: 24px;
@@ -81,25 +82,9 @@ p.all-organisations {
 
 .main-alert {
   @extend .alert;
+  @extend .alert-warning;
 
   font-size: 20px;
   padding-top: 15px;
   padding-bottom: 15px;
-}
-
-.bookmark-button {
-  span {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    line-height: 14px;
-    vertical-align: text-top;
-    background-image: image-url('/assets/glyphicons-halflings.png');
-    background-repeat: no-repeat;
-    margin-top: 1px;
-    @extend .icon-star-empty;
-  }
-  .bookmarked {
-    @extend .icon-star;
-  }
 }

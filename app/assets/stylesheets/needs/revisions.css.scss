@@ -1,5 +1,6 @@
 .revisions {
-  margin: $baseLineHeight 0;
+  margin: $default-vertical-margin 0;
+  padding: 0;
 }
 
 .revision {
@@ -9,7 +10,7 @@
 
 .revision-title {
   font-size: 16px;
-  line-height: $baseLineHeight;
+  line-height: $default-vertical-margin;
   margin: 0 0 5px;
 }
 

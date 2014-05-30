@@ -2,9 +2,7 @@
 
 <article class="need">
 
-  <nav class="add-top-margin">
-    <%= render partial: "needs/breadcrumb", locals: { need: @need } %>
-  </nav>
+  <%= render partial: "needs/breadcrumb", locals: { need: @need } %>
 
   <%= render partial: "need_header" %>
 
@@ -29,7 +27,7 @@
   <% end %>
 
   <div class="need-wrapper row">
-    <div class="span8">
+    <div class="col-md-8">
       <% if @need.met_when.any? %>
         <h3>Need is met when</h3>
         <ul class="met-when">
@@ -112,7 +110,7 @@
     </div>
 
     <% if show_interactions_column?(@need) %>
-      <div class="interactions span4">
+      <div class="interactions col-md-4">
         <h3>Historical Interactions</h3>
 
         <% if @need.yearly_need_views.present? %>

@@ -66,7 +66,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
     should "add needs to a bookmarks list" do
       visit "/needs"
       click_button "bookmark_10001"
-      click_link "My bookmarked needs"
+      click_link "Bookmarked needs"
 
       assert page.has_content?("10001")
       assert page.has_content?("Apply for a primary school place")
@@ -75,10 +75,10 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
 
     should "show bookmarked needs with a star icon" do
       visit "/needs"
-      assert page.has_no_css?("#bookmark_10001 .bookmarked")
+      assert page.has_no_css?("#bookmark_10001 .glyphicon-star")
 
       click_button "bookmark_10001"
-      assert page.has_css?("#bookmark_10001 .bookmarked")
+      assert page.has_css?("#bookmark_10001 .glyphicon-star")
     end
   end
 end

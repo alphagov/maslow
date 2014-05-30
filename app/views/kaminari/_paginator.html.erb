@@ -7,11 +7,11 @@
     paginator:     the paginator that renders the pagination tags inside
 -%>
 <%= paginator.render do -%>
-  <nav class="pagination">
-    <p class="location">
+  <nav>
+    <div>
       Page <%= current_page %> of <%= total_pages %>
-    </p>
-    <ul>
+    </div>
+    <ul class="pagination">
       <%= first_page_tag unless current_page.first? %>
       <%= prev_page_tag unless current_page.first? %>
       <% each_page do |page| -%>

@@ -153,11 +153,11 @@ class NeedHelperTest < ActiveSupport::TestCase
 
   context "bookmark_icon" do
     should "not return bookmarked if need is not in bookmarks" do
-      assert_nil bookmark_icon([10002],10001)
+      assert_equal "glyphicon-star-empty", bookmark_icon([10002],10001)
     end
 
     should "return bookmarked if need is in bookmarks" do
-      assert_equal "bookmarked", bookmark_icon([10001],10001)
+      assert_equal "glyphicon-star", bookmark_icon([10001],10001)
     end
   end
 end

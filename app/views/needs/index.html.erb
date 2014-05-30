@@ -1,10 +1,7 @@
 <% content_for :page_title, "All needs" %>
-
-<div><%= link_to 'Maslow browser tools', bookmarklet_path, :class => "bookmarklet" %></div>
-<h1 class="page-header">All needs</h1>
-
+<h1 class="page-title-with-border">All needs</h1>
 <div>
-  <%= form_tag("/needs", method: "get", class: "filter") do %>
+  <%= form_tag("/needs", method: "get", class: "form-filter-needs form-inline") do %>
     <%= label_tag "organisation_id", "Filter needs by organisation:" %>
     &nbsp;
     <%= select_tag "organisation_id",
@@ -16,19 +13,18 @@
       ),
       prompt: "All organisations",
       class: "organisation-select" %>
-    <%= submit_tag "Filter", name: nil, class: "btn" %>
+    <%= submit_tag "Filter", name: nil, class: "btn btn-default if-js-hide" %>
   <% end %>
   <script>
     $('select').change(function () {
       $(this.form).submit();
     });
-    $('.filter .btn').hide();
   </script>
-  <%= form_tag("/needs", method: "get", class: "search") do %>
+  <%= form_tag("/needs", method: "get", class: "form-search-needs form-inline add-vertical-margins") do %>
     <%= label_tag "q", "Search needs:" %>
     &nbsp;
-    <%= search_field_tag("q", params["q"], class: "search-term") %>
-    <%= submit_tag "Search", name: nil, class: "btn" %>
+    <%= search_field_tag("q", params["q"], class: "search-term form-control") %>
+    <%= submit_tag "Search", name: nil, class: "btn btn-default add-left-margin" %>
   <% end %>
 </div>
 
