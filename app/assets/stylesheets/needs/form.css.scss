@@ -1,19 +1,17 @@
+.form-md-8 {
+  max-width: 760px;
+}
+
+.form-md-2 {
+  max-width: 190px;
+}
+
 form.need {
   /* Avoid using "display: none" so that form still submits with this input */
   input[type="submit"].hide {
     visibility: hidden;
     display: inline;
     position: absolute;
-  }
-
-  .long-form {
-    @extend .col-md-8;
-    float: none;
-  }
-
-  .number-text-input {
-    @extend .col-md-2;
-    float: none;
   }
 
   .help-block {

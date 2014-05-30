@@ -46,7 +46,7 @@
         <div class="modal-body">
           <%= semantic_form_for @need, { url: descope_need_path(@need) } do |f| %>
               <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-              <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :class => 'long-form', :rows => 3 } %>
+              <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :rows => 3 } %>
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
