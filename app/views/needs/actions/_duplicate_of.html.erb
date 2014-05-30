@@ -35,31 +35,35 @@
 </script>
 
 <% unless @need.duplicate? %>
-  <div id="close-as-duplicate-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="close-as-duplicate-label" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="close-as-duplicate-label">Close as a duplicate</h3>
-    </div>
+  <div id="close-as-duplicate-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="close-as-duplicate-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="close-as-duplicate-label" class="modal-title">Close as a duplicate</h3>
+        </div>
 
-    <%= semantic_form_for @need, { url: closed_need_path(@need), html: { class: "remove-bottom-margin" } } do |f| %>
-      <div class="modal-body">
-        <%= f.input :duplicate_of,
-                    :label => "This need is a duplicate of",
-                    :hint => "ID of the need that this duplicates",
-                    :input_html => { :type => :text,
-                      :pattern => "[0-9]*"
-                    }
-                  %>
+        <%= semantic_form_for @need, { url: closed_need_path(@need), html: { class: "remove-bottom-margin" } } do |f| %>
+          <div class="modal-body">
+            <%= f.input :duplicate_of,
+                        :label => "This need is a duplicate of",
+                        :hint => "ID of the need that this duplicates",
+                        :input_html => { :type => :text,
+                          :pattern => "[0-9]*"
+                        }
+                      %>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <%= f.action :submit,
+                         :button_html => {
+                           :value => "Close as a duplicate",
+                           :class => "btn btn-danger"
+                         }
+                       %>
+          </div>
+        <% end %>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <%= f.action :submit,
-                     :button_html => {
-                       :value => "Close as a duplicate",
-                       :class => "btn btn-danger"
-                     }
-                   %>
-      </div>
-    <% end %>
+    </div>
   </div>
 <% end %>
