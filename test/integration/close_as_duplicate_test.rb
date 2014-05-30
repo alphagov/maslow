@@ -93,6 +93,24 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
   end
 
+  should "show an error message if no duplicate need ID is entered" do
+    need_api_has_need(@duplicate) # For individual need
+    request = stub_request(:put, @api_url+'/closed').to_return(status: 422)
+
+    visit "/needs"
+    click_on "100002"
+    click_on "Actions"
+    within "#actions #duplicate" do
+      click_on "Close as a duplicate"
+    end
+
+    fill_in("This need is a duplicate of", with: "")
+    click_on "Close as a duplicate"
+
+    assert page.has_content?("There was a problem closing the need as a duplicate")
+    assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
+  end
+
   should "not be able to edit a closed need" do
     login_as_stub_editor
 

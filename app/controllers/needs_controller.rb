@@ -117,7 +117,7 @@ class NeedsController < ApplicationController
   def closed
     authorize! :close, Need
     @need = load_need
-    @need.duplicate_of = Integer(params["need"]["duplicate_of"])
+    @need.duplicate_of = params["need"]["duplicate_of"].to_i
 
     if @need.valid?
       if @need.close_as(current_user)
