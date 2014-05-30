@@ -9,7 +9,9 @@
         This need applies to all organisations.
       </p>
     <% else %>
-      <%= f.input :organisation_ids,
+      <div class="row">
+        <div class="col-md-8">
+          <%= f.input :organisation_ids,
                     :as => :select,
                     :collection => Organisation.all,
                     :member_label => "name_with_abbreviation_and_status",
@@ -19,6 +21,8 @@
                       :multiple => true,
                       :class => "organisation-select"
                     } %>
+        </div>
+      </div>
     <% end %>
   <% end %>
 

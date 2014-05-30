@@ -9,12 +9,12 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require formtastic-bootstrap
- *= require chosen
  */
 
 @import "govuk_admin_template";
+@import "formtastic-bootstrap";
 @import "govuk_admin_template_overrides";
+@import "chosen";
 @import "mixins";
 @import "maslow_theme";
 @import "scaffolds";

@@ -1,10 +1,36 @@
+/* ==========================================================================
+   Form helpers
+   ========================================================================== */
+
+// Matches the width of an input placed within a col-md-8 grid
 .form-md-8 {
-  max-width: 760px;
+  max-width: 750px;
 }
 
 .form-md-2 {
-  max-width: 190px;
+  max-width: 180px;
 }
+
+/* ==========================================================================
+   Chosen multi-select overrides to conform with Bootstrap 3
+   ========================================================================== */
+
+.chosen-container-multi .chosen-choices {
+  border-color: $input-border;
+  border-radius: $border-radius-base;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  background: none;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+  height: auto;
+}
+
+/* ==========================================================================
+   Need form
+   ========================================================================== */
 
 form.need {
   /* Avoid using "display: none" so that form still submits with this input */
@@ -23,6 +49,10 @@ form.need {
   }
 }
 
+/* ==========================================================================
+   Need filter and search form
+   ========================================================================== */
+
 .form-filter-needs,
 .form-search-needs {
   text-align: right;
@@ -36,6 +66,10 @@ form.need {
 .form-filter-needs .chosen-container {
   text-align: left;
 }
+
+/* ==========================================================================
+   Miscellaneous forms
+   ========================================================================== */
 
 span.all-organisations {
   font-style: italic;
