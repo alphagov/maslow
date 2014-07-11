@@ -102,6 +102,12 @@ GEM
     hashie (2.0.5)
     hike (1.2.3)
     i18n (0.6.9)
+    jasmine (2.0.2)
+      jasmine-core (~> 2.0.0)
+      phantomjs
+      rack (>= 1.2.1)
+      rake
+    jasmine-core (2.0.0)
     journey (1.0.4)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
@@ -156,6 +162,7 @@ GEM
       oauth2 (~> 0.9.3)
       omniauth (~> 1.2)
     origin (1.1.0)
+    phantomjs (1.9.7.0)
     plek (1.4.0)
     polyglot (0.3.4)
     rack (1.4.5)
@@ -245,6 +252,7 @@ DEPENDENCIES
   gds-api-adapters (= 10.6.3)
   gds-sso (= 9.2.2)
   govuk_admin_template (= 1.0.1)
+  jasmine (= 2.0.2)
   kaminari (= 0.14.1)
   logstasher (= 0.4.8)
   mocha (= 0.14.0)

@@ -27,6 +27,10 @@ group :test do
   gem 'webmock', '1.14.0'
 end
 
+group :development, :test do
+  gem 'jasmine', '2.0.2'
+end
+
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
