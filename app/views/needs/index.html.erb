@@ -12,6 +12,7 @@
         params[:organisation_id]
       ),
       prompt: "All organisations",
+      'data-module' => 'chosen',
       class: "organisation-select" %>
     <%= submit_tag "Filter", name: nil, class: "btn btn-default if-js-hide" %>
   <% end %>
