@@ -4,7 +4,6 @@ gem 'rails', '3.2.17'
 
 gem 'mongoid', '3.0.23'
 gem 'plek', '1.4.0'
-gem 'aws-ses', :require => 'aws/ses'
 
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
@@ -14,6 +13,7 @@ end
 
 gem 'kaminari', '0.14.1'
 gem 'logstasher', '0.4.8'
+gem 'airbrake', '~> 4.0.0'
 gem 'cancan', '1.6.10'
 
 group :test do
@@ -38,7 +38,6 @@ gem 'chosen-rails'
 
 gem 'govuk_admin_template', '1.0.1'
 gem 'unicorn'
-gem 'exception_notification', '2.6.1'
 gem 'formtastic', '2.3.0.rc3'
 gem 'formtastic-bootstrap', '3.0.0'
 
