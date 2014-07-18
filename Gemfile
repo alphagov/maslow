@@ -8,7 +8,7 @@ gem 'plek', '1.4.0'
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '9.2.2'
+  gem 'gds-sso', '9.3.0'
 end
 
 gem 'kaminari', '0.14.1'
