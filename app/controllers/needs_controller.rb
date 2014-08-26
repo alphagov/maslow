@@ -22,7 +22,7 @@ class NeedsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        send_data NeedsCsvPresenter.new(needs_url, @needs.map{|n| Need.find(n.id)}).to_csv,
+        send_data NeedsCsvPresenter.new(needs_url, @needs).to_csv,
                   filename: "#{params["organisation_id"]}.csv",
                   type: "text/csv; charset=utf-8"
       end
