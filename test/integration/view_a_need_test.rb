@@ -57,7 +57,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".impact" do
-          assert page.has_content?("If GOV.UK didn't meet this need it would be noticed by the average member of the public")
+          assert page.has_content?("If GOV.UK didn't meet this need it would be noticed by the general public")
         end
 
         assert page.has_no_content?("This need applies to all organisations.")
