@@ -1,7 +1,7 @@
 <% revision.notes.each do |n| %>
   <li class="revision">
     <h3 class="revision-title">
-      <%= Time.parse(n.created_at).strftime("%-d %B %Y, %H:%M") %> &mdash;
+      <%= Time.parse(n.created_at).to_s(:govuk_date) %> &mdash;
       Note by <%= n.author.name %>
       <% if n.author.email.present? %>
         &lt;<%= n.author.email %>&gt;
@@ -13,7 +13,7 @@
 
 <li class="revision">
   <h3 class="revision-title">
-    <%= Time.parse(revision.created_at).strftime("%-d %B %Y, %H:%M") %> &mdash;
+    <%= Time.parse(revision.created_at).to_s(:govuk_date) %> &mdash;
     <%= revision.action_type.capitalize %> by
     <% if revision.author.present? -%>
       <%= revision.author.name %>
