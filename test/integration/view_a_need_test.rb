@@ -113,13 +113,13 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
           within ".revision:nth-child(1)" do
             assert page.has_content?("Note by Donald Duck")
-            assert page.has_content?("1:00pm, 2 May 2013")
+            assert page.has_content?("2:00pm, 2 May 2013")
             assert page.has_content?("hello")
           end
 
           within ".revision:nth-child(2)" do
             assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
-            assert page.has_content?("1:00pm, 1 May 2013")
+            assert page.has_content?("2:00pm, 1 May 2013")
 
             within ".changes" do
               assert_equal 2, page.all("li").count
@@ -131,14 +131,14 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
           within ".revision:nth-child(3)" do
             assert page.has_content?("Note by Minnie Mouse")
-            assert page.has_content?("1:00pm, 3 April 2013")
+            assert page.has_content?("2:00pm, 3 April 2013")
             assert page.has_content?("goodbye")
           end
 
           within ".revision:nth-child(4)" do
             assert page.has_content?("Update by unknown author")
             assert page.has_no_content?("<>") # catch missing email
-            assert page.has_content?("1:00pm, 1 April 2013")
+            assert page.has_content?("2:00pm, 1 April 2013")
           end
 
           within ".revision:nth-child(5)" do
