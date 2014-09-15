@@ -29,7 +29,7 @@
   <div class="need-wrapper row">
     <div class="col-md-8">
       <% if @need.met_when.any? %>
-        <h3>Need is met when the user</h3>
+        <h3>Need is met when</h3>
         <ul class="met-when">
           <% @need.met_when.each do |criterion| %>
             <li><%= criterion %></li>
