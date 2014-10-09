@@ -15,6 +15,7 @@ gem 'kaminari', '0.14.1'
 gem 'logstasher', '0.4.8'
 gem 'airbrake', '~> 4.0.0'
 gem 'cancan', '1.6.10'
+gem 'lrucache', '0.1.4'
 
 group :test do
   gem 'capybara', '2.1.0'
@@ -25,6 +26,7 @@ group :test do
   gem 'simplecov-rcov'
   gem 'mocha', '0.14.0', require: false
   gem 'webmock', '1.14.0'
+  gem 'timecop', '0.7.1'
 end
 
 group :development, :test do

@@ -21,13 +21,11 @@ DatabaseCleaner.clean
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
 
-  setup do
-    Organisation.organisations = nil
-  end
-
   teardown do
     DatabaseCleaner.clean
     WebMock.reset!
+    Organisation.reset_cache
+    Timecop.return
   end
 
   def stub_user
