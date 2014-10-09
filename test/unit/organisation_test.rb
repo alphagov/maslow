@@ -30,10 +30,19 @@ class OrganisationTest < ActiveSupport::TestCase
                    organisations.map(&:abbreviation))
     end
 
-    should "only load the organisation results once" do
+    should "cache the organisation results" do
       GdsApi::NeedApi.any_instance.expects(:organisations).once
 
       5.times do
+        Organisation.all
+      end
+    end
+
+    should "cache the organisation results, but only for an hour" do
+      GdsApi::NeedApi.any_instance.expects(:organisations).twice
+      Organisation.all
+
+      Timecop.travel(Time.now + 61.minutes) do
         Organisation.all
       end
     end
