@@ -38,28 +38,26 @@
 <% unless @need.out_of_scope? %>
   <div id="out-of-scope-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <%= semantic_form_for @need, { url: descope_need_path(@need), html: { class: "modal-content" } } do |f| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h3 id="modal-out-of-scope-label" class="modal-title">Mark as out of scope</h3>
         </div>
         <div class="modal-body">
-          <%= semantic_form_for @need, { url: descope_need_path(@need) } do |f| %>
-              <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-              <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :rows => 3 } %>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              <%= f.action :submit,
-                           :method => :put,
-                           :button_html => {
-                             :value => "Mark as out of scope",
-                             :class => "btn btn-danger"
-                           }
-                       %>
-          <% end %>
+          <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
+          <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :rows => 3 } %>
         </div>
-      </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          <%= f.action :submit,
+                       :method => :put,
+                       :button_html => {
+                         :value => "Mark as out of scope",
+                         :class => "btn btn-danger"
+                       }
+                     %>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>
