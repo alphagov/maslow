@@ -155,7 +155,7 @@ class NeedsController < ApplicationController
   def out_of_scope
     authorize! :descope, Need
     @need = load_need
-    unless @need.in_scope.nil?
+    unless @need.in_scope?
       flash[:error] = "This need has already been marked as out of scope"
       redirect_to need_path(@need)
       return
@@ -166,7 +166,7 @@ class NeedsController < ApplicationController
     authorize! :descope, Need
     @need = load_need
 
-    unless @need.in_scope.nil?
+    unless @need.in_scope?
       flash[:error] = "This need has already been marked as out of scope"
       redirect_to need_path(@need)
       return

@@ -241,6 +241,10 @@ class Need
     @existing
   end
 
+  def in_scope?
+    in_scope.nil?
+  end
+
   def out_of_scope?
     in_scope == false
   end
