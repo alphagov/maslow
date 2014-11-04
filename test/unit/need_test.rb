@@ -32,6 +32,7 @@ class NeedTest < ActiveSupport::TestCase
           "in_scope" => nil,
           "duplicate_of" => nil,
           "out_of_scope_reason" => nil,
+          "status" => nil,
           "author" => {
             "name" => "O'Brien",
             "email" => "obrien@alphagov.co.uk",
@@ -90,7 +91,7 @@ class NeedTest < ActiveSupport::TestCase
           json = Need.new(@atts).as_json
 
           # include protected fields in the list of keys to expect
-          expected_keys = (@atts.keys + ["in_scope", "duplicate_of", "out_of_scope_reason"]).sort
+          expected_keys = (@atts.keys + ["in_scope", "duplicate_of", "out_of_scope_reason", "status"]).sort
 
           assert_equal expected_keys, json.keys.sort
           assert_equal "user", json["role"]
@@ -574,6 +575,7 @@ class NeedTest < ActiveSupport::TestCase
         "duplicate_of" => nil,
         "in_scope" => nil,
         "out_of_scope_reason" => nil,
+        "status" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }

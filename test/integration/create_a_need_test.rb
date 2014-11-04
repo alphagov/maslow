@@ -69,6 +69,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "in_scope" => nil,
           "duplicate_of" => nil,
           "out_of_scope_reason" => nil,
+          "status" => nil,
           "author" => {
             "name" => stub_user.name,
             "email" => stub_user.email,
