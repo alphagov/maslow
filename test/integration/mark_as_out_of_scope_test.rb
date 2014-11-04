@@ -47,6 +47,10 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         "met_when" => ["win","awesome","more"],
         "in_scope" => false,
         "out_of_scope_reason" => "Whitespace is not acceptable",
+        "status" => {
+          "description" => "out of scope",
+          "reason" => "Whitespace is not acceptable",
+        },
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,

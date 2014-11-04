@@ -180,6 +180,7 @@ class NeedsController < ApplicationController
 
     @need.in_scope = false
     @need.out_of_scope_reason = params["need"]["out_of_scope_reason"]
+    @need.status = { description: "out of scope", reason: params["need"]["out_of_scope_reason"] }
 
     if @need.save_as(current_user)
       flash[:need_id] = @need.need_id
