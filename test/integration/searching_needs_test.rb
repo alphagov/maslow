@@ -1,7 +1,7 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
 
-class FilteringNeedsTest < ActionDispatch::IntegrationTest
+class SearchingNeedsTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::NeedApi
 
   setup do
