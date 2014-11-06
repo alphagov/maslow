@@ -22,7 +22,7 @@
     <div class="need-alert">
       <strong>This need is not in scope for GOV.UK</strong>
       <br/>
-      <%= @need.out_of_scope_reason %>
+      <%= @need.status["reason"] %>
     </div>
   <% end %>
 

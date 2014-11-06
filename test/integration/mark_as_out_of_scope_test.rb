@@ -28,7 +28,9 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
   context "marking a need as out of scope" do
     setup do
       @need = need_hash.merge(
-        "in_scope" => nil
+        "status" => {
+          "description" => "proposed",
+        },
       )
       need_api_has_needs([@need]) # For need list
       content_api_has_artefacts_for_need_id("100001", [])
@@ -45,7 +47,6 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         "benefit" => "my child can start school",
         "legislation" => "Blank Fields Act 2013",
         "met_when" => ["win","awesome","more"],
-        "in_scope" => false,
         "out_of_scope_reason" => "Whitespace is not acceptable",
         "status" => {
           "description" => "out of scope",
@@ -119,7 +120,10 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
   context "Need is already out of scope" do
     setup do
       @need = need_hash.merge(
-        "in_scope" => false
+        "status" => {
+          "description" => "out of scope",
+          "reason" => "some reason",
+        }
       )
       need_api_has_needs([@need]) # For need list
       content_api_has_artefacts_for_need_id("100001", [])

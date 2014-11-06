@@ -66,7 +66,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "yearly_site_views" => 1000000,
           "yearly_need_views" => 1000,
           "yearly_searches" => 2000,
-          "in_scope" => nil,
           "duplicate_of" => nil,
           "out_of_scope_reason" => nil,
           "status" => nil,
@@ -74,7 +73,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             "name" => stub_user.name,
             "email" => stub_user.email,
             "uid" => stub_user.uid
-          }
+          },
+          "status" => nil,
         }.to_json
       ).to_return(
         :body =>
@@ -89,7 +89,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             "id" => "100001",
             "role" => "User",
             "goal" => "find my local register office",
-            "benefit" => "I can find records of birth, marriage or death"
+            "benefit" => "I can find records of birth, marriage or death",
+            "status" => {
+              "description" => "proposed",
+            }
           }.to_json
       )
 
@@ -188,7 +191,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "name" => stub_user.name,
           "email" => stub_user.email,
           "uid" => stub_user.uid
-        }
+        },
+        "status" => nil,
       ).to_json
 
       stub_request(:post, Plek.current.find('need-api')+'/needs')
@@ -219,7 +223,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             "name" => stub_user.name,
             "email" => stub_user.email,
             "uid" => stub_user.uid
-          }
+          },
+          "status" => nil,
         }).to_json
       ).to_return(
         :body =>

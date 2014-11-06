@@ -26,7 +26,7 @@ class ActionDispatch::IntegrationTest
     entire_need = JSON.parse(json)
     need_api_has_need(entire_need)
 
-    basic_need = entire_need.slice("id", "role", "goal", "benefit", "organisation_ids", "organisations")
+    basic_need = entire_need.slice("id", "role", "goal", "benefit", "organisation_ids", "organisations", "status")
     need_api_has_needs([basic_need])
 
     content_api_has_artefacts_for_need_id(basic_need["id"], artefacts)

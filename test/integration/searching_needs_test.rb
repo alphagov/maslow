@@ -23,6 +23,9 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "Department for Education",
             }
           ],
+          "status" => {
+            "description" => "proposed",
+          },
         },
         {
           "id" => "10002",
@@ -38,6 +41,9 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "HM Passport Office",
             }
           ],
+          "status" => {
+            "description" => "proposed",
+          },
         }
       ])
 
@@ -56,6 +62,9 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "HM Passport Office",
             }
           ],
+          "status" => {
+            "description" => "proposed",
+          },
         }
       ])
 

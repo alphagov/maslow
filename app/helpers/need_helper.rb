@@ -86,7 +86,7 @@ module NeedHelper
 
   def format_decision_made(need)
     decision = []
-    decision << "Out of scope" if need.in_scope == false
+    decision << need.status["description"].capitalize
     decision << "Duplicate" if need.duplicate?
     decision.join(", ")
   end

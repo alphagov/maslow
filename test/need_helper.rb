@@ -5,6 +5,9 @@ module NeedHelper
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
+      "status" => {
+        "description" => "proposed"
+      }
     }.merge(options)
   end
 
@@ -31,6 +34,9 @@ module NeedHelper
         "The user applies for a school place"
       ],
       "duplicate_of" => nil,
+      "status" => {
+        "description" => "proposed"
+      }
     }.merge(options)
   end
 end

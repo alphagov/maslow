@@ -12,7 +12,10 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
       "revisions" => [],
-      "applies_to_all_organisations" => false
+      "applies_to_all_organisations" => false,
+      "status" => {
+        "description" => "proposed"
+      }
     }
   end
 
