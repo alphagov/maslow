@@ -28,7 +28,7 @@ class NoteTest < ActiveSupport::TestCase
 
   should "have errors set if the note couldn't be saved" do
     GdsApi::NeedApi.any_instance.expects(:create_note).raises(
-      GdsApi::HTTPErrorResponse.new(422, {"errors" => ["error"]})
+      GdsApi::HTTPErrorResponse.new(422, "invalid note", {"errors" => ["error"]})
     )
 
     note = Note.new("", "100001", @author)

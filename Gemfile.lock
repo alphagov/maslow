@@ -80,11 +80,12 @@ GEM
     formtastic-bootstrap (3.0.0)
       formtastic (>= 2.2)
     fssm (0.2.10)
-    gds-api-adapters (10.6.3)
+    gds-api-adapters (16.1.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
       plek
+      rack-cache
       rest-client (~> 1.6.3)
     gds-sso (9.3.0)
       multi_json (~> 1.0)
@@ -193,8 +194,9 @@ GEM
     rake (10.3.2)
     rdoc (3.12.2)
       json (~> 1.4)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
+    rest-client (1.6.8)
+      mime-types (~> 1.16)
+      rdoc (>= 2.4.2)
     safe_yaml (0.9.7)
     sass (3.2.12)
     sass-rails (3.2.6)
@@ -250,7 +252,7 @@ DEPENDENCIES
   factory_girl_rails (= 4.2.1)
   formtastic (= 2.3.0)
   formtastic-bootstrap (= 3.0.0)
-  gds-api-adapters (= 10.6.3)
+  gds-api-adapters (= 16.1.0)
   gds-sso (= 9.3.0)
   govuk_admin_template (= 1.1.2)
   jasmine (= 2.0.3)
