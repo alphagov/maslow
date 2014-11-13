@@ -1,4 +1,13 @@
 module NeedHelper
+  def minimal_example_need(options = {})
+    {
+      "id" => "10001",
+      "role" => "parent",
+      "goal" => "apply for a primary school place",
+      "benefit" => "my child can start school",
+    }.merge(options)
+  end
+
   def example_need(options = {})
     {
       "id" => "10001",
@@ -20,7 +29,8 @@ module NeedHelper
       "impact" => "Has serious consequences for the day-to-day lives of your users",
       "met_when" => [
         "The user applies for a school place"
-      ]
+      ],
+      "duplicate_of" => nil,
     }.merge(options)
   end
 end
