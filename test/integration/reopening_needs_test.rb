@@ -2,14 +2,11 @@ require_relative '../integration_test_helper'
 
 class ReopeningNeedsTest < ActionDispatch::IntegrationTest
   def need_hash
-    {
+    minimal_example_need(
       "id" => "100002",
-      "role" => "parent",
       "goal" => "apply for a primary school place",
-      "benefit" => "my child can start school",
-      "organisations" => [],
       "duplicate_of" => "100001"
-    }
+    )
   end
 
   setup do

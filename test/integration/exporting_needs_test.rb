@@ -46,13 +46,13 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
                                         }
         )
         @needs = [
-          {
+          minimal_example_need(
             "id" => "100001",
             "role" => "Foo",
             "goal" => "Bar",
             "benefit" => "Baz",
             "organisations" => []
-          }
+          )
         ]
         need_api_has_needs(@needs)
         need_api_has_needs_for_organisation("department-for-education", @needs)
@@ -78,21 +78,21 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
                                         }
         )
         @needs = [
-          {
+          minimal_example_need(
             "id" => "100001",
             "role" => "Foo",
             "goal" => "Bar",
             "benefit" => "Baz",
             "organisations" => []
-          },
-          {
+          ),
+          minimal_example_need(
             "id" => "100002",
             "role" => "Foo",
             "goal" => "Bar",
             "benefit" => "Baz",
             "organisations" => [],
             "met_when" => ["a","b"]
-          }
+          )
         ]
         need_api_has_needs(@needs)
         need_api_has_needs_for_organisation("department-for-education", @needs)

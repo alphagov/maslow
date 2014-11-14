@@ -10,11 +10,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   context "viewing the list of needs" do
     setup do
       need_api_has_needs([
-        {
+        example_need(
           "id" => "10001",
-          "role" => "parent",
           "goal" => "apply for a primary school place",
-          "benefit" => "my child can start school",
           "organisation_ids" => ["department-for-education"],
           "organisations" => [
             {
@@ -22,21 +20,10 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "Department for Education",
             }
           ],
-          "applies_to_all_organisations" => false,
-          "justifications" => [
-            "it's something only government does",
-            "the government is legally obliged to provide it"
-          ],
-          "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => [
-            "The user applies for a school place"
-          ]
-        },
-        {
+        ),
+        example_need(
           "id" => "10002",
-          "role" => "user",
           "goal" => "find out about becoming a British citizen",
-          "benefit" => "i can take the correct steps to apply for citizenship",
           "organisation_ids" => ["home-office", "hm-passport-office"],
           "organisations" => [
             {
@@ -48,33 +35,16 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "HM Passport Office",
             }
           ],
-          "applies_to_all_organisations" => false,
-          "justifications" => [
-            "it's something only government does",
-            "the government is legally obliged to provide it"
-          ],
-          "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => [
-            "The user finds information about the citizenship test and the next steps"
-          ]
-        },
-        {
+        ),
+        example_need(
           "id" => "10003",
-          "role" => "user",
           "goal" => "find out about government policy",
-          "benefit" => "i can keep up to date with what's happening in government",
           "organisation_ids" => [],
           "organisations" => [],
           "applies_to_all_organisations" => true,
-          "justifications" => [
-            "it's something only government does",
-            "the government is legally obliged to provide it"
-          ],
-          "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => [],
           "duplicate_of" => 10001,
           "in_scope" => false
-        }
+        )
       ])
     end
 

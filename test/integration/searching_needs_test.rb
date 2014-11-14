@@ -15,9 +15,7 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
       need_api_has_needs([
         {
           "id" => "10001",
-          "role" => "parent",
           "goal" => "apply for a primary school place",
-          "benefit" => "my child can start school",
           "organisation_ids" => ["department-for-education"],
           "organisations" => [
             {
@@ -25,20 +23,10 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "Department for Education",
             }
           ],
-          "justifications" => [
-            "it's something only government does",
-            "the government is legally obliged to provide it"
-          ],
-          "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => [
-            "The user applies for a school place"
-          ]
         },
         {
           "id" => "10002",
-          "role" => "user",
           "goal" => "find out about becoming a British citizen",
-          "benefit" => "i can take the correct steps to apply for citizenship",
           "organisation_ids" => ["home-office", "hm-passport-office"],
           "organisations" => [
             {
@@ -50,23 +38,13 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "HM Passport Office",
             }
           ],
-          "justifications" => [
-            "it's something only government does",
-            "the government is legally obliged to provide it"
-          ],
-          "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => [
-            "The user finds information about the citizenship test and the next steps"
-          ]
         }
       ])
 
       need_api_has_needs_for_search("citizenship", [
         {
           "id" => "10002",
-          "role" => "user",
           "goal" => "find out about becoming a British citizen",
-          "benefit" => "i can take the correct steps to apply for citizenship",
           "organisation_ids" => ["home-office", "hm-passport-office"],
           "organisations" => [
             {
@@ -78,14 +56,6 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
               "name" => "HM Passport Office",
             }
           ],
-          "justifications" => [
-            "it's something only government does",
-            "the government is legally obliged to provide it"
-          ],
-          "impact" => "Has serious consequences for the day-to-day lives of your users",
-          "met_when" => [
-            "The user finds information about the citizenship test and the next steps"
-          ]
         }
       ])
 

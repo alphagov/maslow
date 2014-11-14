@@ -2,29 +2,14 @@
 require_relative '../integration_test_helper'
 
 class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
-  def need_hash
-    {
-      "id" => "100001",
-      "role" => "parent",
-      "goal" => "apply for a primary school place",
-      "benefit" => "my child can start school",
-      "met_when" => ["win","awesome","more"],
-      "organisations" => [],
-      "legislation" => "Blank Fields Act 2013",
-      "revisions" => [],
-      "applies_to_all_organisations" => false
-    }
-  end
-
   setup do
     login_as_stub_editor
-    need_api_has_organisations(
-      "committee-on-climate-change" => "Committee on Climate Change",
-      "competition-commission" => "Competition Commission",
-      "ministry-of-justice" => "Ministry of Justice"
+    need_api_has_organisations([])
+    @need = minimal_example_need(
+      "id" => "100001",
+      "goal" => "apply for a primary school place",
     )
-    @need = need_hash
-    @duplicate = need_hash.merge(
+    @duplicate = minimal_example_need(
       "duplicate_of" => nil,
       "id" => "100002"
     )
@@ -104,8 +89,10 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       click_on "Close as a duplicate"
     end
 
-    fill_in("This need is a duplicate of", with: "")
+    fill_in("This need is a duplicate of", with: "abc")
     click_on "Close as a duplicate"
+
+    assert_requested request
 
     assert page.has_content?("There was a problem closing the need as a duplicate")
     assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
