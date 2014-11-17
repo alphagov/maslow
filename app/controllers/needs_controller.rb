@@ -172,14 +172,13 @@ class NeedsController < ApplicationController
       return
     end
 
-    if params["need"]["out_of_scope_reason"].blank?
+    if params["need"]["status"] && params["need"]["status"]["reason"].blank?
       flash[:error] = "A reason is required to mark a need as out of scope"
       redirect_to need_path(@need)
       return
     end
 
-    @need.out_of_scope_reason = params["need"]["out_of_scope_reason"]
-    @need.status = { description: "out of scope", reason: params["need"]["out_of_scope_reason"] }
+    @need.status = { description: "out of scope", reason: params["need"]["status"]["reason"] }
 
     if @need.save_as(current_user)
       flash[:need_id] = @need.need_id

@@ -496,19 +496,19 @@ class NeedsControllerTest < ActionController::TestCase
 
         @stub_need.expects(:status=).with(description: "out of scope", reason: "foo")
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
       end
 
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
       end
 
       should "redirect to the need with a success message once complete" do
         @stub_need.stubs(:save_as).returns(true)
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
 
         refute @controller.flash[:error]
         assert_equal "Need has been marked as out of scope", @controller.flash[:notice]
@@ -518,7 +518,7 @@ class NeedsControllerTest < ActionController::TestCase
       should "redirect to the need with an error if the save fails" do
         @stub_need.stubs(:save_as).returns(false)
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
 
         refute @controller.flash[:notice]
         assert_equal "We had a problem marking the need as out of scope", @controller.flash[:error]

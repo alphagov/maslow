@@ -47,7 +47,6 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         "benefit" => "my child can start school",
         "legislation" => "Blank Fields Act 2013",
         "met_when" => ["win","awesome","more"],
-        "out_of_scope_reason" => "Whitespace is not acceptable",
         "status" => {
           "description" => "out of scope",
           "reason" => "Whitespace is not acceptable",
@@ -98,10 +97,6 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
 
     should "show an error message if there is no reason why the need is out of scope" do
       need_api_has_need(@need) # For individual need
-      request = stub_request(:put, @api_url).with(
-        id: "100001",
-        need: { out_of_scope_reason: "" }
-      )
 
       visit "/needs"
       click_on "100001"
