@@ -71,7 +71,6 @@ class ActiveSupport::TestCase
       "yearly_need_views" => nil,
       "yearly_searches" => nil,
       "duplicate_of" => nil,
-      "out_of_scope_reason" => nil,
       "status" => {
         "description" => "proposed"
       },

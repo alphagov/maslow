@@ -67,7 +67,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "yearly_need_views" => 1000,
           "yearly_searches" => 2000,
           "duplicate_of" => nil,
-          "out_of_scope_reason" => nil,
           "status" => nil,
           "author" => {
             "name" => stub_user.name,

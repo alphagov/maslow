@@ -30,7 +30,6 @@ class NeedTest < ActiveSupport::TestCase
 
         request = @atts.merge(
           "duplicate_of" => nil,
-          "out_of_scope_reason" => nil,
           "status" => nil,
           "author" => {
             "name" => "O'Brien",
@@ -90,7 +89,7 @@ class NeedTest < ActiveSupport::TestCase
           json = Need.new(@atts).as_json
 
           # include protected fields in the list of keys to expect
-          expected_keys = (@atts.keys + ["duplicate_of", "out_of_scope_reason", "status"]).sort
+          expected_keys = (@atts.keys + ["duplicate_of", "status"]).sort
 
           assert_equal expected_keys, json.keys.sort
           assert_equal "user", json["role"]
@@ -572,7 +571,6 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
         "duplicate_of" => nil,
-        "out_of_scope_reason" => nil,
         "status" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
