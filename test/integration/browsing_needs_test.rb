@@ -43,7 +43,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
           "organisations" => [],
           "applies_to_all_organisations" => true,
           "duplicate_of" => 10001,
-          "in_scope" => false
+          "status" => {
+            "description" => "out of scope",
+          }
         )
       ])
     end

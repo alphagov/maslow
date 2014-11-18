@@ -29,9 +29,7 @@ class NeedTest < ActiveSupport::TestCase
         author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
 
         request = @atts.merge(
-          "in_scope" => nil,
           "duplicate_of" => nil,
-          "out_of_scope_reason" => nil,
           "status" => nil,
           "author" => {
             "name" => "O'Brien",
@@ -91,7 +89,7 @@ class NeedTest < ActiveSupport::TestCase
           json = Need.new(@atts).as_json
 
           # include protected fields in the list of keys to expect
-          expected_keys = (@atts.keys + ["in_scope", "duplicate_of", "out_of_scope_reason", "status"]).sort
+          expected_keys = (@atts.keys + ["duplicate_of", "status"]).sort
 
           assert_equal expected_keys, json.keys.sort
           assert_equal "user", json["role"]
@@ -161,7 +159,7 @@ class NeedTest < ActiveSupport::TestCase
 
     should "raise an exception when protected fields are present" do
       assert_raises ArgumentError do
-        Need.new(@atts.merge("in_scope" => "foo"))
+        Need.new(@atts.merge("duplicate_of" => "foo"))
       end
     end
 
@@ -447,12 +445,12 @@ class NeedTest < ActiveSupport::TestCase
 
     should "correctly assign protected fields" do
       response = stub_response(
-        "in_scope" => false
+        "status" => "some status"
       )
       GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
 
       need = Need.find(100001)
-      assert_equal false, need.in_scope
+      assert_equal "some status", need.status
     end
 
     context "returning artefacts for a need" do
@@ -551,8 +549,8 @@ class NeedTest < ActiveSupport::TestCase
       end
 
       should "create an accessor to update the protected field" do
-        @need.in_scope = "foo"
-        assert_equal "foo", @need.in_scope
+        @need.status = { "description" => "some status" }
+        assert_equal "some status", @need.status["description"]
       end
     end
 
@@ -573,8 +571,6 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
         "duplicate_of" => nil,
-        "in_scope" => nil,
-        "out_of_scope_reason" => nil,
         "status" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
@@ -587,10 +583,10 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   should "return whether a need is out of scope" do
-    need = Need.new({ "in_scope" => false }, true)
+    need = Need.new({ "status" => { "description" => "out of scope" } }, true)
     assert need.out_of_scope?
 
-    need = Need.new({ "in_scope" => nil }, true)
+    need = Need.new({ "status" => { "description" => "proposed" } }, true)
     refute need.out_of_scope?
   end
 

@@ -63,7 +63,7 @@ class Need
 
   # fields which should not be updated through mass-assignment.
   # this is equivalent to using ActiveModel's attr_protected
-  PROTECTED_FIELDS = ["in_scope", "duplicate_of", "out_of_scope_reason", "status"]
+  PROTECTED_FIELDS = ["duplicate_of", "status"]
 
   # fields which we should create read and write accessors for
   # and which we should send back to the Need API
@@ -241,8 +241,12 @@ class Need
     @existing
   end
 
+  def in_scope?
+    !out_of_scope?
+  end
+
   def out_of_scope?
-    in_scope == false
+    status["description"] == "out of scope"
   end
 
 private

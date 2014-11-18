@@ -24,7 +24,10 @@ class BookmarksControllerTest < ActionController::TestCase
       "impact" => "Has serious consequences for the day-to-day lives of your users",
       "met_when" => [
         "The user applies for a school place"
-      ]
+      ],
+      "status" => {
+        "description" => "proposed"
+      }
     }
   end
 

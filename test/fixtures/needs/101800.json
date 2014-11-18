@@ -18,5 +18,8 @@
   "yearly_site_views": null,
   "yearly_need_views": null,
   "yearly_searches": null,
-  "in_scope": false
+  "status": {
+    "description": "out of scope",
+    "reason": "foo"
+  }
 }

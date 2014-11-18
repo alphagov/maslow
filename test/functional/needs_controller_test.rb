@@ -182,7 +182,10 @@ class NeedsControllerTest < ActionController::TestCase
           "id" => 100001,
           "role" => "person",
           "goal" => "do things",
-          "benefit" => "good things"
+          "benefit" => "good things",
+          "status" => {
+            "description" => "proposed"
+          }
         }, true)
 
         # stub the artefacts method so that we don't make calls to
@@ -417,13 +420,16 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     # For the case when the user has no JS
-    context "given a valid need without a set value for in_scope" do
+    context "given a valid need that is in scope" do
       setup do
         @stub_need = Need.new({
             "id" => 100001,
             "role" => "person",
             "goal" => "do things",
-            "benefit" => "good things"
+            "benefit" => "good things",
+            "status" => {
+              "description" => "proposed",
+            }
           }, true)
         Need.expects(:find).with(100001).returns(@stub_need)
       end
@@ -441,7 +447,10 @@ class NeedsControllerTest < ActionController::TestCase
             "role" => "person",
             "goal" => "do things",
             "benefit" => "good things",
-            "in_scope" => false
+            "status" => {
+              "description" => "out of scope",
+              "reason" => "some reason",
+            }
           }, true)
         Need.expects(:find).with(100001).returns(@stub_need)
       end
@@ -467,37 +476,39 @@ class NeedsControllerTest < ActionController::TestCase
       login_as_stub_admin
     end
 
-    context "given a valid need without a set value for in_scope" do
+    context "given a valid need that is in scope" do
       setup do
         @stub_need = Need.new({
             "id" => 100001,
             "role" => "person",
             "goal" => "do things",
             "benefit" => "good things",
-            "in_scope" => nil
+            "status" => {
+              "description" => "proposed",
+            }
           }, true)
         Need.expects(:find).with(100001).returns(@stub_need)
       end
 
-      should "set the in_scope attribute to false" do
+      should "mark the need as out of scope" do
         # not testing the save method here
         @stub_need.stubs(:save_as).returns(true)
 
-        @stub_need.expects(:in_scope=).with(false)
+        @stub_need.expects(:status=).with(description: "out of scope", reason: "foo")
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
       end
 
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
       end
 
       should "redirect to the need with a success message once complete" do
         @stub_need.stubs(:save_as).returns(true)
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
 
         refute @controller.flash[:error]
         assert_equal "Need has been marked as out of scope", @controller.flash[:notice]
@@ -507,7 +518,7 @@ class NeedsControllerTest < ActionController::TestCase
       should "redirect to the need with an error if the save fails" do
         @stub_need.stubs(:save_as).returns(false)
 
-        put :descope, { id: 100001, need: { out_of_scope_reason: "foo" } }
+        put :descope, { id: 100001, need: { status: { reason: "foo" } } }
 
         refute @controller.flash[:notice]
         assert_equal "We had a problem marking the need as out of scope", @controller.flash[:error]
@@ -522,7 +533,9 @@ class NeedsControllerTest < ActionController::TestCase
             "role" => "person",
             "goal" => "do things",
             "benefit" => "good things",
-            "in_scope" => false
+            "status" => {
+              "description" => "out of scope"
+            }
           }, true)
         Need.expects(:find).with(100001).returns(@stub_need)
       end
@@ -671,7 +684,7 @@ class NeedsControllerTest < ActionController::TestCase
   context "DELETE reopen" do
     setup do
       login_as_stub_editor
-      @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
+      @need = Need.new(base_need_fields.merge("id" => 100002, "status" => { "description" => "proposed" }), true)  # duplicate
       @need.stubs(:artefacts).returns([])
       Need.stubs(:find).with(100002).returns(@need)
     end

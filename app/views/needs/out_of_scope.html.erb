@@ -11,7 +11,9 @@
   <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
   <br/>
   <%= semantic_form_for @need, { url: descope_need_path(@need) } do |f| %>
-    <%= f.input :out_of_scope_reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :class => 'input-md-8', :rows => 3 } %>
+    <%= f.semantic_fields_for :status do |s| %>
+      <%= s.input :reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :class => 'input-md-8', :rows => 3 } %>
+    <% end %>
     <%= f.action :submit,
                  :method => :put,
                  :button_html => {

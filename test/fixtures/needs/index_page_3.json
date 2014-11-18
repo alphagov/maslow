@@ -31,7 +31,10 @@
           "id": "government-actuary-s-department",
           "name": "Government Actuary's Department"
         }
-      ]
+      ],
+      "status": {
+        "description": "proposed"
+      }
     },
     {
       "id": 100014,
@@ -46,7 +49,10 @@
           "id": "government-actuary-s-department",
           "name": "Government Actuary's Department"
         }
-      ]
+      ],
+      "status": {
+        "description": "proposed"
+      }
     },
     {
       "id": 100013,
@@ -61,7 +67,10 @@
           "id": "government-actuary-s-department",
           "name": "Government Actuary's Department"
         }
-      ]
+      ],
+      "status": {
+        "description": "proposed"
+      }
     }
   ]
 }

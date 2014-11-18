@@ -48,7 +48,10 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
           "role" => "User",
           "goal" => "find my local register office",
           "benefit" => "I can find records of birth, marriage or death",
-          "duplicate_of" => "100001"
+          "duplicate_of" => "100001",
+          "status" => {
+            "description" => "proposed"
+          }
         }.to_json
     )
     need_api_has_need(@need)

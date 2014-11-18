@@ -35,7 +35,10 @@
           "id": "treasury-solicitor-s-department",
           "name": "Treasury Solicitor’s Department"
         }
-      ]
+      ],
+      "status": {
+        "description": "proposed"
+      }
     },
     {
       "id": 100008,
@@ -50,7 +53,10 @@
           "id": "treasury-solicitor-s-department",
           "name": "Treasury Solicitor’s Department"
         }
-      ]
+      ],
+      "status": {
+        "description": "proposed"
+      }
     },
     {
       "id": 100007,
@@ -65,7 +71,10 @@
           "id": "treasury-solicitor-s-department",
           "name": "Treasury Solicitor’s Department"
         }
-      ]
+      ],
+      "status": {
+        "description": "proposed"
+      }
     }
   ]
 }
