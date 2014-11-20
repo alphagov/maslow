@@ -118,6 +118,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
   should "not be able to edit a closed need from the history page" do
     @duplicate.merge!("duplicate_of" => "100001")
     need_api_has_need(@duplicate)
+    need_api_has_need(@need)
     visit "/needs/100002/revisions"
 
     assert page.has_no_link?("Edit")

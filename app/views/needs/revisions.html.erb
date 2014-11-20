@@ -4,13 +4,6 @@
   <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "History & Notes" } %>
   <%= render :partial => "need_header" %>
 
-  <% if @need.duplicate? %>
-    <p class="need-alert add-top-margin">This need is a duplicate of
-    <%= link_to @need.duplicate_of,
-                need_path(@need.duplicate_of) %>
-    </p>
-  <% end %>
-
   <div class="row">
     <% if current_user.can?(:create, Note) %>
       <div id="notes" class="add-top-margin col-md-6">
