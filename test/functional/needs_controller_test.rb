@@ -4,6 +4,19 @@ require 'gds_api/test_helpers/need_api'
 class NeedsControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
 
+  def existing_need(options = {})
+    defaults = {
+      "id" => 100001,
+      "role" => "person",
+      "goal" => "do things",
+      "benefit" => "good things",
+      "status" => {
+        "description" => "proposed"
+      }
+    }
+    Need.new(defaults.merge(options), true)
+  end
+
   setup do
     login_as_stub_user
     need_api_has_organisations(
@@ -233,12 +246,7 @@ class NeedsControllerTest < ActionController::TestCase
   context "GET revisions" do
     context "given a valid need" do
       setup do
-        @stub_need = Need.new({
-          "id" => 100001,
-          "role" => "person",
-          "goal" => "do things",
-          "benefit" => "good things"
-        }, true)
+        @stub_need = existing_need
 
         Need.expects(:find).with(100001).returns(@stub_need)
       end
@@ -284,12 +292,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "given a valid need" do
       setup do
-        @stub_need = Need.new({
-          "id" => 100001,
-          "role" => "person",
-          "goal" => "do things",
-          "benefit" => "good things"
-        }, true)
+        @stub_need = existing_need
       end
 
       should "display the need form" do
@@ -329,10 +332,6 @@ class NeedsControllerTest < ActionController::TestCase
       }
     end
 
-    def stub_need
-      Need.new(base_need_fields.merge("id" => 100001), true)  # existing need
-    end
-
     setup do
       login_as_stub_editor
     end
@@ -344,7 +343,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "redisplay with a 422 if need is invalid" do
-      need = stub_need
+      need = existing_need
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).never
 
@@ -355,7 +354,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "save the need if valid and redirect to show it" do
-      need = stub_need
+      need = existing_need
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).with(is_a(User)).returns(true)
 
@@ -366,7 +365,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "update the need and redirect to add new need if 'add_new' provided" do
-      need = stub_need
+      need = existing_need
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).with(is_a(User)).returns(true)
 
@@ -378,7 +377,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "leave met when criteria unchanged" do
-      need = stub_need
+      need = existing_need
       Need.expects(:find).with(100001).returns(need)
       # Forcing the validity check to false so we redisplay the form
       need.expects(:valid?).returns(false)
@@ -393,7 +392,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "return a 422 response if save fails" do
-      need = stub_need
+      need = existing_need
       Need.expects(:find).with(100001).returns(need)
       need.expects(:save_as).returns(false)
 
@@ -598,10 +597,10 @@ class NeedsControllerTest < ActionController::TestCase
   context "PUT closed" do
     setup do
       login_as_stub_editor
-      @need = Need.new(base_need_fields.merge("id" => 100002), true)  # duplicate
+      @need = existing_need("id" => 100002)  # duplicate
       Need.stubs(:find).with(100002).returns(@need)
 
-      @canonical = Need.new(base_need_fields.merge("id" => 100001), true)  # duplicate
+      @canonical = existing_need("id" => 100001)  # duplicate
       Need.stubs(:find).with(100001).returns(@canonical)
     end
 
@@ -727,12 +726,7 @@ class NeedsControllerTest < ActionController::TestCase
   context "GET actions" do
     setup do
       login_as_stub_editor
-      @stub_need = Need.new({
-          "id" => 100001,
-          "role" => "person",
-          "goal" => "do things",
-          "benefit" => "good things"
-        }, true)
+      @stub_need = existing_need("id" => 100001)
       Need.expects(:find).with(100001).returns(@stub_need)
     end
 
@@ -744,13 +738,8 @@ class NeedsControllerTest < ActionController::TestCase
     context "for a need closed as a duplicate" do
       setup do
         @stub_need.expects(:duplicate_of).at_least(1).returns(100002)
-        @canonical = Need.new({
-            "id" => 100002,
-            "role" => "person",
-            "goal" => "do things",
-            "benefit" => "good things"
-          }, true)
-        Need.expects(:find).with(100002).returns(@canonical)
+        @canonical = existing_need("id" => 100002)
+        Need.expects(:find).with(100002).at_least(1).returns(@canonical)
       end
 
       should "be successful" do
@@ -763,12 +752,7 @@ class NeedsControllerTest < ActionController::TestCase
   context "GET close-as-duplicate" do
     setup do
       login_as_stub_editor
-      @stub_need = Need.new({
-        "id" => 100001,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }, true)
+      @stub_need = existing_need("id" => 100001)
       Need.expects(:find).with(100001).returns(@stub_need)
     end
 
