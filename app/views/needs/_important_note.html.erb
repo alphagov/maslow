@@ -1,0 +1,20 @@
+<% if @need.duplicate? || @need.out_of_scope? %>
+  <div class="important-note add-bottom-margin">
+    <div class="important-note-body">
+      <% if @need.duplicate? %>
+        <p>
+          This need is closed as a duplicate of
+          <%= link_to "#{@need.duplicate_of}: #{canonical_need_goal}",
+                      need_path(@need.duplicate_of) %>
+        </p>
+      <% end %>
+      <% if @need.out_of_scope? %>
+        <p>
+          <strong>This need is not in scope for GOV.UK</strong>
+          <br/>
+          <%= @need.status["reason"] %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+<% end %>

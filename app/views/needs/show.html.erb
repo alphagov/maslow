@@ -12,20 +12,6 @@
     So that <%= @need.benefit %>
   </p>
 
-  <% if @need.duplicate? %>
-    <p class="need-alert">This need is closed as a duplicate of
-      <%= link_to "#{@need.duplicate_of}: #{canonical_need_goal}",
-                  need_path(@need.duplicate_of) %>
-    </p>
-  <% end %>
-  <% if @need.out_of_scope? %>
-    <div class="need-alert">
-      <strong>This need is not in scope for GOV.UK</strong>
-      <br/>
-      <%= @need.status["reason"] %>
-    </div>
-  <% end %>
-
   <div class="need-wrapper row">
     <div class="col-md-8">
       <% if @need.met_when.any? %>

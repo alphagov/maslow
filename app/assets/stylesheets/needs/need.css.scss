@@ -71,15 +71,6 @@ p.all-organisations {
   @extend .alert-info;
 }
 
-.need-alert {
-  @extend .alert;
-  @extend .alert-warning;
-
-  padding: 24px;
-  font-size: 24px;
-  line-height: 1.31579
-}
-
 .main-alert {
   @extend .alert;
   @extend .alert-warning;
@@ -87,4 +78,21 @@ p.all-organisations {
   font-size: 20px;
   padding-top: 15px;
   padding-bottom: 15px;
+}
+
+.important-note {
+  border: 1px solid $table-border-color;
+  border-left: 5px solid $state-danger-text;
+  border-radius: $border-radius-small;
+  padding: $default-vertical-padding;
+
+  .important-note-title {
+    margin-top: 0;
+    font-size: $font-size-h4;
+    color: $state-danger-text;
+  }
+
+  .important-note-body {
+    font-size: $font-size-h3;
+  }
 }
