@@ -11,4 +11,9 @@
       <%= format_need_goal @need.goal %>
     </h1>
   </div>
+  <span class="lead">
+    <span class="status label <%= status_label_class(@need.status["description"]) %>">
+      Status: <%= @need.status["description"] %>
+    </span>
+  </span>
 </header>

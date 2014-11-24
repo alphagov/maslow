@@ -99,4 +99,13 @@ module NeedHelper
   def bookmark_icon(bookmarks = [], need_id)
     bookmarks.include?(need_id.to_i) ? 'glyphicon-star' : 'glyphicon-star-empty'
   end
+
+  def status_label_class(status_description)
+    case status_description
+    when "valid" then "label-success"
+    when "not valid" then "label-danger"
+    when "valid with conditions" then "label-warning"
+    else "label-info"
+    end
+  end
 end

@@ -36,6 +36,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
 
           assert page.has_content?("Book a driving test")
+
+          assert page.has_content?("Status: proposed")
         end
 
         within ".nav-tabs" do
