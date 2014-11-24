@@ -1,16 +1,3 @@
-<header class="block-border add-bottom-margin">
-  <% if @need.organisations.any? %>
-    <p class="need-organisations">
-      <%= @need.organisations.map do |o| %>
-        <% link_to o.name, needs_url(organisation_id: o.id) %>
-      <% end.join(", ").html_safe %>
-    </p>
-  <% end %>
-  <div class="relative">
-    <h1 class="need-title">
-      <%= format_need_goal @need.goal %>
-    </h1>
-  </div>
-</header>
-
+<%= render partial: "title_and_orgs" %>
+<%= render partial: "need_status" %>
 <%= render partial: "nav_tabs", locals: { titles_to_links: nav_tabs_for(@need) } %>
