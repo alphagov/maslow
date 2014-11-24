@@ -155,7 +155,7 @@ class NeedsController < ApplicationController
   def out_of_scope
     authorize! :descope, Need
     @need = load_need
-    unless @need.in_scope?
+    unless @need.has_valid_status?
       flash[:error] = "This need has already been marked as out of scope"
       redirect_to need_path(@need)
       return
@@ -166,7 +166,7 @@ class NeedsController < ApplicationController
     authorize! :descope, Need
     @need = load_need
 
-    unless @need.in_scope?
+    if @need.has_invalid_status?
       flash[:error] = "This need has already been marked as out of scope"
       redirect_to need_path(@need)
       return
@@ -178,7 +178,12 @@ class NeedsController < ApplicationController
       return
     end
 
-    @need.status = { description: "out of scope", reason: params["need"]["status"]["reason"] }
+    @need.status = {
+      description: "not valid",
+      reasons: [
+        "the need is not in scope for GOV.UK because #{params["need"]["status"]["reason"]}"
+      ]
+    }
 
     if @need.save_as(current_user)
       flash[:need_id] = @need.need_id

@@ -3,7 +3,7 @@
     Mark as out of scope
     <br/>
     <small>
-      <% if @need.out_of_scope? %>
+      <% if @need.has_invalid_status? %>
         <strong>This need is not in scope for GOV.UK</strong>
         <br/>
         <%= @need.status["reason"] %>
@@ -14,7 +14,7 @@
       <% end %>
     </small>
   </h2>
-  <% if @need.out_of_scope? || @need.duplicate? %>
+  <% if @need.has_invalid_status? || @need.duplicate? %>
     <%= link_to "Mark as out of scope",
                 "#",
                 id: 'out-of-scope',
@@ -35,7 +35,7 @@
   attr('role', 'button')
 </script>
 
-<% unless @need.out_of_scope? %>
+<% unless @need.has_invalid_status? %>
   <div id="out-of-scope-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
     <div class="modal-dialog">
       <%= semantic_form_for @need, { url: descope_need_path(@need), html: { class: "modal-content" } } do |f| %>

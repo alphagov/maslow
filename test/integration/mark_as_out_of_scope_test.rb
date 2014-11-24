@@ -48,8 +48,8 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         "legislation" => "Blank Fields Act 2013",
         "met_when" => ["win","awesome","more"],
         "status" => {
-          "description" => "out of scope",
-          "reason" => "Whitespace is not acceptable",
+          "description" => "not valid",
+          "reasons" => [ "the need is not in scope for GOV.UK because whitespace is not acceptable" ],
         },
         "author" => {
           "name" => stub_user.name,
@@ -71,7 +71,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       end
 
       # This is a confirmation on a separate page when JavaScript is off
-      fill_in "Why is this need out of scope?", with: "Whitespace is not acceptable"
+      fill_in "Why is this need out of scope?", with: "whitespace is not acceptable"
       click_on "Mark as out of scope"
 
       assert page.has_content?("Need has been marked as out of scope")
@@ -116,8 +116,8 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
     setup do
       @need = need_hash.merge(
         "status" => {
-          "description" => "out of scope",
-          "reason" => "some reason",
+          "description" => "not valid",
+          "reasons" => [ "some reason" ],
         }
       )
       need_api_has_needs([@need]) # For need list

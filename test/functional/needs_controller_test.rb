@@ -447,8 +447,8 @@ class NeedsControllerTest < ActionController::TestCase
             "goal" => "do things",
             "benefit" => "good things",
             "status" => {
-              "description" => "out of scope",
-              "reason" => "some reason",
+              "description" => "not valid",
+              "reasons" => ["some reason"],
             }
           }, true)
         Need.expects(:find).with(100001).returns(@stub_need)
@@ -493,7 +493,10 @@ class NeedsControllerTest < ActionController::TestCase
         # not testing the save method here
         @stub_need.stubs(:save_as).returns(true)
 
-        @stub_need.expects(:status=).with(description: "out of scope", reason: "foo")
+        @stub_need.expects(:status=).with(
+          description: "not valid",
+          reasons: [ "the need is not in scope for GOV.UK because foo" ]
+        )
 
         put :descope, { id: 100001, need: { status: { reason: "foo" } } }
       end
@@ -533,7 +536,8 @@ class NeedsControllerTest < ActionController::TestCase
             "goal" => "do things",
             "benefit" => "good things",
             "status" => {
-              "description" => "out of scope"
+              "description" => "not valid",
+              "reasons" => [ "some reason" ]
             }
           }, true)
         Need.expects(:find).with(100001).returns(@stub_need)
