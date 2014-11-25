@@ -300,11 +300,11 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       setup_need_api_responses(101800)
     end
 
-    should "indicate that it is out of scope" do
+    should "indicate that it is not valid" do
       visit "/needs"
       click_on "101800"
 
-      assert page.has_content?("This need is not in scope for GOV.UK")
+      assert page.has_content?("This need is not valid because:")
       assert page.has_no_button?("Mark as out of scope")
     end
   end
