@@ -1,15 +1,13 @@
-<% content_for :page_title, "Mark as out of scope" %>
+<% content_for :page_title, "Record validity decision" %>
 
 <article class="need">
   <nav class="add-top-margin">
-    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Mark as out of scope" } %>
+    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Record validity decision" } %>
   </nav>
 
   <%= render :partial => "need_header" %>
 
-  <h3>Mark as out of scope</h3>
-  <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-  <br/>
+  <h3>Record validity decision</h3>
   <%= semantic_form_for @need, { url: descope_need_path(@need) } do |f| %>
     <%= f.semantic_fields_for :status do |s| %>
       <%= s.input :reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :class => 'input-md-8', :rows => 3 } %>
@@ -17,7 +15,7 @@
     <%= f.action :submit,
                  :method => :put,
                  :button_html => {
-                   :value => "Mark as out of scope",
+                   :value => "Update the status",
                    :class => "btn btn-danger"
                  }
                %>
