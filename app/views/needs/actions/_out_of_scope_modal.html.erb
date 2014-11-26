@@ -1,25 +1,3 @@
-<div id="scope">
-  <% if @need.has_invalid_status? || @need.duplicate? %>
-    <%= link_to "Record validity decision",
-                "#",
-                id: 'out-of-scope',
-                disabled: "",
-                class: "btn btn-default btn-disabled" %>
-  <% else %>
-    <%= link_to "Record validity decision",
-                out_of_scope_need_path(@need),
-                id: 'out-of-scope',
-                class: "btn btn-danger" %>
-  <% end %>
-</div>
-
-<script>
-  $('#out-of-scope').
-  attr('href', '#out-of-scope-modal').
-  attr('data-toggle', 'modal').
-  attr('role', 'button')
-</script>
-
 <% unless @need.has_invalid_status? %>
   <div id="out-of-scope-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
     <div class="modal-dialog">
@@ -48,3 +26,10 @@
     </div>
   </div>
 <% end %>
+
+<script>
+  $('#out-of-scope').
+  attr('href', '#out-of-scope-modal').
+  attr('data-toggle', 'modal').
+  attr('role', 'button')
+</script>

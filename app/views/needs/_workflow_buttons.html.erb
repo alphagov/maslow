@@ -5,6 +5,26 @@
       <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
         <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
       <% end %>
+      <% if defined?(need) && current_user.can?(:descope, Need) %>
+        <span id="record-validity-decision">
+          <% if @need.has_invalid_status? || @need.duplicate? %>
+            <%= link_to "Record validity decision",
+                        "#",
+                        id: 'out-of-scope',
+                        disabled: "",
+                        class: "btn btn-default btn-disabled" %>
+          <% else %>
+            <%= link_to "Record validity decision",
+                        out_of_scope_need_path(@need),
+                        id: 'out-of-scope',
+                        class: "btn btn-danger" %>
+          <% end %>
+        </span>
+      <% end %>
     </div>
+  <% end %>
+
+  <% if defined?(need) %>
+    <%= render "needs/actions/out_of_scope_modal" %>
   <% end %>
 <% end %>

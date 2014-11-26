@@ -66,13 +66,15 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       # There are two 'Record validity decision' buttons
       # The second is a confirmation modal drop down when JavaScript is on
       # The first is an action initiator in the header
-      within "#actions #scope" do
+      within "#workflow #record-validity-decision" do
         click_on "Record validity decision"
       end
 
-      # This is a confirmation on a separate page when JavaScript is off
-      fill_in "Why is this need out of scope?", with: "whitespace is not acceptable"
-      click_on "Update the status"
+      within ".non-js-form" do
+        # This is a confirmation on a separate page when JavaScript is off
+        fill_in "Why is this need out of scope?", with: "whitespace is not acceptable"
+        click_on "Update the status"
+      end
 
       assert page.has_content?("Need has been marked as out of scope")
     end
@@ -85,12 +87,14 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      within "#actions #scope" do
+      within "#workflow #record-validity-decision" do
         click_on "Record validity decision"
       end
 
-      fill_in "Why is this need out of scope?", with: "foo"
-      click_on "Update the status"
+      within ".non-js-form" do
+        fill_in "Why is this need out of scope?", with: "foo"
+        click_on "Update the status"
+      end
 
       assert page.has_content?("We had a problem marking the need as out of scope")
     end
@@ -102,11 +106,13 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      within "#actions #scope" do
+      within "#workflow #record-validity-decision" do
         click_on "Record validity decision"
       end
 
-      click_on "Update the status"
+      within ".non-js-form" do
+        click_on "Update the status"
+      end
 
       assert page.has_content?("A reason is required to mark a need as out of scope")
     end
