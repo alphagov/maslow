@@ -6,12 +6,9 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h3 id="modal-out-of-scope-label" class="modal-title">Record validity decision</h3>
         </div>
-        <%= f.semantic_fields_for :status do |s| %>
-          <div class="modal-body">
-            <p>Are you sure you want to mark this need as out of scope? This can’t be changed.</p>
-            <%= s.input :reason, :label => "Why is this need out of scope?", :hint => "Please explain why this need is not in scope for GOV.UK", :as => :text, :input_html => { :rows => 3 } %>
-          </div>
-        <% end %>
+        <div class="modal-body">
+          <%= render partial: "needs/validity_decision_fields", locals: { f: f } %>
+        </div>
         <div class="modal-footer">
           <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
           <%= f.action :submit,
