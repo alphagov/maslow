@@ -1,7 +1,7 @@
 <%= f.semantic_fields_for :status do |s| %>
-  <%= s.input :reason,
-              :label => "Why is this need out of scope?",
-              :hint => "Please explain why this need is not in scope for GOV.UK",
+  <%= s.input :other_reasons_why_invalid,
+              :required => false,
+              :label => "Any other reason why the need is invalid (optional)",
               :as => :text,
               :input_html => { :class => 'input-md-8', :rows => 3 } %>
 <% end %>

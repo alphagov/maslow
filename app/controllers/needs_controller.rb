@@ -172,7 +172,7 @@ class NeedsController < ApplicationController
       return
     end
 
-    if params["need"]["status"] && params["need"]["status"]["reason"].blank?
+    if params["need"]["status"] && params["need"]["status"]["other_reasons_why_invalid"].blank?
       flash[:error] = "A reason is required to mark a need as out of scope"
       redirect_to need_path(@need)
       return
@@ -181,7 +181,7 @@ class NeedsController < ApplicationController
     @need.status = {
       description: "not valid",
       reasons: [
-        "the need is not in scope for GOV.UK because #{params["need"]["status"]["reason"]}"
+        "the need is not in scope for GOV.UK because #{params["need"]["status"]["other_reasons_why_invalid"]}"
       ]
     }
 

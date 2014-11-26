@@ -72,7 +72,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
 
       within ".non-js-form" do
         # This is a confirmation on a separate page when JavaScript is off
-        fill_in "Why is this need out of scope?", with: "whitespace is not acceptable"
+        fill_in "Any other reason why the need is invalid (optional)", with: "whitespace is not acceptable"
         click_on "Update the status"
       end
 
@@ -92,7 +92,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       end
 
       within ".non-js-form" do
-        fill_in "Why is this need out of scope?", with: "foo"
+        fill_in "Any other reason why the need is invalid (optional)", with: "foo"
         click_on "Update the status"
       end
 
