@@ -10,13 +10,13 @@
           <% if @need.has_invalid_status? || @need.duplicate? %>
             <%= link_to "Record validity decision",
                         "#",
-                        id: 'out-of-scope',
+                        id: 'record-validity-decision-button',
                         disabled: "",
                         class: "btn btn-default btn-disabled" %>
           <% else %>
             <%= link_to "Record validity decision",
                         status_need_path(@need),
-                        id: 'out-of-scope',
+                        id: 'record-validity-decision-button',
                         class: "btn btn-danger" %>
           <% end %>
         </span>
@@ -25,6 +25,6 @@
   <% end %>
 
   <% if defined?(need) %>
-    <%= render "needs/actions/out_of_scope_modal" %>
+    <%= render "needs/record_validity_decision_modal" %>
   <% end %>
 <% end %>

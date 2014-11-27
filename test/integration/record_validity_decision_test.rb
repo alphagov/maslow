@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
 
-class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
+class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
   def need_hash
     {
       "id" => "100001",
@@ -25,7 +25,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
     )
   end
 
-  context "marking a need as out of scope" do
+  context "marking a need as not valid" do
     setup do
       @need = need_hash.merge(
         "status" => {
@@ -38,7 +38,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       @api_url = Plek.current.find('need-api') + '/needs/100001'
     end
 
-    should "be able to mark a need as out of scope" do
+    should "update the Need API" do
       need_api_has_need(@need) # For individual need
 
       request_body = blank_need_request.merge(
@@ -79,7 +79,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       assert_requested request
     end
 
-    should "show an error message if there's a problem marking a need as out of scope" do
+    should "show an error message if there's a problem updating the status" do
       need_api_has_need(@need) # For individual need
       request = stub_request(:put, @api_url).to_return(status: 422)
 
@@ -99,7 +99,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       assert page.has_content?("We had a problem marking the need as out of scope")
     end
 
-    should "show an error message if there is no reason why the need is out of scope" do
+    should "show an error message if there is no reason why the need is not valid" do
       need_api_has_need(@need) # For individual need
 
       visit "/needs"
@@ -139,7 +139,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      assert page.has_selector?("a[id=out-of-scope][disabled]")
+      assert page.has_selector?("a[id=record-validity-decision-button][disabled]")
     end
   end
 end

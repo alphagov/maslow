@@ -57,12 +57,12 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Edit")
     end
 
-    should "not allow descoping the need" do
+    should "not allow changing the need's status" do
       login_as_stub_admin
       visit "/needs/100002/actions"
 
-      # 'Out of scope' functionality is disabled if need is closed
-      assert page.has_selector?("a[id=out-of-scope][disabled]")
+      # 'Record validity decision' functionality is disabled if need is closed
+      assert page.has_selector?("a[id=record-validity-decision-button][disabled]")
     end
 
     should "show an error if there's a problem reopening the need" do

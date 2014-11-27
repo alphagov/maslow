@@ -1,10 +1,10 @@
 <% unless @need.has_invalid_status? %>
-  <div id="out-of-scope-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
+  <div id="record-validity-decision-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-record-validity-decision-label" aria-hidden="true">
     <div class="modal-dialog">
       <%= semantic_form_for @need, { url: update_status_need_path(@need), html: { class: "modal-content" } } do |f| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="modal-out-of-scope-label" class="modal-title">Record validity decision</h3>
+          <h3 id="modal-record-validity-decision-label" class="modal-title">Record validity decision</h3>
         </div>
         <div class="modal-body">
           <%= render partial: "needs/validity_decision_fields", locals: { f: f } %>
@@ -25,8 +25,8 @@
 <% end %>
 
 <script>
-  $('#out-of-scope').
-  attr('href', '#out-of-scope-modal').
+  $('#record-validity-decision-button').
+  attr('href', '#record-validity-decision-modal').
   attr('data-toggle', 'modal').
   attr('role', 'button')
 </script>
