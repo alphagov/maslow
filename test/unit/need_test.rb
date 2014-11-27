@@ -544,7 +544,7 @@ class NeedTest < ActiveSupport::TestCase
 
       should "reject a protected field" do
         assert_raises ArgumentError do
-          @need.update("in_scope" => "foo")
+          @need.update("duplicate_of" => "foo")
         end
       end
 
