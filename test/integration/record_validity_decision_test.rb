@@ -96,7 +96,7 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
         click_on "Update the status"
       end
 
-      assert page.has_content?("We had a problem marking the need as out of scope")
+      assert page.has_content?("We had a problem updating the need’s status")
     end
 
     should "show an error message if there is no reason why the need is not valid" do
@@ -114,7 +114,7 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
         click_on "Update the status"
       end
 
-      assert page.has_content?("A reason is required to mark a need as out of scope")
+      assert page.has_content?("A reason is required to mark a need as not valid")
     end
   end
 end

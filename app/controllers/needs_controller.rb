@@ -162,7 +162,7 @@ class NeedsController < ApplicationController
     @need = load_need
 
     if params["need"]["status"] && params["need"]["status"]["other_reasons_why_invalid"].blank?
-      flash[:error] = "A reason is required to mark a need as out of scope"
+      flash[:error] = "A reason is required to mark a need as not valid"
       redirect_to need_path(@need)
       return
     end
@@ -175,7 +175,7 @@ class NeedsController < ApplicationController
     }
 
     unless @need.save_as(current_user)
-      flash[:error] = "We had a problem marking the need as out of scope"
+      flash[:error] = "We had a problem updating the need’s status"
     end
 
     redirect_to need_path(@need)

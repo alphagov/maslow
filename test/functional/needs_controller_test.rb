@@ -498,7 +498,7 @@ class NeedsControllerTest < ActionController::TestCase
         put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:notice]
-        assert_equal "We had a problem marking the need as out of scope", @controller.flash[:error]
+        assert_equal "We had a problem updating the need’s status", @controller.flash[:error]
         assert_redirected_to need_path(@stub_need)
       end
     end
