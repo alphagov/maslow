@@ -507,13 +507,12 @@ class NeedsControllerTest < ActionController::TestCase
         put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
       end
 
-      should "redirect to the need with a success message once complete" do
+      should "redirect to the need once complete" do
         @stub_need.stubs(:save_as).returns(true)
 
         put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:error]
-        assert_equal "Need has been marked as out of scope", @controller.flash[:notice]
         assert_redirected_to need_path(@stub_need)
       end
 

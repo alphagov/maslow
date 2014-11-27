@@ -76,7 +76,7 @@ class MarkAsOutOfScopeTest < ActionDispatch::IntegrationTest
         click_on "Update the status"
       end
 
-      assert page.has_content?("Need has been marked as out of scope")
+      assert_requested request
     end
 
     should "show an error message if there's a problem marking a need as out of scope" do

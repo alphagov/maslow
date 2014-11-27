@@ -185,11 +185,7 @@ class NeedsController < ApplicationController
       ]
     }
 
-    if @need.save_as(current_user)
-      flash[:need_id] = @need.need_id
-      flash[:goal] = @need.goal
-      flash[:notice] = "Need has been marked as out of scope"
-    else
+    unless @need.save_as(current_user)
       flash[:error] = "We had a problem marking the need as out of scope"
     end
 
