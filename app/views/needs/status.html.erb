@@ -8,7 +8,7 @@
   <%= render :partial => "need_header" %>
 
   <h3>Record validity decision</h3>
-  <%= semantic_form_for @need, { url: descope_need_path(@need), html: { class: "non-js-form" } } do |f| %>
+  <%= semantic_form_for @need, { url: update_status_need_path(@need), html: { class: "non-js-form" } } do |f| %>
     <%= render partial: "needs/validity_decision_fields", locals: { f: f } %>
     <%= f.action :submit,
                  :method => :put,

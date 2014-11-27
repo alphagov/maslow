@@ -1,7 +1,7 @@
 <% unless @need.has_invalid_status? %>
   <div id="out-of-scope-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-out-of-scope-label" aria-hidden="true">
     <div class="modal-dialog">
-      <%= semantic_form_for @need, { url: descope_need_path(@need), html: { class: "modal-content" } } do |f| %>
+      <%= semantic_form_for @need, { url: update_status_need_path(@need), html: { class: "modal-content" } } do |f| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h3 id="modal-out-of-scope-label" class="modal-title">Record validity decision</h3>

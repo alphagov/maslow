@@ -152,8 +152,8 @@ class NeedsController < ApplicationController
     render "show", :status => 422
   end
 
-  def out_of_scope
-    authorize! :descope, Need
+  def status
+    authorize! :validate, Need
     @need = load_need
     unless @need.has_valid_status?
       flash[:error] = "This need has already been marked as out of scope"
@@ -162,8 +162,8 @@ class NeedsController < ApplicationController
     end
   end
 
-  def descope
-    authorize! :descope, Need
+  def update_status
+    authorize! :validate, Need
     @need = load_need
 
     if @need.has_invalid_status?

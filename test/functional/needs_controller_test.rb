@@ -413,13 +413,13 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET out-of-scope" do
+  context "GET status" do
     setup do
       login_as_stub_admin
     end
 
     # For the case when the user has no JS
-    context "given a valid need that is in scope" do
+    context "given a valid need that is proposed" do
       setup do
         @stub_need = Need.new({
             "id" => 100001,
@@ -434,12 +434,12 @@ class NeedsControllerTest < ActionController::TestCase
       end
 
       should "be successful" do
-        get :out_of_scope, id: 100001
+        get :status, id: 100001
         assert_response :success
       end
     end
 
-    context "given a valid need already marked as out of scope" do
+    context "given a valid need already marked as invalid" do
       setup do
         @stub_need = Need.new({
             "id" => 100001,
@@ -455,7 +455,7 @@ class NeedsControllerTest < ActionController::TestCase
       end
 
       should "redirect to the need with an error" do
-        get :out_of_scope, id: 100001
+        get :status, id: 100001
 
         refute @controller.flash[:notice]
         assert_equal "This need has already been marked as out of scope", @controller.flash[:error]
@@ -465,17 +465,17 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "stop editors from descoping needs" do
       login_as_stub_editor
-      get :out_of_scope, id: 100001
+      get :status, id: 100001
       assert_redirected_to needs_path
     end
   end
 
-  context "PUT descope" do
+  context "PUT status" do
     setup do
       login_as_stub_admin
     end
 
-    context "given a valid need that is in scope" do
+    context "given a proposed need" do
       setup do
         @stub_need = Need.new({
             "id" => 100001,
@@ -489,7 +489,7 @@ class NeedsControllerTest < ActionController::TestCase
         Need.expects(:find).with(100001).returns(@stub_need)
       end
 
-      should "mark the need as out of scope" do
+      should "mark the need as not valid" do
         # not testing the save method here
         @stub_need.stubs(:save_as).returns(true)
 
@@ -498,19 +498,19 @@ class NeedsControllerTest < ActionController::TestCase
           reasons: [ "the need is not in scope for GOV.UK because foo" ]
         )
 
-        put :descope, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
       end
 
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 
-        put :descope, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
       end
 
       should "redirect to the need with a success message once complete" do
         @stub_need.stubs(:save_as).returns(true)
 
-        put :descope, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:error]
         assert_equal "Need has been marked as out of scope", @controller.flash[:notice]
@@ -520,7 +520,7 @@ class NeedsControllerTest < ActionController::TestCase
       should "redirect to the need with an error if the save fails" do
         @stub_need.stubs(:save_as).returns(false)
 
-        put :descope, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:notice]
         assert_equal "We had a problem marking the need as out of scope", @controller.flash[:error]
@@ -528,7 +528,7 @@ class NeedsControllerTest < ActionController::TestCase
       end
     end
 
-    context "given a valid need already marked as out of scope" do
+    context "given a need that's already not valid" do
       setup do
         @stub_need = Need.new({
             "id" => 100001,
@@ -544,7 +544,7 @@ class NeedsControllerTest < ActionController::TestCase
       end
 
       should "redirect to the need with an error" do
-        put :descope, id: 100001
+        put :update_status, id: 100001
 
         refute @controller.flash[:notice]
         assert_equal "This need has already been marked as out of scope", @controller.flash[:error]
@@ -555,14 +555,14 @@ class NeedsControllerTest < ActionController::TestCase
     should "404 if a need isn't found" do
       Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
 
-      put :descope, id: 100001
+      put :status, id: 100001
 
       assert_response :not_found
     end
 
     should "stop editors from descoping needs" do
       login_as_stub_editor
-      put :descope, id: 100001
+      put :status, id: 100001
       assert_redirected_to needs_path
     end
   end
