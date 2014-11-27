@@ -471,10 +471,10 @@ class NeedsControllerTest < ActionController::TestCase
 
         @stub_need.expects(:status=).with(
           description: "not valid",
-          reasons: [ "the need is not in scope for GOV.UK because foo" ]
+          reasons: [ "bar", "foo" ]
         )
 
-        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { reasons_why_invalid: ["bar"], other_reasons_why_invalid: "foo" } } }
       end
 
       should "save the need as the current user" do

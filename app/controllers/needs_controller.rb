@@ -161,7 +161,12 @@ class NeedsController < ApplicationController
     authorize! :validate, Need
     @need = load_need
 
-    if params["need"]["status"] && params["need"]["status"]["other_reasons_why_invalid"].blank?
+    reasons_why_invalid = [
+      params["need"]["status"]["reasons_why_invalid"],
+      params["need"]["status"]["other_reasons_why_invalid"]
+    ].flatten.select(&:present?)
+
+    if reasons_why_invalid.empty?
       flash[:error] = "A reason is required to mark a need as not valid"
       redirect_to need_path(@need)
       return
@@ -169,9 +174,7 @@ class NeedsController < ApplicationController
 
     @need.status = {
       description: "not valid",
-      reasons: [
-        "the need is not in scope for GOV.UK because #{params["need"]["status"]["other_reasons_why_invalid"]}"
-      ]
+      reasons: reasons_why_invalid
     }
 
     unless @need.save_as(current_user)

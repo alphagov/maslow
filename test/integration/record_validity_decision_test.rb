@@ -41,23 +41,16 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
     should "update the Need API" do
       need_api_has_need(@need) # For individual need
 
-      request_body = blank_need_request.merge(
-        "role" => "parent",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my child can start school",
-        "legislation" => "Blank Fields Act 2013",
-        "met_when" => ["win","awesome","more"],
+      request = stub_request(:put, @api_url).with(:body => hash_including({
         "status" => {
           "description" => "not valid",
-          "reasons" => [ "the need is not in scope for GOV.UK because whitespace is not acceptable" ],
+          "reasons" => [
+            "it has typos or acronyms that aren’t defined",
+            "it’s incomplete or imprecise",
+            "the user needs to be defined more precisely",
+          ],
         },
-        "author" => {
-          "name" => stub_user.name,
-          "email" => stub_user.email,
-          "uid" => stub_user.uid
-        }
-      )
-      request = stub_request(:put, @api_url).with(:body => request_body.to_json)
+      }))
 
       visit "/needs"
       click_on "100001"
@@ -72,7 +65,10 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
 
       within ".non-js-form" do
         # This is a confirmation on a separate page when JavaScript is off
-        fill_in "Any other reason why the need is invalid (optional)", with: "whitespace is not acceptable"
+
+        check "is incomplete or imprecise"
+        check "has typos or acronyms that aren’t defined"
+        fill_in "Any other reason why the need is invalid (optional)", with: "the user needs to be defined more precisely"
         click_on "Update the status"
       end
 
