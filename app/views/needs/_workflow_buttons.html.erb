@@ -7,7 +7,7 @@
       <% end %>
       <% if defined?(need) && current_user.can?(:validate, Need) %>
         <span id="record-validity-decision">
-          <% if @need.has_invalid_status? || @need.duplicate? %>
+          <% if @need.duplicate? %>
             <%= link_to "Record validity decision",
                         "#",
                         id: 'record-validity-decision-button',

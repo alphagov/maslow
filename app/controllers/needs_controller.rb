@@ -155,22 +155,11 @@ class NeedsController < ApplicationController
   def status
     authorize! :validate, Need
     @need = load_need
-    unless @need.has_valid_status?
-      flash[:error] = "This need has already been marked as out of scope"
-      redirect_to need_path(@need)
-      return
-    end
   end
 
   def update_status
     authorize! :validate, Need
     @need = load_need
-
-    if @need.has_invalid_status?
-      flash[:error] = "This need has already been marked as out of scope"
-      redirect_to need_path(@need)
-      return
-    end
 
     if params["need"]["status"] && params["need"]["status"]["other_reasons_why_invalid"].blank?
       flash[:error] = "A reason is required to mark a need as out of scope"

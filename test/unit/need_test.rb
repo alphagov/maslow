@@ -585,10 +585,8 @@ class NeedTest < ActiveSupport::TestCase
   should "return whether a need state is 'valid' or not" do
     need = Need.new({ "status" => { "description" => "not valid" } }, true)
     assert need.has_invalid_status?
-    refute need.has_valid_status?
 
     need = Need.new({ "status" => { "description" => "proposed" } }, true)
-    assert need.has_valid_status?
     refute need.has_invalid_status?
   end
 

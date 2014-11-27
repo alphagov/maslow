@@ -439,30 +439,6 @@ class NeedsControllerTest < ActionController::TestCase
       end
     end
 
-    context "given a valid need already marked as invalid" do
-      setup do
-        @stub_need = Need.new({
-            "id" => 100001,
-            "role" => "person",
-            "goal" => "do things",
-            "benefit" => "good things",
-            "status" => {
-              "description" => "not valid",
-              "reasons" => ["some reason"],
-            }
-          }, true)
-        Need.expects(:find).with(100001).returns(@stub_need)
-      end
-
-      should "redirect to the need with an error" do
-        get :status, id: 100001
-
-        refute @controller.flash[:notice]
-        assert_equal "This need has already been marked as out of scope", @controller.flash[:error]
-        assert_redirected_to need_path(@stub_need)
-      end
-    end
-
     should "stop editors from descoping needs" do
       login_as_stub_editor
       get :status, id: 100001
@@ -523,30 +499,6 @@ class NeedsControllerTest < ActionController::TestCase
 
         refute @controller.flash[:notice]
         assert_equal "We had a problem marking the need as out of scope", @controller.flash[:error]
-        assert_redirected_to need_path(@stub_need)
-      end
-    end
-
-    context "given a need that's already not valid" do
-      setup do
-        @stub_need = Need.new({
-            "id" => 100001,
-            "role" => "person",
-            "goal" => "do things",
-            "benefit" => "good things",
-            "status" => {
-              "description" => "not valid",
-              "reasons" => [ "some reason" ]
-            }
-          }, true)
-        Need.expects(:find).with(100001).returns(@stub_need)
-      end
-
-      should "redirect to the need with an error" do
-        put :update_status, id: 100001
-
-        refute @controller.flash[:notice]
-        assert_equal "This need has already been marked as out of scope", @controller.flash[:error]
         assert_redirected_to need_path(@stub_need)
       end
     end

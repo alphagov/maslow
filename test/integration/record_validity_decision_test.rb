@@ -117,29 +117,4 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       assert page.has_content?("A reason is required to mark a need as out of scope")
     end
   end
-
-  context "Need is already out of scope" do
-    setup do
-      @need = need_hash.merge(
-        "status" => {
-          "description" => "not valid",
-          "reasons" => [ "some reason" ],
-        }
-      )
-      need_api_has_needs([@need]) # For need list
-      content_api_has_artefacts_for_need_id("100001", [])
-
-      @api_url = Plek.current.find('need-api') + '/needs/100001'
-    end
-
-    should "have 'Mark as out of scope' disabled" do
-      need_api_has_need(@need) # For individual need
-
-      visit "/needs"
-      click_on "100001"
-      click_on "Actions"
-
-      assert page.has_selector?("a[id=record-validity-decision-button][disabled]")
-    end
-  end
 end

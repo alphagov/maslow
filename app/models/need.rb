@@ -241,10 +241,6 @@ class Need
     @existing
   end
 
-  def has_valid_status?
-    !has_invalid_status?
-  end
-
   def has_invalid_status?
     status["description"] == "not valid"
   end
