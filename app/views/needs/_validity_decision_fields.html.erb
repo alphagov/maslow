@@ -1,19 +1,34 @@
 <%= f.semantic_fields_for :status do |s| %>
-  <%= s.input :reasons_why_invalid,
-              :label => "This need:",
-              :as => :check_boxes,
+  <%= s.input :description,
+              :label => "Mark this need as:",
+              :input_html => { class: "new-status-description", :"aria-required" => true },
+              :as => :radio,
+              :required => true,
               :collection => {
-                "has typos or acronyms that aren’t defined" => "it has typos or acronyms that aren’t defined",
-                "is incomplete or imprecise (eg user, acceptance criteria)" => "it’s incomplete or imprecise",
-                "contains sensitive or politically controversial information" => "it contains sensitive or politically controversial information",
-                "is an organisational need or isn't properly defined as a user need" => "it’s an organisational need or isn’t properly defined as a user need",
-                "is an acceptance criterion of another need" => "it’s an acceptance criterion of another need",
-                "is invalid or not in proposition" => "it’s invalid or not in proposition",
+                "proposed" => "proposed",
+                "not valid - the need is badly formed, lacks detail, or is out of proposition" => "not valid",
               } %>
 
-  <%= s.input :other_reasons_why_invalid,
-              :required => false,
-              :label => "Any other reason why the need is invalid (optional)",
-              :as => :text,
-              :input_html => { :class => 'input-md-8', :rows => 3 } %>
+  <fieldset class="conditional" data-status-description="not valid">
+    <legend class="if-js-hide">For invalid needs</legend>
+
+    <%= s.input :reasons_why_invalid,
+                :label => "This need:",
+                :as => :check_boxes,
+                :required => false,
+                :collection => {
+                  "has typos or acronyms that aren’t defined" => "it has typos or acronyms that aren’t defined",
+                  "is incomplete or imprecise (eg user, acceptance criteria)" => "it’s incomplete or imprecise",
+                  "contains sensitive or politically controversial information" => "it contains sensitive or politically controversial information",
+                  "is an organisational need or isn't properly defined as a user need" => "it’s an organisational need or isn’t properly defined as a user need",
+                  "is an acceptance criterion of another need" => "it’s an acceptance criterion of another need",
+                  "is invalid or not in proposition" => "it’s invalid or not in proposition",
+                } %>
+
+    <%= s.input :other_reasons_why_invalid,
+                :required => false,
+                :label => "Any other reason why the need is invalid (optional)",
+                :as => :text,
+                :input_html => { :class => 'input-md-8', :rows => 3 } %>
+  </fieldset>
 <% end %>

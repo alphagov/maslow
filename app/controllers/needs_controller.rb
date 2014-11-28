@@ -161,21 +161,32 @@ class NeedsController < ApplicationController
     authorize! :validate, Need
     @need = load_need
 
-    reasons_why_invalid = [
-      params["need"]["status"]["reasons_why_invalid"],
-      params["need"]["status"]["other_reasons_why_invalid"]
-    ].flatten.select(&:present?)
+    case params["need"]["status"]["description"]
+    when "not valid" then
+      reasons_why_invalid = [
+        params["need"]["status"]["reasons_why_invalid"],
+        params["need"]["status"]["other_reasons_why_invalid"]
+      ].flatten.select(&:present?)
 
-    if reasons_why_invalid.empty?
-      flash[:error] = "A reason is required to mark a need as not valid"
+      if reasons_why_invalid.empty?
+        flash[:error] = "A reason is required to mark a need as not valid"
+        redirect_to need_path(@need)
+        return
+      end
+
+      @need.status = {
+        description: "not valid",
+        reasons: reasons_why_invalid
+      }
+    when "proposed" then
+      @need.status = {
+        description: "proposed",
+      }
+    else
+      flash[:error] = "You need to select the new status"
       redirect_to need_path(@need)
       return
     end
-
-    @need.status = {
-      description: "not valid",
-      reasons: reasons_why_invalid
-    }
 
     unless @need.save_as(current_user)
       flash[:error] = "We had a problem updating the need’s status"

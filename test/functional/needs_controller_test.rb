@@ -474,19 +474,28 @@ class NeedsControllerTest < ActionController::TestCase
           reasons: [ "bar", "foo" ]
         )
 
-        put :update_status, { id: 100001, need: { status: { reasons_why_invalid: ["bar"], other_reasons_why_invalid: "foo" } } }
+        put :update_status, {
+          id: 100001,
+          need: {
+            status: {
+              description: "not valid",
+              reasons_why_invalid: ["bar"],
+              other_reasons_why_invalid: "foo"
+            }
+          }
+        }
       end
 
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 
-        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
       end
 
       should "redirect to the need once complete" do
         @stub_need.stubs(:save_as).returns(true)
 
-        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:error]
         assert_redirected_to need_path(@stub_need)
@@ -495,7 +504,7 @@ class NeedsControllerTest < ActionController::TestCase
       should "redirect to the need with an error if the save fails" do
         @stub_need.stubs(:save_as).returns(false)
 
-        put :update_status, { id: 100001, need: { status: { other_reasons_why_invalid: "foo" } } }
+        put :update_status, { id: 100001, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:notice]
         assert_equal "We had a problem updating the need’s status", @controller.flash[:error]

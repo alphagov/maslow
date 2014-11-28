@@ -65,7 +65,7 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
 
       within ".non-js-form" do
         # This is a confirmation on a separate page when JavaScript is off
-
+        choose "not valid - the need is badly formed, lacks detail, or is out of proposition"
         check "is incomplete or imprecise"
         check "has typos or acronyms that aren’t defined"
         fill_in "Any other reason why the need is invalid (optional)", with: "the user needs to be defined more precisely"
@@ -88,6 +88,7 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       end
 
       within ".non-js-form" do
+        choose "not valid - the need is badly formed, lacks detail, or is out of proposition"
         fill_in "Any other reason why the need is invalid (optional)", with: "foo"
         click_on "Update the status"
       end
@@ -107,10 +108,55 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       end
 
       within ".non-js-form" do
+        choose "not valid - the need is badly formed, lacks detail, or is out of proposition"
         click_on "Update the status"
       end
 
       assert page.has_content?("A reason is required to mark a need as not valid")
+    end
+  end
+
+  context "setting a need back to proposed" do
+    setup do
+      @need = need_hash.merge(
+        "status" => {
+          "description" => "not valid",
+          "reasons" => [ "some reasons" ]
+        },
+      )
+      need_api_has_needs([@need]) # For need list
+      content_api_has_artefacts_for_need_id("100001", [])
+
+      @api_url = Plek.current.find('need-api') + '/needs/100001'
+    end
+
+    should "update the Need API" do
+      need_api_has_need(@need) # For individual need
+
+      request = stub_request(:put, @api_url).with(:body => hash_including({
+        "status" => {
+          "description" => "proposed",
+        },
+      }))
+
+      visit "/needs"
+      click_on "100001"
+      click_on "Actions"
+
+      # There are two 'Record validity decision' buttons
+      # The second is a confirmation modal drop down when JavaScript is on
+      # The first is an action initiator in the header
+      within "#workflow #record-validity-decision" do
+        click_on "Record validity decision"
+      end
+
+      within ".non-js-form" do
+        # This is a confirmation on a separate page when JavaScript is off
+        choose "proposed"
+        click_on "Update the status"
+      end
+
+      assert_requested request
     end
   end
 end
