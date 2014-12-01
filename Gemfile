@@ -42,7 +42,7 @@ end
 
 gem 'chosen-rails'
 
-gem 'govuk_admin_template', '1.3.0'
+gem 'govuk_admin_template', '1.4.0'
 gem 'unicorn'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
