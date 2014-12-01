@@ -30,7 +30,7 @@ group :test do
 end
 
 group :development, :test do
-  gem 'jasmine', '2.0.3'
+  gem 'jasmine', '2.1.0'
 end
 
 group :assets do
