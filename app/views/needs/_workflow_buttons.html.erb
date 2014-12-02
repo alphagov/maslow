@@ -8,13 +8,7 @@
         <% end %>
         <% if defined?(need) && current_user.can?(:validate, Need) %>
           <span id="record-validity-decision">
-            <% if @need.duplicate? %>
-              <%= link_to "Record validity decision",
-                          "#",
-                          id: 'record-validity-decision-button',
-                          disabled: "",
-                          class: "btn btn-default btn-disabled" %>
-            <% else %>
+            <% unless @need.duplicate? %>
               <%= link_to "Record validity decision",
                           status_need_path(@need),
                           id: 'record-validity-decision-button',
