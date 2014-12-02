@@ -12,3 +12,10 @@
 //
 //= require chosen-jquery
 //= require_tree .
+
+$(function(){
+  $('#record-validity-decision-button').
+    attr('href', '#record-validity-decision-modal').
+    attr('data-toggle', 'modal').
+    attr('role', 'button');
+});

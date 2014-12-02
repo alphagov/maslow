@@ -1,30 +1,32 @@
-<% if current_user.can?(:create, Need) || current_user.can?(:update, Need) %>
-  <%= render layout: 'workflow_footer' do %>
-    <div class="navbar-btn">
-      <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
-      <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
-        <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
-      <% end %>
-      <% if defined?(need) && current_user.can?(:validate, Need) %>
-        <span id="record-validity-decision">
-          <% if @need.duplicate? %>
-            <%= link_to "Record validity decision",
-                        "#",
-                        id: 'record-validity-decision-button',
-                        disabled: "",
-                        class: "btn btn-default btn-disabled" %>
-          <% else %>
-            <%= link_to "Record validity decision",
-                        status_need_path(@need),
-                        id: 'record-validity-decision-button',
-                        class: "btn btn-danger" %>
-          <% end %>
-        </span>
-      <% end %>
-    </div>
-  <% end %>
+<div data-module="record-validity-decision">
+  <% if current_user.can?(:create, Need) || current_user.can?(:update, Need) %>
+    <%= render layout: 'workflow_footer' do %>
+      <div class="navbar-btn">
+        <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
+        <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
+          <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
+        <% end %>
+        <% if defined?(need) && current_user.can?(:validate, Need) %>
+          <span id="record-validity-decision">
+            <% if @need.duplicate? %>
+              <%= link_to "Record validity decision",
+                          "#",
+                          id: 'record-validity-decision-button',
+                          disabled: "",
+                          class: "btn btn-default btn-disabled" %>
+            <% else %>
+              <%= link_to "Record validity decision",
+                          status_need_path(@need),
+                          id: 'record-validity-decision-button',
+                          class: "btn btn-danger" %>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
 
-  <% if defined?(need) %>
-    <%= render "needs/record_validity_decision_modal" %>
+    <% if defined?(need) %>
+      <%= render "needs/record_validity_decision_modal" %>
+    <% end %>
   <% end %>
-<% end %>
+</div>
