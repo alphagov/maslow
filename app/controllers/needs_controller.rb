@@ -162,6 +162,14 @@ class NeedsController < ApplicationController
     @need = load_need
 
     case params["need"]["status"]["description"]
+    when "valid" then
+      new_status = {
+        description: "valid"
+      }
+      if params["need"]["status"]["additional_comments"].present?
+        new_status[:additional_comments] = params["need"]["status"]["additional_comments"]
+      end
+      @need.status = new_status
     when "not valid" then
       reasons_why_invalid = [
         params["need"]["status"]["reasons_why_invalid"],

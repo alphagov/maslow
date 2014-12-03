@@ -486,6 +486,26 @@ class NeedsControllerTest < ActionController::TestCase
         }
       end
 
+      should "mark the need as valid" do
+        # not testing the save method here
+        @stub_need.stubs(:save_as).returns(true)
+
+        @stub_need.expects(:status=).with(
+          description: "valid",
+          additional_comments: "comment relating to need"
+        )
+
+        put :update_status, {
+          id: 100001,
+          need: {
+            status: {
+              description: "valid",
+              additional_comments: "comment relating to need"
+            }
+          }
+        }
+      end
+
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 
