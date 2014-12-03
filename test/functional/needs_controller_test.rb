@@ -506,6 +506,43 @@ class NeedsControllerTest < ActionController::TestCase
         }
       end
 
+      should "mark the need as valid with conditions" do
+        # not testing the save method here
+        @stub_need.stubs(:save_as).returns(true)
+
+        @stub_need.expects(:status=).with(
+          description: "valid with conditions",
+          validation_conditions: "some conditions"
+        )
+
+        put :update_status, {
+          id: 100001,
+          need: {
+            status: {
+              description: "valid with conditions",
+              validation_conditions: "some conditions"
+            }
+          }
+        }
+      end
+
+      should "not mark the need as valid with conditions if the conditions are missing" do
+        # not testing the save method here
+        @stub_need.stubs(:save_as).returns(true)
+
+        put :update_status, {
+          id: 100001,
+          need: {
+            status: {
+              description: "valid with conditions",
+            }
+          }
+        }
+
+        assert_match "The validation conditions are required to mark a need as valid with conditions", @controller.flash[:error]
+        assert_redirected_to need_path(@stub_need)
+      end
+
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 

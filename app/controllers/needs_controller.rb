@@ -170,6 +170,17 @@ class NeedsController < ApplicationController
         new_status[:additional_comments] = params["need"]["status"]["additional_comments"]
       end
       @need.status = new_status
+    when "valid with conditions" then
+      unless params["need"]["status"]["validation_conditions"].present?
+        flash[:error] = "The validation conditions are required to mark a need as valid with conditions"
+        redirect_to need_path(@need)
+        return
+      end
+
+      @need.status = {
+        description: "valid with conditions",
+        validation_conditions: params["need"]["status"]["validation_conditions"]
+      }
     when "not valid" then
       reasons_why_invalid = [
         params["need"]["status"]["reasons_why_invalid"],

@@ -161,6 +161,51 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "marking a need as valid with conditions" do
+    setup do
+      @need = need_hash.merge(
+        "status" => {
+          "description" => "proposed",
+        },
+      )
+      need_api_has_needs([@need]) # For need list
+      content_api_has_artefacts_for_need_id("100001", [])
+
+      @api_url = Plek.current.find('need-api') + '/needs/100001'
+    end
+
+    should "update the Need API" do
+      need_api_has_need(@need) # For individual need
+
+      request = stub_request(:put, @api_url).with(:body => hash_including({
+        "status" => {
+          "description" => "valid with conditions",
+          "validation_conditions" => "The need is fine, just abc needs to be clarified",
+        },
+      }))
+
+      visit "/needs"
+      click_on "100001"
+      click_on "Actions"
+
+      # There are two 'Decide on need' buttons
+      # The second is a confirmation modal drop down when JavaScript is on
+      # The first is an action initiator in the header
+      within "#workflow #decide-on-need" do
+        click_on "Decide on need"
+      end
+
+      within ".non-js-form" do
+        # This is a confirmation on a separate page when JavaScript is off
+        choose "valid with conditions - there are some minor questions or requests for clarity"
+        fill_in "What needs to change before the need is valid?", with: "The need is fine, just abc needs to be clarified"
+        click_on "Update the status"
+      end
+
+      assert_requested request
+    end
+  end
+
   context "setting a need back to proposed" do
     setup do
       @need = need_hash.merge(
