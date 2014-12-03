@@ -44,7 +44,10 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
           "applies_to_all_organisations" => true,
           "duplicate_of" => 10001,
           "status" => {
-            "description" => "out of scope",
+            "description" => "not valid",
+            "reasons" => [
+              "some reason"
+            ]
           }
         )
       ])
@@ -71,7 +74,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
         within "tbody tr:nth-of-type(3)" do
           assert page.has_content?("10003")
           assert page.has_content?("Find out about government policy")
-          assert page.has_content?("Out of scope, Duplicate")
+          assert page.has_content?("Not valid, Duplicate")
           assert page.has_content?("Applies to all organisations")
         end
       end

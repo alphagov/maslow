@@ -5,11 +5,7 @@
   <%= render :partial => "need_header" %>
 
   <div id="actions">
-    <% if current_user.can?(:descope, Need) %>
-      <%= render partial: "needs/actions/out_of_scope" %>
-    <% end %>
     <% if current_user.can?(:close, Need) %>
-      <hr/>
       <%= render partial: "needs/actions/duplicate_of" %>
     <% end %>
   </div>

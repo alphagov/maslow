@@ -12,3 +12,10 @@
 //
 //= require chosen-jquery
 //= require_tree .
+
+$(function(){
+  $('#decide-on-need-button').
+    attr('href', '#decide-on-need-modal').
+    attr('data-toggle', 'modal').
+    attr('role', 'button');
+});

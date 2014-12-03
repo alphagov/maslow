@@ -152,40 +152,44 @@ class NeedsController < ApplicationController
     render "show", :status => 422
   end
 
-  def out_of_scope
-    authorize! :descope, Need
+  def status
+    authorize! :validate, Need
     @need = load_need
-    unless @need.in_scope?
-      flash[:error] = "This need has already been marked as out of scope"
-      redirect_to need_path(@need)
-      return
-    end
   end
 
-  def descope
-    authorize! :descope, Need
+  def update_status
+    authorize! :validate, Need
     @need = load_need
 
-    unless @need.in_scope?
-      flash[:error] = "This need has already been marked as out of scope"
-      redirect_to need_path(@need)
-      return
-    end
+    case params["need"]["status"]["description"]
+    when "not valid" then
+      reasons_why_invalid = [
+        params["need"]["status"]["reasons_why_invalid"],
+        params["need"]["status"]["other_reasons_why_invalid"]
+      ].flatten.select(&:present?)
 
-    if params["need"]["status"] && params["need"]["status"]["reason"].blank?
-      flash[:error] = "A reason is required to mark a need as out of scope"
-      redirect_to need_path(@need)
-      return
-    end
+      if reasons_why_invalid.empty?
+        flash[:error] = "A reason is required to mark a need as not valid"
+        redirect_to need_path(@need)
+        return
+      end
 
-    @need.status = { description: "out of scope", reason: params["need"]["status"]["reason"] }
-
-    if @need.save_as(current_user)
-      flash[:need_id] = @need.need_id
-      flash[:goal] = @need.goal
-      flash[:notice] = "Need has been marked as out of scope"
+      @need.status = {
+        description: "not valid",
+        reasons: reasons_why_invalid
+      }
+    when "proposed" then
+      @need.status = {
+        description: "proposed",
+      }
     else
-      flash[:error] = "We had a problem marking the need as out of scope"
+      flash[:error] = "You need to select the new status"
+      redirect_to need_path(@need)
+      return
+    end
+
+    unless @need.save_as(current_user)
+      flash[:error] = "We had a problem updating the need’s status"
     end
 
     redirect_to need_path(@need)

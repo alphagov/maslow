@@ -241,12 +241,8 @@ class Need
     @existing
   end
 
-  def in_scope?
-    !out_of_scope?
-  end
-
-  def out_of_scope?
-    status["description"] == "out of scope"
+  def has_invalid_status?
+    status["description"] == "not valid"
   end
 
 private

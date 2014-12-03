@@ -1,10 +1,26 @@
-<% if current_user.can?(:create, Need) || current_user.can?(:update, Need) %>
-  <%= render layout: 'workflow_footer' do %>
-    <div class="navbar-btn">
-      <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
-      <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
-        <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
-      <% end %>
-    </div>
+<div data-module="decide-on-need">
+  <% if current_user.can?(:create, Need) || current_user.can?(:update, Need) %>
+    <%= render layout: 'workflow_footer' do %>
+      <div class="navbar-btn">
+        <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
+        <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
+          <%= link_to "Edit", edit_need_path(need), class: "btn btn-success" %>
+        <% end %>
+        <% if defined?(need) && current_user.can?(:validate, Need) %>
+          <span id="decide-on-need">
+            <% unless @need.duplicate? %>
+              <%= link_to "Decide on need",
+                          status_need_path(@need),
+                          id: 'decide-on-need-button',
+                          class: "btn btn-default add-left-margin" %>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if defined?(need) %>
+      <%= render "needs/decide_on_need_modal" %>
+    <% end %>
   <% end %>
-<% end %>
+</div>

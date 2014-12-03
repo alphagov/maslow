@@ -8,12 +8,15 @@
   </div>
 <% end %>
 
-<% if @need.out_of_scope? %>
+<% if @need.has_invalid_status? %>
   <div class="callout callout-danger add-bottom-margin">
     <div class="callout-body">
-      <strong>This need is not in scope for GOV.UK</strong>
-      <br/>
-      <%= @need.status["reason"] %>
+      This need is not valid because:
+      <ul>
+        <% @need.status["reasons"].each do |reason| %>
+          <li><%= reason %></li>
+        <% end %>
+      </ul>
     </div>
   </div>
 <% end %>

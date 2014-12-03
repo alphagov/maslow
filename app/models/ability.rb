@@ -13,6 +13,6 @@ class Ability
       can :create, Note
     end
 
-    can :descope, Need if user.admin?
+    can :validate, Need if user.admin?
   end
 end

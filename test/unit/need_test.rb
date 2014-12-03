@@ -544,7 +544,7 @@ class NeedTest < ActiveSupport::TestCase
 
       should "reject a protected field" do
         assert_raises ArgumentError do
-          @need.update("in_scope" => "foo")
+          @need.update("duplicate_of" => "foo")
         end
       end
 
@@ -582,12 +582,12 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
-  should "return whether a need is out of scope" do
-    need = Need.new({ "status" => { "description" => "out of scope" } }, true)
-    assert need.out_of_scope?
+  should "return whether a need state is 'valid' or not" do
+    need = Need.new({ "status" => { "description" => "not valid" } }, true)
+    assert need.has_invalid_status?
 
     need = Need.new({ "status" => { "description" => "proposed" } }, true)
-    refute need.out_of_scope?
+    refute need.has_invalid_status?
   end
 
   context "closing needs as duplicates" do
