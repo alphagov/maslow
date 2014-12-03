@@ -1,12 +1,12 @@
-<div id="record-validity-decision-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-record-validity-decision-label" aria-hidden="true">
+<div id="decide-on-need-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-decide-on-need-label" aria-hidden="true">
   <div class="modal-dialog">
     <%= semantic_form_for @need, { url: update_status_need_path(@need), html: { class: "modal-content" } } do |f| %>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="modal-record-validity-decision-label" class="modal-title">Record validity decision</h3>
+        <h3 id="modal-decide-on-need-label" class="modal-title">Decide on need</h3>
       </div>
       <div class="modal-body">
-        <%= render partial: "needs/validity_decision_fields", locals: { f: f } %>
+        <%= render partial: "needs/decide_on_need_fields", locals: { f: f } %>
       </div>
       <div class="modal-footer">
         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -14,7 +14,7 @@
                      :method => :put,
                      :button_html => {
                        :value => "Update the status",
-                       :class => "btn btn-success record-validity-decision-submit-button",
+                       :class => "btn btn-success decide-on-need-submit-button",
                        :disabled => "disabled",
                      }
                    %>

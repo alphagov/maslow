@@ -61,8 +61,8 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
       login_as_stub_admin
       visit "/needs/100002/actions"
 
-      # 'Record validity decision' functionality is absent if need is closed
-      refute page.has_selector?("a[id=record-validity-decision-button]")
+      # 'Decide on need' functionality is absent if need is closed
+      refute page.has_selector?("a[id=decide-on-need-button]")
     end
 
     should "show an error if there's a problem reopening the need" do

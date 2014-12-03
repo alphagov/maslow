@@ -1,15 +1,15 @@
-<% content_for :page_title, "Record validity decision" %>
+<% content_for :page_title, "Decide on need" %>
 
 <article class="need">
   <nav class="add-top-margin">
-    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Record validity decision" } %>
+    <%= render partial: "needs/breadcrumb", locals: { need: @need, action: "Decide on need" } %>
   </nav>
 
   <%= render :partial => "need_header" %>
 
-  <h3>Record validity decision</h3>
+  <h3>Decide on need</h3>
   <%= semantic_form_for @need, { url: update_status_need_path(@need), html: { class: "non-js-form" } } do |f| %>
-    <%= render partial: "needs/validity_decision_fields", locals: { f: f } %>
+    <%= render partial: "needs/decide_on_need_fields", locals: { f: f } %>
     <%= f.action :submit,
                  :method => :put,
                  :button_html => {

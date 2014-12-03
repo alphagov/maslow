@@ -1,4 +1,4 @@
-describe('A "record validity decision" module', function() {
+describe('A "Decide on need" module', function() {
   "use strict";
 
   var root = window,
@@ -12,7 +12,7 @@ describe('A "record validity decision" module', function() {
                 append('<fieldset id="fields-for-a" data-status-description="option A">').
                 append('<fieldset id="fields-for-b" data-status-description="option B">');
     $('body').append($element);
-    module = new GOVUKAdmin.Modules.RecordValidityDecision();
+    module = new GOVUKAdmin.Modules.DecideOnNeed();
   });
 
   afterEach(function() {

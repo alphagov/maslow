@@ -14,8 +14,8 @@
 //= require_tree .
 
 $(function(){
-  $('#record-validity-decision-button').
-    attr('href', '#record-validity-decision-modal').
+  $('#decide-on-need-button').
+    attr('href', '#decide-on-need-modal').
     attr('data-toggle', 'modal').
     attr('role', 'button');
 });

@@ -305,7 +305,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       click_on "101800"
 
       assert page.has_content?("This need is not valid because:")
-      assert page.has_no_button?("Record validity decision")
+      assert page.has_no_button?("Decide on need")
     end
   end
 

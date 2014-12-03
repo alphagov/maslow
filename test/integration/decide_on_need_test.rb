@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
 
-class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
+class DecideOnNeedTest < ActionDispatch::IntegrationTest
   def need_hash
     {
       "id" => "100001",
@@ -56,11 +56,11 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      # There are two 'Record validity decision' buttons
+      # There are two 'Decide on need' buttons
       # The second is a confirmation modal drop down when JavaScript is on
       # The first is an action initiator in the header
-      within "#workflow #record-validity-decision" do
-        click_on "Record validity decision"
+      within "#workflow #decide-on-need" do
+        click_on "Decide on need"
       end
 
       within ".non-js-form" do
@@ -83,8 +83,8 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      within "#workflow #record-validity-decision" do
-        click_on "Record validity decision"
+      within "#workflow #decide-on-need" do
+        click_on "Decide on need"
       end
 
       within ".non-js-form" do
@@ -103,8 +103,8 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      within "#workflow #record-validity-decision" do
-        click_on "Record validity decision"
+      within "#workflow #decide-on-need" do
+        click_on "Decide on need"
       end
 
       within ".non-js-form" do
@@ -143,11 +143,11 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       click_on "100001"
       click_on "Actions"
 
-      # There are two 'Record validity decision' buttons
+      # There are two 'Decide on need' buttons
       # The second is a confirmation modal drop down when JavaScript is on
       # The first is an action initiator in the header
-      within "#workflow #record-validity-decision" do
-        click_on "Record validity decision"
+      within "#workflow #decide-on-need" do
+        click_on "Decide on need"
       end
 
       within ".non-js-form" do
