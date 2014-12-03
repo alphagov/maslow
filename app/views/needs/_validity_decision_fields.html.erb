@@ -13,17 +13,17 @@
     <legend class="if-js-hide">For invalid needs</legend>
 
     <%= s.input :reasons_why_invalid,
-                :label => "This need:",
+                :label => "This need is not valid because:",
                 :as => :check_boxes,
                 :required => false,
-                :collection => {
-                  "has typos or acronyms that aren’t defined" => "it has typos or acronyms that aren’t defined",
-                  "is incomplete or imprecise (eg user, acceptance criteria)" => "it’s incomplete or imprecise",
-                  "contains sensitive or politically controversial information" => "it contains sensitive or politically controversial information",
-                  "is an organisational need or isn't properly defined as a user need" => "it’s an organisational need or isn’t properly defined as a user need",
-                  "is an acceptance criterion of another need" => "it’s an acceptance criterion of another need",
-                  "is invalid or not in proposition" => "it’s invalid or not in proposition",
-                } %>
+                :collection => [
+                  "it has typos or acronyms that aren’t defined",
+                  "it’s incomplete or imprecise",
+                  "it contains sensitive or politically controversial information",
+                  "it’s an organisational need or isn’t properly defined as a user need",
+                  "it’s an acceptance criterion of another need",
+                  "it’s not in proposition",
+                ] %>
 
     <%= s.input :other_reasons_why_invalid,
                 :required => false,

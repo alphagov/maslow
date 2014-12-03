@@ -66,8 +66,8 @@ class RecordValidityDecisionTest < ActionDispatch::IntegrationTest
       within ".non-js-form" do
         # This is a confirmation on a separate page when JavaScript is off
         choose "not valid - the need is badly formed, lacks detail, or is out of proposition"
-        check "is incomplete or imprecise"
-        check "has typos or acronyms that aren’t defined"
+        check "it’s incomplete or imprecise"
+        check "it has typos or acronyms that aren’t defined"
         fill_in "Any other reason why the need is invalid (optional)", with: "the user needs to be defined more precisely"
         click_on "Update the status"
       end
