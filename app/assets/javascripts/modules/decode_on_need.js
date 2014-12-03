@@ -7,20 +7,25 @@
   Modules.DecideOnNeed = function() {
     var that = this;
     that.start = function(element) {
-      var $el = $(element);
-      var $allFieldsets = $el.find('fieldset[data-status-description]');
+      var $allFieldsets = element.find('fieldset[data-status-description]');
 
-      $el.find('input.new-status-description').change(function(){
-        $el.find('.decide-on-need-submit-button').attr('disabled', false);
+      element.find('input.new-status-description').
+        change(enableSubmitButton).
+        change(displayRelevantFormField);
 
+      $allFieldsets.hide();
+
+      function displayRelevantFormField() {
         var selectedStatusDescription = $(this).val();
-        var $relevantFieldset = $el.find('fieldset[data-status-description="' + selectedStatusDescription + '"]');
+        var $relevantFieldset = element.find('fieldset[data-status-description="' + selectedStatusDescription + '"]');
 
         $relevantFieldset.show();
         $allFieldsets.not($relevantFieldset).hide();
-      });
+      };
 
-      $allFieldsets.hide();
-    }
+      function enableSubmitButton() {
+        element.find('.decide-on-need-submit-button').attr('disabled', false);
+      };
+    };
   };
 })(window.GOVUKAdmin.Modules);
