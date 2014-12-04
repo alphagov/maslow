@@ -6,8 +6,31 @@
               :required => true,
               :collection => {
                 "proposed" => "proposed",
+                "valid - it’s good for a content designer to work with on a content plan" => "valid",
+                "valid with conditions - there are some minor questions or requests for clarity" => "valid with conditions",
                 "not valid - the need is badly formed, lacks detail, or is out of proposition" => "not valid",
               } %>
+
+  <fieldset data-status-description="valid">
+    <legend class="if-js-hide">For valid needs</legend>
+
+    <%= s.input :additional_comments,
+                :required => false,
+                :label => "Additional comments (optional)",
+                :as => :text,
+                :input_html => { :class => 'input-md-8', :rows => 3 } %>
+  </fieldset>
+
+  <fieldset data-status-description="valid with conditions">
+    <legend class="if-js-hide">For needs that are valid with conditions</legend>
+
+    <%= s.input :validation_conditions,
+                :required => false,
+                :label => "What needs to change before the need is valid?",
+                :hint => "Please list anything that needs to be clarified",
+                :as => :text,
+                :input_html => { :class => 'input-md-8', :rows => 3 } %>
+  </fieldset>
 
   <fieldset data-status-description="not valid">
     <legend class="if-js-hide">For invalid needs</legend>
