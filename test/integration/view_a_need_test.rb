@@ -309,6 +309,29 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "given a need which is valid with conditions" do
+    setup do
+      need = example_need(
+        "id" => "10001",
+        "status" => {
+          "description" => "valid with conditions",
+          "validation_conditions" => "a and b must be changed",
+        })
+
+      need_api_has_organisations([])
+      need_api_has_needs([need])
+      need_api_has_need(need)
+      content_api_has_artefacts_for_need_id("10001", [])
+    end
+
+    should "indicate that it is valid with conditions" do
+      visit "/needs"
+      click_on "10001"
+
+      assert page.has_content?("This need is valid under the following conditions: a and b must be changed")
+    end
+  end
+
   context "given a need which doesn't exist" do
     setup do
       need_api_has_no_need("101007")
