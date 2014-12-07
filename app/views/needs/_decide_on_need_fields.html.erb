@@ -39,14 +39,7 @@
                 :label => "This need is not valid because:",
                 :as => :check_boxes,
                 :required => false,
-                :collection => [
-                  "it has typos or acronyms that aren’t defined",
-                  "it’s incomplete or imprecise",
-                  "it contains sensitive or politically controversial information",
-                  "it’s an organisational need or isn’t properly defined as a user need",
-                  "it’s an acceptance criterion of another need",
-                  "it’s not in proposition",
-                ] %>
+                :collection => NeedStatus::COMMON_REASONS_WHY_INVALID %>
 
     <%= s.input :other_reasons_why_invalid,
                 :required => false,

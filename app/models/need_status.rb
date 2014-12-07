@@ -6,6 +6,15 @@ class NeedStatus
   include ActiveModel::Validations
   include ActiveModel::Conversion
 
+  COMMON_REASONS_WHY_INVALID = [
+    "it has typos or acronyms that aren’t defined",
+    "it’s incomplete or imprecise",
+    "it contains sensitive or politically controversial information",
+    "it’s an organisational need or isn’t properly defined as a user need",
+    "it’s an acceptance criterion of another need",
+    "it’s not in proposition",
+  ]
+
   PROPOSED = "proposed"
   NOT_VALID = "not valid"
   VALID = "valid"
