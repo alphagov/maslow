@@ -194,7 +194,7 @@ class Need
       # with updates on other fields
       value = nil if value == ""
 
-      hash[field] = value
+      hash[field] = value.as_json
     end
   end
 
@@ -242,7 +242,7 @@ class Need
   end
 
   def has_invalid_status?
-    status["description"] == "not valid"
+    status.description == "not valid"
   end
 
 private
@@ -264,6 +264,8 @@ private
                          prepare_revisions(value)
                        when 'organisations'
                          prepare_organisations(value)
+                       when 'status'
+                         prepare_status(value)
                        else
                          value
                        end
@@ -282,6 +284,11 @@ private
   def prepare_organisations(organisations)
     return [] unless organisations.present?
     GdsApi::Response.build_ostruct_recursively(organisations)
+  end
+
+  def prepare_status(status)
+    return nil unless status.present?
+    NeedStatus.new(status)
   end
 
   def prepare_revisions(revisions)

@@ -445,12 +445,12 @@ class NeedTest < ActiveSupport::TestCase
 
     should "correctly assign protected fields" do
       response = stub_response(
-        "status" => "some status"
+        "status" => { "description" => "some status" }
       )
       GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
 
       need = Need.find(100001)
-      assert_equal "some status", need.status
+      assert_equal "some status", need.status.description
     end
 
     context "returning artefacts for a need" do
@@ -549,8 +549,8 @@ class NeedTest < ActiveSupport::TestCase
       end
 
       should "create an accessor to update the protected field" do
-        @need.status = { "description" => "some status" }
-        assert_equal "some status", @need.status["description"]
+        @need.status = NeedStatus.new("description" => "some status")
+        assert_equal "some status", @need.status.description
       end
     end
 

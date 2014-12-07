@@ -1,3 +1,4 @@
+require "ostruct"
 require "active_model"
 
 class NeedStatus
@@ -21,10 +22,12 @@ class NeedStatus
             presence: { message: "The validation conditions are required to mark a need as valid with conditions" }
 
   def initialize(options)
-    @description = options[:description]
-    @reasons = options[:reasons]
-    @additional_comments = options[:additional_comments]
-    @validation_conditions = options[:validation_conditions]
+    options = OpenStruct.new(options) if options.is_a?(Hash)
+
+    @description = options.description
+    @reasons = options.reasons
+    @additional_comments = options.additional_comments
+    @validation_conditions = options.validation_conditions
   end
 
   def as_json

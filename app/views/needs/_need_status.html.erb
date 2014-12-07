@@ -13,7 +13,7 @@
     <div class="callout-body">
       This need is not valid because:
       <ul>
-        <% @need.status["reasons"].each do |reason| %>
+        <% @need.status.reasons.each do |reason| %>
           <li><%= reason %></li>
         <% end %>
       </ul>
@@ -21,10 +21,10 @@
   </div>
 <% end %>
 
-<% if @need.status["description"] == "valid with conditions" %>
+<% if @need.status.description == "valid with conditions" %>
   <div class="callout callout-warning add-bottom-margin">
     <div class="callout-body">
-      This need is valid under the following conditions: <%= @need.status["validation_conditions"] %>
+      This need is valid under the following conditions: <%= @need.status.validation_conditions %>
     </div>
   </div>
 <% end %>
