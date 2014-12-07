@@ -1,4 +1,4 @@
-<%= f.semantic_fields_for :status do |s| %>
+<%= f.semantic_fields_for :status, f.object.status do |s| %>
   <%= s.input :description,
               :label => "Mark this need as:",
               :input_html => { class: "new-status-description", :"aria-required" => true },

@@ -39,6 +39,14 @@ class NeedStatus
     @validation_conditions = options.validation_conditions
   end
 
+  def common_reasons_why_invalid
+    @reasons & COMMON_REASONS_WHY_INVALID
+  end
+
+  def other_reasons_why_invalid
+    ((@reasons || []) - COMMON_REASONS_WHY_INVALID).first
+  end
+
   def as_json
     additional_attributes = case description
                             when VALID then

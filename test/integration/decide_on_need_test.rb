@@ -211,7 +211,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
       @need = need_hash.merge(
         "status" => {
           "description" => "not valid",
-          "reasons" => [ "some reasons" ]
+          "reasons" => [ NeedStatus::COMMON_REASONS_WHY_INVALID.first, "some reasons" ]
         },
       )
       need_api_has_needs([@need]) # For need list
@@ -241,6 +241,9 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
       end
 
       within ".non-js-form" do
+        assert has_checked_field?(NeedStatus::COMMON_REASONS_WHY_INVALID.first)
+        assert has_field?("Any other reason why the need is invalid (optional)", with: "some reasons")
+
         # This is a confirmation on a separate page when JavaScript is off
         choose "proposed"
         click_on "Update the status"
