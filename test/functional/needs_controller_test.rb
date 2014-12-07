@@ -479,7 +479,7 @@ class NeedsControllerTest < ActionController::TestCase
           need: {
             status: {
               description: "not valid",
-              reasons_why_invalid: ["bar"],
+              common_reasons_why_invalid: ["bar"],
               other_reasons_why_invalid: "foo"
             }
           }

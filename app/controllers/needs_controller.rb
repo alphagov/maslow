@@ -163,14 +163,14 @@ class NeedsController < ApplicationController
 
     status_params = params["need"]["status"]
 
-    reasons_why_invalid = [
-      status_params["reasons_why_invalid"],
+    reasons = [
+      status_params["common_reasons_why_invalid"],
       status_params["other_reasons_why_invalid"]
     ].flatten.select(&:present?)
 
     need_status = NeedStatus.new(
       description: status_params["description"],
-      reasons: reasons_why_invalid,
+      reasons: reasons,
       additional_comments: status_params["additional_comments"],
       validation_conditions: status_params["validation_conditions"],
     )
