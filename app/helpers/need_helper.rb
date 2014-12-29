@@ -86,7 +86,7 @@ module NeedHelper
 
   def format_decision_made(need)
     decision = []
-    decision << need.status["description"].capitalize
+    decision << need.status.description.capitalize
     decision << "Duplicate" if need.duplicate?
     decision.join(", ")
   end

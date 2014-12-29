@@ -161,51 +161,27 @@ class NeedsController < ApplicationController
     authorize! :validate, Need
     @need = load_need
 
-    case params["need"]["status"]["description"]
-    when "valid" then
-      new_status = {
-        description: "valid"
-      }
-      if params["need"]["status"]["additional_comments"].present?
-        new_status[:additional_comments] = params["need"]["status"]["additional_comments"]
-      end
-      @need.status = new_status
-    when "valid with conditions" then
-      unless params["need"]["status"]["validation_conditions"].present?
-        flash[:error] = "The validation conditions are required to mark a need as valid with conditions"
-        redirect_to need_path(@need)
-        return
-      end
+    status_params = params["need"]["status"]
 
-      @need.status = {
-        description: "valid with conditions",
-        validation_conditions: params["need"]["status"]["validation_conditions"]
-      }
-    when "not valid" then
-      reasons_why_invalid = [
-        params["need"]["status"]["reasons_why_invalid"],
-        params["need"]["status"]["other_reasons_why_invalid"]
-      ].flatten.select(&:present?)
+    reasons = [
+      status_params["common_reasons_why_invalid"],
+      status_params["other_reasons_why_invalid"]
+    ].flatten.select(&:present?)
 
-      if reasons_why_invalid.empty?
-        flash[:error] = "A reason is required to mark a need as not valid"
-        redirect_to need_path(@need)
-        return
-      end
+    need_status = NeedStatus.new(
+      description: status_params["description"],
+      reasons: reasons,
+      additional_comments: status_params["additional_comments"],
+      validation_conditions: status_params["validation_conditions"],
+    )
 
-      @need.status = {
-        description: "not valid",
-        reasons: reasons_why_invalid
-      }
-    when "proposed" then
-      @need.status = {
-        description: "proposed",
-      }
-    else
-      flash[:error] = "You need to select the new status"
+    unless need_status.valid?
+      flash[:error] = need_status.errors.full_messages.join(". ")
       redirect_to need_path(@need)
       return
     end
+
+    @need.status = need_status.as_json
 
     unless @need.save_as(current_user)
       flash[:error] = "We had a problem updating the need’s status"

@@ -1,17 +1,17 @@
-<%= f.semantic_fields_for :status do |s| %>
+<%= f.semantic_fields_for :status, f.object.status do |s| %>
   <%= s.input :description,
               :label => "Mark this need as:",
               :input_html => { class: "new-status-description", :"aria-required" => true },
               :as => :radio,
               :required => true,
               :collection => {
-                "proposed" => "proposed",
-                "valid - it’s good for a content designer to work with on a content plan" => "valid",
-                "valid with conditions - there are some minor questions or requests for clarity" => "valid with conditions",
-                "not valid - the need is badly formed, lacks detail, or is out of proposition" => "not valid",
+                "proposed" => NeedStatus::PROPOSED,
+                "valid - it’s good for a content designer to work with on a content plan" => NeedStatus::VALID,
+                "valid with conditions - there are some minor questions or requests for clarity" => NeedStatus::VALID_WITH_CONDITIONS,
+                "not valid - the need is badly formed, lacks detail, or is out of proposition" => NeedStatus::NOT_VALID,
               } %>
 
-  <fieldset data-status-description="valid">
+  <fieldset data-status-description="<%= NeedStatus::VALID %>">
     <legend class="if-js-hide">For valid needs</legend>
 
     <%= s.input :additional_comments,
@@ -21,7 +21,7 @@
                 :input_html => { :class => 'input-md-8', :rows => 3 } %>
   </fieldset>
 
-  <fieldset data-status-description="valid with conditions">
+  <fieldset data-status-description="<%= NeedStatus::VALID_WITH_CONDITIONS %>">
     <legend class="if-js-hide">For needs that are valid with conditions</legend>
 
     <%= s.input :validation_conditions,
@@ -32,21 +32,14 @@
                 :input_html => { :class => 'input-md-8', :rows => 3 } %>
   </fieldset>
 
-  <fieldset data-status-description="not valid">
+  <fieldset data-status-description="<%= NeedStatus::NOT_VALID %>">
     <legend class="if-js-hide">For invalid needs</legend>
 
-    <%= s.input :reasons_why_invalid,
+    <%= s.input :common_reasons_why_invalid,
                 :label => "This need is not valid because:",
                 :as => :check_boxes,
                 :required => false,
-                :collection => [
-                  "it has typos or acronyms that aren’t defined",
-                  "it’s incomplete or imprecise",
-                  "it contains sensitive or politically controversial information",
-                  "it’s an organisational need or isn’t properly defined as a user need",
-                  "it’s an acceptance criterion of another need",
-                  "it’s not in proposition",
-                ] %>
+                :collection => NeedStatus::COMMON_REASONS_WHY_INVALID %>
 
     <%= s.input :other_reasons_why_invalid,
                 :required => false,
