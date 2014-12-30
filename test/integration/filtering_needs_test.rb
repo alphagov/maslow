@@ -31,7 +31,19 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         ),
         minimal_example_need(
           "id" => "10002",
-          "goal" => "find out about becoming a British citizen",
+          "goal" => "apply for a secondary school place",
+          "organisation_ids" => ["department-for-education"],
+          "organisations" => [
+            {
+              "id" => "department-for-education",
+              "name" => "Department for Education",
+              "abbreviation" => "DfE"
+            }
+          ],
+        ),
+        minimal_example_need(
+          "id" => "10003",
+          "goal" => "find out about becoming a British citizen primary",
           "organisation_ids" => ["home-office", "hm-passport-office"],
           "organisations" => [
             {
@@ -47,18 +59,19 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       ]
 
       need_api_has_needs(@needs)
-      need_api_has_needs_for_organisation("department-for-education", [@needs[0]])
-
+      need_api_has_needs_for_organisation("department-for-education", [@needs[0], @needs[1]])
+      need_api_has_needs_for_search("primary", [@needs[0], @needs[3]])
+      need_api_has_needs_for_search_and_filter("primary", "department-for-education", [@needs[0]])
     end
 
-    should "display a subset of the needs" do
+    should "display needs related to an organisation" do
       visit "/needs"
 
       assert page.has_text?("10001")
       assert page.has_text?("Apply for a primary school place")
       assert page.has_text?("Department for Education [DfE]")
 
-      assert page.has_text?("10002")
+      assert page.has_text?("10003")
       assert page.has_text?("Find out about becoming a British citizen")
       assert page.has_text?("Home Office")
       assert page.has_text?("HM Passport Office")
@@ -70,6 +83,28 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         assert page.has_text?("Department for Education")
         assert page.has_text?("Apply for a primary school place")
         assert page.has_no_text?("Find out about becoming a British citizen")
+      end
+    end
+
+    should "display needs related to an organisation and filtered by text" do
+      visit "/needs"
+
+      select("Department for Education [DfE]", from: "Filter needs by organisation:")
+      click_on_first_button("Filter")
+
+      within "#needs" do
+        assert page.has_text?("Apply for a primary school place")
+        assert page.has_text?("Apply for a secondary school place")
+        refute page.has_text?("find out about becoming a British citizen primary")
+      end
+
+      fill_in("Search needs", with: "primary")
+      click_on("Search")
+
+      within "#needs" do
+        assert page.has_text?("Apply for a primary school place")
+        refute page.has_text?("Apply for a secondary school place")
+        refute page.has_text?("find out about becoming a British citizen primary")
       end
     end
 

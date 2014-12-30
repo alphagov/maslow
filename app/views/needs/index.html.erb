@@ -2,6 +2,7 @@
 <h1 class="page-title-with-border">All needs</h1>
 <div>
   <%= form_tag("/needs", method: "get", class: "form-filter-needs form-inline") do %>
+    <%= hidden_field_tag "q", params["q"] %>
     <%= label_tag "organisation_id", "Filter needs by organisation:" %>
     &nbsp;
     <%= select_tag "organisation_id",
@@ -22,6 +23,7 @@
     });
   </script>
   <%= form_tag("/needs", method: "get", class: "form-search-needs form-inline add-vertical-margins") do %>
+    <%= hidden_field_tag "organisation_id", params["organisation_id"] %>
     <%= label_tag "q", "Search needs:" %>
     &nbsp;
     <%= search_field_tag("q", params["q"], class: "search-term form-control") %>
