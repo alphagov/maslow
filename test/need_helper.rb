@@ -39,4 +39,13 @@ module NeedHelper
       }
     }.merge(options)
   end
+
+  def need_api_has_needs_for_search_and_filter(search_term, organisation, needs)
+    url = GdsApi::TestHelpers::NeedApi::NEED_API_ENDPOINT + "/needs?organisation_id=#{organisation}&q=#{search_term}"
+
+    body = response_base.merge(
+      "results" => needs
+    )
+    stub_request(:get, url).to_return(status: 200, body: body.to_json, headers: {})
+  end
 end
