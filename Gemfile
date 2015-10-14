@@ -27,6 +27,7 @@ group :test do
   gem 'mocha', '0.14.0', require: false
   gem 'webmock', '1.14.0'
   gem 'timecop', '0.7.1'
+  gem 'test-unit'
 end
 
 group :development, :test do
