@@ -15,8 +15,6 @@ class User
   field "organisation_slug", type: String
   field "bookmarks", type: Array, default: Array.new
 
-  attr_accessible :email, :name, :uid, :version, :organisation_slug
-
   delegate :can?, :cannot?, :to => :ability
 
   def ability

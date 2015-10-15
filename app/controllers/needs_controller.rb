@@ -8,7 +8,7 @@ class NeedsController < ApplicationController
   end
 
   rescue_from Http404 do
-    render "public/404", :status => 404
+    render file: "public/404", status: :not_found
   end
 
   def index

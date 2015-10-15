@@ -1,5 +1,6 @@
-Maslow::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb
+  config.eager_load = false
 
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
@@ -7,8 +8,10 @@ Maslow::Application.configure do
   # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = true
 
+  config.active_support.test_order = :random
+
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_assets = true
+  config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
   # Log error messages when you accidentally call methods on nil

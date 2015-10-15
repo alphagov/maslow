@@ -1,4 +1,4 @@
-Maslow::Application.routes.draw do
+Rails.application.routes.draw do
   mount GovukAdminTemplate::Engine, at: '/style-guide'
 
   get "/healthcheck" => Proc.new { [200, {"Content-type" => "text/plain"}, ["OK"]] }
@@ -16,9 +16,9 @@ Maslow::Application.routes.draw do
   resources :needs, except: [:destroy], constraints: { id: /[0-9]+/ } do
     member do
       get :revisions
-      put :closed
+      patch :closed
       get :status
-      put :status, to: 'needs#update_status', as: 'update_status'
+      patch :status, to: 'needs#update_status', as: 'update_status'
       delete :closed, to: 'needs#reopen', as: :reopen
       get :actions
       get :close_as_duplicate, path: 'close-as-duplicate'

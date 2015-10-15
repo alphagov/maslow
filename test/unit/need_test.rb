@@ -264,19 +264,19 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
-  context "listing needs" do
+  def stub_need_response
+    response = stub("need response",
+      pages: 2,
+      total: 60,
+      page_size: 50,
+      current_page: 1,
+      start_index: 1,
+    )
+    response.stubs(:[]).with("results").returns([{"id" => 100001}])
+    response
+  end
 
-    def stub_need_response
-      response = stub("need response",
-        pages: 2,
-        total: 60,
-        page_size: 50,
-        current_page: 1,
-        start_index: 1,
-      )
-      response.stubs(:[]).with("results").returns([{"id" => 100001}])
-      response
-    end
+  context "listing needs" do
 
     should "call the need API adapter" do
       GdsApi::NeedApi.any_instance.expects(:needs)
@@ -344,19 +344,18 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
+  def stub_response(additional_atts = {})
+    response_hash = {
+      "_response_info" => {"status" => "ok"},
+      "id" => 100001,
+      "role" => "person",
+      "goal" => "do things",
+      "benefit" => "good things"
+    }.merge(additional_atts)
+    stub("response", :to_hash => response_hash)
+  end
+
   context "loading needs" do
-
-    def stub_response(additional_atts = {})
-      response_hash = {
-        "_response_info" => {"status" => "ok"},
-        "id" => 100001,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }.merge(additional_atts)
-      stub("response", :to_hash => response_hash)
-    end
-
     should "construct a need from an API response" do
       GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
 

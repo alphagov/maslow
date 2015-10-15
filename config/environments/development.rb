@@ -1,5 +1,15 @@
-Maslow::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb
+
+  config.eager_load = false
+
+  config.assets.debug = true
+
+  config.assets.digest = true
+
+  config.assets.raise_runtime_errors = true
+
+  config.action_view.raise_on_missing_translations = true
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development

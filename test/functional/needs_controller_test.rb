@@ -83,21 +83,21 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  def complete_need_data
+    {
+      "role" => "User",
+      "goal" => "do stuff",
+      "benefit" => "get stuff",
+      "organisation_ids" => ["ministry-of-justice"],
+      "impact" => "Endangers people",
+      "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
+      "met_when" => ["Winning","Awesome"]
+    }
+  end
+
   context "POST create" do
     setup do
       login_as_stub_editor
-    end
-
-    def complete_need_data
-      {
-        "role" => "User",
-        "goal" => "do stuff",
-        "benefit" => "get stuff",
-        "organisation_ids" => ["ministry-of-justice"],
-        "impact" => "Endangers people",
-        "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => ["Winning","Awesome"]
-      }
     end
 
     should "fail with incomplete data" do
@@ -237,9 +237,10 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "reject non-numeric IDs" do
       Need.expects(:find).never
-      get :show, :id => "coffee"
 
-      assert_response :not_found
+      assert_raise ActionController::UrlGenerationError do
+        get :show, :id => "coffee"
+      end
     end
   end
 
@@ -279,9 +280,10 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "reject non-numeric IDs" do
       Need.expects(:find).never
-      get :revisions, :id => "coffee"
 
-      assert_response :not_found
+      assert_raise ActionController::UrlGenerationError do
+        get :revisions, :id => "coffee"
+      end
     end
   end
 
@@ -312,8 +314,10 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "reject non-numeric IDs" do
       Need.expects(:find).never
-      get :edit, :id => "coffee"
-      assert_response :not_found
+
+      assert_raise ActionController::UrlGenerationError do
+        get :edit, :id => "coffee"
+      end
     end
 
     should "stop viewers from editing needs" do
@@ -323,15 +327,15 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
-  context "PUT update" do
-    def base_need_fields
-      {
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }
-    end
+  def base_need_fields
+    {
+      "role" => "person",
+      "goal" => "do things",
+      "benefit" => "good things"
+    }
+  end
 
+  context "PUT update" do
     setup do
       login_as_stub_editor
     end
