@@ -13,8 +13,7 @@
         <div class="col-md-8">
           <%= f.input :organisation_ids,
                     :as => :select,
-                    :collection => Organisation.all,
-                    :member_label => "name_with_abbreviation_and_status",
+                    :collection => Organisation.to_options,
                     :hint => "Which government departments and agencies meet this need? You can select more than one.",
                     :label => "Departments and agencies <br/><span class='optional'>(optional)</span>".html_safe,
                     :input_html => {

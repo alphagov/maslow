@@ -18,6 +18,10 @@ class Organisation
     @status = atts[:govuk_status]
   end
 
+  def to_option
+    [name_with_abbreviation_and_status, id]
+  end
+
   def name_with_abbreviation_and_status
     if abbreviation.present? && abbreviation != name
       # Use square brackets around the abbreviation
@@ -27,6 +31,10 @@ class Organisation
     else
       "#{name} (#{status})"
     end
+  end
+
+  def self.to_options
+    all.map(&:to_option)
   end
 
   def self.all
