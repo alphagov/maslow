@@ -25,5 +25,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root :to => redirect('/needs')
+  root to: redirect('/needs')
 end
