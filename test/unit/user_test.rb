@@ -2,15 +2,6 @@ require 'test_helper'
 
 class UserTest < ActiveModel::TestCase
 
-  context "attr_accessible" do
-    should "not allow mass assignment of permissions" do
-      skip "revisit this using strong params"
-
-      user = User.create!(permissions: ['signin'])
-      assert_nil user.reload.permissions
-    end
-  end
-
   context "a normal user" do
     should "just be a viewer" do
       user = create(:user)
