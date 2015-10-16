@@ -23,7 +23,7 @@ class NeedsCsvPresenter
   end
 
   def row_values(need)
-    [@base_url+"/#{need.need_id}",
+    [@base_url + "/#{need.need_id}",
      need.role,
      need.goal,
      need.benefit] + need.met_when.to_a
@@ -39,8 +39,7 @@ class NeedsCsvPresenter
 
   def longest_criteria(needs)
     needs.map(&:met_when)
-         .max_by(&:length)
-         .try(:size) || 0
+      .max_by(&:length)
+      .try(:size) || 0
   end
-
 end

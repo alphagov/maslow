@@ -6,7 +6,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
   attr_reader :current_user
 
   setup do
-    @need = Need.new({"id" => 100001}, true)
+    @need = Need.new({ "id" => 100001 }, true)
   end
 
   context "for an editor" do
@@ -29,7 +29,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
 
   context "for a viewer" do
     setup do
-      @current_user = stub(:can? => false)
+      @current_user = stub(can?: false)
     end
 
     should "not include Edit or Actions links" do

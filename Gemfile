@@ -35,7 +35,7 @@ group :development, :test do
   gem 'jasmine', '2.3.1'
 end
 
-gem 'sass-rails',   '~> 5.0.3'
+gem 'sass-rails', '~> 5.0.3'
 gem 'uglifier', '2.7.1'
 
 gem 'chosen-rails'

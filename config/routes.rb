@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount GovukAdminTemplate::Engine, at: '/style-guide'
 
-  get "/healthcheck" => Proc.new { [200, {"Content-type" => "text/plain"}, ["OK"]] }
+  get "/healthcheck" => Proc.new { [200, { "Content-type" => "text/plain" }, ["OK"]] }
 
   get :bookmarklet, controller: :bookmarklet, path: 'bookmarklet'
 
@@ -25,5 +25,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root :to => redirect('/needs')
+  root to: redirect('/needs')
 end

@@ -82,13 +82,13 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   end
 
   should "be able to navigate between pages of results" do
-    page_one = File.read( Rails.root.join("test", "fixtures", "needs", "index_page_1.json") )
+    page_one = File.read(Rails.root.join("test", "fixtures", "needs", "index_page_1.json"))
     need_api_has_raw_response_for_page(page_one, nil)
 
-    page_two = File.read( Rails.root.join("test", "fixtures", "needs", "index_page_2.json") )
+    page_two = File.read(Rails.root.join("test", "fixtures", "needs", "index_page_2.json"))
     need_api_has_raw_response_for_page(page_two, "2")
 
-    page_three = File.read( Rails.root.join("test", "fixtures", "needs", "index_page_3.json") )
+    page_three = File.read(Rails.root.join("test", "fixtures", "needs", "index_page_3.json"))
     need_api_has_raw_response_for_page(page_three, "3")
 
     visit "/needs"

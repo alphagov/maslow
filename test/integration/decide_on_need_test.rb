@@ -8,7 +8,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
-      "met_when" => ["win","awesome","more"],
+      "met_when" => %w(win awesome more),
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
       "revisions" => [],
@@ -41,7 +41,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
     should "update the Need API" do
       need_api_has_need(@need) # For individual need
 
-      request = stub_request(:put, @api_url).with(:body => hash_including({
+      request = stub_request(:put, @api_url).with(body: hash_including({
         "status" => {
           "description" => "not valid",
           "reasons" => [
@@ -132,7 +132,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
     should "update the Need API" do
       need_api_has_need(@need) # For individual need
 
-      request = stub_request(:put, @api_url).with(:body => hash_including({
+      request = stub_request(:put, @api_url).with(body: hash_including({
         "status" => {
           "description" => "valid",
           "additional_comments" => "Really top need",
@@ -177,7 +177,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
     should "update the Need API" do
       need_api_has_need(@need) # For individual need
 
-      request = stub_request(:put, @api_url).with(:body => hash_including({
+      request = stub_request(:put, @api_url).with(body: hash_including({
         "status" => {
           "description" => "valid with conditions",
           "validation_conditions" => "The need is fine, just abc needs to be clarified",
@@ -211,7 +211,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
       @need = need_hash.merge(
         "status" => {
           "description" => "not valid",
-          "reasons" => [ NeedStatus::COMMON_REASONS_WHY_INVALID.first, "some reasons" ]
+          "reasons" => [NeedStatus::COMMON_REASONS_WHY_INVALID.first, "some reasons"]
         },
       )
       need_api_has_needs([@need]) # For need list
@@ -223,7 +223,7 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
     should "update the Need API" do
       need_api_has_need(@need) # For individual need
 
-      request = stub_request(:put, @api_url).with(:body => hash_including({
+      request = stub_request(:put, @api_url).with(body: hash_including({
         "status" => {
           "description" => "proposed",
         },

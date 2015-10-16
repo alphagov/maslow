@@ -15,14 +15,14 @@ class User
   field "organisation_slug", type: String
   field "bookmarks", type: Array, default: Array.new
 
-  delegate :can?, :cannot?, :to => :ability
+  delegate :can?, :cannot?, to: :ability
 
   def ability
     @ability ||= Ability.new(self)
   end
 
   def self.find_by_uid(uid)
-    where(uid: uid).first
+    find_by(uid: uid)
   end
 
   def viewer?

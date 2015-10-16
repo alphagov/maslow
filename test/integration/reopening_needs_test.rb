@@ -16,9 +16,9 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
     })
     login_as(stub_user)
     need_api_has_organisations({})
-    need_api_has_needs([need_hash])  # For need list
-    need_api_has_need(need_hash)  # For individual need
-    need_api_has_need(@canonical)  # For individual need
+    need_api_has_needs([need_hash]) # For need list
+    need_api_has_need(need_hash) # For individual need
+    need_api_has_need(@canonical) # For individual need
     content_api_has_artefacts_for_need_id("100002", [])
     @api_url = Plek.current.find('need-api') + '/needs/100002'
   end
@@ -36,7 +36,7 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
           "uid" => stub_user.uid
         }
       }
-      delete_request = stub_request(:delete, @api_url+'/closed').with(:body => request_body.to_json)
+      delete_request = stub_request(:delete, @api_url + '/closed').with(body: request_body.to_json)
 
       visit "/needs"
       click_on "100002"
@@ -66,7 +66,7 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
     end
 
     should "show an error if there's a problem reopening the need" do
-      request = stub_request(:delete, @api_url+'/closed').to_return(status: 422)
+      request = stub_request(:delete, @api_url + '/closed').to_return(status: 422)
 
       visit "/needs"
       click_on "100002"

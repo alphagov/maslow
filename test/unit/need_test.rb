@@ -13,7 +13,7 @@ class NeedTest < ActiveSupport::TestCase
         "organisation_ids" => ["ministry-of-justice"],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-        "met_when" => ["Winning","Winning More"],
+        "met_when" => ["Winning", "Winning More"],
         "other_evidence" => "Ministerial priority",
         "legislation" => "Vehicle Excise and Registration Act 1994, schedule 4",
         "yearly_user_contacts" => 500,
@@ -52,13 +52,13 @@ class NeedTest < ActiveSupport::TestCase
 
       should "set the 'met_when', 'justifications' and 'organisation_ids' fields to be empty arrays if not present" do
         assert_equal [], Need.new({}).met_when
-        assert_equal [], Need.new({"met_when" => nil}).met_when
+        assert_equal [], Need.new({ "met_when" => nil }).met_when
 
         assert_equal [], Need.new({}).justifications
-        assert_equal [], Need.new({"justifications" => nil}).justifications
+        assert_equal [], Need.new({ "justifications" => nil }).justifications
 
         assert_equal [], Need.new({}).organisation_ids
-        assert_equal [], Need.new({"organisation_ids" => nil}).organisation_ids
+        assert_equal [], Need.new({ "organisation_ids" => nil }).organisation_ids
       end
 
       should "be able to add blank criteria" do
@@ -68,14 +68,14 @@ class NeedTest < ActiveSupport::TestCase
         assert_equal [""], need.met_when
 
         need.add_more_criteria
-        assert_equal ["",""], need.met_when
+        assert_equal ["", ""], need.met_when
       end
 
       should "be able to delete criteria" do
-        need = Need.new({"met_when" => ["0","1","2"]})
+        need = Need.new({ "met_when" => %w(0 1 2) })
 
         need.remove_criteria(0)
-        assert_equal ["1","2"], need.met_when
+        assert_equal %w(1 2), need.met_when
 
         need.remove_criteria(1)
         assert_equal ["1"], need.met_when
@@ -89,7 +89,7 @@ class NeedTest < ActiveSupport::TestCase
           json = Need.new(@atts).as_json
 
           # include protected fields in the list of keys to expect
-          expected_keys = (@atts.keys + ["duplicate_of", "status"]).sort
+          expected_keys = (@atts.keys + %w(duplicate_of status)).sort
 
           assert_equal expected_keys, json.keys.sort
           assert_equal "user", json["role"]
@@ -98,18 +98,18 @@ class NeedTest < ActiveSupport::TestCase
           assert_equal ["ministry-of-justice"], json["organisation_ids"]
           assert_equal "Endangers people", json["impact"]
           assert_equal ["It's something only government does", "The government is legally obliged to provide it"], json["justifications"]
-          assert_equal ["Winning","Winning More"], json["met_when"]
+          assert_equal ["Winning", "Winning More"], json["met_when"]
         end
 
         should "remove empty values from met_when when converted to json" do
-          @atts.merge!({"met_when" => ["","Winning",""]})
+          @atts.merge!({ "met_when" => ["", "Winning", ""] })
           json = Need.new(@atts).as_json
 
           assert_equal ["Winning"], json["met_when"]
         end
 
         should "clear met_when if no values set when converted to json" do
-          @atts.merge!({"met_when" => ["","",""]})
+          @atts.merge!({ "met_when" => ["", "", ""] })
           json = Need.new(@atts).as_json
 
           assert json.has_key?("met_when")
@@ -273,24 +273,23 @@ class NeedTest < ActiveSupport::TestCase
       current_page: 1,
       start_index: 1,
     )
-    response.stubs(:[]).with("results").returns([{"id" => 100001}])
+    response.stubs(:[]).with("results").returns([{ "id" => 100001 }])
     response
   end
 
   context "listing needs" do
-
     should "call the need API adapter" do
       GdsApi::NeedApi.any_instance.expects(:needs)
-          .with({})
-          .returns(stub_need_response)
+        .with({})
+        .returns(stub_need_response)
 
       Need.list
     end
 
     should "pass parameters to the API adapter" do
       GdsApi::NeedApi.any_instance.expects(:needs)
-          .with({page: 2})
-          .returns(stub_need_response)
+        .with({page: 2})
+        .returns(stub_need_response)
 
       Need.list(page: 2)
     end
@@ -337,7 +336,7 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "return an array of matching Need objects" do
-      needs = Need.by_ids(10001,10002)
+      needs = Need.by_ids(10001, 10002)
 
       assert_equal 2, needs.size
       assert_equal %w(10001 10002), needs.map(&:id)
@@ -347,7 +346,7 @@ class NeedTest < ActiveSupport::TestCase
 
   def stub_response(additional_atts = {})
     response_hash = {
-      "_response_info" => {"status" => "ok"},
+      "_response_info" => { "status" => "ok" },
       "id" => 100001,
       "role" => "person",
       "goal" => "do things",
@@ -403,8 +402,8 @@ class NeedTest < ActiveSupport::TestCase
               "email" => "jack.bauer@test.com"
             },
             "changes" => {
-              "goal" => [ "apply for a secondary school place" ,"apply for a primary school place" ],
-              "role" => [ nil, "parent" ]
+              "goal" => ["apply for a secondary school place", "apply for a primary school place"],
+              "role" => [nil, "parent"]
             },
             "created_at" => "2013-05-01T00:00:00+00:00"
           },
@@ -415,8 +414,8 @@ class NeedTest < ActiveSupport::TestCase
               "email" => "jack.sparrow@test.com",
             },
             "changes" => {
-              "goal" => [ "apply for a school place", "apply for a secondary school place" ],
-              "role" => [ "grandparent", nil ]
+              "goal" => ["apply for a school place", "apply for a secondary school place"],
+              "role" => ["grandparent", nil]
             },
             "created_at" => "2013-01-01T00:00:00+00:00"
           }
@@ -436,9 +435,9 @@ class NeedTest < ActiveSupport::TestCase
 
       assert_nil first_revision.author.uid
 
-      assert_equal ["goal", "role"], first_revision.changes.keys
-      assert_equal [ "apply for a secondary school place" ,"apply for a primary school place" ], first_revision.changes["goal"]
-      assert_equal [ nil, "parent" ], first_revision.changes["role"]
+      assert_equal %w(goal role), first_revision.changes.keys
+      assert_equal ["apply for a secondary school place", "apply for a primary school place"], first_revision.changes["goal"]
+      assert_equal [nil, "parent"], first_revision.changes["role"]
 
       assert_equal "2013-05-01T00:00:00+00:00", first_revision.created_at
     end
@@ -485,8 +484,8 @@ class NeedTest < ActiveSupport::TestCase
 
       should "be an empty array if there are any api errors" do
         GdsApi::ContentApi.any_instance.expects(:for_need).once
-                                          .with(100001)
-                                          .raises(GdsApi::HTTPErrorResponse.new(500))
+          .with(100001)
+          .raises(GdsApi::HTTPErrorResponse.new(500))
 
         assert_equal [], @need.artefacts
       end
@@ -501,7 +500,6 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   context "updating needs" do
-
     setup do
       need_hash = {
         "id" => 100001,
@@ -514,7 +512,6 @@ class NeedTest < ActiveSupport::TestCase
 
     context "updating fields" do
       should "update fields" do
-
         @need.update(
           "impact" => "Endangers people",
           "yearly_searches" => 50000
@@ -634,7 +631,7 @@ class NeedTest < ActiveSupport::TestCase
       author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
       GdsApi::NeedApi.any_instance.expects(:reopen).once
         .with(100002, {
-          "author"=> {
+          "author" => {
             "name" => "O'Brien",
             "email" => "obrien@alphagov.co.uk",
             "uid" => "user-1234"

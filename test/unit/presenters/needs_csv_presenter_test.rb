@@ -22,25 +22,25 @@ class NeedsCsvPresenterTest < ActiveSupport::TestCase
         "role" => "Foo",
         "goal" => "Bar",
         "benefit" => "Baz",
-        "met_when" => ["a","b"]
+        "met_when" => %w(a b)
       }
     end
 
     should "return only headers if no ids given" do
-      csv = NeedsCsvPresenter.new(base_url,[]).to_csv
+      csv = NeedsCsvPresenter.new(base_url, []).to_csv
       assert_equal csv_file(1), csv
     end
 
     should "return a single row if only one need id given" do
       csv = NeedsCsvPresenter.new(base_url,
-                                  [Need.new(@need_1,true)]).to_csv
+                                  [Need.new(@need_1, true)]).to_csv
       assert_equal csv_file(2), csv
     end
 
     should "return rows with acceptance criteria, if present" do
       csv = NeedsCsvPresenter.new(base_url,
-                                  [Need.new(@need_1,true),
-                                   Need.new(@need_2,true)]).to_csv
+                                  [Need.new(@need_1, true),
+                                   Need.new(@need_2, true)]).to_csv
       assert_equal csv_file(3), csv
     end
   end

@@ -19,7 +19,7 @@ module NeedHelper
   end
 
   def format_field_value(value)
-    if value.nil? or value.to_s.strip == ""
+    if value.nil? || value.to_s.strip == ""
       "<em>blank</em>".html_safe
     else
       value.to_s
@@ -44,7 +44,7 @@ module NeedHelper
   end
 
   def calculate_percentage(numerator, denominator)
-    return unless numerator.present? and denominator.present?
+    return unless numerator.present? && denominator.present?
     return if denominator == 0
 
     percent = numerator.to_f / denominator.to_f * 100.0
@@ -55,7 +55,7 @@ module NeedHelper
   end
 
   def show_interactions_column?(need)
-    [ need.yearly_user_contacts, need.yearly_site_views, need.yearly_need_views, need.yearly_searches ].select(&:present?).any?
+    [need.yearly_user_contacts, need.yearly_site_views, need.yearly_need_views, need.yearly_searches].select(&:present?).any?
   end
 
   def format_friendly_integer(number)
@@ -69,9 +69,10 @@ module NeedHelper
   end
 
   def paginate_needs(needs)
-    return unless needs.present? and needs.current_page.present? and needs.pages.present? and needs.page_size.present?
+    return unless needs.present? && needs.current_page.present? && needs.pages.present? && needs.page_size.present?
 
-    Kaminari::Helpers::Paginator.new(self,
+    Kaminari::Helpers::Paginator.new(
+      self,
       current_page: needs.current_page,
       total_pages: needs.pages,
       per_page: needs.page_size,
@@ -96,7 +97,7 @@ module NeedHelper
     Maslow.support_api.feedback_url path
   end
 
-  def bookmark_icon(bookmarks = [], need_id)
+  def bookmark_icon(bookmarks, need_id)
     bookmarks.include?(need_id.to_i) ? 'glyphicon-star' : 'glyphicon-star-empty'
   end
 

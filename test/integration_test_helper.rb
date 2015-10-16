@@ -20,7 +20,7 @@ class ActionDispatch::IntegrationTest
     first(:button, selector).click
   end
 
-  def setup_need_api_responses(need_id, artefacts=[])
+  def setup_need_api_responses(need_id, artefacts = [])
     json = File.read Rails.root.join("test", "fixtures", "needs", "#{need_id}.json")
 
     entire_need = JSON.parse(json)

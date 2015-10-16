@@ -1,7 +1,6 @@
 require_relative '../integration_test_helper'
 
 class ExportingNeedsTest < ActionDispatch::IntegrationTest
-
   def filter_needs
     visit "/needs"
     select("Department for Education [DfE]", from: "Filter needs by organisation:")
@@ -66,7 +65,7 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
         click_on("Export as CSV")
 
         assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
-        assert_equal(csv_file(2),page.source)
+        assert_equal(csv_file(2), page.source)
       end
     end
 
@@ -91,7 +90,7 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
             "goal" => "Bar",
             "benefit" => "Baz",
             "organisations" => [],
-            "met_when" => ["a","b"]
+            "met_when" => %w(a b)
           )
         ]
         need_api_has_needs(@needs)
