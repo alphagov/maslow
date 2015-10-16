@@ -51,7 +51,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "filtering needs" do
       should "send the organisation id" do
-        Need.expects(:list).with({"organisation_id" => "test"})
+        Need.expects(:list).with({ "organisation_id" => "test" })
         get(:index, "organisation_id" => "test")
       end
 
@@ -77,7 +77,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "searching needs" do
       should "send the search query" do
-        Need.expects(:list).with({"q" => "citizenship"})
+        Need.expects(:list).with({ "q" => "citizenship" })
         get(:index, "q" => "citizenship")
       end
     end

@@ -52,13 +52,13 @@ class NeedTest < ActiveSupport::TestCase
 
       should "set the 'met_when', 'justifications' and 'organisation_ids' fields to be empty arrays if not present" do
         assert_equal [], Need.new({}).met_when
-        assert_equal [], Need.new({"met_when" => nil}).met_when
+        assert_equal [], Need.new({ "met_when" => nil }).met_when
 
         assert_equal [], Need.new({}).justifications
-        assert_equal [], Need.new({"justifications" => nil}).justifications
+        assert_equal [], Need.new({ "justifications" => nil }).justifications
 
         assert_equal [], Need.new({}).organisation_ids
-        assert_equal [], Need.new({"organisation_ids" => nil}).organisation_ids
+        assert_equal [], Need.new({ "organisation_ids" => nil }).organisation_ids
       end
 
       should "be able to add blank criteria" do
@@ -72,7 +72,7 @@ class NeedTest < ActiveSupport::TestCase
       end
 
       should "be able to delete criteria" do
-        need = Need.new({"met_when" => %w(0 1 2)})
+        need = Need.new({ "met_when" => %w(0 1 2) })
 
         need.remove_criteria(0)
         assert_equal %w(1 2), need.met_when
@@ -102,14 +102,14 @@ class NeedTest < ActiveSupport::TestCase
         end
 
         should "remove empty values from met_when when converted to json" do
-          @atts.merge!({"met_when" => ["", "Winning", ""]})
+          @atts.merge!({ "met_when" => ["", "Winning", ""] })
           json = Need.new(@atts).as_json
 
           assert_equal ["Winning"], json["met_when"]
         end
 
         should "clear met_when if no values set when converted to json" do
-          @atts.merge!({"met_when" => ["", "", ""]})
+          @atts.merge!({ "met_when" => ["", "", ""] })
           json = Need.new(@atts).as_json
 
           assert json.has_key?("met_when")
@@ -273,7 +273,7 @@ class NeedTest < ActiveSupport::TestCase
       current_page: 1,
       start_index: 1,
     )
-    response.stubs(:[]).with("results").returns([{"id" => 100001}])
+    response.stubs(:[]).with("results").returns([{ "id" => 100001 }])
     response
   end
 
@@ -346,7 +346,7 @@ class NeedTest < ActiveSupport::TestCase
 
   def stub_response(additional_atts = {})
     response_hash = {
-      "_response_info" => {"status" => "ok"},
+      "_response_info" => { "status" => "ok" },
       "id" => 100001,
       "role" => "person",
       "goal" => "do things",
