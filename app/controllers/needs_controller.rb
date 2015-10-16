@@ -162,19 +162,7 @@ class NeedsController < ApplicationController
     authorize! :validate, Need
     @need = load_need
 
-    status_params = params["need"]["status"]
-
-    reasons = [
-      status_params["common_reasons_why_invalid"],
-      status_params["other_reasons_why_invalid"]
-    ].flatten.select(&:present?)
-
-    need_status = NeedStatus.new(
-      description: status_params["description"],
-      reasons: reasons,
-      additional_comments: status_params["additional_comments"],
-      validation_conditions: status_params["validation_conditions"],
-    )
+    need_status = NeedStatus.new(need_status_params)
 
     unless need_status.valid?
       flash[:error] = need_status.errors.full_messages.join(". ")
@@ -195,6 +183,28 @@ class NeedsController < ApplicationController
 
   def redirect_url
     params["add_new"] ? new_need_path : need_url(@need.need_id)
+  end
+
+  def need_status_params
+    filtered = params.require(:need)
+      .require(:status)
+      .permit(
+        :description,
+        :additional_comments,
+        :validation_conditions,
+        :other_reasons_why_invalid,
+        :common_reasons_why_invalid => [],
+      )
+
+    {
+      description: filtered[:description],
+      reasons: [
+        filtered[:common_reasons_why_invalid],
+        filtered[:other_reasons_why_invalid],
+      ].flatten.select(&:present?),
+      additional_comments: filtered[:additional_comments],
+      validation_conditions: filtered[:validation_conditions],
+    }
   end
 
   def need_params
