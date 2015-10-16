@@ -8,7 +8,7 @@ class NeedsController < ApplicationController
   end
 
   rescue_from Http404 do
-    render "public/404", :status => 404
+    render file: "public/404", status: :not_found
   end
 
   def index
@@ -62,7 +62,8 @@ class NeedsController < ApplicationController
 
   def create
     authorize! :create, Need
-    @need = Need.new( prepare_need_params(params) )
+
+    @need = Need.new(need_params)
 
     add_or_remove_criteria(:new) and return if criteria_params_present?
 
@@ -84,7 +85,7 @@ class NeedsController < ApplicationController
   def update
     authorize! :update, Need
     @need = load_need
-    @need.update(prepare_need_params(params))
+    @need.update(need_params)
 
     add_or_remove_criteria(:edit) and return if criteria_params_present?
 
@@ -161,19 +162,7 @@ class NeedsController < ApplicationController
     authorize! :validate, Need
     @need = load_need
 
-    status_params = params["need"]["status"]
-
-    reasons = [
-      status_params["common_reasons_why_invalid"],
-      status_params["other_reasons_why_invalid"]
-    ].flatten.select(&:present?)
-
-    need_status = NeedStatus.new(
-      description: status_params["description"],
-      reasons: reasons,
-      additional_comments: status_params["additional_comments"],
-      validation_conditions: status_params["validation_conditions"],
-    )
+    need_status = NeedStatus.new(need_status_params)
 
     unless need_status.valid?
       flash[:error] = need_status.errors.full_messages.join(". ")
@@ -196,16 +185,48 @@ class NeedsController < ApplicationController
     params["add_new"] ? new_need_path : need_url(@need.need_id)
   end
 
-  def prepare_need_params(params_hash)
-    if params_hash["need"]
-      # Remove empty strings from multi-valued fields that Rails inserts.
-      ["justifications","organisation_ids"].each do |field|
-        if params_hash["need"][field]
-          params_hash["need"][field].select!(&:present?)
-        end
+  def need_status_params
+    filtered = params.require(:need)
+      .require(:status)
+      .permit(
+        :description,
+        :additional_comments,
+        :validation_conditions,
+        :other_reasons_why_invalid,
+        common_reasons_why_invalid: [],
+      )
+
+    {
+      description: filtered[:description],
+      reasons: [
+        filtered[:common_reasons_why_invalid],
+        filtered[:other_reasons_why_invalid],
+      ].flatten.select(&:present?),
+      additional_comments: filtered[:additional_comments],
+      validation_conditions: filtered[:validation_conditions],
+    }
+  end
+
+  def need_params
+    params.require(:need).permit(
+      :role,
+      :goal,
+      :benefit,
+      :legislation,
+      :yearly_user_contacts,
+      :yearly_need_views,
+      :yearly_site_views,
+      :yearly_searches,
+      :other_evidence,
+      :impact,
+      organisation_ids: [],
+      justifications: [],
+      met_when: [],
+    ).tap do |cleaned_params|
+      %w(justifications organisation_ids).each do |field|
+        cleaned_params[field].select!(&:present?) if cleaned_params[field]
       end
     end
-    params_hash["need"]
   end
 
   def load_need

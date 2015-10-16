@@ -61,7 +61,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
                                "It's straightforward advice that helps people to comply with their statutory obligations"],
           "met_when" => ["Can download a birth certificate."],
           "other_evidence" => "Free text evidence with lots more evidence",
-          "legislation" => "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff",
+          "legislation" => "http://www.legislation.gov.uk/stuff\r\nhttp://www.legislation.gov.uk/stuff",
           "yearly_user_contacts" => 10000,
           "yearly_site_views" => 1000000,
           "yearly_need_views" => 1000,
@@ -73,7 +73,6 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             "email" => stub_user.email,
             "uid" => stub_user.uid
           },
-          "status" => nil,
         }.to_json
       ).to_return(
         :body =>

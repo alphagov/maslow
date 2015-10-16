@@ -2,24 +2,19 @@ ENV["RAILS_ENV"] = "test"
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'shoulda/context'
 require 'database_cleaner'
-
-require 'simplecov'
-require 'simplecov-rcov'
-
 require 'mocha/setup'
-
 require 'webmock/test_unit'
-WebMock.disable_net_connect!(:allow_localhost => true)
 
-SimpleCov.start 'rails'
-SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+WebMock.disable_net_connect!(allow_localhost: true)
 
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
+  include WebMock::API
 
   teardown do
     DatabaseCleaner.clean

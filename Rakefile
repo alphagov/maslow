@@ -4,6 +4,6 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Maslow::Application.load_tasks
+Rails.application.load_tasks
 
 task :default => [:test, 'jasmine:ci']
