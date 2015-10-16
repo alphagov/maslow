@@ -265,7 +265,8 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   def stub_need_response
-    response = stub("need response",
+    response = stub(
+      "need response",
       pages: 2,
       total: 60,
       page_size: 50,
@@ -352,7 +353,7 @@ class NeedTest < ActiveSupport::TestCase
       "goal" => "do things",
       "benefit" => "good things"
     }.merge(additional_atts)
-    stub("response", :to_hash => response_hash)
+    stub("response", to_hash: response_hash)
   end
 
   context "loading needs" do

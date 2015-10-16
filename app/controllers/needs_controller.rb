@@ -193,7 +193,7 @@ class NeedsController < ApplicationController
         :additional_comments,
         :validation_conditions,
         :other_reasons_why_invalid,
-        :common_reasons_why_invalid => [],
+        common_reasons_why_invalid: [],
       )
 
     {
@@ -219,14 +219,12 @@ class NeedsController < ApplicationController
       :yearly_searches,
       :other_evidence,
       :impact,
-      :organisation_ids => [],
-      :justifications => [],
-      :met_when => [],
+      organisation_ids: [],
+      justifications: [],
+      met_when: [],
     ).tap do |cleaned_params|
       %w(justifications organisation_ids).each do |field|
-        if cleaned_params[field]
-          cleaned_params[field].select!(&:present?)
-        end
+        cleaned_params[field].select!(&:present?) if cleaned_params[field]
       end
     end
   end

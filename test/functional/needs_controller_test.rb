@@ -91,7 +91,7 @@ class NeedsControllerTest < ActionController::TestCase
       "organisation_ids" => ["ministry-of-justice"],
       "impact" => "Endangers people",
       "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-      "met_when" => ["Winning","Awesome"]
+      "met_when" => %w(Winning Awesome)
     }
   end
 
@@ -239,7 +239,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).never
 
       assert_raise ActionController::UrlGenerationError do
-        get :show, :id => "coffee"
+        get :show, id: "coffee"
       end
     end
   end
@@ -282,7 +282,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).never
 
       assert_raise ActionController::UrlGenerationError do
-        get :revisions, :id => "coffee"
+        get :revisions, id: "coffee"
       end
     end
   end
@@ -316,7 +316,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).never
 
       assert_raise ActionController::UrlGenerationError do
-        get :edit, :id => "coffee"
+        get :edit, id: "coffee"
       end
     end
 

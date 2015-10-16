@@ -7,7 +7,7 @@ require 'database_cleaner'
 require 'mocha/setup'
 require 'webmock/test_unit'
 
-WebMock.disable_net_connect!(:allow_localhost => true)
+WebMock.disable_net_connect!(allow_localhost: true)
 
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean

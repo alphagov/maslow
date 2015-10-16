@@ -31,6 +31,7 @@ group :test do
 end
 
 group :development, :test do
+  gem 'govuk-lint'
   gem 'jasmine', '2.3.1'
 end
 
