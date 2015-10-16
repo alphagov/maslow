@@ -3,7 +3,6 @@ require 'plek'
 require 'json'
 
 class NeedsController < ApplicationController
-
   class Http404 < StandardError
   end
 
@@ -13,7 +12,7 @@ class NeedsController < ApplicationController
 
   def index
     authorize! :index, Need
-    opts = params.slice("organisation_id", "page", "q").select { |k, v| v.present? }
+    opts = params.slice("organisation_id", "page", "q").select { |_k, v| v.present? }
 
     @bookmarks = current_user.bookmarks
     @current_page = needs_path
@@ -23,7 +22,7 @@ class NeedsController < ApplicationController
       format.html
       format.csv do
         send_data NeedsCsvPresenter.new(needs_url, @needs).to_csv,
-                  filename: "#{params["organisation_id"]}.csv",
+                  filename: "#{params['organisation_id']}.csv",
                   type: "text/csv; charset=utf-8"
       end
     end
@@ -65,7 +64,7 @@ class NeedsController < ApplicationController
 
     @need = Need.new(need_params)
 
-    add_or_remove_criteria(:new) and return if criteria_params_present?
+    add_or_remove_criteria(:new) && return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -79,7 +78,7 @@ class NeedsController < ApplicationController
       flash[:error] = "Please fill in the required fields."
     end
 
-    render "new", :status => 422
+    render "new", status: 422
   end
 
   def update
@@ -87,7 +86,7 @@ class NeedsController < ApplicationController
     @need = load_need
     @need.update(need_params)
 
-    add_or_remove_criteria(:edit) and return if criteria_params_present?
+    add_or_remove_criteria(:edit) && return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -101,7 +100,7 @@ class NeedsController < ApplicationController
       flash[:error] = "There were errors in the need form."
     end
 
-    render "edit", :status => 422
+    render "edit", status: 422
   end
 
   def close_as_duplicate
@@ -134,7 +133,7 @@ class NeedsController < ApplicationController
     end
 
     @need.duplicate_of = nil
-    render "actions", :status => 422
+    render "actions", status: 422
   end
 
   def reopen
@@ -150,7 +149,7 @@ class NeedsController < ApplicationController
       flash[:error] = "There was a problem reopening the need"
     end
 
-    render "show", :status => 422
+    render "show", status: 422
   end
 
   def status
@@ -247,7 +246,7 @@ class NeedsController < ApplicationController
   def add_or_remove_criteria(action)
     add_criteria if params[:criteria_action]
     remove_criteria if params[:delete_criteria]
-    render :action => action
+    render action: action
   end
 
   def add_criteria

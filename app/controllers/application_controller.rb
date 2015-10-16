@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     render text: "Invalid authenticity token", status: 403
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
+  rescue_from CanCan::AccessDenied do |_exception|
     redirect_to needs_path, alert: "You do not have permission to perform this action."
   end
 
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   before_filter :require_signin_permission!
 
   private
-    def verify_authenticity_token
-      raise ActionController::InvalidAuthenticityToken unless verified_request?
-    end
+  def verify_authenticity_token
+    raise ActionController::InvalidAuthenticityToken unless verified_request?
+  end
 end

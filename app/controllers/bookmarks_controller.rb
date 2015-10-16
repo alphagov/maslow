@@ -25,7 +25,7 @@ class BookmarksController < ApplicationController
 
   def whitelist_redirect_to
     path = params["bookmark"]["redirect_to"]
-    if ["/needs","/bookmarks"].include?(path)
+    if ["/needs", "/bookmarks"].include?(path)
       path
     else
       "/needs"

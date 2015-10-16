@@ -57,13 +57,13 @@ class Need
     "Endangers people"
   ]
 
-  NUMERIC_FIELDS = ["yearly_user_contacts", "yearly_site_views", "yearly_need_views", "yearly_searches"]
-  MASS_ASSIGNABLE_FIELDS = ["role", "goal", "benefit", "organisation_ids", "impact", "justifications", "met_when",
-    "other_evidence", "legislation"] + NUMERIC_FIELDS
+  NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
+  MASS_ASSIGNABLE_FIELDS = %w(role goal benefit organisation_ids impact justifications met_when
+                              other_evidence legislation) + NUMERIC_FIELDS
 
   # fields which should not be updated through mass-assignment.
   # this is equivalent to using ActiveModel's attr_protected
-  PROTECTED_FIELDS = ["duplicate_of", "status"]
+  PROTECTED_FIELDS = %w(duplicate_of status)
 
   # fields which we should create read and write accessors for
   # and which we should send back to the Need API
@@ -71,27 +71,27 @@ class Need
 
   # non-writable fields returned from the API which we want to make accessible
   # but which we don't want to send back to the Need API
-  READ_ONLY_FIELDS = [ :id, :revisions, :organisations, :applies_to_all_organisations ]
+  READ_ONLY_FIELDS = [:id, :revisions, :organisations, :applies_to_all_organisations]
 
   attr_accessor *WRITABLE_FIELDS
   attr_reader *READ_ONLY_FIELDS
 
   alias_method :need_id, :id
 
-  validates_presence_of ["role", "goal", "benefit"]
+  validates_presence_of %w(role goal benefit)
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
   validates_each :justifications do |record, attr, value|
-    record.errors.add(attr, "must contain a known value") unless (value.nil? || value.all? { |v| JUSTIFICATIONS.include? v })
+    record.errors.add(attr, "must contain a known value") unless value.nil? || value.all? { |v| JUSTIFICATIONS.include? v }
   end
   NUMERIC_FIELDS.each do |field|
-    validates_numericality_of field, :only_integer => true, :allow_blank => true, :greater_than_or_equal_to => 0
+    validates_numericality_of field, only_integer: true, allow_blank: true, greater_than_or_equal_to: 0
   end
 
   # Retrieve a list of needs from the Need API
   #
   # The parameters are the same as passed through to the Need API: as of
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
-  def self.list(options={})
+  def self.list(options = {})
     need_response = Maslow.need_api.needs(options)
 
     # The response can be treated either as nested `OpenStruct`s or as a hash;
@@ -304,15 +304,13 @@ private
   end
 
   def remove_blank_met_when_criteria
-    if met_when
-      met_when.delete_if(&:empty?)
-    end
+    met_when.delete_if(&:empty?) if met_when
   end
 
   def strip_newline_from_textareas(attrs)
     # Rails prepends a newline character into the textarea fields in the form.
     # Strip these so that we don't send them to the Need API.
-    ["legislation", "other_evidence"].each do |field|
+    %w(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
   end

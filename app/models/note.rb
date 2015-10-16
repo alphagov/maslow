@@ -1,5 +1,4 @@
 class Note
-
   attr_reader :text, :need_id, :author
   attr_reader :errors
 
