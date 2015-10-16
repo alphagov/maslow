@@ -26,8 +26,6 @@ group :test do
   gem 'database_cleaner', '1.4.1', require: false
   gem 'factory_girl_rails', '4.5.0'
   gem 'shoulda-context', '1.2.1'
-  gem 'simplecov', '0.7.1'
-  gem 'simplecov-rcov'
   gem 'mocha', '1.1.0', require: false
   gem 'timecop', '0.8.0'
 end
