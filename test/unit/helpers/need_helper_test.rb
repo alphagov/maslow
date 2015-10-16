@@ -1,4 +1,5 @@
 require_relative '../../test_helper'
+require_relative '../../../app/helpers/need_helper'
 
 class NeedHelperTest < ActiveSupport::TestCase
   include NeedHelper
