@@ -44,9 +44,9 @@ class ActiveSupport::TestCase
 
   def login_as(user)
     request.env['warden'] = stub(
-      :authenticate! => true,
-      :authenticated? => true,
-      :user => user
+      authenticate!: true,
+      authenticated?: true,
+      user: user
     )
   end
 

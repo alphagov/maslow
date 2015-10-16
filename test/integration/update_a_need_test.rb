@@ -8,7 +8,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       "role" => "parent",
       "goal" => "apply for a primary school place",
       "benefit" => "my child can start school",
-      "met_when" => ["win","awesome","more"],
+      "met_when" => %w(win awesome more),
       "organisations" => [],
       "legislation" => "Blank Fields Act 2013",
       "revisions" => [],
@@ -30,8 +30,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
   context "updating a need" do
     setup do
-      need_api_has_needs([need_hash])  # For need list
-      need_api_has_need(need_hash)  # For individual need
+      need_api_has_needs([need_hash]) # For need list
+      need_api_has_need(need_hash) # For individual need
       content_api_has_artefacts_for_need_id("100001", [])
     end
 
@@ -60,18 +60,18 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     should "be able to update a need" do
       api_url = Plek.current.find('need-api') + '/needs/100001'
       request_body = blank_need_request.merge(
-          "role" => "grandparent",
-          "goal" => "apply for a primary school place",
-          "benefit" => "my grandchild can start school",
-          "legislation" => nil,
-          "met_when" => ["win","awesome","more"],
-          "author" => {
-            "name" => stub_user.name,
-            "email" => stub_user.email,
-            "uid" => stub_user.uid
-          }
+        "role" => "grandparent",
+        "goal" => "apply for a primary school place",
+        "benefit" => "my grandchild can start school",
+        "legislation" => nil,
+        "met_when" => %w(win awesome more),
+        "author" => {
+          "name" => stub_user.name,
+          "email" => stub_user.email,
+          "uid" => stub_user.uid
+        }
       ).to_json
-      request = stub_request(:put, api_url).with(:body => request_body)
+      request = stub_request(:put, api_url).with(body: request_body)
 
       visit('/needs')
 
@@ -94,7 +94,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "display met_when criteria on multiple lines" do
-      need_api_has_need(need_hash.merge("met_when" => ["win", "awesome"]))
+      need_api_has_need(need_hash.merge("met_when" => %w(win awesome)))
       visit('/needs')
       click_on('100001')
       within "#workflow" do
@@ -114,14 +114,14 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "goal" => "apply for a primary school place",
         "benefit" => "my child can start school",
         "legislation" => "Blank Fields Act 2013",
-        "met_when" => ["win","awesome","more"],
+        "met_when" => %w(win awesome more),
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
           "uid" => stub_user.uid
         }
       ).to_json
-      request = stub_request(:put, api_url).with(:body => request_body)
+      request = stub_request(:put, api_url).with(body: request_body)
 
       visit('/needs')
       click_on('100001')
@@ -187,7 +187,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "goal" => "apply for a primary school place",
         "benefit" => "my grandchild can start school",
         "legislation" => "Blank Fields Act 2013",
-        "met_when" => ["win","awesome","more"],
+        "met_when" => %w(win awesome more),
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
@@ -195,14 +195,14 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         }
       ).to_json
       request = stub_request(:put, api_url)
-                  .with(:body => request_body)
-                  .to_return(
-                    status: 422,
-                    body: {
-                      _response_info: { status: "invalid_attributes" },
-                      errors: [ "error"]
-                    }.to_json
-                  )
+        .with(body: request_body)
+        .to_return(
+          status: 422,
+          body: {
+            _response_info: { status: "invalid_attributes" },
+            errors: ["error"]
+          }.to_json
+        )
 
       visit('/needs')
 
@@ -228,14 +228,14 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "goal" => "apply for a primary school place",
         "benefit" => "my child can start school",
         "legislation" => "Blank Fields Act 2013",
-        "met_when" => ["win","awesome","more"],
+        "met_when" => %w(win awesome more),
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
           "uid" => stub_user.uid
         }
       ).to_json
-      request = stub_request(:put, api_url).with(:body => request_body)
+      request = stub_request(:put, api_url).with(body: request_body)
 
       visit('/needs')
 
@@ -278,7 +278,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         "organisation_ids" => [],
         "benefit" => "my child can start school",
         "legislation" => "Blank Fields Act 2013",
-        "met_when" => ["win","awesome","more"],
+        "met_when" => %w(win awesome more),
         "author" => {
           "name" => stub_user.name,
           "email" => stub_user.email,
@@ -286,7 +286,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         }
       )
       request = stub_request(:put, Plek.current.find('need-api') + '/needs/100200')
-                  .with(:body => request_body.to_json)
+        .with(body: request_body.to_json)
 
       visit "/needs"
       click_on "100200"
@@ -312,5 +312,4 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_link?("100200: apply for a primary school place", href: "/needs/100200")
     end
   end
-
 end

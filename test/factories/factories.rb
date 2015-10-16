@@ -4,11 +4,11 @@ FactoryGirl.define do
     permissions { ["signin"] }
 
     factory :editor do
-      permissions { ["signin", "editor"] }
+      permissions { %w(signin editor) }
     end
 
     factory :admin do
-      permissions { ["signin", "editor", "admin"] }
+      permissions { %w(signin editor admin) }
     end
   end
 end

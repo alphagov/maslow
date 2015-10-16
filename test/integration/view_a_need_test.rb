@@ -2,7 +2,6 @@
 require_relative '../integration_test_helper'
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
-
   setup do
     login_as_stub_user
     need_api_has_organisations(
@@ -204,7 +203,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
             end # within tbody
           end # within table
         end # within .need
-
       end # should display artefacts from the content api
 
       should "not display a table when there are no artefacts for this need" do
@@ -223,8 +221,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
       should "not display a table when the Content API returns an error" do
         GdsApi::ContentApi.any_instance.expects(:for_need).once
-                                  .with(101350)
-                                  .raises(GdsApi::HTTPErrorResponse.new(500))
+          .with(101350)
+          .raises(GdsApi::HTTPErrorResponse.new(500))
 
         visit "/needs"
         click_on "101350"
@@ -237,7 +235,6 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
       end
     end # context showing artefacts which meet the need
-
   end
 
   context "given a need with missing attributes" do
@@ -343,5 +340,4 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       assert page.has_content?("The page you were looking for doesn't exist.")
     end
   end
-
 end

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UserTest < ActiveModel::TestCase
-
   context "a normal user" do
     should "just be a viewer" do
       user = create(:user)

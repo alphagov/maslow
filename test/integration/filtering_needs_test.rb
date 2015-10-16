@@ -1,7 +1,6 @@
 require_relative '../integration_test_helper'
 
 class FilteringNeedsTest < ActionDispatch::IntegrationTest
-
   setup do
     login_as_stub_user
   end
@@ -111,7 +110,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
     context "filtering from showing a need" do
       setup do
         need_api_has_need(@needs[0])
-        content_api_has_artefacts_for_need_id("10001",[])
+        content_api_has_artefacts_for_need_id("10001", [])
       end
 
       should "filter when clicking on an organisation while showing a need" do

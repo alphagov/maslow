@@ -29,7 +29,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
 
   context "for a viewer" do
     setup do
-      @current_user = stub(:can? => false)
+      @current_user = stub(can?: false)
     end
 
     should "not include Edit or Actions links" do

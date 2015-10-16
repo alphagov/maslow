@@ -13,7 +13,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       "duplicate_of" => nil,
       "id" => "100002"
     )
-    need_api_has_needs([@need,@duplicate]) # For need list
+    need_api_has_needs([@need, @duplicate]) # For need list
     content_api_has_artefacts_for_need_id("100002", [])
 
     @api_url = Plek.current.find('need-api') + '/needs/100002'
@@ -30,7 +30,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
       }
     }
 
-    request = stub_request(:put, @api_url+'/closed').with(:body => request_body.to_json)
+    request = stub_request(:put, @api_url + '/closed').with(body: request_body.to_json)
 
     visit "/needs"
     click_on "100002"
@@ -42,17 +42,17 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
     fill_in("This need is a duplicate of", with: 100001)
 
     get_request = stub_request(:get, @api_url).to_return(
-      :body =>
-        { "_response_info" => { "status" => "ok" },
-          "id" => "100002",
-          "role" => "User",
-          "goal" => "find my local register office",
-          "benefit" => "I can find records of birth, marriage or death",
-          "duplicate_of" => "100001",
-          "status" => {
-            "description" => "proposed"
-          }
-        }.to_json
+      body: {
+        "_response_info" => { "status" => "ok" },
+        "id" => "100002",
+        "role" => "User",
+        "goal" => "find my local register office",
+        "benefit" => "I can find records of birth, marriage or death",
+        "duplicate_of" => "100001",
+        "status" => {
+          "description" => "proposed"
+        }
+      }.to_json
     )
     need_api_has_need(@need)
 
@@ -65,7 +65,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
 
   should "show an error message if there's a problem closing the need as a duplicate" do
     need_api_has_need(@duplicate) # For individual need
-    request = stub_request(:put, @api_url+'/closed').to_return(status: 422)
+    request = stub_request(:put, @api_url + '/closed').to_return(status: 422)
 
     visit "/needs"
     click_on "100002"
@@ -83,7 +83,7 @@ class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
 
   should "show an error message if no duplicate need ID is entered" do
     need_api_has_need(@duplicate) # For individual need
-    request = stub_request(:put, @api_url+'/closed').to_return(status: 422)
+    request = stub_request(:put, @api_url + '/closed').to_return(status: 422)
 
     visit "/needs"
     click_on "100002"

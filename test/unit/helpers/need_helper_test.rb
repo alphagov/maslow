@@ -54,7 +54,7 @@ class NeedHelperTest < ActiveSupport::TestCase
     end
 
     should "return the criteria if values are present" do
-      assert_equal ["1","2"], criteria_with_blank_value(["1","2"])
+      assert_equal %w(1 2), criteria_with_blank_value(%w(1 2))
     end
   end
 
@@ -127,15 +127,18 @@ class NeedHelperTest < ActiveSupport::TestCase
     end
 
     should "initialize an paginator with the correct values" do
-      stub_paginator = stub(:to_s => "pagination")
+      stub_paginator = stub(to_s: "pagination")
       Kaminari::Helpers::Paginator.expects(:new)
-        .with(self, has_entries(
+        .with(
+          self,
+          has_entries(
             current_page: 3,
             total_pages: 5,
             per_page: 10,
             param_name: "page",
             remote: false
-          ))
+          )
+        )
         .returns(stub_paginator)
 
       need = OpenStruct.new(current_page: 3, pages: 5, page_size: 10)
@@ -153,11 +156,11 @@ class NeedHelperTest < ActiveSupport::TestCase
 
   context "bookmark_icon" do
     should "not return bookmarked if need is not in bookmarks" do
-      assert_equal "glyphicon-star-empty", bookmark_icon([10002],10001)
+      assert_equal "glyphicon-star-empty", bookmark_icon([10002], 10001)
     end
 
     should "return bookmarked if need is in bookmarks" do
-      assert_equal "glyphicon-star", bookmark_icon([10001],10001)
+      assert_equal "glyphicon-star", bookmark_icon([10001], 10001)
     end
   end
 end

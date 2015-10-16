@@ -1,7 +1,6 @@
 require_relative '../test_helper'
 
 class OrganisationTest < ActiveSupport::TestCase
-
   context "loading organisations" do
     setup do
       @organisation_attrs = [
@@ -26,7 +25,7 @@ class OrganisationTest < ActiveSupport::TestCase
                    organisations.map(&:id))
       assert_equal(["Committee on Climate Change", "Competition Commission"],
                    organisations.map(&:name))
-      assert_equal(["CCC", "CC"],
+      assert_equal(%w(CCC CC),
                    organisations.map(&:abbreviation))
     end
 
@@ -42,7 +41,7 @@ class OrganisationTest < ActiveSupport::TestCase
       GdsApi::NeedApi.any_instance.expects(:organisations).twice
       Organisation.all
 
-      Timecop.travel(Time.now + 61.minutes) do
+      Timecop.travel(Time.zone.now + 61.minutes) do
         Organisation.all
       end
     end

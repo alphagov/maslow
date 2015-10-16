@@ -67,7 +67,6 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
           },
         }
       ])
-
     end
 
     should "display a list of search results" do

@@ -1,16 +1,21 @@
 require_relative '../integration_test_helper'
 
 class CreateANeedTest < ActionDispatch::IntegrationTest
-
   setup do
     login_as_stub_editor
     need_api_has_organisations(
-      "committee-on-climate-change" => {"name"=>"Committee on Climate Change",
-                                        "abbreviation"=>"CCC"},
-      "competition-commission" => {"name"=>"Competition Commission",
-                                   "abbreviation"=>"CC"},
-      "ministry-of-justice" => {"name"=>"Ministry of Justice",
-                                "abbreviation"=>"MOJ"},
+      "committee-on-climate-change" => {
+        "name" => "Committee on Climate Change",
+        "abbreviation" => "CCC"
+      },
+      "competition-commission" => {
+        "name" => "Competition Commission",
+        "abbreviation" => "CC"
+      },
+      "ministry-of-justice" => {
+        "name" => "Ministry of Justice",
+        "abbreviation" => "MOJ"
+      },
     )
     need_api_has_needs([])
   end
@@ -50,15 +55,17 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to create a new Need" do
-      post_request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
-        :body => {
+      post_request = stub_request(:post, Plek.current.find('need-api') + '/needs').with(
+        body: {
           "role" => "User",
           "goal" => "find my local register office",
           "benefit" => "I can find records of birth, marriage or death",
           "organisation_ids" => ["ministry-of-justice"],
           "impact" => "Noticed by the average member of the public",
-          "justifications" => ["It's something only government does",
-                               "It's straightforward advice that helps people to comply with their statutory obligations"],
+          "justifications" => [
+            "It's something only government does",
+            "It's straightforward advice that helps people to comply with their statutory obligations"
+          ],
           "met_when" => ["Can download a birth certificate."],
           "other_evidence" => "Free text evidence with lots more evidence",
           "legislation" => "http://www.legislation.gov.uk/stuff\r\nhttp://www.legislation.gov.uk/stuff",
@@ -75,23 +82,23 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           },
         }.to_json
       ).to_return(
-        :body =>
-          { "_response_info" => { "status" => "created" },
-            "id" => "100001"
-          }.to_json
+        body: {
+          "_response_info" => { "status" => "created" },
+          "id" => "100001"
+        }.to_json
       )
 
-      get_request = stub_request(:get, Plek.current.find('need-api')+'/needs/100001').to_return(
-        :body =>
-          { "_response_info" => { "status" => "ok" },
-            "id" => "100001",
-            "role" => "User",
-            "goal" => "find my local register office",
-            "benefit" => "I can find records of birth, marriage or death",
-            "status" => {
-              "description" => "proposed",
-            }
-          }.to_json
+      get_request = stub_request(:get, Plek.current.find('need-api') + '/needs/100001').to_return(
+        body: {
+          "_response_info" => { "status" => "ok" },
+          "id" => "100001",
+          "role" => "User",
+          "goal" => "find my local register office",
+          "benefit" => "I can find records of birth, marriage or death",
+          "status" => {
+            "description" => "proposed",
+          }
+        }.to_json
       )
 
       content_api_has_artefacts_for_need_id(100001, [])
@@ -193,9 +200,16 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
         "status" => nil,
       ).to_json
 
-      stub_request(:post, Plek.current.find('need-api')+'/needs')
-                    .with(:body => request_body)
-                    .to_return(status: 422, body: { _response_info: { status: "invalid_attributes" }, errors: [ "error"] }.to_json)
+      stub_request(:post, Plek.current.find('need-api') + '/needs')
+        .with(body: request_body)
+        .to_return(
+          status: 422,
+          body: {
+            _response_info: { status: "invalid_attributes" },
+            errors: ["error"]
+          }
+          .to_json
+        )
 
       visit('/needs')
       within "#workflow" do
@@ -212,8 +226,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to save and add a new need" do
-      post_request = stub_request(:post, Plek.current.find('need-api')+'/needs').with(
-        :body => blank_need_request.merge({
+      post_request = stub_request(:post, Plek.current.find('need-api') + '/needs').with(
+        body: blank_need_request.merge({
           "role" => "User",
           "goal" => "find my local register office",
           "benefit" => "I can find records of birth, marriage or death",
@@ -225,10 +239,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           "status" => nil,
         }).to_json
       ).to_return(
-        :body =>
-          { "_response_info" => { "status" => "created" },
-            "id" => "100001"
-          }.to_json
+        body: {
+          "_response_info" => { "status" => "created" },
+          "id" => "100001"
+        }.to_json
       )
 
       visit('/needs')
