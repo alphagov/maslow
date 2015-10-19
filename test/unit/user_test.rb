@@ -28,6 +28,10 @@ class UserTest < ActiveModel::TestCase
     end
   end
 
+  should "persist the `organisation_content_id` attribute" do
+    assert create(:user, organisation_content_id: "bleh")
+  end
+
   context "toggle bookmarks" do
     should "update the users bookmarked needs" do
       user = create(:user)

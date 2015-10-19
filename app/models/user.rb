@@ -13,6 +13,7 @@ class User
   field "permissions", type: Array
   field "remotely_signed_out", type: Boolean, default: false
   field "organisation_slug", type: String
+  field "organisation_content_id", type: String
   field "bookmarks", type: Array, default: Array.new
 
   delegate :can?, :cannot?, to: :ability
