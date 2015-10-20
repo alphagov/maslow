@@ -15,6 +15,7 @@ class User
   field "organisation_slug", type: String
   field "organisation_content_id", type: String
   field "bookmarks", type: Array, default: Array.new
+  field "disabled", type: Boolean, default: false
 
   delegate :can?, :cannot?, to: :ability
 
