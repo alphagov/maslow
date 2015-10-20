@@ -28,8 +28,16 @@ class UserTest < ActiveModel::TestCase
     end
   end
 
-  should "persist the `organisation_content_id` attribute" do
-    assert create(:user, organisation_content_id: "bleh")
+  should "persist attributes required by GDS-SSO" do
+    assert create(
+      :user,
+      uid: "bleh",
+      name: "Mr. Smith",
+      email: "smith@example.com",
+      organisation_slug: "/something",
+      organisation_content_id: "bleh",
+      disabled: false
+    )
   end
 
   context "toggle bookmarks" do
