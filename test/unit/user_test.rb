@@ -1,4 +1,11 @@
 require 'test_helper'
+require 'gds-sso/lint/user_test'
+
+class GDS::SSO::Lint::UserTest
+  def user_class
+    ::User
+  end
+end
 
 class UserTest < ActiveModel::TestCase
   context "a normal user" do
@@ -26,18 +33,6 @@ class UserTest < ActiveModel::TestCase
       assert admin.editor?
       assert admin.admin?
     end
-  end
-
-  should "persist attributes required by GDS-SSO" do
-    assert create(
-      :user,
-      uid: "bleh",
-      name: "Mr. Smith",
-      email: "smith@example.com",
-      organisation_slug: "/something",
-      organisation_content_id: "bleh",
-      disabled: false
-    )
   end
 
   context "toggle bookmarks" do
