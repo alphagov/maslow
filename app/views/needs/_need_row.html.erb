@@ -18,7 +18,7 @@
       <span class="all-organisations">Applies to all organisations</span>
     <% else %>
       <% if need.organisations.any? %>
-        <%= need.organisations.map(&:name).join(", ") %>
+        <%= need.organisations.map {|o| o["name"] }.join(", ") %>
       <% end %>
     <% end %>
   </td>

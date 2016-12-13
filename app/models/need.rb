@@ -24,11 +24,11 @@ class Need
     def initialize(needs, pagination_info)
       super(needs)
 
-      @pages = pagination_info.pages
-      @total = pagination_info.total
-      @page_size = pagination_info.page_size
-      @current_page = pagination_info.current_page
-      @start_index = pagination_info.start_index
+      @pages = pagination_info["pages"]
+      @total = pagination_info["total"]
+      @page_size = pagination_info["page_size"]
+      @current_page = pagination_info["current_page"]
+      @start_index = pagination_info["start_index"]
     end
 
     def inspect
@@ -71,7 +71,7 @@ class Need
 
   # non-writable fields returned from the API which we want to make accessible
   # but which we don't want to send back to the Need API
-  READ_ONLY_FIELDS = [:id, :revisions, :organisations, :applies_to_all_organisations]
+  READ_ONLY_FIELDS = %w(id revisions organisations applies_to_all_organisations)
 
   attr_accessor *WRITABLE_FIELDS
   attr_reader *READ_ONLY_FIELDS
@@ -94,22 +94,18 @@ class Need
   def self.list(options = {})
     need_response = Maslow.need_api.needs(options)
 
-    # The response can be treated either as nested `OpenStruct`s or as a hash;
-    # to get the result hashes back out, we can access the key directly.
-    need_hashes = need_response["results"]
-
-    need_objects = need_hashes.map { |need_hash| self.new(need_hash, true) }
+    need_objects = need_response["results"].map { |need_hash| self.new(need_hash, true) }
     PaginatedList.new(need_objects, need_response)
   end
 
   # Retrieve a list of needs matching an array of ids
-
+  #
   # Note that this returns the entire set of matching ids and not a
   # PaginatedList
   def self.by_ids(*ids)
     response = Maslow.need_api.needs_by_id(ids.flatten)
 
-    response.with_subsequent_pages.map { |need| self.new(need.marshal_dump.stringify_keys, true) }
+    response.with_subsequent_pages.map { |need| self.new(need, true) }
   end
 
   # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
@@ -118,11 +114,9 @@ class Need
   # just with a different exception type.
   def self.find(need_id)
     need_response = Maslow.need_api.need(need_id)
-    if need_response
-      self.new(need_response.to_hash, true)
-    else
-      raise NotFound, need_id
-    end
+    self.new(need_response.to_hash, true)
+  rescue GdsApi::HTTPNotFound
+    raise NotFound, need_id
   end
 
   def initialize(attrs, existing = false)
@@ -283,7 +277,7 @@ private
 
   def prepare_organisations(organisations)
     return [] unless organisations.present?
-    GdsApi::Response.build_ostruct_recursively(organisations)
+    organisations
   end
 
   def prepare_status(status)
@@ -294,12 +288,8 @@ private
   def prepare_revisions(revisions)
     return [] unless revisions.present?
 
-    structs = GdsApi::Response.build_ostruct_recursively(revisions)
-
-    # Return changes as a hash, rather than an OpenStruct because
-    # we would like changes to be returned as field-value pairs
-    structs.each_with_index do |revision, i|
-      revision.changes = revisions[i]["changes"]
+    revisions.each_with_index do |revision, i|
+      revision["changes"] = revisions[i]["changes"]
     end
   end
 

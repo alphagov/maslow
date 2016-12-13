@@ -93,7 +93,7 @@ module NeedHelper
   end
 
   def feedback_for_page(artefact)
-    path = URI(artefact.web_url).path
+    path = URI(artefact["web_url"]).path
     Maslow.support_api.feedback_url path
   end
 
