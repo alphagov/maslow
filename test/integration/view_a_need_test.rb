@@ -1,13 +1,14 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
+require 'gds_api/test_helpers/organisations'
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
-    need_api_has_organisations(
-      "driver-vehicle-licensing-agency" => "Driver and Vehicle Licensing Agency",
-      "driving-standards-agency" => "Driving Standards Agency",
-    )
+    organisations_api_has_organisations([
+      "driver-vehicle-licensing-agency",
+      "driving-standards-agency"
+    ])
   end
 
   context "given a need which exists" do
@@ -315,7 +316,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           "validation_conditions" => "a and b must be changed",
         })
 
-      need_api_has_organisations([])
+      organisations_api_has_organisations([])
       need_api_has_needs([need])
       need_api_has_need(need)
       content_api_has_artefacts_for_need_id("10001", [])

@@ -1,4 +1,5 @@
 require_relative '../integration_test_helper'
+require 'gds_api/test_helpers/organisations'
 
 class FilteringNeedsTest < ActionDispatch::IntegrationTest
   setup do
@@ -7,13 +8,11 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
   context "filtering the list of needs" do
     setup do
-      need_api_has_organisations(
-        "department-for-education" => { "name" => "Department for Education",
-                                        "abbreviation" => "DfE"
-                                      },
-        "hm-passport-office" => "HM Passport Office",
-        "home-office" => "Home Office"
-      )
+      organisations_api_has_organisations([
+        "department-for-education",
+        "hm-passport-office",
+        "home-office"
+      ])
 
       @needs = [
         minimal_example_need(
@@ -68,14 +67,14 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("10001")
       assert page.has_text?("Apply for a primary school place")
-      assert page.has_text?("Department for Education [DfE]")
+      assert page.has_text?("Department for Education")
 
       assert page.has_text?("10003")
       assert page.has_text?("Find out about becoming a British citizen")
       assert page.has_text?("Home Office")
       assert page.has_text?("HM Passport Office")
 
-      select("Department for Education [DfE]", from: "Filter needs by organisation:")
+      select("Department For Education [DFE]", from: "Filter needs by organisation:")
       click_on_first_button("Filter")
 
       within "#needs" do
@@ -87,8 +86,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
     should "display needs related to an organisation and filtered by text" do
       visit "/needs"
-
-      select("Department for Education [DfE]", from: "Filter needs by organisation:")
+      select("Department For Education [DFE]", from: "Filter needs by organisation:")
       click_on_first_button("Filter")
 
       within "#needs" do

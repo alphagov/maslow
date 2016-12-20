@@ -1,9 +1,12 @@
 require_relative '../integration_test_helper'
 
 class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
+  include GdsApi::TestHelpers::Organisations
+  include GdsApi::TestHelpers::NeedApi
+
   setup do
     login_as_stub_user
-    need_api_has_organisations([])
+    organisations_api_has_organisations([])
 
     need_1 = example_need("id" => "10001", "goal" => "apply for a primary school place")
     need_2 = example_need("id" => "10002", "goal" => "find out about becoming a British citizen")

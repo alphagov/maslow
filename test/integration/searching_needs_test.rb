@@ -1,8 +1,10 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
+require 'gds_api/test_helpers/organisations'
 
 class SearchingNeedsTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::NeedApi
+  include GdsApi::TestHelpers::Organisations
 
   setup do
     login_as_stub_user
@@ -10,7 +12,7 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
 
   context "filtering the list of needs" do
     setup do
-      need_api_has_organisations([])
+      organisations_api_has_organisations([])
 
       need_api_has_needs([
         {

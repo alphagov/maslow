@@ -3,20 +3,11 @@ require_relative '../integration_test_helper'
 class CreateANeedTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_editor
-    need_api_has_organisations(
-      "committee-on-climate-change" => {
-        "name" => "Committee on Climate Change",
-        "abbreviation" => "CCC"
-      },
-      "competition-commission" => {
-        "name" => "Competition Commission",
-        "abbreviation" => "CC"
-      },
-      "ministry-of-justice" => {
-        "name" => "Ministry of Justice",
-        "abbreviation" => "MOJ"
-      },
-    )
+    organisations_api_has_organisations([
+      "committee-on-climate-change",
+      "competition-commission",
+      "ministry-of-justice"
+    ])
     need_api_has_needs([])
   end
 
@@ -32,7 +23,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_field?("So that")
       assert page.has_text?("Departments and agencies")
       assert page.has_text?("Competition Commission")
-      assert page.has_text?("Committee on Climate Change")
+      assert page.has_text?("Committee On Climate Change")
 
       assert page.has_text?("Is this need in proposition for GOV.UK? You can tick more than one.")
       Need::JUSTIFICATIONS.each do |just|
@@ -111,7 +102,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       fill_in("As a", with: "User")
       fill_in("I need to", with: "find my local register office")
       fill_in("So that", with: "I can find records of birth, marriage or death")
-      select("Ministry of Justice [MOJ]", from: "Departments and agencies")
+      select("Ministry Of Justice [MOJ]", from: "Departments and agencies")
       check("It's straightforward advice that helps people to comply with their statutory obligations")
       check("It's something only government does")
       choose("Noticed by the average member of the public")

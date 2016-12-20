@@ -1,8 +1,10 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
+require 'gds_api/test_helpers/organisations'
 
 class NeedsControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
+  include GdsApi::TestHelpers::Organisations
 
   def existing_need(options = {})
     defaults = {
@@ -19,10 +21,7 @@ class NeedsControllerTest < ActionController::TestCase
 
   setup do
     login_as_stub_user
-    need_api_has_organisations(
-      "ministry-of-justice" => "Ministry of Justice",
-      "competition-commission" => "Competition Commission"
-    )
+    organisations_api_has_organisations(["ministry-of-justice", "competition-commission"])
   end
 
   context "GET index" do
