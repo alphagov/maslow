@@ -15,7 +15,7 @@ class BookmarkletTest < ActionDispatch::IntegrationTest
 
       assert page.has_selector?("ol")
       assert page.has_link?("Maslow need")
-      assert find_link("Maslow need")["href"].include?("https://maslow.production.alphagov.co.uk/needs/")
+      assert find_link("Maslow need")["href"].include?("https://maslow.publishing.service.gov.uk/needs/")
     end
   end
 end

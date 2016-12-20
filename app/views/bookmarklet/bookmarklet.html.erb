@@ -9,5 +9,5 @@
     <li>Drag the blue button below to your bookmarks bar</li>
     <li>Go to a GOV.UK page and click on the Maslow bookmarklet. It will take you to the related need in Maslow.</li>
   </ol>
-  <a class="btn btn-info bookmarklet" href='javascript:(function(){$.getJSON(document.location+".json").done(function(data){if(data.details&&data.details.need_ids&&parseInt(data.details.need_ids[0])>1e5){window.location="https://maslow.production.alphagov.co.uk/needs/"+data.details.need_ids[0]}else{alert("No Maslow need can be found for this GOV.UK page")}}).fail(function(data){alert("No information could be found about this page")})})();' title="Drag me to your bookmarks bar">Maslow need</a>
+  <a class="btn btn-info bookmarklet" href='javascript:(function(){$.getJSON(document.location+".json").done(function(data){if(data.details&&data.details.need_ids&&parseInt(data.details.need_ids[0])>1e5){window.location="https://maslow.publishing.service.gov.uk/needs/"+data.details.need_ids[0]}else{alert("No Maslow need can be found for this GOV.UK page")}}).fail(function(data){alert("No information could be found about this page")})})();' title="Drag me to your bookmarks bar">Maslow need</a>
 </div>
