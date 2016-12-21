@@ -85,28 +85,6 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    should "display needs related to an organisation and filtered by text" do
-      visit "/needs"
-
-      select("Department for Education [DfE]", from: "Filter needs by organisation:")
-      click_on_first_button("Filter")
-
-      within "#needs" do
-        assert page.has_text?("Apply for a primary school place")
-        assert page.has_text?("Apply for a secondary school place")
-        refute page.has_text?("find out about becoming a British citizen primary")
-      end
-
-      fill_in("Search needs", with: "primary")
-      click_on("Search")
-
-      within "#needs" do
-        assert page.has_text?("Apply for a primary school place")
-        refute page.has_text?("Apply for a secondary school place")
-        refute page.has_text?("find out about becoming a British citizen primary")
-      end
-    end
-
     context "filtering from showing a need" do
       setup do
         need_api_has_need(@needs[0])
