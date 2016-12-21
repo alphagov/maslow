@@ -81,11 +81,11 @@
             <tbody>
               <% @need.artefacts.each do |artefact| %>
                 <tr>
-                  <td><%= link_to artefact.title, artefact.web_url %></td>
-                  <td><% if artefact.web_url.present? %>
+                  <td><%= link_to artefact["title"], artefact["web_url"] %></td>
+                  <td><% if artefact["web_url"].present? %>
                         <%= link_to 'View feedback', feedback_for_page(artefact) %>
                       <% end %></td>
-                  <td><%= artefact.format.humanize %></td>
+                  <td><%= artefact["format"].humanize %></td>
                 </tr>
               <% end %>
             </tbody>

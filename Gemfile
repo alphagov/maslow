@@ -48,5 +48,5 @@ gem 'formtastic-bootstrap', '3.1.1'
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '~> 24.5'
+  gem 'gds-api-adapters', '~> 38.1'
 end

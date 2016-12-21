@@ -265,16 +265,14 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   def stub_need_response
-    response = stub(
-      "need response",
-      pages: 2,
-      total: 60,
-      page_size: 50,
-      current_page: 1,
-      start_index: 1,
-    )
-    response.stubs(:[]).with("results").returns([{ "id" => 100001 }])
-    response
+    {
+      "results" => [{ "id" => 100001 }],
+      "pages" => 2,
+      "total" => 60,
+      "page_size" => 50,
+      "current_page" => 1,
+      "start_index" => 1,
+    }
   end
 
   context "listing needs" do
@@ -388,8 +386,8 @@ class NeedTest < ActiveSupport::TestCase
 
       first_organisation = need.organisations.first
 
-      assert_equal "ministry-of-joy", first_organisation.id
-      assert_equal "Ministry of Joy", first_organisation.name
+      assert_equal "ministry-of-joy", first_organisation["id"]
+      assert_equal "Ministry of Joy", first_organisation["name"]
     end
 
     should "return revisions for a need" do
@@ -429,17 +427,17 @@ class NeedTest < ActiveSupport::TestCase
 
       first_revision = need.revisions.first
 
-      assert_equal "update", first_revision.action_type
-      assert_equal "Jack Bauer", first_revision.author.name
-      assert_equal "jack.bauer@test.com", first_revision.author.email
+      assert_equal "update", first_revision["action_type"]
+      assert_equal "Jack Bauer", first_revision["author"]["name"]
+      assert_equal "jack.bauer@test.com", first_revision["author"]["email"]
 
-      assert_nil first_revision.author.uid
+      assert_nil first_revision["author"]["uid"]
 
-      assert_equal %w(goal role), first_revision.changes.keys
-      assert_equal ["apply for a secondary school place", "apply for a primary school place"], first_revision.changes["goal"]
-      assert_equal [nil, "parent"], first_revision.changes["role"]
+      assert_equal %w(goal role), first_revision["changes"].keys
+      assert_equal ["apply for a secondary school place", "apply for a primary school place"], first_revision["changes"]["goal"]
+      assert_equal [nil, "parent"], first_revision["changes"]["role"]
 
-      assert_equal "2013-05-01T00:00:00+00:00", first_revision.created_at
+      assert_equal "2013-05-01T00:00:00+00:00", first_revision["created_at"]
     end
 
     should "correctly assign protected fields" do
@@ -492,7 +490,10 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "raise an error when need not found" do
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(nil)
+      GdsApi::NeedApi.any_instance.expects(:need).once
+        .with(100001)
+        .raises(GdsApi::HTTPNotFound.new(404))
+
       assert_raises Need::NotFound do
         Need.find(100001)
       end
