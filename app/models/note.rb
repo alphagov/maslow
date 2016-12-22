@@ -1,33 +1,14 @@
 class Note
-  attr_reader :text, :need_id, :author
-  attr_reader :errors
+  include Mongoid::Document
+  include Mongoid::Timestamps
 
-  def initialize(text, need_id, author)
-    @text = text
-    @need_id = need_id
-    @author = author
-  end
+  field :text, type: String
+  field :need_id, type: Integer
+  field :author, type: Hash
+  field :revision, type: String
+  field :content_id, type: String
 
-  def save
-    note_atts = {
-      "text" => text,
-      "need_id" => need_id,
-      "author" => author_atts(author)
-    }
-    Maslow.need_api.create_note(note_atts)
-    true
-  rescue GdsApi::HTTPErrorResponse => err
-    @errors = err.error_details["errors"].first
-    false
-  end
+  default_scope -> { order_by(:created_at.desc) }
 
-  private
-
-  def author_atts(author)
-    {
-      "name" => author.name,
-      "email" => author.email,
-      "uid" => author.uid
-    }
-  end
+  validates_presence_of :text, :need_id, :content_id, :author
 end
