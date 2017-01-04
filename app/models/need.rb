@@ -59,9 +59,9 @@ class Need
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
 
-  FIELDS_WITH_ARRAY_VALUES = %w(organisations revisions status)
+  FIELDS_WITH_ARRAY_VALUES = %w(organisations revisions status met_when justifications organisation_ids)
 
-  alias_method :need_id, :id
+  attr_accessor :met_when, :justifications, :organisation_ids
 
   validates_presence_of %w(role goal benefit)
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -70,6 +70,20 @@ class Need
   end
   NUMERIC_FIELDS.each do |field|
     validates_numericality_of field, only_integer: true, allow_blank: true, greater_than_or_equal_to: 0
+  end
+
+  def initialize(attributes)
+    @attributes = attributes.merge(
+      "met_when" => [],
+      "justifications" => [],
+      "organisation_ids" => [],
+    )
+    strip_newline_from_textareas(attributes)
+
+    attributes.each do |field, value|
+      singleton_class.class_eval { attr_accessor "#{field}" }
+      assign_attribute_value(field, value)
+    end
   end
 
   # Retrieve a list of needs from the Need API
@@ -102,18 +116,6 @@ class Need
     self.new(need_response.to_hash, true)
   rescue GdsApi::HTTPNotFound
     raise NotFound, need_id
-  end
-
-  def initialize(attrs)
-    strip_newline_from_textareas(attrs)
-
-    attrs.each do |field, value|
-      assign_attribute_value(field, value)
-    end
-
-    @met_when ||= []
-    @justifications ||= []
-    @organisation_ids ||= []
   end
 
   def add_more_criteria
@@ -151,19 +153,14 @@ class Need
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
     remove_blank_met_when_criteria
-    res = (WRITABLE_FIELDS).each_with_object({}) do |field, hash|
-      value = send(field)
+
+    @attributes.each_with_object({}) do |attribute, hash|
+      field = attribute[0]
+      value = attribute[1]
       if value.present?
-        # if this is a numeric field, force the value we send to the API to be an
-        # integer
-        value = Integer(value) if NUMERIC_FIELDS.include?(field)
+        send("#{field}=", value)
+        hash[field] = value.as_json
       end
-
-      # catch empty text fields and send them as null values instead for consistency
-      # with updates on other fields
-      value = nil if value == ""
-
-      hash[field] = value.as_json
     end
   end
 
@@ -212,17 +209,24 @@ private
 
   def assign_attribute_value(field, value)
     if FIELDS_WITH_ARRAY_VALUES.include?(field)
-      set_organisations(value) if field == "organisations"
-      set_status(value) if field == "status"
-      set_revisions(value) if field == "revisions"
+      case field
+      when "organisations", "met_when", "justifications", "organisation_ids"
+        set_attribute(field, value)
+      when "status"
+        set_status(value)
+      when "revisions"
+        set_revisions(value)
+      else
+        raise "attribute unknown: #{field}"
+      end
     else
       send("#{field}=", value)
     end
   end
 
-  def set_organisations(organisations)
-    organisations = [] if organisations.blank?
-    instance_variable_set("@organisations", organisations)
+  def set_attribute(field, value)
+    value = [] if value.blank?
+    instance_variable_set("@#{field}", value)
   end
 
   def set_status(status)
