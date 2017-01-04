@@ -58,23 +58,8 @@ class Need
   ]
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
-  MASS_ASSIGNABLE_FIELDS = %w(role goal benefit organisation_ids impact justifications met_when
-                              other_evidence legislation) + NUMERIC_FIELDS
 
-  # fields which should not be updated through mass-assignment.
-  # this is equivalent to using ActiveModel's attr_protected
-  PROTECTED_FIELDS = %w(duplicate_of status)
-
-  # fields which we should create read and write accessors for
-  # and which we should send back to the Need API
-  WRITABLE_FIELDS = MASS_ASSIGNABLE_FIELDS + PROTECTED_FIELDS
-
-  # non-writable fields returned from the API which we want to make accessible
-  # but which we don't want to send back to the Need API
-  READ_ONLY_FIELDS = %w(id revisions organisations applies_to_all_organisations)
-
-  attr_accessor *WRITABLE_FIELDS
-  attr_reader *READ_ONLY_FIELDS
+  FIELDS_WITH_ARRAY_VALUES = %w(organisations revisions status)
 
   alias_method :need_id, :id
 
@@ -119,23 +104,16 @@ class Need
     raise NotFound, need_id
   end
 
-  def initialize(attrs, existing = false)
-    @existing = existing
+  def initialize(attrs)
+    strip_newline_from_textareas(attrs)
 
-    if existing
-      assign_read_only_and_protected_attributes(attrs)
-
-      # discard all the read-only fields and anything else from the API which
-      # we don't understand, before calling the update method below
-      #
-      # we only do this for initializing an existing need from the API so that
-      # we can raise an error when invalid fields are submitted through the
-      # Maslow forms.
-      attrs = filtered_attributes(attrs)
+    attrs.each do |field, value|
+      assign_attribute_value(field, value)
     end
 
-    # assign all the writable attributes
-    update(attrs)
+    @met_when ||= []
+    @justifications ||= []
+    @organisation_ids ||= []
   end
 
   def add_more_criteria
@@ -153,9 +131,6 @@ class Need
   def update(attrs)
     strip_newline_from_textareas(attrs)
 
-    unless (attrs.keys - MASS_ASSIGNABLE_FIELDS).empty?
-      raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
-    end
     attrs.keys.each do |f|
       send("#{f}=", attrs[f])
     end
@@ -221,18 +196,12 @@ class Need
       Maslow.need_api.update_need(@id, atts)
     else
       response_hash = Maslow.need_api.create_need(atts).to_hash
-      @existing = true
 
-      assign_read_only_and_protected_attributes(response_hash)
-      update(filtered_attributes(response_hash))
+      update(response_hash)
     end
     true
   rescue GdsApi::HTTPErrorResponse => err
     false
-  end
-
-  def persisted?
-    @existing
   end
 
   def has_invalid_status?
@@ -240,57 +209,41 @@ class Need
   end
 
 private
+
+  def assign_attribute_value(field, value)
+    if FIELDS_WITH_ARRAY_VALUES.include?(field)
+      set_organisations(value) if field == "organisations"
+      set_status(value) if field == "status"
+      set_revisions(value) if field == "revisions"
+    else
+      send("#{field}=", value)
+    end
+  end
+
+  def set_organisations(organisations)
+    organisations = [] if organisations.blank?
+    instance_variable_set("@organisations", organisations)
+  end
+
+  def set_status(status)
+    status = nil if status.blank?
+    instance_variable_set("@status", NeedStatus.new(status))
+  end
+
+  def set_revisions(revisions)
+    revisions = [] if revisions.blank?
+    revisions.each_with_index do |revision, i|
+      revision["changes"] = revisions[i]["changes"]
+    end
+    instance_variable_set("@revisions", revisions)
+  end
+
   def author_atts(author)
     {
       "name" => author.name,
       "email" => author.email,
       "uid" => author.uid
     }
-  end
-
-  def assign_read_only_and_protected_attributes(attrs)
-    # map the read only and protected fields from the API to instance
-    # variables of the same name
-    (READ_ONLY_FIELDS + PROTECTED_FIELDS).map(&:to_s).each do |field|
-      value = attrs[field]
-      prepared_value = case field
-                       when 'revisions'
-                         prepare_revisions(value)
-                       when 'organisations'
-                         prepare_organisations(value)
-                       when 'status'
-                         prepare_status(value)
-                       else
-                         value
-                       end
-
-      instance_variable_set("@#{field}", prepared_value)
-    end
-  end
-
-  def filtered_attributes(original_attrs)
-    # Discard fields from the API we don't understand. Coupling the fields
-    # this app understands to the fields it expects from clients is fine, but
-    # we don't want to couple that with the fields we can use in the API.
-    original_attrs.slice(*MASS_ASSIGNABLE_FIELDS)
-  end
-
-  def prepare_organisations(organisations)
-    return [] unless organisations.present?
-    organisations
-  end
-
-  def prepare_status(status)
-    return nil unless status.present?
-    NeedStatus.new(status)
-  end
-
-  def prepare_revisions(revisions)
-    return [] unless revisions.present?
-
-    revisions.each_with_index do |revision, i|
-      revision["changes"] = revisions[i]["changes"]
-    end
   end
 
   def remove_blank_met_when_criteria

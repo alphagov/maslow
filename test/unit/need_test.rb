@@ -151,18 +151,6 @@ class NeedTest < ActiveSupport::TestCase
       end
     end
 
-    should "raise an exception when non-whitelisted fields are present" do
-      assert_raises(ArgumentError) do
-        Need.new(@atts.merge("foo" => "bar", "bar" => "baz"))
-      end
-    end
-
-    should "raise an exception when protected fields are present" do
-      assert_raises ArgumentError do
-        Need.new(@atts.merge("duplicate_of" => "foo"))
-      end
-    end
-
     should "be invalid when role is blank" do
       need = Need.new(@atts.merge("role" => ""))
 
@@ -440,16 +428,6 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal "2013-05-01T00:00:00+00:00", first_revision["created_at"]
     end
 
-    should "correctly assign protected fields" do
-      response = stub_response(
-        "status" => { "description" => "some status" }
-      )
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
-
-      need = Need.find(100001)
-      assert_equal "some status", need.status.description
-    end
-
     context "returning artefacts for a need" do
       setup do
         GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
@@ -532,23 +510,6 @@ class NeedTest < ActiveSupport::TestCase
         )
         assert_equal "Remove the newline from legislation", @need.legislation
         assert_equal "Remove the newline from other_evidence", @need.other_evidence
-      end
-
-      should "reject unrecognised fields" do
-        assert_raises ArgumentError do
-          @need.update("cheese" => "obstinate")
-        end
-      end
-
-      should "reject a protected field" do
-        assert_raises ArgumentError do
-          @need.update("duplicate_of" => "foo")
-        end
-      end
-
-      should "create an accessor to update the protected field" do
-        @need.status = NeedStatus.new("description" => "some status")
-        assert_equal "some status", @need.status.description
       end
     end
 
