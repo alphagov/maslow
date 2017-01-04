@@ -41,6 +41,15 @@ class NeedsController < ApplicationController
   def revisions
     authorize! :see_revisions_of, Need
     @need = load_need
+    @notes = load_notes_for_need
+    @revisions_and_notes = (@need.revisions + @notes).sort_by do |x|
+      # Either a Hash or a Note, so transform the `created_at`s into
+      # the same type.
+      x.try(:created_at) || Time.zone.parse(x["created_at"])
+    end
+    # `.sort_by` doesn't take "asc" or "desc" options, so sort in descending
+    # order by reversing the array.
+    @revisions_and_notes.reverse!
   end
 
   def edit
@@ -237,6 +246,11 @@ class NeedsController < ApplicationController
     rescue Need::NotFound
       raise Http404
     end
+  end
+
+  def load_notes_for_need
+    need_id = Integer(params[:id])
+    Note.where(need_id: need_id).to_a
   end
 
   def criteria_params_present?

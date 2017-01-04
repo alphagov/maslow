@@ -1,14 +1,14 @@
-.revisions {
+.revisions, .notes {
   margin: $default-vertical-margin 0;
   padding: 0;
 }
 
-.revision {
+.revision, .note-history {
   @extend .well;
   list-style: none;
 }
 
-.revision-title {
+.revision-title, .note-title {
   font-size: 16px;
   line-height: $default-vertical-margin;
   margin: 0 0 5px;

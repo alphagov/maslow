@@ -1,16 +1,3 @@
-<% revision["notes"].each do |n| %>
-  <li class="revision">
-    <h3 class="revision-title">
-      <%= Time.zone.parse(n["created_at"]).to_s(:govuk_date) %> &mdash;
-      Note by <%= n["author"]["name"] %>
-      <% if n["author"]["email"].present? %>
-        &lt;<%= n["author"]["email"] %>&gt;
-      <% end %>
-    </h3>
-    <%= n["text"] %>
-  </li>
-<% end %>
-
 <li class="revision">
   <h3 class="revision-title">
     <%= Time.zone.parse(revision["created_at"]).to_s(:govuk_date) %> &mdash;
