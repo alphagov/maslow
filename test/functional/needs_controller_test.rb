@@ -16,7 +16,7 @@ class NeedsControllerTest < ActionController::TestCase
         "description" => "proposed"
       }
     }
-    Need.new(defaults.merge(options), true)
+    Need.new(defaults.merge(options))
   end
 
   setup do
@@ -198,7 +198,7 @@ class NeedsControllerTest < ActionController::TestCase
           "status" => {
             "description" => "proposed"
           }
-        }, true)
+        })
 
         # stub the artefacts method so that we don't make calls to
         # the content api. we aren't really testing the view behaviour
@@ -432,7 +432,7 @@ class NeedsControllerTest < ActionController::TestCase
             "status" => {
               "description" => "proposed",
             }
-          }, true)
+          })
         Need.expects(:find).with(100001).returns(@stub_need)
       end
 
@@ -464,7 +464,7 @@ class NeedsControllerTest < ActionController::TestCase
             "status" => {
               "description" => "proposed",
             }
-          }, true)
+          })
         Need.expects(:find).with(100001).returns(@stub_need)
       end
 
@@ -707,7 +707,7 @@ class NeedsControllerTest < ActionController::TestCase
   context "DELETE reopen" do
     setup do
       login_as_stub_editor
-      @need = Need.new(base_need_fields.merge("id" => 100002, "status" => { "description" => "proposed" }), true) # duplicate
+      @need = Need.new(base_need_fields.merge("id" => 100002, "status" => { "description" => "proposed" })) # duplicate
       @need.stubs(:artefacts).returns([])
       Need.stubs(:find).with(100002).returns(@need)
     end
@@ -715,7 +715,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "reopen the need" do
       @need.expects(:duplicate_of).returns(100001)
       @need.expects(:reopen_as).with(stub_user).returns(true)
-      was_canonical = Need.new(base_need_fields.merge("id" => 100001), true) # duplicate
+      was_canonical = Need.new(base_need_fields.merge("id" => 100001)) # duplicate
       Need.stubs(:find).with(100001).returns(was_canonical)
 
       delete :reopen,

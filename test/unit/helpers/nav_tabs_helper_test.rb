@@ -7,7 +7,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
   attr_reader :current_user
 
   setup do
-    @need = Need.new({ "id" => 100001 }, true)
+    @need = Need.new({ "id" => 100001 })
   end
 
   context "for an editor" do

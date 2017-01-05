@@ -486,7 +486,7 @@ class NeedTest < ActiveSupport::TestCase
         "goal" => "do things",
         "benefit" => "good things"
       }
-      @need = Need.new(need_hash, existing = true)
+      @need = Need.new(need_hash)
     end
 
     context "updating fields" do
@@ -557,7 +557,7 @@ class NeedTest < ActiveSupport::TestCase
         "goal" => "do things",
         "benefit" => "good things"
       }
-      @need = Need.new(need_hash, existing = true)
+      @need = Need.new(need_hash)
     end
 
     should "call Need API with the correct values" do
@@ -586,7 +586,7 @@ class NeedTest < ActiveSupport::TestCase
         "benefit" => "good things",
         "duplicate_of" => 100001
       }
-      @need = Need.new(need_hash, existing = true)
+      @need = Need.new(need_hash)
     end
 
     should "call Need API with the correct values" do

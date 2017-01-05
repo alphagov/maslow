@@ -93,7 +93,7 @@ class Need
   def self.list(options = {})
     need_response = Maslow.need_api.needs(options)
 
-    need_objects = need_response["results"].map { |need_hash| self.new(need_hash, true) }
+    need_objects = need_response["results"].map { |need_hash| self.new(need_hash) }
     PaginatedList.new(need_objects, need_response)
   end
 
@@ -104,7 +104,7 @@ class Need
   def self.by_ids(*ids)
     response = Maslow.need_api.needs_by_id(ids.flatten)
 
-    response.with_subsequent_pages.map { |need| self.new(need, true) }
+    response.with_subsequent_pages.map { |need| self.new(need) }
   end
 
   # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
@@ -113,7 +113,7 @@ class Need
   # just with a different exception type.
   def self.find(need_id)
     need_response = Maslow.need_api.need(need_id)
-    self.new(need_response.to_hash, true)
+    self.new(need_response.to_hash)
   rescue GdsApi::HTTPNotFound
     raise NotFound, need_id
   end
