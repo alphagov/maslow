@@ -57,6 +57,6 @@ class Organisation
   end
 
   def self.organisations
-    GdsApi::Organisations.new(Plek.current.find('whitehall-admin')).organisations
+    GdsApi::Organisations.new(Plek.current.find('whitehall-admin')).organisations.with_subsequent_pages.to_a
   end
 end
