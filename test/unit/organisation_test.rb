@@ -1,7 +1,10 @@
 require_relative '../test_helper'
 require 'gds_api/organisations'
+require 'gds_api/test_helpers/organisations'
 
 class OrganisationTest < ActiveSupport::TestCase
+  include GdsApi::TestHelpers::Organisations
+
   context "loading organisations" do
     setup do
       @organisation_attrs = [
@@ -23,8 +26,8 @@ class OrganisationTest < ActiveSupport::TestCase
     end
 
     should "return organisations from the organisations api" do
-      GdsApi::Organisations.any_instance.expects(:organisations)
-        .returns(@organisation_attrs)
+      organisations_api_has_organisations_with_bodies(@organisation_attrs)
+
       organisations = Organisation.all
 
       assert_equal 2, organisations.size
@@ -37,7 +40,7 @@ class OrganisationTest < ActiveSupport::TestCase
     end
 
     should "cache the organisation results" do
-      GdsApi::Organisations.any_instance.expects(:organisations).once
+      organisations_api_has_organisations_with_bodies(@organisation_attrs)
 
       5.times do
         Organisation.all
@@ -45,7 +48,7 @@ class OrganisationTest < ActiveSupport::TestCase
     end
 
     should "cache the organisation results, but only for an hour" do
-      GdsApi::Organisations.any_instance.expects(:organisations).twice
+      organisations_api_has_organisations_with_bodies(@organisation_attrs)
       Organisation.all
 
       Timecop.travel(Time.zone.now + 61.minutes) do
