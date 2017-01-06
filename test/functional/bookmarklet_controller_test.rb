@@ -2,10 +2,11 @@ require_relative '../integration_test_helper'
 
 class BookmarkletControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
+  include GdsApi::TestHelpers::Organisations
 
   setup do
     login_as stub_user
-    need_api_has_organisations({})
+    organisations_api_has_organisations({})
   end
 
   context "GET bookmarklet" do

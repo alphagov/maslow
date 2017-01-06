@@ -1,10 +1,11 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
+require 'gds_api/test_helpers/organisations'
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
-    need_api_has_organisations([])
+    organisations_api_has_organisations([])
   end
 
   context "viewing the list of needs" do

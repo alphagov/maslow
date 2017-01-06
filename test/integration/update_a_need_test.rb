@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
+require 'gds_api/test_helpers/organisations'
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
   def need_hash
@@ -21,11 +22,11 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
   setup do
     login_as_stub_editor
-    need_api_has_organisations(
-      "committee-on-climate-change" => "Committee on Climate Change",
-      "competition-commission" => "Competition Commission",
-      "ministry-of-justice" => "Ministry of Justice"
-    )
+    organisations_api_has_organisations([
+      "committee-on-climate-change",
+      "competition-commission",
+      "ministry-of-justice"
+    ])
   end
 
   context "updating a need" do

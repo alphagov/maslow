@@ -1,4 +1,5 @@
 require 'gds_api/need_api'
+require 'gds_api/organisations'
 
 class Organisation
   attr_reader :id, :name, :abbreviation, :status
@@ -12,10 +13,10 @@ class Organisation
   end
 
   def initialize(atts)
-    @id = atts[:id]
-    @name = atts[:name]
-    @abbreviation = atts[:abbreviation]
-    @status = atts[:govuk_status]
+    @id = atts[:details][:slug]
+    @name = atts[:title]
+    @abbreviation = atts[:details][:abbreviation]
+    @status = atts[:details][:govuk_status]
   end
 
   def to_option
@@ -50,12 +51,12 @@ class Organisation
 
   private
   def self.load_organisations
-    (need_api.organisations || []).map {|atts|
-      self.new(atts.symbolize_keys)
+    (organisations || []).map {|atts|
+      self.new(atts.deep_symbolize_keys)
     }
   end
 
-  def self.need_api
-    Maslow.need_api
+  def self.organisations
+    GdsApi::Organisations.new(Plek.current.find('whitehall-admin')).organisations
   end
 end

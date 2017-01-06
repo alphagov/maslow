@@ -2,6 +2,7 @@ require_relative '../integration_test_helper'
 
 class BookmarksControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::NeedApi
+  include GdsApi::TestHelpers::Organisations
 
   def need
     {
@@ -34,7 +35,7 @@ class BookmarksControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
     need_api_has_need_ids([need])
-    need_api_has_organisations({})
+    organisations_api_has_organisations({})
   end
 
   context "GET bookmarks" do
