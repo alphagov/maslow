@@ -1,0 +1,10 @@
+<li class="note-history">
+  <h3 class="note-title">
+    <%= note["created_at"].to_s(:govuk_date) %> &mdash;
+    Note by <%= note["author"]["name"] %>
+    <% if note["author"]["email"].present? %>
+      &lt;<%= note["author"]["email"] %>&gt;
+    <% end %>
+  </h3>
+  <%= note["text"] %>
+</li>

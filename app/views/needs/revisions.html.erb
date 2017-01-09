@@ -11,7 +11,7 @@
       </div>
     <% end %>
     <div id="revision-history" class="col-md-6 accordion">
-      <%= render partial: "needs/revisions/recent_changes", locals: { need: @need } %>
+      <%= render partial: "needs/revisions/recent_changes", locals: { revisions_and_notes: @revisions_and_notes } %>
     </div>
   </div>
 

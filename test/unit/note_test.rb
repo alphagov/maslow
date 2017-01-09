@@ -5,35 +5,31 @@ class NoteTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::NeedApi
 
   setup do
-    @author = OpenStruct.new(
+    @author = {
       name: "Winston Smith-Churchill",
       email: "winston@alphagov.co.uk",
       uid: "win5t0n"
-    )
+    }
   end
 
-  should "send note data to the need api" do
-    stub_create_note(
+  should "save note data to the database" do
+    Note.new({
       "text" => "test",
       "need_id" => "100001",
-      "author" => {
-        "name" => "Winston Smith-Churchill",
-        "email" => "winston@alphagov.co.uk",
-        "uid" => "win5t0n"
-      }
-    )
-
-    Note.new("test", "100001", @author).save
+      "content_id" => "123abc",
+      "author" => @author
+    }).save
   end
 
   should "have errors set if the note couldn't be saved" do
-    GdsApi::NeedApi.any_instance.expects(:create_note).raises(
-      GdsApi::HTTPErrorResponse.new(422, "invalid note", { "errors" => ["error"] })
-    )
-
-    note = Note.new("", "100001", @author)
+    note = Note.new({
+      "text" => "",
+      "need_id" => "100001",
+      "content_id" => "123abc",
+      "author" => @author
+    })
     note.save
 
-    assert_equal "error", note.errors
+    assert_equal "Text can't be blank", note.errors.full_messages.first
   end
 end
