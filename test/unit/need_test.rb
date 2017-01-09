@@ -1,8 +1,93 @@
 require_relative '../test_helper'
 require 'gds_api/test_helpers/need_api'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 class NeedTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::NeedApi
+  include GdsApi::TestHelpers::PublishingApiV2
+
+  setup do
+    @stub_publishing_api_response = {
+      "total"=>3,
+      "pages"=>1,
+      "current_page"=>1,
+      "links"=>[
+        {
+          "href"=>"http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=need_ids&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=2",
+          "rel"=>"next"
+        },
+        {
+          "href"=>"http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=need_ids&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=1", "rel"=>"self"
+        }
+      ],
+      "results"=>[
+        {
+          "need_ids"=>["100523"],
+          "content_id"=>"0001c0c6-2dd3-4b56-87f1-815efe32c155",
+          "state" => "draft",
+          "details"=>
+          {
+            "applies_to_all_organisations"=>false,
+            "benefit"=>"I can make sure I'm getting what I'm entitled to",
+            "goal"=>"know what my rights are after a crime",
+            "role"=>"citizen"
+          }
+        },
+        {
+          "need_ids"=>["100522"],
+          "content_id"=>"c867e5f7-2d68-42ad-bedb-20638b3bf58e",
+          "state" => "draft",
+          "details"=>
+          {
+            "applies_to_all_organisations"=>false,
+            "benefit"=>"I can improve their services or stop them from operating",
+            "goal"=>"complain about a legal adviser",
+            "role"=>"citizen"
+          }
+        },
+        {
+          "need_ids"=>["100521"],
+          "content_id"=>"0925fd2b-6b59-4120-a849-96ab19b9c7df",
+          "state" => "published",
+          "details"=>{
+            "applies_to_all_organisations"=>false,
+            "role"=>"citizen",
+            "goal"=>"take my tax appeal to a tribunal",
+            "benefit"=>"I can have my case heard again and get the decision reversed"
+          }
+        }
+      ]
+    }
+    @need_attributes_1 = {
+      "content_id"=>"0001c0c6-2dd3-4b56-87f1-815efe32c155",
+      "need_id" => 100523,
+      "details"=>{
+        "benefit"=>"I can make sure I'm getting what I'm entitled to",
+        "goal"=>"know what my rights are after a crime",
+        "role"=>"citizen"
+      }
+    }
+
+    @need_attributes_2 = {
+      "content_id"=>"c867e5f7-2d68-42ad-bedb-20638b3bf58e",
+      "need_id" => 100522,
+      "details"=>{
+        "benefit"=>"I can improve their services or stop them from operating",
+        "goal"=>"complain about a legal adviser",
+        "role"=>"citizen"
+      }
+    }
+
+    @need_attributes_3 = {
+      "content_id"=>"0925fd2b-6b59-4120-a849-96ab19b9c7df",
+      "need_id" => 100521,
+      "details"=>{
+        "role"=>"citizen",
+        "goal"=>"take my tax appeal to a tribunal",
+        "benefit"=>"I can have my case heard again and get the decision reversed"
+      }
+    }
+  end
 
   context "saving need data to the Need API" do
     setup do
@@ -21,7 +106,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => 15000,
         "yearly_searches" => 2000
       }
-    end
+  end
 
     context "given valid attributes" do
       should "make a request to the need API with an author" do
@@ -264,21 +349,43 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   context "listing needs" do
-    should "call the need API adapter" do
-      GdsApi::NeedApi.any_instance.expects(:needs)
-        .with({})
-        .returns(stub_need_response)
+    should "call the Publishing API V2 adapter and return a list of needs" do
+      request_params = {
+        document_type: 'need',
+        page: 1,
+        per_page: 50,
+        publishing_app: 'need-api',
+        fields: ['content_id', 'need_ids', 'details', 'publication_state'],
+        locale: 'en',
+        order: '-public_updated_at'
+      }
 
-      Need.list
+      needs = [
+        Need.new(@need_attributes_1["details"]),
+        Need.new(@need_attributes_2["details"]),
+        Need.new(@need_attributes_3["details"])
+      ]
+
+      publishing_api_has_content(
+        needs,
+        document_type: 'need',
+        page: 1,
+        per_page: 50,
+        publishing_app: 'need-api',
+        fields: ['content_id', 'need_ids', 'details', 'publication_state'],
+        locale: 'en',
+        order: '-public_updated_at'
+      )
+
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items)
+        .with(request_params)
+        .returns(@stub_publishing_api_response)
+
+      list = Need.list
+
+      assert 3, list.length
     end
 
-    should "pass parameters to the API adapter" do
-      GdsApi::NeedApi.any_instance.expects(:needs)
-        .with({page: 2})
-        .returns(stub_need_response)
-
-      Need.list(page: 2)
-    end
 
     should "return a list of Need objects" do
       GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
@@ -304,7 +411,7 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
-  context "requesting needs by IDs" do
+  context "requesting needs by content_ids" do
     setup do
       @need1 = {
         "id" => "10001",

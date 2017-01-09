@@ -91,10 +91,10 @@ class Need
   # The parameters are the same as passed through to the Need API: as of
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
   def self.list(options = {})
-    need_response = Maslow.need_api.needs(options)
-
-    need_objects = need_response["results"].map { |need_hash| self.new(need_hash) }
-    PaginatedList.new(need_objects, need_response)
+    options = default_options.merge(options)
+    response = Maslow.publishing_api_v2.get_content_items(options)
+    need_objects = build_needs(response["results"])
+    PaginatedList.new(need_objects, response)
   end
 
   # Retrieve a list of needs matching an array of ids
@@ -207,6 +207,24 @@ class Need
 
 private
 
+  def self.build_needs(response)
+    needs = []
+    response.each do |need|
+      need_status = Need.map_to_status(need["state"])
+      needs << Need.new(
+        {
+          "id" => need["need_ids"][0],
+          "applies_to_all_organisations" => need["applies_to_all_organisations"],
+          "benefit" => need["details"]["benefit"],
+          "goal" => need["details"]["goal"],
+          "role" => need["details"]["role"],
+          "status" => need_status
+        }
+      )
+    end
+    needs
+  end
+
   def assign_attribute_value(field, value)
     if FIELDS_WITH_ARRAY_VALUES.include?(field)
       case field
@@ -231,7 +249,7 @@ private
 
   def set_status(status)
     status = nil if status.blank?
-    instance_variable_set("@status", NeedStatus.new(status))
+    instance_variable_set("@status", NeedStatus.new(description: status)) #expects description
   end
 
   def set_revisions(revisions)
@@ -240,6 +258,31 @@ private
       revision["changes"] = revisions[i]["changes"]
     end
     instance_variable_set("@revisions", revisions)
+  end
+
+  def self.default_options
+    {
+      document_type: 'need',
+      page: 1,
+      per_page: 50,
+      publishing_app: 'need-api',
+      fields: ['content_id', 'need_ids', 'details', 'publication_state'],
+      locale: 'en',
+      order: '-public_updated_at'
+    }
+  end
+
+  def self.map_to_status(state)
+    case state
+    when "published"
+      "Valid"
+    when "draft"
+      "Proposed"
+    when "unpublished"
+      "Duplicate"
+    else
+      "Status not recognised: #{state}"
+    end
   end
 
   def author_atts(author)
