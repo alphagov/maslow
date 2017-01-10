@@ -18,7 +18,7 @@ class Need
   # Allow us to convert the API response to a list of Need objects, but still
   # retain the pagination information
   class PaginatedList < Array
-    PAGINATION_PARAMS = [:pages, :total, :page_size, :current_page, :start_index]
+    PAGINATION_PARAMS = [:pages, :total, :per_page, :page]
     attr_reader *PAGINATION_PARAMS
 
     def initialize(needs, pagination_info)
@@ -26,9 +26,8 @@ class Need
 
       @pages = pagination_info["pages"]
       @total = pagination_info["total"]
-      @page_size = pagination_info["page_size"]
-      @current_page = pagination_info["current_page"]
-      @start_index = pagination_info["start_index"]
+      @per_page = pagination_info["per_page"]
+      @page = pagination_info["page"]
     end
 
     def inspect
@@ -263,7 +262,6 @@ private
   def self.default_options
     {
       document_type: 'need',
-      page: 1,
       per_page: 50,
       publishing_app: 'need-api',
       fields: ['content_id', 'need_ids', 'details', 'publication_state'],

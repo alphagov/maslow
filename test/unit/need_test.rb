@@ -352,7 +352,6 @@ class NeedTest < ActiveSupport::TestCase
     should "call the Publishing API V2 adapter and return a list of needs" do
       request_params = {
         document_type: 'need',
-        page: 1,
         per_page: 50,
         publishing_app: 'need-api',
         fields: ['content_id', 'need_ids', 'details', 'publication_state'],
@@ -384,30 +383,24 @@ class NeedTest < ActiveSupport::TestCase
       list = Need.list
 
       assert 3, list.length
-    end
-
-
-    should "return a list of Need objects" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
-      need_list = Need.list
-      assert_equal 1, need_list.length
-      assert need_list.all? { |need| need.is_a? Need }
-    end
-
-    should "report each need as existing" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
-      assert Need.list.all?(&:persisted?)
+      assert list.all? { |need| need.is_a? Need }
     end
 
     should "retain pagination info" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
+
+      multipage_response = @stub_publishing_api_response
+      multipage_response["total"]= 60
+      multipage_response["per_page"]= 50
+      multipage_response["pages"]= 2
+      multipage_response["page"]= 1
+
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items).once.returns(multipage_response)
       need_list = Need.list
 
       assert_equal 2, need_list.pages
       assert_equal 60, need_list.total
-      assert_equal 50, need_list.page_size
-      assert_equal 1, need_list.current_page
-      assert_equal 1, need_list.start_index
+      assert_equal 50, need_list.per_page
+      assert_equal 1, need_list.page
     end
   end
 
