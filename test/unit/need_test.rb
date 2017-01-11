@@ -617,6 +617,7 @@ class NeedTest < ActiveSupport::TestCase
         "goal" => "do things",
         "benefit" => "excellent things",
         "organisation_ids" => [],
+        "applies_to_all_organisations" => true,
         "impact" => nil,
         "justifications" => [],
         "met_when" => [],
