@@ -206,6 +206,7 @@ class Need
     attributes = as_json.merge("author" => author_atts(author))
     content_id = attributes["content_id"]
     attributes.delete("content_id")
+    attributes.delete("organisations")
 
     response_hash = Maslow.publishing_api_v2.put_content(content_id, attributes)
     update(response_hash)

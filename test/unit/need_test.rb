@@ -632,8 +632,10 @@ class NeedTest < ActiveSupport::TestCase
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }
       }
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash)
+
       @need.update(update_hash)
+      update_hash.delete("organisations")
+      GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash)
       @need.save_as(author)
     end
   end
