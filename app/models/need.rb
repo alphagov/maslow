@@ -58,7 +58,7 @@ class Need
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
 
-  FIELDS_WITH_ARRAY_VALUES = %w(organisations revisions status met_when justifications organisation_ids)
+  FIELDS_WITH_ARRAY_VALUES = %w(organisations status met_when justifications organisation_ids)
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + %w(author content_id id role goal benefit  impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
@@ -237,8 +237,6 @@ private
         set_attribute(field, value)
       when "status"
         set_status(value)
-      when "revisions"
-        set_revisions(value)
       else
         raise "attribute unknown: #{field}"
       end
@@ -255,14 +253,6 @@ private
   def set_status(status)
     status = nil if status.blank?
     instance_variable_set("@status", NeedStatus.new(description: status)) #expects description
-  end
-
-  def set_revisions(revisions)
-    revisions = [] if revisions.blank?
-    revisions.each_with_index do |revision, i|
-      revision["changes"] = revisions[i]["changes"]
-    end
-    instance_variable_set("@revisions", revisions)
   end
 
   def self.default_options
