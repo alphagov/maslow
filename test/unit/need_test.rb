@@ -626,14 +626,12 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_site_views" => nil,
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
-        "duplicate_of" => nil,
-        "author" => {
-          "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
-        }
+        "duplicate_of" => nil
       }
 
       @need.update(update_hash)
       update_hash.delete("organisations")
+      update_hash["author"] = @need.send(:author_atts, author)
       GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash)
       @need.save_as(author)
     end

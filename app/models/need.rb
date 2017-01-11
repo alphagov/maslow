@@ -60,7 +60,7 @@ class Need
 
   FIELDS_WITH_ARRAY_VALUES = %w(organisations status met_when justifications organisation_ids)
 
-  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + %w(author content_id id role goal benefit  impact legislation other_evidence duplicate_of applies_to_all_organisations)
+  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + %w(content_id id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
   attr_accessor :met_when, :justifications, :organisation_ids
 
