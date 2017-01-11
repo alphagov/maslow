@@ -627,7 +627,6 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => nil,
         "yearly_searches" => nil,
         "duplicate_of" => nil,
-        "status" => nil,
         "author" => {
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }

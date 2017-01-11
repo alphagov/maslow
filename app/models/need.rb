@@ -206,8 +206,7 @@ class Need
   def save_as(author)
     attributes = as_json.merge("author" => author_atts(author))
     content_id = attributes["content_id"]
-    attributes.delete("content_id")
-    attributes.delete("organisations")
+    attributes = attributes.except("content_id", "organisations", "status")
 
     response_hash = Maslow.publishing_api_v2.put_content(content_id, attributes)
     update(response_hash)
