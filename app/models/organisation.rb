@@ -2,7 +2,7 @@ require 'gds_api/need_api'
 require 'gds_api/organisations'
 
 class Organisation
-  attr_reader :id, :name, :abbreviation, :status
+  attr_reader :id, :content_id, :name, :abbreviation, :status
 
   def self.cache
     @cache ||= LRUCache.new(ttl: 1.hour)
@@ -14,6 +14,7 @@ class Organisation
 
   def initialize(atts)
     @id = atts[:details][:slug]
+    @content_id = atts[:content_id]
     @name = atts[:title]
     @abbreviation = atts[:details][:abbreviation]
     @status = atts[:details][:govuk_status]

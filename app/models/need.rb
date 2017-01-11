@@ -58,7 +58,7 @@ class Need
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
 
-  FIELDS_WITH_ARRAY_VALUES = %w(organisations status met_when justifications organisation_ids)
+  FIELDS_WITH_ARRAY_VALUES = %w(status met_when justifications organisation_ids)
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + %w(content_id need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
@@ -117,6 +117,19 @@ class Need
     self.new(need_response.to_hash)
   rescue GdsApi::HTTPNotFound
     raise NotFound, need_id
+  end
+
+  def organisations
+    org_response = Maslow.publishing_api_v2.get_expanded_links(@content_id)
+    response = org_response["expanded_links"]["organisations"] || []
+    @organisations ||= response.map do |org|
+      Organisation.new(
+        title: org.deep_symbolize_keys[:title],
+        content_id: org.deep_symbolize_keys[:content_id],
+        details: {}
+      )
+    end
+    @organisations
   end
 
   def add_more_criteria

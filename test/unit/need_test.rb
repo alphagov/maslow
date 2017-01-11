@@ -451,27 +451,40 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "return organisations for a need" do
-      response = stub_response(
-        "organisations" => [
-          {
-            "id" => "ministry-of-joy",
-            "name" => "Ministry of Joy"
-          },
-          {
-            "id" => "ministry-of-plenty",
-            "name" => "Ministry of Plenty"
-          }
-        ]
+      first_organisation_content_id = SecureRandom.uuid
+      second_organisation_content_id = SecureRandom.uuid
+      response = {
+        "expanded_links" => {
+          "organisations" => [
+            {
+              title: "Her Majesty's Revenue and Customs",
+              content_id: first_organisation_content_id
+            },
+            {
+              title: "Department of Transport",
+              content_id: second_organisation_content_id
+            }
+          ]
+        }
+      }
+      content_id = SecureRandom.uuid
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once.with(content_id).returns(
+        {
+          "content_id" => content_id
+        }
       )
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
+      GdsApi::PublishingApiV2.any_instance.expects(:get_expanded_links).once.with(content_id).returns(response)
 
-      need = Need.find(100001)
-      assert_equal 2, need.organisations.count
+      need = Need.find(content_id)
+      organisations = need.organisations
 
-      first_organisation = need.organisations.first
+      assert_equal 2, organisations.count
 
-      assert_equal "ministry-of-joy", first_organisation["id"]
-      assert_equal "Ministry of Joy", first_organisation["name"]
+      first_organisation = organisations.first
+      second_organisation = organisations[1]
+
+      assert_equal first_organisation_content_id, first_organisation.content_id
+      assert_equal second_organisation_content_id, second_organisation.content_id
     end
 
     should "return revisions for a need" do
