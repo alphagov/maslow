@@ -196,8 +196,6 @@ class Need
     content_id = attributes["content_id"]
     attributes.delete("content_id")
 
-    p "DDDD"
-    p attributes["benefit"]
     response_hash = Maslow.publishing_api_v2.put_content(content_id, attributes)
     update(response_hash)
 
