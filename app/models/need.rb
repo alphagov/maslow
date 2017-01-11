@@ -83,7 +83,7 @@ class Need
 
     ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
 
-    attributes.each { |field, value| assign_attribute_value(field, value)}
+    update(attributes)
   end
 
   # Retrieve a list of needs from the Need API
@@ -133,8 +133,19 @@ class Need
   def update(attrs)
     strip_newline_from_textareas(attrs)
 
-    attrs.keys.each do |f|
-      send("#{f}=", attrs[f])
+    attrs.each do |field, value|
+      if FIELDS_WITH_ARRAY_VALUES.include?(field)
+        case field
+        when "organisations", "met_when", "justifications", "organisation_ids"
+          set_attribute(field, value)
+        when "status"
+          set_status(value)
+        else
+          raise "attribute unknown: #{field}"
+        end
+      else
+        send("#{field}=", value)
+      end
     end
 
     @met_when ||= []
@@ -226,21 +237,6 @@ private
       )
     end
     needs
-  end
-
-  def assign_attribute_value(field, value)
-    if FIELDS_WITH_ARRAY_VALUES.include?(field)
-      case field
-      when "organisations", "met_when", "justifications", "organisation_ids"
-        set_attribute(field, value)
-      when "status"
-        set_status(value)
-      else
-        raise "attribute unknown: #{field}"
-      end
-    else
-      send("#{field}=", value)
-    end
   end
 
   def set_attribute(field, value)
