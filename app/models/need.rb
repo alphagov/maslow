@@ -74,11 +74,11 @@ class Need
   end
 
   def initialize(attributes)
-    @attributes = attributes.merge(
+    attributes = {
       "met_when" => [],
       "justifications" => [],
       "organisation_ids" => [],
-    )
+    }.merge(attributes)
     strip_newline_from_textareas(attributes)
 
     ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
