@@ -578,7 +578,7 @@ class NeedTest < ActiveSupport::TestCase
     setup do
       need_hash = {
         "content_id" => "2a0173df-7483-411c-abc7-4e648625eafe",
-        "id" => 100001,
+        "need_id" => 100001,
         "role" => "person",
         "goal" => "do things",
         "benefit" => "good things",
@@ -631,6 +631,7 @@ class NeedTest < ActiveSupport::TestCase
 
       @need.update(update_hash)
       update_hash.delete("organisations")
+      update_hash["need_id"] = @need.need_id
       update_hash["author"] = @need.send(:author_atts, author)
       GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash)
       @need.save_as(author)
