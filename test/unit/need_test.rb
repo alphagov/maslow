@@ -634,7 +634,7 @@ class NeedTest < ActiveSupport::TestCase
       update_hash.delete("organisations")
       update_hash["need_id"] = @need.need_id
       update_hash["author"] = @need.send(:author_atts, author)
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash)
+      GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash).returns({})
       @need.save_as(author)
     end
   end
