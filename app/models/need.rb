@@ -60,6 +60,8 @@ class Need
 
   FIELDS_WITH_ARRAY_VALUES = %w(organisations revisions status met_when justifications organisation_ids)
 
+  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + %w(author content_id id role goal benefit  impact legislation other_evidence duplicate_of applies_to_all_organisations)
+
   attr_accessor :met_when, :justifications, :organisation_ids
 
   validates_presence_of %w(role goal benefit)
@@ -79,10 +81,9 @@ class Need
     )
     strip_newline_from_textareas(attributes)
 
-    attributes.each do |field, value|
-      singleton_class.class_eval { attr_accessor "#{field}" }
-      assign_attribute_value(field, value)
-    end
+    ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
+
+    attributes.each { |field, value| assign_attribute_value(field, value)}
   end
 
   # Retrieve a list of needs from the Need API
@@ -106,12 +107,12 @@ class Need
     response.with_subsequent_pages.map { |need| self.new(need) }
   end
 
-  # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
+  # Retrieve a need from the Publishing API, or raise NotFound if it doesn't exist.
   #
   # This works in roughly the same way as an ActiveRecord-style `find` method,
   # just with a different exception type.
-  def self.find(need_id)
-    need_response = Maslow.need_api.need(need_id)
+  def self.find(content_id)
+    need_response = Maslow.publishing_api_v2.get_content(content_id)
     self.new(need_response.to_hash)
   rescue GdsApi::HTTPNotFound
     raise NotFound, need_id
@@ -152,14 +153,19 @@ class Need
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
     remove_blank_met_when_criteria
-
-    @attributes.each_with_object({}) do |attribute, hash|
-      field = attribute[0]
-      value = attribute[1]
+    res = (ALLOWED_FIELDS).each_with_object({}) do |field, hash|
+      value = send(field)
       if value.present?
-        send("#{field}=", value)
-        hash[field] = value.as_json
+        # if this is a numeric field, force the value we send to the API to be an
+        # integer
+        value = Integer(value) if NUMERIC_FIELDS.include?(field)
       end
+
+      # catch empty text fields and send them as null values instead for consistency
+      # with updates on other fields
+      value = nil if value == ""
+
+      hash[field] = value.as_json
     end
   end
 
@@ -186,15 +192,15 @@ class Need
   end
 
   def save_as(author)
-    atts = as_json.merge("author" => author_atts(author))
+    attributes = as_json.merge("author" => author_atts(author))
+    content_id = attributes["content_id"]
+    attributes.delete("content_id")
 
-    if persisted?
-      Maslow.need_api.update_need(@id, atts)
-    else
-      response_hash = Maslow.need_api.create_need(atts).to_hash
+    p "DDDD"
+    p attributes["benefit"]
+    response_hash = Maslow.publishing_api_v2.put_content(content_id, attributes)
+    update(response_hash)
 
-      update(response_hash)
-    end
     true
   rescue GdsApi::HTTPErrorResponse => err
     false

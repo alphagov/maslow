@@ -331,10 +331,6 @@ class NeedTest < ActiveSupport::TestCase
 
       assert_equal false, need.save_as(stub_user)
     end
-
-    should "report new needs as not persisted" do
-      refute Need.new({}).persisted?
-    end
   end
 
   def stub_need_response
@@ -443,15 +439,15 @@ class NeedTest < ActiveSupport::TestCase
 
   context "loading needs" do
     should "construct a need from an API response" do
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once.with("0925fd2b-6b59-4120-a849-96ab19b9c7df").returns(stub_response)
 
-      need = Need.find(100001)
+      need = Need.find("0925fd2b-6b59-4120-a849-96ab19b9c7df")
 
+      assert_equal "0925fd2b-6b59-4120-a849-96ab19b9c7df", need.content_id
       assert_equal 100001, need.need_id
       assert_equal "person", need.role
       assert_equal "do things", need.goal
       assert_equal "good things", need.benefit
-      assert need.persisted?
     end
 
     should "return organisations for a need" do
@@ -581,10 +577,11 @@ class NeedTest < ActiveSupport::TestCase
   context "updating needs" do
     setup do
       need_hash = {
+        "content_id" => "2a0173df-7483-411c-abc7-4e648625eafe",
         "id" => 100001,
         "role" => "person",
         "goal" => "do things",
-        "benefit" => "good things"
+        "benefit" => "good things",
       }
       @need = Need.new(need_hash)
     end
@@ -613,7 +610,7 @@ class NeedTest < ActiveSupport::TestCase
       end
     end
 
-    should "call the need API" do
+    should "call the Publishing API" do
       author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
       update_hash = {
         "role" => "person",
@@ -635,8 +632,8 @@ class NeedTest < ActiveSupport::TestCase
           "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
         }
       }
-      GdsApi::NeedApi.any_instance.expects(:update_need).once.with(100001, update_hash)
-      @need.update("benefit" => "excellent things")
+      GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash)
+      @need.update(update_hash)
       @need.save_as(author)
     end
   end
