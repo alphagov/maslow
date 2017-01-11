@@ -75,6 +75,7 @@ class Need
 
   def initialize(attributes)
     attributes = {
+      "content_id" => SecureRandom.uuid,
       "met_when" => [],
       "justifications" => [],
       "organisation_ids" => [],
