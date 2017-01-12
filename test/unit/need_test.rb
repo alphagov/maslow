@@ -390,11 +390,8 @@ class NeedTest < ActiveSupport::TestCase
         }
       }
       content_id = SecureRandom.uuid
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once.with(content_id).returns(
-        {
-          "content_id" => content_id
-        }
-      )
+      publishing_api_has_item(create(:need_content_item, content_id: content_id))
+
       GdsApi::PublishingApiV2.any_instance.expects(:get_expanded_links).once.with(content_id).returns(response)
 
       need = Need.find(content_id)
