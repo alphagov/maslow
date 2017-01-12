@@ -242,38 +242,40 @@ class Need
 private
 
   def self.needs_from_publishing_api_payloads(*responses)
-    responses.map do |attributes|
-      # Transforms the attributes to not have a nested details hash, and
-      # instead have all the values in the details hash as top level
-      # fields for convenience.
-      #
-      # {
-      #   "content_id": "...",
-      #   "details": {
-      #     "role": "foo",
-      #     ...
-      #   }
-      # }
-      #
-      # Would be transformed to:
-      #
-      # {
-      #   "content_id": "...",
-      #   "role": "foo"
-      # }
+    responses.map(&:need_from_publishing_api_payload)
+  end
 
-      attributes_without_nested_details = attributes.except("details")
-      attributes_with_merged_details =
-        attributes_without_nested_details.merge(attributes["details"] || {})
+  def self.need_from_publishing_api_payload(attributes)
+    # Transforms the attributes to not have a nested details hash, and
+    # instead have all the values in the details hash as top level
+    # fields for convenience.
+    #
+    # {
+    #   "content_id": "...",
+    #   "details": {
+    #     "role": "foo",
+    #     ...
+    #   }
+    # }
+    #
+    # Would be transformed to:
+    #
+    # {
+    #   "content_id": "...",
+    #   "role": "foo"
+    # }
 
-      need_status = Need.map_to_status(attributes["state"])
+    attributes_without_nested_details = attributes.except("details")
+    attributes_with_merged_details =
+      attributes_without_nested_details.merge(attributes["details"] || {})
 
-      Need.new(
-        attributes_with_merged_details
-          .except("publishing_app", "rendering_app", "need_ids", "state")
-          .merge({ "status" => need_status })
-      )
-    end
+    need_status = Need.map_to_status(attributes["state"])
+
+    Need.new(
+      attributes_with_merged_details
+        .except("publishing_app", "rendering_app", "need_ids", "state")
+        .merge({ "status" => need_status })
+    )
   end
 
   def set_attribute(field, value)
