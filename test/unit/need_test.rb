@@ -546,7 +546,7 @@ class NeedTest < ActiveSupport::TestCase
   context "closing needs as duplicates" do
     setup do
       need_hash = {
-        "id" => 100002,
+        "need_id" => 100002,
         "role" => "person",
         "goal" => "do things",
         "benefit" => "good things"
