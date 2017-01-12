@@ -76,18 +76,20 @@ class Need
   end
 
   def initialize(attributes={})
-    attributes = {
+    ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
+
+    strip_newline_from_textareas(attributes)
+
+    default_values = {
       "content_id" => SecureRandom.uuid,
       "met_when" => [],
       "justifications" => [],
       "organisation_ids" => [],
-    }.merge(remove_unnecessary_fields(attributes))
+    }
 
-    strip_newline_from_textareas(attributes)
-
-    ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
-
-    update(attributes)
+    update(
+      default_values.merge(attributes)
+    )
   end
 
   # Retrieve a list of needs from the Need API
@@ -97,7 +99,7 @@ class Need
   def self.list(options = {})
     options = default_options.merge(options)
     response = Maslow.publishing_api_v2.get_content_items(options)
-    need_objects = build_needs(*response["results"].to_a)
+    need_objects = needs_from_publishing_api_payloads(*response["results"].to_a)
     PaginatedList.new(need_objects, response)
   end
 
@@ -239,18 +241,37 @@ class Need
 
 private
 
-  def self.build_needs(*responses)
-    responses.map do |need|
-      need_status = Need.map_to_status(need["state"])
+  def self.needs_from_publishing_api_payloads(*responses)
+    responses.map do |attributes|
+      # Transforms the attributes to not have a nested details hash, and
+      # instead have all the values in the details hash as top level
+      # fields for convenience.
+      #
+      # {
+      #   "content_id": "...",
+      #   "details": {
+      #     "role": "foo",
+      #     ...
+      #   }
+      # }
+      #
+      # Would be transformed to:
+      #
+      # {
+      #   "content_id": "...",
+      #   "role": "foo"
+      # }
+
+      attributes_without_nested_details = attributes.except("details")
+      attributes_with_merged_details =
+        attributes_without_nested_details.merge(attributes["details"] || {})
+
+      need_status = Need.map_to_status(attributes["state"])
+
       Need.new(
-        {
-          "need_id" => need["details"]["need_id"],
-          "applies_to_all_organisations" => need["applies_to_all_organisations"],
-          "benefit" => need["details"]["benefit"],
-          "goal" => need["details"]["goal"],
-          "role" => need["details"]["role"],
-          "status" => need_status
-        }
+        attributes_with_merged_details
+          .except("publishing_app", "rendering_app", "need_ids", "state")
+          .merge({ "status" => need_status })
       )
     end
   end
@@ -307,9 +328,5 @@ private
     %w(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
-  end
-
-  def remove_unnecessary_fields(attributes)
-    attributes.except("publishing_app", "rendering_app")
   end
 end
