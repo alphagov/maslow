@@ -257,7 +257,7 @@ class NeedTest < ActiveSupport::TestCase
 
     should "report a problem if unable to save the need" do
       need = Need.new(@atts)
-      GdsApi::NeedApi.any_instance.expects(:create_need).raises(
+      GdsApi::PublishingApiV2.any_instance.expects(:put_content).raises(
         GdsApi::HTTPErrorResponse.new(422, ["error"])
       )
 
