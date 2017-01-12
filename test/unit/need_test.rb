@@ -114,26 +114,24 @@ class NeedTest < ActiveSupport::TestCase
         need = Need.new(@atts)
         author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
 
-        request = @atts.merge(
-          "duplicate_of" => nil,
-          "status" => nil,
+        all_request_fields = Need::ALLOWED_FIELDS.each_with_object({}) do |field, hash|
+          hash[field] = nil
+        end
+
+        request = all_request_fields.merge(@atts.merge(
           "author" => {
             "name" => "O'Brien",
             "email" => "obrien@alphagov.co.uk",
             "uid" => "user-1234"
-          })
-        response = @atts.merge(
-          "_response_info" => {
-            "status" => "created"
-          },
-          "id" => "123456"
-        )
+          }
+        )).except("content_id", "organisations", "status")
+        #response = create(:need_content_item, @atts)
 
-        GdsApi::NeedApi.any_instance.expects(:create_need).with(request).returns(response)
+        stub_publishing_api_put_content(need.content_id, request, body: {})
 
         assert need.save_as(author)
-        assert need.persisted?
-        assert_equal "123456", need.need_id
+
+        assert_publishing_api_put_content(need.content_id, request)
       end
 
       should "set the 'met_when', 'justifications' and 'organisation_ids' fields to be empty arrays if not present" do
