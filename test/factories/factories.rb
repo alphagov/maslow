@@ -80,33 +80,6 @@ FactoryGirl.define do
     trait :draft do
     end
 
-    trait :published do
-      publication_state 'published'
-      first_published_at "2015-11-15T00:00:00+00:00"
-      state_history {
-        { "1": "published" }
-      }
-    end
-
-    trait :redrafted do
-      state_history {
-        { "2": "draft", "1": "published" }
-      }
-
-      publication_state 'draft'
-      first_published_at "2015-11-15T00:00:00+00:00"
-
-      update_type "major"
-    end
-
-    trait :unpublished do
-      publication_state 'unpublished'
-      first_published_at "2015-11-15T00:00:00+00:00"
-      state_history {
-        { "1": "unpublished" }
-      }
-    end
-
     to_create(&:deep_stringify_keys!)
   end
 end
