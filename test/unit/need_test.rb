@@ -107,7 +107,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => 15000,
         "yearly_searches" => 2000
       }
-  end
+    end
 
     context "given valid attributes" do
       should "make a request to the need API with an author" do
