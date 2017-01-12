@@ -402,27 +402,17 @@ class NeedTest < ActiveSupport::TestCase
 
   context "requesting needs by content_ids" do
     setup do
-      @need1 = {
-        "id" => "10001",
-        "role" => "parent",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my child can start school" }
-
-      @need2 = {
-        "id" => "10002",
-        "role" => "person",
-        "goal" => "do stuff",
-        "benefit" => "get stuff done" }
-
-      need_api_has_need_ids([@need1, @need2])
+      @need1 = create(:need_content_item)
+      @need2 = create(:need_content_item)
+      publishing_api_has_item(@need1)
+      publishing_api_has_item(@need2)
     end
 
     should "return an array of matching Need objects" do
-      needs = Need.by_ids(10001, 10002)
+      needs = Need.by_content_ids(@need1["content_id"], @need2["content_id"])
 
       assert_equal 2, needs.size
-      assert_equal %w(10001 10002), needs.map(&:id)
-      assert_equal %w(parent person), needs.map(&:role)
+      assert_equal [@need1["content_id"], @need2["content_id"]], needs.map(&:content_id)
     end
   end
 
