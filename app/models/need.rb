@@ -81,7 +81,8 @@ class Need
       "met_when" => [],
       "justifications" => [],
       "organisation_ids" => [],
-    }.merge(attributes)
+    }.merge(remove_unnecessary_fields(attributes))
+
     strip_newline_from_textareas(attributes)
 
     ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
@@ -307,5 +308,9 @@ private
     %w(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
+  end
+
+  def remove_unnecessary_fields(attributes)
+    attributes.except("publishing_app", "rendering_app")
   end
 end
