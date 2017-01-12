@@ -92,6 +92,7 @@ class NeedTest < ActiveSupport::TestCase
   context "saving need data to the Need API" do
     setup do
       @atts = {
+        "content_id" => SecureRandom.uuid,
         "role" => "user",
         "goal" => "do stuff",
         "benefit" => "get stuff",
