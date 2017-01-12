@@ -125,7 +125,6 @@ class NeedTest < ActiveSupport::TestCase
             "uid" => "user-1234"
           }
         )).except("content_id", "organisations", "status")
-        #response = create(:need_content_item, @atts)
 
         stub_publishing_api_put_content(need.content_id, request, body: {})
 
