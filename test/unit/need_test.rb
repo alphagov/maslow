@@ -507,29 +507,30 @@ class NeedTest < ActiveSupport::TestCase
 
     should "call the Publishing API" do
       author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+
+      all_request_fields = Need::ALLOWED_FIELDS.each_with_object({}) do |field, hash|
+        hash[field] = nil
+      end
       update_hash = {
         "role" => "person",
         "goal" => "do things",
         "benefit" => "excellent things",
         "organisation_ids" => [],
-        "applies_to_all_organisations" => true,
-        "impact" => nil,
         "justifications" => [],
         "met_when" => [],
-        "other_evidence" => nil,
-        "legislation" => nil,
-        "yearly_user_contacts" => nil,
-        "yearly_site_views" => nil,
-        "yearly_need_views" => nil,
-        "yearly_searches" => nil,
-        "duplicate_of" => nil
       }
 
+      expected_request = all_request_fields
+                           .merge(update_hash)
+                           .except("content_id", "status")
+
+      expected_request["author"] = @need.send(:author_atts, author)
+      expected_request["need_id"] = @need.need_id
+
       @need.update(update_hash)
-      update_hash.delete("organisations")
-      update_hash["need_id"] = @need.need_id
-      update_hash["author"] = @need.send(:author_atts, author)
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).once.with("2a0173df-7483-411c-abc7-4e648625eafe", update_hash).returns({})
+
+      stub_publishing_api_put_content(@need.content_id, expected_request, body: {})
+
       @need.save_as(author)
     end
   end
