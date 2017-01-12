@@ -122,7 +122,7 @@ class Need
     response = Maslow.publishing_api_v2.get_content(content_id)
     need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPNotFound
-    raise NotFound, need_id
+    raise NotFound, content_id
   end
 
   def organisations
