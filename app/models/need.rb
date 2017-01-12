@@ -97,7 +97,7 @@ class Need
   def self.list(options = {})
     options = default_options.merge(options)
     response = Maslow.publishing_api_v2.get_content_items(options)
-    need_objects = build_needs(response["results"])
+    need_objects = build_needs(*response["results"].to_a)
     PaginatedList.new(need_objects, response)
   end
 
@@ -239,11 +239,10 @@ class Need
 
 private
 
-  def self.build_needs(response)
-    needs = []
-    response.each do |need|
+  def self.build_needs(*responses)
+    responses.map do |need|
       need_status = Need.map_to_status(need["state"])
-      needs << Need.new(
+      Need.new(
         {
           "need_id" => need["details"]["need_id"],
           "applies_to_all_organisations" => need["applies_to_all_organisations"],
@@ -254,7 +253,6 @@ private
         }
       )
     end
-    needs
   end
 
   def set_attribute(field, value)
