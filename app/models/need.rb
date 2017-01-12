@@ -245,7 +245,7 @@ private
       need_status = Need.map_to_status(need["state"])
       needs << Need.new(
         {
-          "id" => need["need_ids"][0],
+          "need_id" => need["details"]["need_id"],
           "applies_to_all_organisations" => need["applies_to_all_organisations"],
           "benefit" => need["details"]["benefit"],
           "goal" => need["details"]["goal"],
