@@ -242,7 +242,7 @@ class Need
 private
 
   def self.needs_from_publishing_api_payloads(*responses)
-    responses.map(&:need_from_publishing_api_payload)
+    responses.map { |x| need_from_publishing_api_payload(x) }
   end
 
   def self.need_from_publishing_api_payload(attributes)
