@@ -457,12 +457,14 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "raise an error when need not found" do
-      GdsApi::NeedApi.any_instance.expects(:need).once
-        .with(100001)
+      content_id = SecureRandom.uuid
+
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once
+        .with(content_id)
         .raises(GdsApi::HTTPNotFound.new(404))
 
       assert_raises Need::NotFound do
-        Need.find(100001)
+        Need.find(content_id)
       end
     end
   end
