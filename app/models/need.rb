@@ -110,7 +110,7 @@ class Need
   def self.by_content_ids(*content_ids)
     content_ids.map do |content_id|
       response = Maslow.publishing_api_v2.get_content(content_id)
-      Need.new(response.parsed_content)
+      need_from_publishing_api_payload(response.parsed_content)
     end
   end
 
@@ -119,8 +119,8 @@ class Need
   # This works in roughly the same way as an ActiveRecord-style `find` method,
   # just with a different exception type.
   def self.find(content_id)
-    need_response = Maslow.publishing_api_v2.get_content(content_id)
-    self.new(need_response.to_hash)
+    response = Maslow.publishing_api_v2.get_content(content_id)
+    need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPNotFound
     raise NotFound, need_id
   end
