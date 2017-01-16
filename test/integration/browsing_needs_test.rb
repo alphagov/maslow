@@ -9,52 +9,22 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   end
 
   context "viewing the list of needs" do
-    setup do
-      need_api_has_needs([
-        example_need(
-          "id" => "10001",
-          "goal" => "apply for a primary school place",
-          "organisation_ids" => ["department-for-education"],
-          "organisations" => [
-            {
-              "id" => "department-for-education",
-              "name" => "Department for Education",
-            }
-          ],
-        ),
-        example_need(
-          "id" => "10002",
-          "goal" => "find out about becoming a British citizen",
-          "organisation_ids" => ["home-office", "hm-passport-office"],
-          "organisations" => [
-            {
-              "id" => "home-office",
-              "name" => "Home Office",
-            },
-            {
-              "id" => "hm-passport-office",
-              "name" => "HM Passport Office",
-            }
-          ],
-        ),
-        example_need(
-          "id" => "10003",
-          "goal" => "find out about government policy",
-          "organisation_ids" => [],
-          "organisations" => [],
-          "applies_to_all_organisations" => true,
-          "duplicate_of" => 10001,
-          "status" => {
-            "description" => "not valid",
-            "reasons" => [
-              "some reason"
-            ]
-          }
-        )
-      ])
-    end
-
     should "display a table of all the needs" do
+      publishing_api_has_content(
+        FactoryGirl.create_list(:need_content_item, 3),
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state",
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
+
       visit "/needs"
 
       assert page.has_content?("All needs")
@@ -83,14 +53,20 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   end
 
   should "be able to navigate between pages of results" do
-    page_one = File.read(Rails.root.join("test", "fixtures", "needs", "index_page_1.json"))
-    need_api_has_raw_response_for_page(page_one, nil)
-
-    page_two = File.read(Rails.root.join("test", "fixtures", "needs", "index_page_2.json"))
-    need_api_has_raw_response_for_page(page_two, "2")
-
-    page_three = File.read(Rails.root.join("test", "fixtures", "needs", "index_page_3.json"))
-    need_api_has_raw_response_for_page(page_three, "3")
+    publishing_api_has_content(
+      FactoryGirl.create(:need_content_item),
+      document_type: "need",
+      fields: [
+        "content_id",
+        "details",
+        "need_ids",
+        "publication_state",
+      ],
+      locale: "en",
+      order: "-public_updated_at",
+      per_page: 50,
+      publishing_app: "need-api"
+    )
 
     visit "/needs"
 
