@@ -143,7 +143,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "remove blank entries from justifications" do
       need_data = complete_need_data.merge("justifications" => ["", "It's something only government does"])
 
-      GdsApi::NeedApi.any_instance.expects(:create_need).with(
+      GdsApi::PublishingApi.any_instance.expects(:put_content).with(
         has_entry("justifications", ["It's something only government does"])
       ).returns("id" => 100001)
 
