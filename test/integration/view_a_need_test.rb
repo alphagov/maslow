@@ -12,20 +12,23 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which exists" do
-    setup do
-      setup_need_api_responses(101350)
+    content_item = FactoryGirl.create(:need_content_item)
 
-      Note.new({
-        "text" => "looks good",
-        "need_id" => 101350,
-        "content_id" => SecureRandom.uuid,
-        "author" => {
-          "name" => "Testy McTestFace",
-          "email" => "test@example.com",
-          "uid" => "123456"
-        },
-        "created_at" => "2017-01-05 13:00:00 UTC"
-        }).save!
+    setup do
+      publishing_api_has_content(
+        [content_item],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
     end
 
     should "show basic information about the need" do
@@ -240,8 +243,23 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need with missing attributes" do
+    content_item = FactoryGirl.create(:need_content_item)
+
     setup do
-      setup_need_api_responses(101500)
+      publishing_api_has_content(
+        [content_item],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
     end
 
     should "show basic information about the need" do
@@ -270,8 +288,23 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which applies to all organisations" do
+    content_item = FactoryGirl.create(:need_content_item)
+
     setup do
-      setup_need_api_responses(101700)
+      publishing_api_has_content(
+        [content_item],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
     end
 
     should "show basic information about the need" do
@@ -295,8 +328,23 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which is not valid" do
+    content_item = FactoryGirl.create(:need_content_item)
+
     setup do
-      setup_need_api_responses(101800)
+      publishing_api_has_content(
+        [content_item],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
     end
 
     should "indicate that it is not valid" do
@@ -309,18 +357,24 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which is valid with conditions" do
-    setup do
-      need = example_need(
-        "id" => "10001",
-        "status" => {
-          "description" => "valid with conditions",
-          "validation_conditions" => "a and b must be changed",
-        })
+    content_item = FactoryGirl.create(:need_content_item)
 
+    setup do
       organisations_api_has_organisations([])
-      need_api_has_needs([need])
-      need_api_has_need(need)
-      content_api_has_artefacts_for_need_id("10001", [])
+      publishing_api_has_content(
+        [content_item],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
     end
 
     should "indicate that it is valid with conditions" do
@@ -332,12 +386,14 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which doesn't exist" do
+    content_id = SecureRandom.uuid
+
     setup do
-      need_api_has_no_need("101007")
+      publishing_api_does_not_have_item(content_id)
     end
 
     should "display a not found error message" do
-      visit "/needs/101007"
+      visit "/needs/#{content_id}"
 
       assert page.has_content?("The page you were looking for doesn't exist.")
     end
