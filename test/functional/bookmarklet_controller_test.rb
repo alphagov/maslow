@@ -1,7 +1,6 @@
 require_relative '../integration_test_helper'
 
 class BookmarkletControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::NeedApi
   include GdsApi::TestHelpers::Organisations
 
   setup do

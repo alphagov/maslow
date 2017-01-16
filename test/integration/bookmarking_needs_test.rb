@@ -2,7 +2,6 @@ require_relative '../integration_test_helper'
 
 class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::Organisations
-  include GdsApi::TestHelpers::NeedApi
 
   setup do
     login_as_stub_user

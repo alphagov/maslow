@@ -3,7 +3,6 @@ require 'gds_api/test_helpers/need_api'
 require 'gds_api/test_helpers/organisations'
 
 class NeedsControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::NeedApi
   include GdsApi::TestHelpers::Organisations
 
   def existing_need(options = {})

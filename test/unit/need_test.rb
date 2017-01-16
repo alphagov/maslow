@@ -3,7 +3,6 @@ require 'gds_api/test_helpers/need_api'
 require 'gds_api/test_helpers/publishing_api_v2'
 
 class NeedTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::NeedApi
   include GdsApi::TestHelpers::PublishingApiV2
 
   setup do

@@ -9,7 +9,6 @@ require_relative 'need_helper'
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
   include GdsApi::TestHelpers::ContentApi
-  include GdsApi::TestHelpers::NeedApi
   include GdsApi::TestHelpers::Organisations
   include NeedHelper
 
