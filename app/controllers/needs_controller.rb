@@ -239,8 +239,7 @@ class NeedsController < ApplicationController
 
   def load_need
     begin
-      need_id = Integer(params[:id])
-      Need.find(need_id)
+      Need.find(params[:content_id])
     rescue ArgumentError, TypeError # shouldn't happen; route is constrained
       raise Http404
     rescue Need::NotFound
