@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :notes, only: [:create]
 
-  resources :needs, except: [:destroy], constraints: { id: /[0-9]+/ } do
+  resources :needs, except: [:destroy], param: :content_id do
     member do
       get :revisions
       patch :closed
