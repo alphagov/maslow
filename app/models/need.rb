@@ -65,7 +65,9 @@ class Need
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(content_id need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
-  attr_accessor :met_when, :justifications, :organisation_ids
+  attr_accessor :met_when, :justifications, :organisation_ids, :content_id
+
+  alias_method :id, :content_id
 
   validates_presence_of %w(role goal benefit)
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
