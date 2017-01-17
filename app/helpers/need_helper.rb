@@ -3,7 +3,7 @@ module NeedHelper
   include ActionView::Helpers::NumberHelper
 
   def breadcrumb_link_for(need)
-    link_to breadcrumb_label_for(need), need_path(need)
+    link_to breadcrumb_label_for(need), need_path(need.content_id)
   end
 
   def breadcrumb_label_for(need)

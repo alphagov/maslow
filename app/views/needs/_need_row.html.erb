@@ -1,10 +1,10 @@
 <tr>
   <td>
     <%= semantic_form_for :bookmark, :url => toggle_bookmarks_path do |f| %>
-      <%= f.input :need_id, :as => :hidden, :input_html => { :value => need.id } %>
+      <%= f.input :need_id, :as => :hidden, :input_html => { :value => need.content_id } %>
       <%= f.input :redirect_to, :as => :hidden, :input_html => { :value => @current_page } %>
-      <button id="bookmark_<%= need.id %>" type="submit" class="btn btn-default">
-        <span class="glyphicon <%= bookmark_icon(@bookmarks, need.id) %>"></span>
+      <button id="bookmark_<%= need.content_id %>" type="submit" class="btn btn-default">
+        <span class="glyphicon <%= bookmark_icon(@bookmarks, need.content_id) %>"></span>
       </button>
     <% end %>
   </td>
