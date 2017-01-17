@@ -69,11 +69,11 @@ module NeedHelper
   end
 
   def paginate_needs(needs)
-    return unless needs.present? && needs.current_page.present? && needs.pages.present? && needs.page_size.present?
+    return unless needs.present? && needs.page.present? && needs.pages.present? && needs.per_page.present?
 
     Kaminari::Helpers::Paginator.new(
       self,
-      current_page: needs.current_page,
+      current_page: needs.page,
       total_pages: needs.pages,
       per_page: needs.page_size,
       param_name: "page",
