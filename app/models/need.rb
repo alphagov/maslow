@@ -2,6 +2,7 @@ require "active_model"
 
 class Need
   extend ActiveModel::Naming
+  include ActiveModel::Model
   include ActiveModel::Validations
   include ActiveModel::Conversion
   include ActiveModel::Serialization
