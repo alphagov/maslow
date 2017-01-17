@@ -276,7 +276,7 @@ private
 
     Need.new(
       attributes_with_merged_details
-        .except("publishing_app", "rendering_app", "need_ids", "state")
+        .except("publishing_app", "rendering_app", "document_type", "need_ids", "state", "user_facing_version", "lock_version", "updated_at", "warnings")
         .merge({ "status" => need_status })
     )
   end
