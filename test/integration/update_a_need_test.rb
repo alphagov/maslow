@@ -3,23 +3,6 @@ require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/organisations'
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
-  def need_hash
-    {
-      "id" => "100001",
-      "role" => "parent",
-      "goal" => "apply for a primary school place",
-      "benefit" => "my child can start school",
-      "met_when" => %w(win awesome more),
-      "organisations" => [],
-      "legislation" => "Blank Fields Act 2013",
-      "revisions" => [],
-      "applies_to_all_organisations" => false,
-      "status" => {
-        "description" => "proposed"
-      }
-    }
-  end
-
   setup do
     login_as_stub_editor
     organisations_api_has_organisations([
@@ -31,9 +14,28 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
   context "updating a need" do
     setup do
-      need_api_has_needs([need_hash]) # For need list
-      need_api_has_need(need_hash) # For individual need
-      content_api_has_artefacts_for_need_id("100001", [])
+      content_item = create(:need_content_item)
+      publishing_api_has_content(
+        [content_item],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
+      publishing_api_has_expanded_links(
+        content_id: content_item["content_id"],
+        expanded_links: {
+          organisations: []
+        }
+      )
+      publishing_api_has_item(content_item)
     end
 
     should "be able to access edit form" do
