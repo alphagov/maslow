@@ -1,13 +1,14 @@
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/need_api'
+require 'gds_api/publishing_api_v2'
 require 'gds_api/test_helpers/organisations'
 
 class NeedsControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::Organisations
+  include GdsApi::TestHelpers::PublishingApiV2
 
   def existing_need(options = {})
     defaults = {
-      "id" => 100001,
+      "need_id" => 100001,
       "role" => "person",
       "goal" => "do things",
       "benefit" => "good things",
@@ -21,11 +22,25 @@ class NeedsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
     organisations_api_has_organisations(["ministry-of-justice", "competition-commission"])
+    Need.any_instance.stubs(:organisations).returns([])
   end
 
   context "GET index" do
     setup do
-      need_api_has_needs([])
+      publishing_api_has_content(
+        [],
+        document_type: "need",
+        fields: [
+          "content_id",
+          "details",
+          "need_ids",
+          "publication_state"
+        ],
+        locale: "en",
+        order: "-public_updated_at",
+        per_page: 50,
+        publishing_app: "need-api"
+      )
     end
 
     should "be successful" do
@@ -124,7 +139,7 @@ class NeedsControllerTest < ActionController::TestCase
       mock_need.expects(:goal).returns(:goal)
 
       post(:create, need: complete_need_data)
-      assert_redirected_to need_path(id: 1)
+      assert_redirected_to need_path(content_id: 1)
     end
 
     should "return a 422 response if save fails" do
@@ -145,7 +160,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       GdsApi::PublishingApi.any_instance.expects(:put_content).with(
         has_entry("justifications", ["It's something only government does"])
-      ).returns("id" => 100001)
+      ).returns(need_data)
 
       post(:create, need: need_data)
     end
@@ -190,7 +205,7 @@ class NeedsControllerTest < ActionController::TestCase
     context "given a valid need" do
       setup do
         @stub_need = Need.new({
-          "id" => 100001,
+          "need_id" => 100001,
           "role" => "person",
           "goal" => "do things",
           "benefit" => "good things",
@@ -204,31 +219,32 @@ class NeedsControllerTest < ActionController::TestCase
         # here so just return an empty array
         @stub_need.expects(:artefacts).returns([])
 
-        Need.expects(:find).with(100001).returns(@stub_need)
+        Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
       end
 
       should "make a successful request" do
-        get :show, id: 100001
+        get :show, content_id: @stub_need.content_id
 
         assert_response :ok
       end
 
       should "use the show template" do
-        get :show, id: 100001
+        get :show, content_id: @stub_need.content_id
 
         assert_template :show
       end
 
       should "assign the need to the form" do
-        get :show, id: 100001
+        get :show, content_id: @stub_need.content_id
 
         assert_equal @stub_need, assigns[:need]
       end
     end
 
     should "404 if the need doesn't exist" do
-      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
-      get :show, id: 100001
+      content_id = SecureRandom.uuid
+      Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
+      get :show, content_id: content_id
 
       assert_response :not_found
     end
@@ -237,7 +253,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).never
 
       assert_raise ActionController::UrlGenerationError do
-        get :show, id: "coffee"
+        get :show, content_id: "coffee"
       end
     end
   end
@@ -247,31 +263,32 @@ class NeedsControllerTest < ActionController::TestCase
       setup do
         @stub_need = existing_need
 
-        Need.expects(:find).with(100001).returns(@stub_need)
+        Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
       end
 
       should "make a successful request" do
-        get :revisions, id: 100001
+        get :revisions, content_id: @stub_need.content_id
 
         assert_response :ok
       end
 
       should "use the revisions template" do
-        get :revisions, id: 100001
+        get :revisions, content_id: @stub_need.content_id
 
         assert_template :revisions
       end
 
       should "assign the need to the form" do
-        get :revisions, id: 100001
+        get :revisions, content_id: @stub_need.content_id
 
         assert_equal @stub_need, assigns[:need]
       end
     end
 
     should "404 if the need doesn't exist" do
-      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
-      get :revisions, id: 100001
+      content_id = SecureRandom.uuid
+      Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
+      get :revisions, content_id: content_id
 
       assert_response :not_found
     end
@@ -280,7 +297,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).never
 
       assert_raise ActionController::UrlGenerationError do
-        get :revisions, id: "coffee"
+        get :revisions, content_id: "coffee"
       end
     end
   end
@@ -296,8 +313,8 @@ class NeedsControllerTest < ActionController::TestCase
       end
 
       should "display the need form" do
-        Need.expects(:find).with(100001).returns(@stub_need)
-        get :edit, id: "100001"
+        Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
+        get :edit, content_id: @stub_need.content_id
 
         assert_response :ok
         assert_equal "do things", assigns[:need].goal
@@ -305,8 +322,9 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "404 if the need doesn't exist" do
-      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
-      get :edit, id: 100001
+      content_id = SecureRandom.uuid
+      Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
+      get :edit, content_id: content_id
       assert_response :not_found
     end
 
@@ -314,13 +332,13 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).never
 
       assert_raise ActionController::UrlGenerationError do
-        get :edit, id: "coffee"
+        get :edit, content_id: "coffee"
       end
     end
 
     should "stop viewers from editing needs" do
       login_as_stub_user
-      get :edit, id: 100001
+      get :edit, content_id: SecureRandom.uuid
       assert_redirected_to needs_path
     end
   end
@@ -339,40 +357,41 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "404 if need not found" do
-      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
-      put :update, id: "100001", need: { goal: "do things" }
+      content_id = SecureRandom.uuid
+      Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
+      put :update, content_id: content_id, need: { goal: "do things" }
       assert_response :not_found
     end
 
     should "redisplay with a 422 if need is invalid" do
       need = existing_need
-      Need.expects(:find).with(100001).returns(need)
+      Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save_as).never
 
       put :update,
-          id: "100001",
+          content_id: need.content_id,
           need: base_need_fields.merge(goal: "")
       assert_response 422
     end
 
     should "save the need if valid and redirect to show it" do
       need = existing_need
-      Need.expects(:find).with(100001).returns(need)
+      Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save_as).with(is_a(User)).returns(true)
 
       put :update,
-          id: "100001",
+          content_id: need.content_id,
           need: base_need_fields.merge(benefit: "be awesome")
-      assert_redirected_to need_path(100001)
+      assert_redirected_to need_path(@stub_need.content_id)
     end
 
     should "update the need and redirect to add new need if 'add_new' provided" do
       need = existing_need
-      Need.expects(:find).with(100001).returns(need)
+      Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save_as).with(is_a(User)).returns(true)
 
       put :update,
-          id: "100001",
+          content_id: need.content_id,
           need: base_need_fields.merge(benefit: "be awesome"),
           add_new: ""
       assert_redirected_to new_need_path
@@ -380,13 +399,13 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "leave met when criteria unchanged" do
       need = existing_need
-      Need.expects(:find).with(100001).returns(need)
+      Need.expects(:find).with(need.content_id).returns(need)
       # Forcing the validity check to false so we redisplay the form
       need.expects(:valid?).returns(false)
       need.expects(:save_as).never
 
       put :update,
-          id: "100001",
+          content_id: need.content_id,
           need: base_need_fields.merge(met_when: ["something", "something else"])
 
       assert_response 422
@@ -395,7 +414,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "return a 422 response if save fails" do
       need = existing_need
-      Need.expects(:find).with(100001).returns(need)
+      Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save_as).returns(false)
 
       need_data = {
@@ -403,14 +422,14 @@ class NeedsControllerTest < ActionController::TestCase
         "goal" => "Do Stuff",
         "benefit" => "test"
       }
-      put(:update, id: 100001, need: need_data)
+      put(:update, content_id: need.content_id, need: need_data)
 
       assert_response 422
     end
 
     should "stop viewers from updating needs" do
       login_as_stub_user
-      put(:update, id: 100001, need: {})
+      put(:update, content_id: SecureRandom.uuid, need: {})
       assert_redirected_to needs_path
     end
   end
@@ -424,7 +443,7 @@ class NeedsControllerTest < ActionController::TestCase
     context "given a valid need that is proposed" do
       setup do
         @stub_need = Need.new({
-            "id" => 100001,
+            "need_id" => 100001,
             "role" => "person",
             "goal" => "do things",
             "benefit" => "good things",
@@ -432,18 +451,18 @@ class NeedsControllerTest < ActionController::TestCase
               "description" => "proposed",
             }
           })
-        Need.expects(:find).with(100001).returns(@stub_need)
+        Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
       end
 
       should "be successful" do
-        get :status, id: 100001
+        get :status, content_id: @stub_need.content_id
         assert_response :success
       end
     end
 
     should "stop editors from descoping needs" do
       login_as_stub_editor
-      get :status, id: 100001
+      get :status, content_id: SecureRandom.uuid
       assert_redirected_to needs_path
     end
   end
@@ -456,7 +475,7 @@ class NeedsControllerTest < ActionController::TestCase
     context "given a proposed need" do
       setup do
         @stub_need = Need.new({
-            "id" => 100001,
+            "need_id" => 100001,
             "role" => "person",
             "goal" => "do things",
             "benefit" => "good things",
@@ -464,7 +483,7 @@ class NeedsControllerTest < ActionController::TestCase
               "description" => "proposed",
             }
           })
-        Need.expects(:find).with(100001).returns(@stub_need)
+        Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
       end
 
       should "mark the need as not valid" do
@@ -477,7 +496,7 @@ class NeedsControllerTest < ActionController::TestCase
         )
 
         put :update_status, {
-          id: 100001,
+          content_id: @stub_need.content_id,
           need: {
             status: {
               description: "not valid",
@@ -498,7 +517,7 @@ class NeedsControllerTest < ActionController::TestCase
         )
 
         put :update_status, {
-          id: 100001,
+          content_id: @stub_need.content_id,
           need: {
             status: {
               description: "valid",
@@ -518,7 +537,7 @@ class NeedsControllerTest < ActionController::TestCase
         )
 
         put :update_status, {
-          id: 100001,
+          content_id: @stub_need.content_id,
           need: {
             status: {
               description: "valid with conditions",
@@ -533,7 +552,7 @@ class NeedsControllerTest < ActionController::TestCase
         @stub_need.stubs(:save_as).returns(true)
 
         put :update_status, {
-          id: 100001,
+          content_id: @stub_need.content_id,
           need: {
             status: {
               description: "valid with conditions",
@@ -548,13 +567,13 @@ class NeedsControllerTest < ActionController::TestCase
       should "save the need as the current user" do
         @stub_need.expects(:save_as).with(stub_user).returns(true)
 
-        put :update_status, { id: 100001, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
+        put :update_status, { content_id: @stub_need.content_id, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
       end
 
       should "redirect to the need once complete" do
         @stub_need.stubs(:save_as).returns(true)
 
-        put :update_status, { id: 100001, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
+        put :update_status, { content_id: @stub_need.content_id, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:error]
         assert_redirected_to need_path(@stub_need)
@@ -563,7 +582,7 @@ class NeedsControllerTest < ActionController::TestCase
       should "redirect to the need with an error if the save fails" do
         @stub_need.stubs(:save_as).returns(false)
 
-        put :update_status, { id: 100001, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
+        put :update_status, { content_id: @stub_need.content_id, need: { status: { description: "not valid", other_reasons_why_invalid: "foo" } } }
 
         refute @controller.flash[:notice]
         assert_equal "We had a problem updating the need’s status", @controller.flash[:error]
@@ -572,16 +591,17 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "404 if a need isn't found" do
-      Need.expects(:find).with(100001).raises(Need::NotFound.new(100001))
+      content_id = SecureRandom.uuid
+      Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
 
-      put :status, id: 100001
+      put :status, content_id: content_id
 
       assert_response :not_found
     end
 
     should "stop editors from descoping needs" do
       login_as_stub_editor
-      put :status, id: 100001
+      put :status, content_id: SecureRandom.uuid
       assert_redirected_to needs_path
     end
   end
@@ -620,11 +640,11 @@ class NeedsControllerTest < ActionController::TestCase
   context "PUT closed" do
     setup do
       login_as_stub_editor
-      @need = existing_need("id" => 100002) # duplicate
-      Need.stubs(:find).with(100002).returns(@need)
+      @need = existing_need()
+      Need.stubs(:find).with(@need.content_id).returns(@need)
 
-      @canonical = existing_need("id" => 100001) # duplicate
-      Need.stubs(:find).with(100001).returns(@canonical)
+      @duplicate_need = existing_need()
+      Need.stubs(:find).with(@need.content_id).returns(@duplicate_need)
     end
 
     should "call duplicate_of with the correct value" do
@@ -632,62 +652,50 @@ class NeedsControllerTest < ActionController::TestCase
       @need.stubs(:close_as).returns(true)
 
       put :closed,
-          id: "100002",
-          need: { duplicate_of: "100001" }
+          content_id: @duplicate_need.content_id,
+          need: { duplicate_of: @need.content_id }
 
-      assert_equal 100001, @need.duplicate_of
+      assert_equal @need.duplicate_of, @need.content_id
     end
 
     should "close the need" do
       @need.expects(:close_as).with(stub_user).returns(true)
 
       put :closed,
-          id: "100002",
-          need: { duplicate_of: "100001" }
+          content_id: @duplicate_need.content_id,
+          need: { duplicate_of: @need.content_id }
     end
 
     should "redirect to the need with a success message once complete" do
       @need.stubs(:close_as).returns(true)
 
       put :closed,
-          id: "100002",
-          need: { duplicate_of: "100001" }
+          content_id: @duplicate_need.content_id,
+          need: { duplicate_of: @need.content_id }
 
       refute @controller.flash[:error]
       assert_equal "Need closed as a duplicate of", @controller.flash[:notice]
-      assert_equal 100001, @controller.flash[:need_id]
+      assert_equal @stub_need.content_id, @controller.flash[:need_id]
       assert_equal "do things", @controller.flash[:goal]
-      assert_redirected_to need_path(100002)
+      assert_redirected_to need_path(@duplicate_need.content_id)
     end
 
     should "not be able to edit a need closed as a duplicate" do
-      @need.duplicate_of = 100002
+      @duplicate_need.duplicate_of = @need.content_id
 
       get :edit,
-          id: "100002"
+          content_id: @duplicate_need.content_id
 
       assert_equal "Closed needs cannot be edited", @controller.flash[:notice]
       assert_response 303
-    end
-
-    should "display an error if the duplicate_of id is invalid" do
-      @need.expects(:valid?).returns(false)
-
-      put :closed,
-          id: "100002",
-          need: { duplicate_of: 1 }
-
-      refute @controller.flash[:notice]
-      assert_equal "The Need ID entered is invalid", @controller.flash[:error]
-      assert_response 422
     end
 
     should "return a 422 response if save fails" do
       @need.expects(:close_as).returns(false)
 
       put :closed,
-          id: "100002",
-          need: { duplicate_of: "100000" }
+          content_id: @duplicate_need.content_id,
+          need: { duplicate_of: @need.content_id }
 
       refute @controller.flash[:notice]
       assert_equal "There was a problem closing the need as a duplicate", @controller.flash[:error]
@@ -697,8 +705,8 @@ class NeedsControllerTest < ActionController::TestCase
     should "stop viewers from marking needs as duplicates" do
       login_as_stub_user
       put :closed,
-          id: "100002",
-          need: { duplicate_of: "100000" }
+          content_id: @duplicate_need.content_id,
+          need: { duplicate_of: @need.content_id }
       assert_redirected_to needs_path
     end
   end
@@ -706,23 +714,23 @@ class NeedsControllerTest < ActionController::TestCase
   context "DELETE reopen" do
     setup do
       login_as_stub_editor
-      @need = Need.new(base_need_fields.merge("id" => 100002, "status" => { "description" => "proposed" })) # duplicate
+      @need = Need.new(base_need_fields.merge("need_id" => 100002, "status" => { "description" => "proposed" })) # duplicate
       @need.stubs(:artefacts).returns([])
-      Need.stubs(:find).with(100002).returns(@need)
+      Need.stubs(:find).with(@need.content_id).returns(@need)
     end
 
     should "reopen the need" do
-      @need.expects(:duplicate_of).returns(100001)
+      @need.expects(:duplicate_of).returns(@stub_need.content_id)
       @need.expects(:reopen_as).with(stub_user).returns(true)
-      was_canonical = Need.new(base_need_fields.merge("id" => 100001)) # duplicate
-      Need.stubs(:find).with(100001).returns(was_canonical)
+      was_canonical = Need.new(base_need_fields.merge("need_id" => @stub_need.content_id)) # duplicate
+      Need.stubs(:find).with(@stub_need.content_id).returns(was_canonical)
 
       delete :reopen,
-             id: @need.need_id
+             content_id: @need.need_id
 
       refute @controller.flash[:error]
       assert_equal "Need is no longer a duplicate of", @controller.flash[:notice]
-      assert_equal 100001, @controller.flash[:need_id]
+      assert_equal @stub_need.content_id, @controller.flash[:need_id]
       assert_equal "do things", @controller.flash[:goal]
       assert_redirected_to need_path(@need)
     end
@@ -731,7 +739,7 @@ class NeedsControllerTest < ActionController::TestCase
       @need.stubs(:reopen_as).returns(false)
 
       delete :reopen,
-             id: @need.need_id
+             content_id: @need.content_id
 
       refute @controller.flash[:notice]
       assert_equal "There was a problem reopening the need", @controller.flash[:error]
@@ -741,7 +749,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "stop viewers from reopening needs" do
       login_as_stub_user
       delete :reopen,
-             id: @need.need_id
+             content_id: @need.content_id
       assert_redirected_to needs_path
     end
   end
@@ -749,24 +757,24 @@ class NeedsControllerTest < ActionController::TestCase
   context "GET actions" do
     setup do
       login_as_stub_editor
-      @stub_need = existing_need("id" => 100001)
-      Need.expects(:find).with(100001).returns(@stub_need)
+      @stub_need = existing_need()
+      Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
     end
 
     should "be successful" do
-      get :actions, id: 100001
+      get :actions, content_id: @stub_need.content_id
       assert_response :success
     end
 
     context "for a need closed as a duplicate" do
       setup do
-        @stub_need.expects(:duplicate_of).at_least(1).returns(100002)
-        @canonical = existing_need("id" => 100002)
-        Need.expects(:find).with(100002).at_least(1).returns(@canonical)
+        @canonical = existing_need()
+        @stub_need.expects(:duplicate_of).at_least(1).returns(@canonical.content_id)
+        Need.expects(:find).with(@canonical.content_id).at_least(1).returns(@canonical)
       end
 
       should "be successful" do
-        get :actions, id: 100001
+        get :actions, content_id: @stub_need.content_id
         assert_response :success
       end
     end
@@ -775,18 +783,18 @@ class NeedsControllerTest < ActionController::TestCase
   context "GET close-as-duplicate" do
     setup do
       login_as_stub_editor
-      @stub_need = existing_need("id" => 100001)
-      Need.expects(:find).with(100001).returns(@stub_need)
+      @stub_need = existing_need()
+      Need.expects(:find).with(@stub_need.content_id).returns(@stub_need)
     end
 
     should "be successful" do
-      get :close_as_duplicate, id: 100001
+      get :close_as_duplicate, content_id: @stub_need.content_id
       assert_response :success
     end
 
     should "redirect if already closed" do
       @stub_need.expects(:duplicate_of).returns(:duplicate_of_id)
-      get :close_as_duplicate, id: 100001
+      get :close_as_duplicate, content_id: @stub_need.content_id
       assert_response 303
     end
   end
