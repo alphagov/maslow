@@ -100,7 +100,7 @@ class Need
   # The parameters are the same as passed through to the Need API: as of
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
   def self.list(options = {})
-    options = default_options.merge(options)
+    options = default_options.merge(options.symbolize_keys)
     response = Maslow.publishing_api_v2.get_content_items(options)
     need_objects = needs_from_publishing_api_payloads(*response["results"].to_a)
     PaginatedList.new(need_objects, response)
