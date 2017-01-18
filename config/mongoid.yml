@@ -1,15 +1,12 @@
 development:
   sessions:
     default:
-      database: maslow_development
-      hosts:
-        - localhost:27017
+      uri: <%= ENV.fetch('MONGODB_URI', 'mongodb://localhost/maslow_development') %>
+
 test:
   sessions:
     default:
-      database: maslow_test
-      hosts:
-        - localhost:27017
+      uri: <%= ENV.fetch('MONGODB_URI', 'mongodb://localhost/maslow_test') %>
       options:
         max_retries: 1
         retry_interval: 0
