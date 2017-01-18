@@ -1,8 +1,11 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/organisations'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
+  include GdsApi::TestHelpers::PublishingApiV2
+
   setup do
     login_as_stub_user
     organisations_api_has_organisations([])
