@@ -65,7 +65,6 @@ FactoryGirl.define do
             "treasury-solicitor-s-department"
           ],
           "other_evidence": "Relatives are entitled to claim up to 30 years after the death; it is their money to claim and it can only be claimed through the Treasury Solicitor",
-          "out_of_scope_reason": nil,
           "role": "relative of a deceased person"
         }
       }
