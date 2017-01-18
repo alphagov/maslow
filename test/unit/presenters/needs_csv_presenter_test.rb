@@ -12,13 +12,13 @@ class NeedsCsvPresenterTest < ActiveSupport::TestCase
   context "csv_from_need_ids" do
     setup do
       @need_1 = {
-        "id" => "100001",
+        "need_id" => "100001",
         "role" => "Foo",
         "goal" => "Bar",
         "benefit" => "Baz"
       }
       @need_2 = {
-        "id" => "100002",
+        "need_id" => "100002",
         "role" => "Foo",
         "goal" => "Bar",
         "benefit" => "Baz",
