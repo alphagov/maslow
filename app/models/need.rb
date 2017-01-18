@@ -272,7 +272,7 @@ private
     attributes_with_merged_details =
       attributes_without_nested_details.merge(attributes["details"] || {})
 
-    need_status = Need.map_to_status(attributes["state"])
+    need_status = Need.map_to_status(attributes["publication_state"])
 
     Need.new(
       attributes_with_merged_details
