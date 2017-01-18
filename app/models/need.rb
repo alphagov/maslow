@@ -19,16 +19,16 @@ class Need
   # Allow us to convert the API response to a list of Need objects, but still
   # retain the pagination information
   class PaginatedList < Array
-    PAGINATION_PARAMS = [:pages, :total, :per_page, :page]
+    PAGINATION_PARAMS = [:pages, :total, :per_page, :current_page]
     attr_reader *PAGINATION_PARAMS
 
-    def initialize(needs, pagination_info)
+    def initialize(needs, pages:, total:, current_page:, per_page:)
       super(needs)
 
-      @pages = pagination_info["pages"]
-      @total = pagination_info["total"]
-      @per_page = pagination_info["per_page"]
-      @page = pagination_info["page"]
+      @pages = pages
+      @total = total
+      @per_page = per_page
+      @current_page = current_page
     end
 
     def inspect
@@ -103,7 +103,13 @@ class Need
     options = default_options.merge(options.symbolize_keys)
     response = Maslow.publishing_api_v2.get_content_items(options)
     need_objects = needs_from_publishing_api_payloads(*response["results"].to_a)
-    PaginatedList.new(need_objects, response)
+    PaginatedList.new(
+      need_objects,
+      pages: response["pages"],
+      total: response["total"],
+      current_page: response["current_page"],
+      per_page: options[:per_page]
+    )
   end
 
   # Retrieve a list of needs matching an array of ids
