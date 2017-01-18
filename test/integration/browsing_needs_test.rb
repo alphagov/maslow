@@ -13,8 +13,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
 
   context "viewing the list of needs" do
     should "display a table of all the needs" do
+      need_content_items = FactoryGirl.create_list(:need_content_item, 3)
       publishing_api_has_content(
-        FactoryGirl.create_list(:need_content_item, 3),
+        need_content_items,
         document_type: "need",
         fields: [
           "content_id",
@@ -27,6 +28,14 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
         per_page: 50,
         publishing_app: "need-api"
       )
+      need_content_items.each do |need_content_item|
+        publishing_api_has_expanded_links(
+          content_id: need_content_item["content_id"],
+          expanded_links: {
+            organisations: []
+          }
+        )
+      end
 
       visit "/needs"
 
