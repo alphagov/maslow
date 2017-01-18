@@ -33,14 +33,14 @@ class NeedsCsvPresenterTest < ActiveSupport::TestCase
 
     should "return a single row if only one need id given" do
       csv = NeedsCsvPresenter.new(base_url,
-                                  [Need.new(@need_1, true)]).to_csv
+                                  [Need.new(@need_1)]).to_csv
       assert_equal csv_file(2), csv
     end
 
     should "return rows with acceptance criteria, if present" do
       csv = NeedsCsvPresenter.new(base_url,
-                                  [Need.new(@need_1, true),
-                                   Need.new(@need_2, true)]).to_csv
+                                  [Need.new(@need_1),
+                                   Need.new(@need_2)]).to_csv
       assert_equal csv_file(3), csv
     end
   end
