@@ -6,6 +6,7 @@ require 'shoulda/context'
 require 'database_cleaner'
 require 'mocha/setup'
 require 'webmock/test_unit'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
@@ -15,6 +16,7 @@ DatabaseCleaner.clean
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include WebMock::API
+  include GdsApi::TestHelpers::PublishingApiV2
 
   teardown do
     DatabaseCleaner.clean
