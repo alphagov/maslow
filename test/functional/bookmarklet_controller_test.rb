@@ -9,10 +9,6 @@ class BookmarkletControllerTest < ActionController::TestCase
   end
 
   context "GET bookmarklet" do
-    setup do
-      need_api_has_needs([])
-    end
-
     should "be successful" do
       get :bookmarklet
       assert_response :success
