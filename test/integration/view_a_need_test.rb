@@ -29,6 +29,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         per_page: 50,
         publishing_app: "need-api"
       )
+      publishing_api_has_expanded_links(
+        content_id: content_item["content_id"],
+        expanded_links: {
+          organisations: []
+        }
+      )
     end
 
     should "show basic information about the need" do
@@ -260,6 +266,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         per_page: 50,
         publishing_app: "need-api"
       )
+      publishing_api_has_expanded_links(
+        content_id: content_item["content_id"],
+        expanded_links: {
+          organisations: []
+        }
+      )
     end
 
     should "show basic information about the need" do
@@ -305,6 +317,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         per_page: 50,
         publishing_app: "need-api"
       )
+      publishing_api_has_expanded_links(
+        content_id: content_item["content_id"],
+        expanded_links: {
+          organisations: []
+        }
+      )
     end
 
     should "show basic information about the need" do
@@ -345,6 +363,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         per_page: 50,
         publishing_app: "need-api"
       )
+      publishing_api_has_expanded_links(
+        content_id: content_item["content_id"],
+        expanded_links: {
+          organisations: []
+        }
+      )
     end
 
     should "indicate that it is not valid" do
@@ -374,6 +398,12 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         order: "-public_updated_at",
         per_page: 50,
         publishing_app: "need-api"
+      )
+      publishing_api_has_expanded_links(
+        content_id: content_item["content_id"],
+        expanded_links: {
+          organisations: []
+        }
       )
     end
 
