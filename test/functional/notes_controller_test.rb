@@ -11,29 +11,29 @@ class NotesControllerTest < ActionController::TestCase
 
   context "POST create" do
     should "be successful" do
+      content_id = SecureRandom.uuid
       @note_atts = {
         "note" => {
           "text" => "test"
         },
-        "need_id" => "100001"
+        "content_id" => content_id
       }
-      need_api_has_content_id_for_need(id: @note_atts["need_id"], content_id: SecureRandom.uuid)
 
       post :create, @note_atts
 
-      assert_redirected_to revisions_need_path("100001")
+      assert_redirected_to revisions_need_path(content_id)
       assert_equal "Note saved", flash[:notice]
       refute flash[:error]
     end
 
     should "return an error message if the save fails" do
+      content_id = SecureRandom.uuid
       @blank_note_atts = {
         "note" => {
           "text" => ""
         },
-        "need_id" => "100002"
+        "content_id" => content_id
       }
-      need_api_has_content_id_for_need(id: @blank_note_atts["need_id"], content_id: SecureRandom.uuid)
 
       post :create, @blank_note_atts
 
