@@ -97,8 +97,8 @@ module NeedHelper
     Maslow.support_api.feedback_url path
   end
 
-  def bookmark_icon(bookmarks, need_id)
-    bookmarks.include?(need_id.to_i) ? 'glyphicon-star' : 'glyphicon-star-empty'
+  def bookmark_icon(bookmarks, content_id)
+    bookmarks.include?(content_id) ? 'glyphicon-star' : 'glyphicon-star-empty'
   end
 
   def status_label_class(status_description)

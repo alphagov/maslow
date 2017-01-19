@@ -39,24 +39,14 @@ class UserTest < ActiveModel::TestCase
     should "update the users bookmarked needs" do
       user = create(:user)
 
-      user.toggle_bookmark(10001)
-      assert_equal [10001], user.bookmarks
+      user.toggle_bookmark("c2639b9c-27af-4684-8635-6a149346d967")
+      assert_equal ["c2639b9c-27af-4684-8635-6a149346d967"], user.bookmarks
 
-      user.toggle_bookmark(10002)
-      assert_equal [10001, 10002], user.bookmarks
+      user.toggle_bookmark("f97b9f26-6a04-4ef8-aa75-b429a8662b5e")
+      assert_equal ["c2639b9c-27af-4684-8635-6a149346d967", "f97b9f26-6a04-4ef8-aa75-b429a8662b5e"], user.bookmarks
 
-      user.toggle_bookmark(10001)
-      assert_equal [10002], user.bookmarks
-    end
-
-    should "not accept an invalid number as a need id" do
-      user = create(:user)
-
-      user.toggle_bookmark(0)
-      assert_equal [], user.bookmarks
-
-      user.toggle_bookmark(-1)
-      assert_equal [], user.bookmarks
+      user.toggle_bookmark("c2639b9c-27af-4684-8635-6a149346d967")
+      assert_equal ["f97b9f26-6a04-4ef8-aa75-b429a8662b5e"], user.bookmarks
     end
   end
 end

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   get :bookmarklet, controller: :bookmarklet, path: 'bookmarklet'
 
-  resources :bookmarks, only: [:index] do
+  resources :bookmarks, only: [:index], param: :content_id do
     collection do
       post :toggle
     end
