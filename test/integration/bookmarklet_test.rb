@@ -1,12 +1,25 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/organisations'
-require 'gds_api/test_helpers/need_api'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 class BookmarkletTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
     organisations_api_has_organisations([])
-    need_api_has_needs([])
+    publishing_api_has_content(
+      [],
+      document_type: "need",
+      fields: [
+      "content_id",
+      "details",
+        "need_ids",
+        "publication_state"
+      ],
+      locale: "en",
+      order: "-public_updated_at",
+      per_page: 50,
+      publishing_app: "need-api"
+      )
   end
 
   context "on the navbar" do
