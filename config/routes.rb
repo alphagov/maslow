@@ -18,8 +18,8 @@ Rails.application.routes.draw do
       get :revisions
       get :status
       patch :status, to: 'needs#update_status', as: 'update_status'
-      delete :closed, to: 'needs#reopen', as: :reopen
       post :closed
+      post :reopen
       get :actions
       get :close_as_duplicate, path: 'close-as-duplicate'
     end
