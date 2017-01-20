@@ -227,6 +227,8 @@ class Need
     )
     true
   rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.close_as_duplicate_of")
+    logger.error(err)
     false
   end
 
@@ -240,6 +242,8 @@ class Need
 
     true
   rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.save_as")
+    logger.error(err)
     false
   end
 
