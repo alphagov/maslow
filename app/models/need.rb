@@ -77,9 +77,9 @@ class Need
 
   FIELDS_WITH_ARRAY_VALUES = %w(status met_when justifications organisation_ids)
 
-  PUBLISHING_API_FIELDS = %w(title base_path schema_name locale phase redirects update_type public_updated_at first_published_at last_edited_at publication_state state_history routes description)
+  PUBLISHING_API_FIELDS = %w(content_id title details base_path schema_name locale phase redirects update_type public_updated_at first_published_at last_edited_at publication_state state_history routes description)
 
-  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(content_id need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
+  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
   attr_accessor :persisted, :met_when, :justifications, :organisation_ids, :content_id
 
