@@ -127,10 +127,7 @@ class Need
   # Note that this returns the entire set of matching ids and not a
   # PaginatedList
   def self.by_content_ids(*content_ids)
-    content_ids.map do |content_id|
-      response = Maslow.publishing_api_v2.get_content(content_id)
-      need_from_publishing_api_payload(response.parsed_content)
-    end
+    content_ids.map { |content_id| Need.find(content_id) }
   end
 
   # Retrieve a need from the Publishing API, or raise NotFound if it doesn't exist.
