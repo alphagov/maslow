@@ -72,8 +72,11 @@ class NeedsController < ApplicationController
     authorize! :create, Need
 
     @need = Need.new(need_params)
+    if criteria_params_present?
+      add_or_remove_criteria(:new)
+      return
+    end
 
-    add_or_remove_criteria(:new) && return if criteria_params_present?
 
     if @need.valid?
       if @need.save_as(current_user)
@@ -95,7 +98,10 @@ class NeedsController < ApplicationController
     @need = load_need
     @need.update(need_params)
 
-    add_or_remove_criteria(:edit) && return if criteria_params_present?
+    if criteria_params_present?
+      add_or_remove_criteria(:edit)
+      return
+    end
 
     if @need.valid?
       if @need.save_as(current_user)
