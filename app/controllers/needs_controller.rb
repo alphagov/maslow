@@ -194,7 +194,7 @@ class NeedsController < ApplicationController
   private
 
   def redirect_url
-    params["add_new"] ? new_need_path : need_url(@need.need_id)
+    params["add_new"] ? new_need_path : need_url(@need.content_id)
   end
 
   def need_status_params
