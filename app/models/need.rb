@@ -71,7 +71,7 @@ class Need
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(content_id need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
-  attr_accessor :met_when, :justifications, :organisation_ids, :content_id
+  attr_accessor :persisted, :met_when, :justifications, :organisation_ids, :content_id
 
   alias_method :id, :content_id
 
@@ -99,6 +99,10 @@ class Need
     update(
       default_values.merge(attributes)
     )
+
+    # This is set to true when data is loaded in from the Publishing
+    # API, forms use this to decide what route to post to
+    @persisted = false
   end
 
   # Retrieve a list of needs from the Need API
@@ -251,6 +255,10 @@ class Need
     status.description == "not valid"
   end
 
+  def persisted?
+    @persisted
+  end
+
 private
 
   def self.needs_from_publishing_api_payloads(*responses)
@@ -283,11 +291,15 @@ private
 
     need_status = Need.map_to_status(attributes["publication_state"])
 
-    Need.new(
+    need = Need.new(
       attributes_with_merged_details
         .except("publishing_app", "rendering_app", "document_type", "need_ids", "state", "user_facing_version", "lock_version", "updated_at", "warnings")
         .merge({ "status" => need_status })
     )
+
+    need.persisted = true
+
+    need
   end
 
   def set_attribute(field, value)
