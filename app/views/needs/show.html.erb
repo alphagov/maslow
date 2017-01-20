@@ -101,12 +101,12 @@
 
         <% if @need.yearly_need_views.present? %>
           <div class="big-number">
-            <%= format_friendly_integer @need.yearly_need_views %>
+            <%= format_friendly_integer @need.yearly_need_views.to_i %>
             <span class="big-number-detail">Approximate pageviews a year</span>
           </div>
         <% end %>
 
-        <% if percentage = calculate_percentage(@need.yearly_need_views, @need.yearly_site_views) %>
+        <% if percentage = calculate_percentage(@need.yearly_need_views.to_i, @need.yearly_site_views.to_i) %>
           <div class="big-number">
             <%= percentage %>
             <span class="big-number-detail">of site pageviews</span>
@@ -115,14 +115,14 @@
 
         <% if @need.yearly_user_contacts.present? %>
         <div class="big-number">
-          <%= format_friendly_integer @need.yearly_user_contacts %>
+          <%= format_friendly_integer @need.yearly_user_contacts.to_i %>
           <span class="big-number-detail">Approximate contacts a year</span>
         </div>
         <% end %>
 
         <% if @need.yearly_searches.present? %>
           <div class="big-number">
-            <%= format_friendly_integer @need.yearly_searches %>
+            <%= format_friendly_integer @need.yearly_searches.to_i %>
             <span class="big-number-detail">Approximate searches a year</span>
           </div>
         <% end %>
