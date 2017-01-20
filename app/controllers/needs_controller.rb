@@ -129,7 +129,6 @@ class NeedsController < ApplicationController
       flash[:error] = "There was a problem closing the need as a duplicate"
     end
 
-    @need.duplicate_of = nil
     render "actions", status: 422
   end
 
