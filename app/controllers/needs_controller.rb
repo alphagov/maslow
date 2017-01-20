@@ -124,12 +124,10 @@ class NeedsController < ApplicationController
         notice: "Need closed as a duplicate of",
         flash: { content_id: duplicate_of, goal: @canonical_need.goal }
       )
-      return
     else
       flash[:error] = "There was a problem closing the need as a duplicate"
+      render "actions", status: 422
     end
-
-    render "actions", status: 422
   end
 
   def reopen
