@@ -115,19 +115,18 @@ class NeedsController < ApplicationController
   def closed
     authorize! :close, Need
     @need = load_need
-    @need.duplicate_of = params["need"]["duplicate_of"].to_i
+    duplicate_of = params["duplicate_of"]
 
-    if @need.valid?
-      if @need.close_as(current_user)
-        @canonical_need = Need.find(@need.duplicate_of)
-        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of",
-          flash: { need_id: @canonical_need.need_id, goal: @canonical_need.goal }
-        return
-      else
-        flash[:error] = "There was a problem closing the need as a duplicate"
-      end
+    if @need.close_as_duplicate_of(duplicate_of, current_user)
+      @canonical_need = Need.find(duplicate_of)
+      redirect_to(
+        need_url(@need.content_id),
+        notice: "Need closed as a duplicate of",
+        flash: { content_id: duplicate_of, goal: @canonical_need.goal }
+      )
+      return
     else
-      flash[:error] = "The Need ID entered is invalid"
+      flash[:error] = "There was a problem closing the need as a duplicate"
     end
 
     @need.duplicate_of = nil

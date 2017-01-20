@@ -37,6 +37,12 @@ class Need
       ]
       "#<#{self.class} #{super}, #{pagination_params}>"
     end
+
+    def to_options
+      map do |need|
+        [need.benefit, need.content_id]
+      end
+    end
   end
 
   JUSTIFICATIONS = [
@@ -213,19 +219,12 @@ class Need
     raise("The save_as method must be used when persisting a need, providing details about the author.")
   end
 
-  def close_as(author)
-    duplicate_atts = {
-      "duplicate_of" => @duplicate_of,
-      "author" => author_atts(author)
-    }
-    Maslow.need_api.close(@id, duplicate_atts)
-    true
-  rescue GdsApi::HTTPErrorResponse => err
-    false
-  end
-
-  def reopen_as(author)
-    Maslow.need_api.reopen(@id, "author" => author_atts(author))
+  def close_as_duplicate_of(duplicate_of_content_id, author)
+    Maslow.publishing_api_v2.unpublish(
+      @content_id,
+      type: "withdrawal",
+      explanation: "Duplicate of #{duplicate_of_content_id}"
+    )
     true
   rescue GdsApi::HTTPErrorResponse => err
     false
