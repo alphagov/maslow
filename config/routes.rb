@@ -21,7 +21,6 @@ Rails.application.routes.draw do
       post :closed
       post :reopen
       get :actions
-      get :close_as_duplicate, path: 'close-as-duplicate'
     end
   end
 

@@ -112,17 +112,6 @@ class NeedsController < ApplicationController
     render "edit", status: 422
   end
 
-  def close_as_duplicate
-    authorize! :close, Need
-    @need = load_need
-    if @need.duplicate?
-      redirect_to need_url(@need.need_id),
-                  notice: "This need is already closed",
-                  status: 303
-      return
-    end
-  end
-
   def closed
     authorize! :close, Need
     @need = load_need
