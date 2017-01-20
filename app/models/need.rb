@@ -16,6 +16,16 @@ class Need
     end
   end
 
+  class BasePathAlreadyInUse < StandardError
+    attr_reader :content_id
+
+    def initialize(content_id)
+      super("Publishing API rejected update as the base path is already in use")
+      @content_id = content_id
+    end
+  end
+
+
   # Allow us to convert the API response to a list of Need objects, but still
   # retain the pagination information
   class PaginatedList < Array

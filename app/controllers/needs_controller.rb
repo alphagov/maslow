@@ -91,6 +91,12 @@ class NeedsController < ApplicationController
     end
 
     render "new", status: 422
+  rescue Need::BasePathAlreadyInUse => err
+    logger.error("content_id: #{err.content_id}")
+
+    flash[:error] = true
+    flash[:base_path_already_in_use] = err.content_id
+    render "new", status: 422
   end
 
   def update
@@ -116,6 +122,12 @@ class NeedsController < ApplicationController
     end
 
     render "edit", status: 422
+  rescue Need::BasePathAlreadyInUse => err
+    logger.error("content_id: #{err.content_id}")
+
+    flash[:error] = true
+    flash[:base_path_already_in_use] = err.content_id
+    render "new", status: 422
   end
 
   def closed
