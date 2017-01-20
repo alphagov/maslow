@@ -81,7 +81,7 @@ class NeedsController < ApplicationController
     if @need.valid?
       if @need.save_as(current_user)
         redirect_to redirect_url, notice: "Need created",
-          flash: { need_id: @need.need_id, goal: @need.goal }
+          flash: { goal: @need.goal }
         return
       else
         flash[:error] = "There was a problem saving your need."
