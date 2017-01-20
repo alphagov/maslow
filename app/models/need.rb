@@ -205,26 +205,6 @@ class Need
     []
   end
 
-  def as_json(options = {})
-    # Build up the hash manually, as ActiveModel::Serialization's default
-    # behaviour serialises all attributes, including @errors and
-    # @validation_context.
-    res = (ALLOWED_FIELDS).each_with_object({}) do |field, hash|
-      value = send(field)
-      if value.present?
-        # if this is a numeric field, force the value we send to the API to be an
-        # integer
-        value = Integer(value) if NUMERIC_FIELDS.include?(field)
-      end
-
-      # catch empty text fields and send them as null values instead for consistency
-      # with updates on other fields
-      value = nil if value == ""
-
-      hash[field] = value.as_json
-    end
-  end
-
   def save
     raise("The save_as method must be used when persisting a need, providing details about the author.")
   end
@@ -243,15 +223,47 @@ class Need
   end
 
   def save_as(author)
-    attributes = as_json.merge("author" => author_atts(author))
-    content_id = attributes["content_id"]
-    attributes = attributes.except("content_id", "organisations", "status")
+    details_fields = ALLOWED_FIELDS - PUBLISHING_API_FIELDS - ["status"]
+    details = details_fields.each_with_object({}) do |field, hash|
+      value = send(field)
+      next if value.blank?
+      hash[field] = value.as_json
+    end
 
-    response_hash = Maslow.publishing_api_v2.put_content(content_id, attributes)
-    update(response_hash)
+    slug = @goal.parameterize
+    base_path = "/needs/#{slug}"
+    payload = {
+      schema_name: "need",
+      publishing_app: "maslow",
+      rendering_app: "info-frontend",
+      locale: "en",
+      base_path: base_path,
+      routes: [
+        {
+          path: base_path,
+          type: "exact"
+        }
+      ],
+      document_type: "need",
+      title: @goal,
+      description: "As a #{@role}, I need to #{@goal}, so that I can #{@benefit}",
+      details: details
+    }
 
-    true
+    response = Maslow.publishing_api_v2.put_content(content_id, payload)
+    Need.need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPErrorResponse => err
+    if err.error_details.is_a?(Hash)
+      message = err.error_details.dig "error", "message"
+      if message
+        conflicting_content_id = /content_id=([^\s]+)/.match(message)[1]
+
+        if conflicting_content_id
+          raise BasePathAlreadyInUse.new(conflicting_content_id)
+        end
+      end
+    end
+
     logger.error("GdsApi::HTTPErrorResponse in Need.save_as")
     logger.error(err)
     false
