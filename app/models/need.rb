@@ -156,7 +156,7 @@ class Need
   end
 
   def duplicate?
-    duplicate_of.present?
+    @status.description == "Duplicate"
   end
 
   def update(attrs)
