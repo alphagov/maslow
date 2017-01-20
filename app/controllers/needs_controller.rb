@@ -235,6 +235,8 @@ class NeedsController < ApplicationController
       justifications: [],
       met_when: [],
     ).tap do |cleaned_params|
+      cleaned_params[:met_when].delete_if(&:empty?)
+
       %w(justifications organisation_ids).each do |field|
         cleaned_params[field].select!(&:present?) if cleaned_params[field]
       end

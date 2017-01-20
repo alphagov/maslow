@@ -209,7 +209,6 @@ class Need
     # Build up the hash manually, as ActiveModel::Serialization's default
     # behaviour serialises all attributes, including @errors and
     # @validation_context.
-    remove_blank_met_when_criteria
     res = (ALLOWED_FIELDS).each_with_object({}) do |field, hash|
       value = send(field)
       if value.present?
@@ -349,10 +348,6 @@ private
       "email" => author.email,
       "uid" => author.uid
     }
-  end
-
-  def remove_blank_met_when_criteria
-    met_when.delete_if(&:empty?) if met_when
   end
 
   def strip_newline_from_textareas(attrs)
