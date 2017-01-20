@@ -133,11 +133,12 @@ class NeedsController < ApplicationController
   def reopen
     authorize! :reopen, Need
     @need = load_need
-    old_canonical_id = @need.duplicate_of
 
-    if @need.reopen_as(current_user)
-      redirect_to need_url(@need.need_id), notice: "Need is no longer a duplicate of",
-        flash: { need_id: old_canonical_id, goal: Need.find(old_canonical_id).goal }
+    if @need.save_as(current_user)
+      redirect_to(
+        need_url(@need.need_id),
+        notice: "Need is no longer marked as a duplicate",
+      )
       return
     else
       flash[:error] = "There was a problem reopening the need"
