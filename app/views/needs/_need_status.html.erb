@@ -1,9 +1,7 @@
 <% if @need.duplicate? %>
   <div class="callout callout-info add-bottom-margin">
     <div class="callout-body">
-      This need is closed as a duplicate of
-      <%= link_to "#{@need.duplicate_of}: #{canonical_need_goal}",
-                  need_path(@need.duplicate_of) %>
+      This need is closed as a duplicate of some unknown content
     </div>
   </div>
 <% end %>
