@@ -3,7 +3,7 @@
     <%= render layout: 'workflow_footer' do %>
       <div class="navbar-btn">
         <%= link_to "Add a new need", new_need_path, class: "btn btn-primary" %>
-        <% if defined?(need) && !need.duplicate? && current_user.can?(:update, Need) %>
+        <% if defined?(need) && !need.unpublished? && current_user.can?(:update, Need) %>
           <%= link_to "Edit", edit_need_path(need.content_id), class: "btn btn-success" %>
         <% end %>
         <% if defined?(need) && current_user.can?(:validate, Need) %>
