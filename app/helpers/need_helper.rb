@@ -94,11 +94,10 @@ module NeedHelper
     bookmarks.include?(content_id) ? 'glyphicon-star' : 'glyphicon-star-empty'
   end
 
-  def status_label_class(status_description)
-    case status_description
-    when "valid" then "label-success"
-    when "not valid" then "label-danger"
-    when "valid with conditions" then "label-warning"
+  def publication_state_label_class(state)
+    case state
+    when "published" then "label-success"
+    when "unpublished" then "label-warning"
     else "label-info"
     end
   end
