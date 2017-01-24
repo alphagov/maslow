@@ -85,13 +85,6 @@ module NeedHelper
     Need.find(@need.duplicate_of).goal
   end
 
-  def format_decision_made(need)
-    decision = []
-    decision << need.status.description
-    decision << "Duplicate" if need.duplicate?
-    decision.join(", ")
-  end
-
   def feedback_for_page(artefact)
     path = URI(artefact["web_url"]).path
     Maslow.support_api.feedback_url path
