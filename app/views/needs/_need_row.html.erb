@@ -11,7 +11,7 @@
   <td><%= link_to need.need_id, need_path(need.id) %></td>
   <td><%= link_to format_need_goal(need.goal), need_path(need.id) %></td>
   <td>
-    <%= format_decision_made(need) %>
+    <%= need.status %>
   </td>
   <td>
     <% if need.applies_to_all_organisations %>
