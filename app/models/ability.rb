@@ -7,10 +7,10 @@ class Ability
     can [:index, :create], :bookmark if user.viewer?
 
     if user.editor?
-      can [:create, :update, :close, :reopen, :perform_actions_on], Need
+      can [:perform_actions_on, :create, :update, :unpublish, :redraft], Need
       can :create, Note
     end
 
-    can :validate, Need if user.admin?
+    can [:publish, :discard], Need if user.admin?
   end
 end
