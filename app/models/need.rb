@@ -172,8 +172,16 @@ class Need
     @met_when.delete_at(index)
   end
 
-  def duplicate?
-    @status.description == "Duplicate"
+  def unpublished?
+    publication_state == "unpublished"
+  end
+
+  def published?
+    publication_state == "published"
+  end
+
+  def draft?
+    publication_state == "draft"
   end
 
   def update(attrs)
@@ -265,10 +273,6 @@ class Need
     logger.error("GdsApi::HTTPErrorResponse in Need.save_as")
     logger.error(err)
     false
-  end
-
-  def has_invalid_status?
-    status.description == "not valid"
   end
 
   def persisted?
