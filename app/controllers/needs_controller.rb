@@ -43,9 +43,9 @@ class NeedsController < ApplicationController
     @need = load_need
     @notes = load_notes_for_need
     @revisions_and_notes = (@need.revisions + @notes).sort_by do |x|
-      # Either a Hash or a Note, so transform the `created_at`s into
+      # Either a Hash or a Note, so transform the `updated_at`s into
       # the same type.
-      x.try(:created_at) || Time.zone.parse(x["created_at"])
+      x.try(:updated_at) || Time.zone.parse(x["updated_at"])
     end
     # `.sort_by` doesn't take "asc" or "desc" options, so sort in descending
     # order by reversing the array.
@@ -241,8 +241,7 @@ class NeedsController < ApplicationController
   end
 
   def load_notes_for_need
-    need_id = Integer(params[:id])
-    Note.where(need_id: need_id).to_a
+    Note.where(content_id: params[:content_id]).to_a
   end
 
   def criteria_params_present?

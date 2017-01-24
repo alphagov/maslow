@@ -10,5 +10,5 @@ class Note
 
   default_scope -> { order_by(:created_at.desc) }
 
-  validates_presence_of :text, :need_id, :content_id, :author
+  validates_presence_of :text, :content_id, :author
 end

@@ -22,7 +22,7 @@ class NotesController < ApplicationController
     else
       flash[:error] = "Note couldn't be saved: #{@note.errors.full_messages.first}"
     end
-    redirect_to revisions_need_path(need_id)
+    redirect_to revisions_need_path(content_id)
   end
 
 private

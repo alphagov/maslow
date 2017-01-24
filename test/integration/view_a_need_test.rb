@@ -15,7 +15,22 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which exists" do
-    content_item = FactoryGirl.create(:need_content_item)
+    content_item = FactoryGirl.create(:need_content_item,
+      content_id: "17adf15a-eb1a-472a-85d7-603ed431ed04", # Randomly generated.
+      details: {
+        goal: "Book a driving test",
+        need_id: 101350,
+      }
+    )
+
+  context "given a need which exists" do
+    content_item = FactoryGirl.create(:need_content_item,
+      content_id: "17adf15a-eb1a-472a-85d7-603ed431ed04", # Randomly generated.
+      details: {
+        goal: "Book a driving test",
+        need_id: 101350,
+      }
+    )
 
     setup do
       publishing_api_has_content(
@@ -252,7 +267,13 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need with missing attributes" do
-    content_item = FactoryGirl.create(:need_content_item)
+    content_item = FactoryGirl.create(:need_content_item,
+      content_id: "f3b5c4ea-42a7-4b5a-beff-7cb11fa5865f", # Randomly generated.
+      details: {
+        goal: "Book a driving test",
+        need_id: 101500,
+      }
+    )
 
     setup do
       publishing_api_has_content(
@@ -277,7 +298,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       )
     end
 
-    should "show basic information about the need" do
+      should "show basic information about the need" do
       visit "/needs"
       click_on "101500"
 

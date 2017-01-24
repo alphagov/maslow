@@ -1,6 +1,6 @@
 <%= semantic_form_for(:note, url: notes_url) do |f| %>
   <%= f.inputs do %>
-    <%= hidden_field_tag :need_id, need.need_id %>
+    <%= hidden_field_tag :content_id, need.content_id %>
     <%= f.input :text, :label => 'Note', :as => :text, :hint => "Don't forget to save your note when you have finished.", input_html: { class: "col-md-12 add-bottom-margin" } %>
   <% end %>
   <%= f.action :submit,

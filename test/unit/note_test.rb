@@ -1,5 +1,4 @@
 require_relative '../test_helper'
-require 'gds_api/test_helpers/need_api'
 
 class NoteTest < ActiveSupport::TestCase
   setup do
