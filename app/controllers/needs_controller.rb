@@ -165,10 +165,6 @@ class NeedsController < ApplicationController
     render "show", status: 422
   end
 
-  def status
-    authorize! :validate, Need
-    @need = load_need
-  end
 
   def update_status
     authorize! :validate, Need

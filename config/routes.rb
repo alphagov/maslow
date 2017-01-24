@@ -16,7 +16,6 @@ Rails.application.routes.draw do
   resources :needs, except: [:destroy], param: :content_id do
     member do
       get :revisions
-      get :status
       patch :status, to: 'needs#update_status', as: 'update_status'
       post :closed
       post :reopen
