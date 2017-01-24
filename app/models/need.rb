@@ -211,24 +211,40 @@ class Need
     []
   end
 
-  def save
-    raise("The save_as method must be used when persisting a need, providing details about the author.")
-  end
+  def publish
+    if unpublished?
+      # Save to ensure that a draft exists to Publish
+      save
+    end
 
-  def close_as_duplicate_of(duplicate_of_content_id, author)
-    Maslow.publishing_api_v2.unpublish(
-      @content_id,
-      type: "withdrawal",
-      explanation: "Duplicate of #{duplicate_of_content_id}"
-    )
-    true
+    Maslow.publishing_api_v2.publish(content_id, "major")
   rescue GdsApi::HTTPErrorResponse => err
-    logger.error("GdsApi::HTTPErrorResponse in Need.close_as_duplicate_of")
+    logger.error("GdsApi::HTTPErrorResponse in Need.publish")
     logger.error(err)
     false
   end
 
-  def save_as(author)
+  def discard
+    Maslow.publishing_api_v2.discard_draft(content_id)
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.discard")
+    logger.error(err)
+    false
+  end
+
+  def unpublish(explanation)
+    Maslow.publishing_api_v2.unpublish(
+      content_id,
+      type: "withdrawal",
+      explanation: explanation
+    )
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.unpublish")
+    logger.error(err)
+    false
+  end
+
+  def save
     details_fields = ALLOWED_FIELDS - PUBLISHING_API_FIELDS
     details = details_fields.each_with_object({}) do |field, hash|
       value = send(field)
@@ -270,7 +286,7 @@ class Need
       end
     end
 
-    logger.error("GdsApi::HTTPErrorResponse in Need.save_as")
+    logger.error("GdsApi::HTTPErrorResponse in Need.save")
     logger.error(err)
     false
   end
