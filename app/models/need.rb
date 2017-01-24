@@ -75,7 +75,7 @@ class Need
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
 
-  FIELDS_WITH_ARRAY_VALUES = %w(status met_when justifications organisation_ids)
+  FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids)
 
   PUBLISHING_API_FIELDS = %w(content_id title details base_path schema_name locale phase redirects update_type public_updated_at first_published_at last_edited_at publication_state state_history routes description)
 
@@ -184,8 +184,6 @@ class Need
         case field
         when "organisations", "met_when", "justifications", "organisation_ids"
           set_attribute(field, value)
-        when "status"
-          set_status(value)
         else
           raise "attribute unknown: #{field}"
         end
@@ -223,7 +221,7 @@ class Need
   end
 
   def save_as(author)
-    details_fields = ALLOWED_FIELDS - PUBLISHING_API_FIELDS - ["status"]
+    details_fields = ALLOWED_FIELDS - PUBLISHING_API_FIELDS
     details = details_fields.each_with_object({}) do |field, hash|
       value = send(field)
       next if value.blank?
@@ -311,7 +309,6 @@ private
       publishing_app
       rendering_app
       document_type
-      state
       need_ids
       user_facing_version
       lock_version
@@ -328,11 +325,6 @@ private
   def set_attribute(field, value)
     value = [] if value.blank?
     instance_variable_set("@#{field}", value)
-  end
-
-  def set_status(status)
-    status = nil if status.blank?
-    instance_variable_set("@status", NeedStatus.new(description: status)) #expects description
   end
 
   def self.default_options
