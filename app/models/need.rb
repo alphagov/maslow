@@ -307,14 +307,19 @@ private
     attributes_with_merged_details =
       attributes_without_nested_details.merge(attributes["details"] || {})
 
-    need_status = Need.map_to_status(attributes["publication_state"])
-
-    need = Need.new(
-      attributes_with_merged_details
-        .except("publishing_app", "rendering_app", "document_type", "need_ids", "state", "user_facing_version", "lock_version", "updated_at", "warnings")
-        .merge({ "status" => need_status })
+    fields_to_exclude = %w(
+      publishing_app
+      rendering_app
+      document_type
+      state
+      need_ids
+      user_facing_version
+      lock_version
+      updated_at
+      warnings
     )
 
+    need = Need.new(attributes_with_merged_details.except(*fields_to_exclude))
     need.persisted = true
 
     need
