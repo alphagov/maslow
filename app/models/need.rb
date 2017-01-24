@@ -275,6 +275,19 @@ class Need
     @persisted
   end
 
+  def status
+    case publication_state
+    when "published"
+      "Valid"
+    when "draft"
+      "Proposed"
+    when "unpublished"
+      "Duplicate"
+    else
+      raise "publication_state: #{publication_state} not recognised"
+    end
+  end
+
 private
 
   def self.needs_from_publishing_api_payloads(*responses)
@@ -336,19 +349,6 @@ private
       locale: 'en',
       order: '-public_updated_at'
     }
-  end
-
-  def self.map_to_status(state)
-    case state
-    when "published"
-      "Valid"
-    when "draft"
-      "Proposed"
-    when "unpublished"
-      "Duplicate"
-    else
-      "Status not recognised: #{state}"
-    end
   end
 
   def author_atts(author)
