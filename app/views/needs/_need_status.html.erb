@@ -1,28 +1,7 @@
-<% if @need.duplicate? %>
+<% if @need.unpublished? %>
   <div class="callout callout-info add-bottom-margin">
     <div class="callout-body">
       This need is closed as a duplicate of some unknown content
-    </div>
-  </div>
-<% end %>
-
-<% if @need.has_invalid_status? %>
-  <div class="callout callout-danger add-bottom-margin">
-    <div class="callout-body">
-      This need is not valid because:
-      <ul>
-        <% @need.status.reasons.each do |reason| %>
-          <li><%= reason %></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-<% end %>
-
-<% if @need.status.description == "valid with conditions" %>
-  <div class="callout callout-warning add-bottom-margin">
-    <div class="callout-body">
-      This need is valid under the following conditions: <%= @need.status.validation_conditions %>
     </div>
   </div>
 <% end %>
