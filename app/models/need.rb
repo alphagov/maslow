@@ -252,7 +252,7 @@ class Need
       ],
       document_type: "need",
       title: @goal,
-      description: "As a #{@role}, I need to #{@goal}, so that I can #{@benefit}",
+      description: "As a #{@role}, I need to #{@goal}, so that #{@benefit}",
       details: details
     }
 
