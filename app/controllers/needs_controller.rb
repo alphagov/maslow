@@ -55,7 +55,7 @@ class NeedsController < ApplicationController
   def edit
     authorize! :update, Need
     @need = load_need
-    if @need.duplicate?
+    if @need.unpublished?
       redirect_to need_url(@need.need_id),
                   notice: "Closed needs cannot be edited",
                   status: 303
@@ -77,9 +77,8 @@ class NeedsController < ApplicationController
       return
     end
 
-
     if @need.valid?
-      if @need.save_as(current_user)
+      if @need.save
         redirect_to redirect_url, notice: "Need created",
           flash: { goal: @need.goal }
         return
@@ -110,7 +109,7 @@ class NeedsController < ApplicationController
     end
 
     if @need.valid?
-      if @need.save_as(current_user)
+      if @need.save
         redirect_to redirect_url, notice: "Need updated",
           flash: { need_id: @need.need_id, goal: @need.goal }
         return
@@ -130,61 +129,53 @@ class NeedsController < ApplicationController
     render "new", status: 422
   end
 
-  def closed
-    authorize! :close, Need
+  def publish
+    authorize! :publish, Need
     @need = load_need
-    duplicate_of = params["duplicate_of"]
 
-    if @need.close_as_duplicate_of(duplicate_of, current_user)
-      @canonical_need = Need.find(duplicate_of)
-      redirect_to(
-        need_url(@need.content_id),
-        notice: "Need closed as a duplicate of",
-        flash: { content_id: duplicate_of, goal: @canonical_need.goal }
-      )
-    else
-      flash[:error] = "There was a problem closing the need as a duplicate"
-      render "actions", status: 422
+    unless @need.publish
+      flash[:error] = "A problem was encountered when publishing"
     end
+
+    redirect_to need_path(@need.content_id)
   end
 
-  def reopen
-    authorize! :reopen, Need
+  def discard
+    authorize! :publish, Need
     @need = load_need
 
-    if @need.save_as(current_user)
-      redirect_to(
-        need_url(@need.need_id),
-        notice: "Need is no longer marked as a duplicate",
-      )
-      return
-    else
-      flash[:error] = "There was a problem reopening the need"
+    unless @need.discard
+      flash[:error] = "A problem was encountered when publishing"
     end
 
-    render "show", status: 422
+    redirect_to(
+      needs_path,
+      notice: "Need discarded"
+    )
   end
 
-
-  def update_status
-    authorize! :validate, Need
+  def unpublish
+    authorize! :unpublish, Need
     @need = load_need
 
-    need_status = NeedStatus.new(need_status_params)
+    explanation = nil
 
-    unless need_status.valid?
-      flash[:error] = need_status.errors.full_messages.join(". ")
-      redirect_to need_path(@need)
-      return
+    if params.key? "duplicate_of"
+      explanation = "Duplicate of #{params["duplicate_of"]}"
+    else
+      explanation = params["explanation"]
     end
 
-    @need.status = need_status.as_json
-
-    unless @need.save_as(current_user)
+    if @need.unpublish(explanation)
+      redirect_to(
+        need_path(@need.content_id),
+        notice: "Need withdrawn"
+      )
+    else
       flash[:error] = "We had a problem updating the need’s status"
-    end
 
-    redirect_to need_path(@need)
+      redirect_to need_path(@need.content_id)
+    end
   end
 
   private
