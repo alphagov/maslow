@@ -36,6 +36,7 @@ FactoryGirl.define do
       { "1": "draft" }
     }
 
+    version 3
     routes {
       [
         {

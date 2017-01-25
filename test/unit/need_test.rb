@@ -434,11 +434,34 @@ class NeedTest < ActiveSupport::TestCase
           }
         ]
       )
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
 
-      need = Need.find(100001)
+      content_id = SecureRandom.uuid
+      need_content_item_1 = create(
+        :need_content_item,
+        content_id: content_id,
+        version: 1
+      )
+      need_content_item_2 = create(
+        :need_content_item,
+        content_id: content_id,
+        goal: "how to make a claim on an estate",
+        version: 2
+      )
+      need_content_item_3 = create(
+        :need_content_item,
+        content_id: content_id,
+        goal: "how to make a claim on an estate",
+        publication_state: "published"
+      )
 
-      assert_equal 2, need.revisions.count
+      publishing_api_has_content(need_content_item_1, version: need_content_item_1["version"])
+      publishing_api_has_content(need_content_item_2, version: need_content_item_2["version"])
+      publishing_api_has_content(need_content_item_3)
+
+      need = Need.find(content_id)
+
+      assert_equal 3, need.revisions.count
+
 
       first_revision = need.revisions.first
 
