@@ -89,6 +89,10 @@ module NeedHelper
     Maslow.support_api.feedback_url base_path
   end
 
+  def full_url_for_base_path(base_path)
+    URI.join(Plek.new.website_root, base_path).to_s
+  end
+
   def bookmark_icon(bookmarks, content_id)
     bookmarks.include?(content_id) ? 'glyphicon-star' : 'glyphicon-star-empty'
   end
