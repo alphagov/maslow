@@ -85,9 +85,8 @@ module NeedHelper
     Need.find(@need.duplicate_of).goal
   end
 
-  def feedback_for_page(artefact)
-    path = URI(artefact["web_url"]).path
-    Maslow.support_api.feedback_url path
+  def feedback_for_page(base_path)
+    Maslow.support_api.feedback_url base_path
   end
 
   def bookmark_icon(bookmarks, content_id)
