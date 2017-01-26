@@ -77,7 +77,25 @@ class Need
 
   FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids)
 
-  PUBLISHING_API_FIELDS = %w(content_id title details base_path schema_name locale version phase redirects update_type public_updated_at first_published_at last_edited_at publication_state state_history routes description)
+  PUBLISHING_API_FIELDS = %w(
+    base_path
+    content_id
+    description
+    details
+    first_published_at
+    last_edited_at
+    locale
+    phase
+    public_updated_at
+    publication_state
+    redirects
+    routes
+    schema_name
+    state_history
+    title
+    update_type
+    version
+  )
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
