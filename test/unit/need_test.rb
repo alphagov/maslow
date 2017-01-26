@@ -444,38 +444,41 @@ class NeedTest < ActiveSupport::TestCase
       need_content_item_2 = create(
         :need_content_item,
         content_id: content_id,
-        goal: "how to make a claim on an estate",
+        details: {
+          goal: "how to make a claim on an estate"
+        },
         version: 2
       )
       need_content_item_3 = create(
         :need_content_item,
         content_id: content_id,
-        goal: "how to make a claim on an estate",
-        publication_state: "published"
+        publication_state: "published",
+        details: {
+          goal: "how to make a claim on an estate"
+        },
+        version: 3
       )
 
-      publishing_api_has_content(need_content_item_1, version: need_content_item_1["version"])
-      publishing_api_has_content(need_content_item_2, version: need_content_item_2["version"])
-      publishing_api_has_content(need_content_item_3)
+      publishing_api_has_item(need_content_item_1, version: need_content_item_1["version"])
+      publishing_api_has_item(need_content_item_2, version: need_content_item_2["version"])
+      publishing_api_has_item(need_content_item_3, version: need_content_item_3["version"])
+      publishing_api_has_item(need_content_item_3)
 
       need = Need.find(content_id)
 
       assert_equal 3, need.revisions.count
 
-
       first_revision = need.revisions.first
+      second_revision = need.revisions[1]
 
-      assert_equal "update", first_revision["action_type"]
-      assert_equal "Jack Bauer", first_revision["author"]["name"]
-      assert_equal "jack.bauer@test.com", first_revision["author"]["email"]
-
-      assert_nil first_revision["author"]["uid"]
-
-      assert_equal %w(goal role), first_revision["changes"].keys
-      assert_equal ["apply for a secondary school place", "apply for a primary school place"], first_revision["changes"]["goal"]
-      assert_equal [nil, "parent"], first_revision["changes"]["role"]
-
-      assert_equal "2013-05-01T00:00:00+00:00", first_revision["created_at"]
+      assert_equal %w(publication_state), first_revision["changes"].keys
+      assert_equal ["draft", "published"], first_revision["changes"]["publication_state"]
+      assert_equal %w(goal), second_revision["changes"].keys
+      assert_equal [
+        "find out if an estate is claimable and how to make a claim on an estate",
+        "how to make a claim on an estate"
+        ],
+      second_revision["changes"]["goal"]
     end
 
     should "raise an error when need not found" do
