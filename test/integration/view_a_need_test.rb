@@ -5,6 +5,7 @@ require 'gds_api/test_helpers/publishing_api_v2'
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2
+  include NeedHelper
 
   setup do
     login_as_stub_user
@@ -12,56 +13,45 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       "driver-vehicle-licensing-agency",
       "driving-standards-agency"
     ])
+
+    @content_item = create(:need_content_item)
+    publishing_api_has_content(
+      [@content_item],
+      document_type: "need",
+      fields: [
+        "content_id",
+        "details",
+        "need_ids",
+        "publication_state"
+      ],
+      locale: "en",
+      order: "-public_updated_at",
+      per_page: 50,
+      publishing_app: "need-api"
+    )
+    publishing_api_has_item(@content_item)
+    publishing_api_has_linked_items(
+      [],
+      content_id: @content_item["content_id"],
+      link_type: "meets_user_needs",
+      fields: ["title", "base_path", "document_type"]
+    )
+    publishing_api_has_expanded_links(
+      content_id: @content_item["content_id"],
+      expanded_links: {
+        organisations: []
+      }
+    )
   end
 
   context "given a need which exists" do
-    content_item = FactoryGirl.create(:need_content_item,
-      content_id: "17adf15a-eb1a-472a-85d7-603ed431ed04", # Randomly generated.
-      details: {
-        goal: "Book a driving test",
-        need_id: 101350,
-      }
-    )
-
-  context "given a need which exists" do
-    content_item = FactoryGirl.create(:need_content_item,
-      content_id: "17adf15a-eb1a-472a-85d7-603ed431ed04", # Randomly generated.
-      details: {
-        goal: "Book a driving test",
-        need_id: 101350,
-      }
-    )
-
-    setup do
-      publishing_api_has_content(
-        [content_item],
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state"
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
-      )
-      publishing_api_has_expanded_links(
-        content_id: content_item["content_id"],
-        expanded_links: {
-          organisations: []
-        }
-      )
-    end
-
     should "show basic information about the need" do
       visit "/needs"
-      click_on "101350"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
-        assert page.has_content?("101350: Book a driving test")
+        assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
       end
 
       within ".need" do
@@ -123,7 +113,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     should "show the recent revisions and notes" do
       visit "/needs"
 
-      click_on "101350"
+      click_on format_need_goal(@content_item["details"]["goal"])
       click_on "History & Notes"
 
       within ".breadcrumb" do
@@ -193,30 +183,24 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       end
     end # should show recent revisions
 
-    context "showing artefacts which meet the need" do
-      should "display artefacts from the content api" do
-        content_api_has_artefacts_for_need_id(101350, [
-          {
-            id: "http://contentapi.dev.gov.uk/vat-rates.json",
-            web_url: "http://www.dev.gov.uk/vat-rates",
-            title: "VAT rates",
-            format: "answer"
-          },
-          {
-            id: "http://contentapi.dev.gov.uk/vat.json",
-            web_url: "http://www.dev.gov.uk/vat",
-            title: "VAT",
-            format: "business_support"
-          }
-        ])
+    context "showing content which meet the need" do
+      setup do
+        linked_content_items = create_list(:need_content_item, 2)
+        publishing_api_has_linked_items(
+          linked_content_items,
+          content_id: @content_item["content_id"],
+          link_type: "meets_user_needs"
+        )
+      end
 
+      should "display content from the publishing api" do
         visit "/needs"
-        click_on "101350"
+        click_on format_need_goal(@content_item["details"]["goal"])
 
         within ".need" do
-          assert page.has_selector?("table#artefacts-for-need")
+          assert page.has_selector?("table#content-items-meeting-this-need")
 
-          within "table#artefacts-for-need" do
+          within "table#content-items-meeting-this-need" do
             assert page.has_selector?("tbody tr", count: 2)
 
             within "tbody" do
@@ -234,83 +218,44 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end # within .need
       end # should display artefacts from the content api
 
-      should "not display a table when there are no artefacts for this need" do
-        content_api_has_artefacts_for_need_id(101350, [])
+      should "not display a table when there are no content items for this need" do
+        linked_content_items = create_list(:need_content_item, 2)
+        publishing_api_has_linked_items(
+          linked_content_items,
+          content_id: @content_item["content_id"],
+          link_type: "meets_user_needs"
+        )
 
         visit "/needs"
-        click_on "101350"
+        click_on format_need_goal(@content_item["details"]["goal"])
 
         # check the page has loaded correctly
-        assert page.has_content?("Book a driving test")
+        assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
 
         within ".need" do
-          assert page.has_no_selector?("table#artefacts-for-need")
+          assert page.has_no_selector?("table#content-items-meeting-this-need")
         end
       end
-
-      should "not display a table when the Content API returns an error" do
-        GdsApi::ContentApi.any_instance.expects(:for_need).once
-          .with(101350)
-          .raises(GdsApi::HTTPErrorResponse.new(500))
-
-        visit "/needs"
-        click_on "101350"
-
-        # check the page has loaded correctly
-        assert page.has_content?("Book a driving test")
-
-        within ".need" do
-          assert page.has_no_selector?("table#artefacts-for-need")
-        end
-      end
-    end # context showing artefacts which meet the need
+    end
   end
 
   context "given a need with missing attributes" do
-    content_item = FactoryGirl.create(:need_content_item,
-      content_id: "f3b5c4ea-42a7-4b5a-beff-7cb11fa5865f", # Randomly generated.
-      details: {
-        goal: "Book a driving test",
-        need_id: 101500,
-      }
-    )
-
-    setup do
-      publishing_api_has_content(
-        [content_item],
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state"
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
-      )
-      publishing_api_has_expanded_links(
-        content_id: content_item["content_id"],
-        expanded_links: {
-          organisations: []
-        }
-      )
-    end
-
-      should "show basic information about the need" do
+    should "show basic information about the need" do
       visit "/needs"
-      click_on "101500"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       within ".need" do
         within "header" do
           assert page.has_no_selector?(".need-organisations")
 
-          assert page.has_content?("Book a driving test")
+          assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
         end
 
         within ".the-need" do
-          assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
+          role, goal, benefit = @content_item["details"].slice("role", "goal", "benefit")
+          assert page.has_content?(
+                   "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
+                 )
         end
 
         assert page.has_no_selector?(".met-when")
@@ -324,44 +269,22 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which applies to all organisations" do
-    content_item = FactoryGirl.create(:need_content_item)
-
-    setup do
-      publishing_api_has_content(
-        [content_item],
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state"
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
-      )
-      publishing_api_has_expanded_links(
-        content_id: content_item["content_id"],
-        expanded_links: {
-          organisations: []
-        }
-      )
-    end
-
     should "show basic information about the need" do
       visit "/needs"
-      click_on "101700"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       within ".need" do
         within "header" do
           assert page.has_no_selector?(".need-organisations")
 
-          assert page.has_content?("Find out news from government")
+          assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
         end
 
         within ".the-need" do
-          assert page.has_content?("As a user \nI need to find out news from government \nSo that I know what government is doing")
+          role, goal, benefit = @content_item["details"].slice("role", "goal", "benefit")
+          assert page.has_content?(
+                   "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
+                 )
         end
 
         assert page.has_content?("This need applies to all organisations.")
@@ -370,72 +293,11 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which is not valid" do
-    content_item = FactoryGirl.create(:need_content_item)
-
-    setup do
-      publishing_api_has_content(
-        [content_item],
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state"
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
-      )
-      publishing_api_has_expanded_links(
-        content_id: content_item["content_id"],
-        expanded_links: {
-          organisations: []
-        }
-      )
-    end
-
     should "indicate that it is not valid" do
       visit "/needs"
-      click_on "101800"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       assert page.has_content?("This need is not valid because:")
-      assert page.has_no_button?("Decide on need")
-    end
-  end
-
-  context "given a need which is valid with conditions" do
-    content_item = FactoryGirl.create(:need_content_item)
-
-    setup do
-      organisations_api_has_organisations([])
-      publishing_api_has_content(
-        [content_item],
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state"
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
-      )
-      publishing_api_has_expanded_links(
-        content_id: content_item["content_id"],
-        expanded_links: {
-          organisations: []
-        }
-      )
-    end
-
-    should "indicate that it is valid with conditions" do
-      visit "/needs"
-      click_on "10001"
-
-      assert page.has_content?("This need is valid under the following conditions: a and b must be changed")
     end
   end
 
