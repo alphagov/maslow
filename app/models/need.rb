@@ -94,6 +94,8 @@ class Need
     state_history
     title
     update_type
+    updated_at
+    user_facing_version
     version
   )
 
@@ -405,9 +407,7 @@ private
       document_type
       content_store
       need_ids
-      user_facing_version
       lock_version
-      updated_at
       warnings
     )
 
