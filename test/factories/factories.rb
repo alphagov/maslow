@@ -19,7 +19,7 @@ FactoryGirl.define do
   factory :need_content_item, class: Hash do
     content_id
     base_path "/needs/slug"
-    title "Claim my entitlement"
+    title "find out if an estate is claimable and how to make a claim on an estate"
     description "This is the summary of example need"
     schema_name "need"
     publishing_app "maslow"
