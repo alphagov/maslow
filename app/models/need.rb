@@ -403,6 +403,7 @@ private
       publishing_app
       rendering_app
       document_type
+      content_store
       need_ids
       user_facing_version
       lock_version
