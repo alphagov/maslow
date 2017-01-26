@@ -1,4 +1,5 @@
 require "active_model"
+require_relative "../helpers/changeset_helper.rb"
 
 class Need
   extend ActiveModel::Naming
@@ -172,6 +173,7 @@ class Need
       version -= 1
       @responses << fetch_from_publishing_api(@content_id, version: version)
     end
+    compute_changes(@responses)
   end
 
   def fetch_from_publishing_api(content_id, params={})
@@ -417,6 +419,22 @@ private
     # Strip these so that we don't send them to the Need API.
     %w(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
+    end
+  end
+
+  def compute_changes(responses)
+    changes = {}
+    responses.each_with_index do |current_version, index|
+      index_of_previous_version = index + 1
+      previous_version = responses[index_of_previous_version] || {}
+      changes[index] = ChangeSet.new(current_version, previous_version).changes
+    end
+    save_changes(responses, changes)
+  end
+
+  def save_changes(responses, changes)
+    responses.each_with_index do |version, index|
+      version["changes"]= changes[index]
     end
   end
 end
