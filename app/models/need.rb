@@ -77,7 +77,7 @@ class Need
 
   FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids)
 
-  PUBLISHING_API_FIELDS = %w(content_id title details base_path schema_name locale version phase redirects update_type public_updated_at first_published_at last_edited_at publication_state state_history routes description user_facing_version)
+  PUBLISHING_API_FIELDS = %w(content_id title details base_path schema_name locale version phase redirects update_type public_updated_at first_published_at last_edited_at publication_state state_history routes description)
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(need_id role goal benefit impact legislation other_evidence duplicate_of applies_to_all_organisations)
 
@@ -161,6 +161,22 @@ class Need
       @responses << Maslow.publishing_api_v2.get_content(@content_id, version: version)
     end
     @responses
+  end
+
+  def revisions
+    return @responses if @responses
+    latest_revision = fetch_from_publishing_api(@content_id)
+    version = latest_revision["version"]
+    @responses = [latest_revision]
+    while version > 1
+      version -= 1
+      @responses << fetch_from_publishing_api(@content_id, version: version)
+    end
+  end
+
+  def fetch_from_publishing_api(content_id, params={})
+    response = Maslow.publishing_api_v2.get_content(content_id, params).parsed_content
+    self.class.move_details_to_top_level(response)
   end
 
   def organisations
