@@ -351,6 +351,14 @@ private
   end
 
   def self.need_from_publishing_api_payload(attributes)
+    attributes = self.move_details_to_top_level(attributes)
+    need = Need.new(attributes)
+    need.persisted = true
+
+    need
+  end
+
+  def self.move_details_to_top_level(attributes)
     # Transforms the attributes to not have a nested details hash, and
     # instead have all the values in the details hash as top level
     # fields for convenience.
@@ -379,15 +387,13 @@ private
       rendering_app
       document_type
       need_ids
+      user_facing_version
       lock_version
       updated_at
       warnings
     )
 
-    need = Need.new(attributes_with_merged_details.except(*fields_to_exclude))
-    need.persisted = true
-
-    need
+    attributes_with_merged_details.except(*fields_to_exclude)
   end
 
   def set_attribute(field, value)
