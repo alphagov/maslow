@@ -172,21 +172,9 @@ class Need
   end
 
   def revisions
-    latest_revision = Maslow.publishing_api_v2.get_content(@content_id)
-    @responses ||= [latest_revision]
-    version = latest_revision["user_facing_version"]
-    return @responses if version == 1
-    while version > 1
-      version -= 1
-      @responses << Maslow.publishing_api_v2.get_content(@content_id, version: version)
-    end
-    @responses
-  end
-
-  def revisions
     return @responses if @responses
     latest_revision = fetch_from_publishing_api(@content_id)
-    version = latest_revision["version"]
+    version = latest_revision["user_facing_version"]
     @responses = [latest_revision]
     while version > 1
       version -= 1
