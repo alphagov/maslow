@@ -1,5 +1,4 @@
 require "active_model"
-require_relative "../helpers/changeset_helper.rb"
 
 class Need
   extend ActiveModel::Naming
@@ -433,9 +432,25 @@ private
     responses.each_with_index do |current_version, index|
       index_of_previous_version = index + 1
       previous_version = responses[index_of_previous_version] || {}
-      changes[index] = ChangeSet.new(current_version, previous_version).changes
+      changes[index] = changes(current_version, previous_version)
     end
     save_changes(responses, changes)
+  end
+
+  def changes(previous, current)
+    versions = [previous, current]
+
+    keys = changed_keys(current, previous) - ["version"]
+
+    keys.inject({}) { |changes, key|
+      changes.merge(key => versions.map {|version| version[key] })
+    }
+  end
+
+  def changed_keys(current, previous)
+    (current.keys | previous.keys).reject do |key|
+      current[key] == previous[key]
+    end
   end
 
   def save_changes(responses, changes)
