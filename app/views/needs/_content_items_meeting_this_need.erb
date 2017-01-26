@@ -1,0 +1,51 @@
+<div class="add-top-margin">
+  <h3>GOV.UK content which meets this need</h3>
+  <% if @need.content_items_meeting_this_need %>
+    <% if @need.content_items_meeting_this_need.any? %>
+      <table id="content-items-meeting-this-need" class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">
+              Title
+            </th>
+            <th scope="col">
+              Feedback
+            </th>
+            <th scope="col">
+              Format
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @need.content_items_meeting_this_need.each do |content_item| %>
+            <tr>
+              <td>
+                <%=
+                link_to(
+                    content_item["title"],
+                    full_url_for_base_path(content_item["base_path"])
+                )
+                %>
+              </td>
+              <td>
+                <% if artefact["base_path"].present? %>
+                  <%=
+                  link_to(
+                      'View feedback',
+                      feedback_for_page(content_item["base_path"])
+                  )
+                  %>
+                <% end %>
+              </td>
+              <td><%= content_item["document_type"].humanize %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      No content is recorded as meeting this need.
+    <% end %>
+  <% else %>
+    A problem was encountered when fetching the content that meets this need.
+  <% end %>
+</div>
