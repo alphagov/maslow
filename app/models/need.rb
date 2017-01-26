@@ -216,10 +216,17 @@ class Need
     @organisation_ids ||= []
   end
 
-  def artefacts
-    @artefacts ||= Maslow.content_api.for_need(@id)
-  rescue GdsApi::BaseError
-    []
+  def content_items_meeting_this_need
+    @content_items_meeting_this_need ||=
+      Maslow.publishing_api_v2.get_linked_items(
+        content_id,
+        link_type: "meets_user_needs",
+        fields: ["title", "base_path", "document_type"]
+      )
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
+    logger.error(err)
+    false
   end
 
   def publish
