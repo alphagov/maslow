@@ -345,7 +345,7 @@ class Need
     when "draft"
       "Proposed"
     when "unpublished"
-      "Duplicate"
+      "Withdrawn"
     else
       raise "publication_state: #{publication_state} not recognised"
     end
