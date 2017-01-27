@@ -447,7 +447,7 @@ private
   def changes(previous, current)
     versions = [previous, current]
 
-    keys = changed_keys(current, previous) - ["version"]
+    keys = changed_keys(current, previous) - ["user_facing_version"]
 
     keys.inject({}) { |changes, key|
       changes.merge(key => versions.map {|version| version[key] })

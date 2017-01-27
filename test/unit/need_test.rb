@@ -439,7 +439,7 @@ class NeedTest < ActiveSupport::TestCase
       need_content_item_1 = create(
         :need_content_item,
         content_id: content_id,
-        version: 1
+        user_facing_version: 1
       )
       need_content_item_2 = create(
         :need_content_item,
@@ -447,7 +447,7 @@ class NeedTest < ActiveSupport::TestCase
         details: {
           goal: "how to make a claim on an estate"
         },
-        version: 2
+        user_facing_version: 2
       )
       need_content_item_3 = create(
         :need_content_item,
@@ -456,12 +456,12 @@ class NeedTest < ActiveSupport::TestCase
         details: {
           goal: "how to make a claim on an estate"
         },
-        version: 3
+        user_facing_version: 3
       )
 
-      publishing_api_has_item(need_content_item_1, version: need_content_item_1["version"])
-      publishing_api_has_item(need_content_item_2, version: need_content_item_2["version"])
-      publishing_api_has_item(need_content_item_3, version: need_content_item_3["version"])
+      publishing_api_has_item(need_content_item_1, version: need_content_item_1["user_facing_version"])
+      publishing_api_has_item(need_content_item_2, version: need_content_item_2["user_facing_version"])
+      publishing_api_has_item(need_content_item_3, version: need_content_item_3["user_facing_version"])
       publishing_api_has_item(need_content_item_3)
 
       need = Need.find(content_id)
