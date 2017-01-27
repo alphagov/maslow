@@ -360,15 +360,28 @@ class NeedTest < ActiveSupport::TestCase
 
   context "loading needs" do
     should "construct a need from an API response" do
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once.with("0925fd2b-6b59-4120-a849-96ab19b9c7df").returns(stub_response)
 
-      need = Need.find("0925fd2b-6b59-4120-a849-96ab19b9c7df")
+      content_id = SecureRandom.uuid
+      need_content_item = create(
+        :need_content_item,
+        content_id: content_id,
+        details: {
+          need_id: 100001,
+          role: "human",
+          goal: "I want to do something",
+          benefit: "so that I can be happy"
+        }
+      )
 
-      assert_equal "0925fd2b-6b59-4120-a849-96ab19b9c7df", need.content_id
+      publishing_api_has_item(need_content_item)
+
+      need = Need.find(content_id)
+
+      assert_equal content_id, need.content_id
       assert_equal 100001, need.need_id
-      assert_equal "person", need.role
-      assert_equal "do things", need.goal
-      assert_equal "good things", need.benefit
+      assert_equal "human", need.role
+      assert_equal "I want to do something", need.goal
+      assert_equal "so that I can be happy", need.benefit
     end
 
     should "return organisations for a need" do
