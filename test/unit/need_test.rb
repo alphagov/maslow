@@ -23,7 +23,7 @@ class NeedTest < ActiveSupport::TestCase
         {
           "need_ids"=>["100523"],
           "content_id"=>"0001c0c6-2dd3-4b56-87f1-815efe32c155",
-          "state" => "draft",
+          "publication_state" => "draft",
           "details"=>
           {
             "applies_to_all_organisations"=>false,
@@ -35,7 +35,7 @@ class NeedTest < ActiveSupport::TestCase
         {
           "need_ids"=>["100522"],
           "content_id"=>"c867e5f7-2d68-42ad-bedb-20638b3bf58e",
-          "state" => "draft",
+          "publication_state" => "draft",
           "details"=>
           {
             "applies_to_all_organisations"=>false,
@@ -47,7 +47,7 @@ class NeedTest < ActiveSupport::TestCase
         {
           "need_ids"=>["100521"],
           "content_id"=>"0925fd2b-6b59-4120-a849-96ab19b9c7df",
-          "state" => "published",
+          "publication_state" => "published",
           "details"=>{
             "applies_to_all_organisations"=>false,
             "role"=>"citizen",
