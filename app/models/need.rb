@@ -439,7 +439,7 @@ private
     responses.each_with_index do |current_version, index|
       index_of_previous_version = index + 1
       previous_version = responses[index_of_previous_version] || {}
-      changes[index] = changes(current_version, previous_version)
+      changes[index] = changes(previous_version, current_version)
     end
     save_changes(responses, changes)
   end
