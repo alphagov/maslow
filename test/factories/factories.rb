@@ -53,7 +53,6 @@ FactoryGirl.define do
         {
           "applies_to_all_organisations": false,
           "benefit": "claim my entitlement",
-          "duplicate_of": 100003,
           "goal": "find out if an estate is claimable and how to make a claim on an estate",
           "legislation": nil,
           "met_when": [

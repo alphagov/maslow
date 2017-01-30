@@ -574,30 +574,34 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   context "closing needs as duplicates" do
-    setup do
-      need_hash = {
-        "need_id" => 100002,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }
-      @need = Need.new(need_hash)
-    end
+    should "call Publishing API with the correct values" do
 
-    should "call Need API with the correct values" do
-      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
-      duplicate_atts = {
-        "duplicate_of" => 100001,
-        "author" => {
-          "name" => "O'Brien",
-          "email" => "obrien@alphagov.co.uk",
-          "uid" => "user-1234"
+      need_content_item = create(
+        :need_content_item,
+        need_id: 100001
+      )
+
+      need_content_item_duplicate = create(
+        :need_content_item,
+        need_id: 100002
+      )
+
+      explanation = "Duplicate of #{need_content_item["content_id"]}"
+
+      stub_publishing_api_unpublish(
+        need_content_item_duplicate["content_id"],
+        query: {
+        },
+        "body": {
+          "type": "withdrawal",
+          explanation: explanation
         }
-      }
-      GdsApi::NeedApi.any_instance.expects(:close).once.with(100002, duplicate_atts)
-      @need.duplicate_of = 100001
-      @need.close_as(author)
-      assert @need.duplicate?
+      )
+
+      need = Need.need_from_publishing_api_payload(need_content_item_duplicate)
+      need.unpublish(explanation)
+
+      assert_publishing_api_unpublish(need.content_id, attributes_or_matcher = nil, times = 1)
     end
   end
 
