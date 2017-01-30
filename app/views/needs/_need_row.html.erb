@@ -11,7 +11,7 @@
   <td>
     <%=
       link_to(
-        format_need_goal(need.goal) + (need.need_id ? " (#{need.need_id})" : ""),
+        short_label_for_need(need),
         need_path(need.id)
       )
     %>

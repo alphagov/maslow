@@ -3,11 +3,12 @@ module NeedHelper
   include ActionView::Helpers::NumberHelper
 
   def breadcrumb_link_for(need)
-    link_to breadcrumb_label_for(need), need_path(need.content_id)
+    link_to short_label_for_need(need), need_path(need.content_id)
   end
 
-  def breadcrumb_label_for(need)
-    "#{need.need_id}: #{format_need_goal(need.goal)}"
+  def short_label_for_need(need)
+    need_id_suffix = need.need_id ? " (#{need.need_id})" : ""
+    "#{format_need_goal(need.goal)}#{need_id_suffix}"
   end
 
   def format_need_goal(goal)
