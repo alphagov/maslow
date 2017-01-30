@@ -425,7 +425,6 @@ private
     {
       document_type: 'need',
       per_page: 50,
-      publishing_app: 'need-api',
       fields: ['content_id', 'need_ids', 'details', 'publication_state'],
       locale: 'en',
       order: '-public_updated_at'
