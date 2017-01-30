@@ -288,34 +288,18 @@ class Need
   end
 
   def save
-    details_fields = ALLOWED_FIELDS - PUBLISHING_API_FIELDS
-    details = details_fields.each_with_object({}) do |field, hash|
-      value = send(field)
-      next if value.blank?
-      hash[field] = value.as_json
-    end
+    response = Maslow.publishing_api_v2.put_content(
+      content_id,
+      publishing_api_payload
+    )
 
-    slug = @goal.parameterize
-    base_path = "/needs/#{slug}"
-    payload = {
-      schema_name: "need",
-      publishing_app: "maslow",
-      rendering_app: "info-frontend",
-      locale: "en",
-      base_path: base_path,
-      routes: [
-        {
-          path: base_path,
-          type: "exact"
-        }
-      ],
-      document_type: "need",
-      title: @goal,
-      description: "As a #{@role}, I need to #{@goal}, so that #{@benefit}",
-      details: details
-    }
+    Maslow.publishing_api_v2.patch_links(
+      content_id,
+      links: {
+        "organisations": organisation_ids
+      }
+    )
 
-    response = Maslow.publishing_api_v2.put_content(content_id, payload)
     Need.need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPErrorResponse => err
     if err.error_details.is_a?(Hash)
@@ -400,6 +384,36 @@ private
     )
 
     attributes_with_merged_details.except(*fields_to_exclude)
+  end
+
+  def publishing_api_payload
+    details_fields = (ALLOWED_FIELDS - PUBLISHING_API_FIELDS) - ["organisation_ids"]
+    details = details_fields.each_with_object({}) do |field, hash|
+      value = send(field)
+      next if value.blank?
+      hash[field] = value.as_json
+    end
+
+    slug = @goal.parameterize
+    base_path = "/needs/#{slug}"
+
+    {
+      schema_name: "need",
+      publishing_app: "maslow",
+      rendering_app: "info-frontend",
+      locale: "en",
+      base_path: base_path,
+      routes: [
+        {
+          path: base_path,
+          type: "exact"
+        }
+      ],
+      document_type: "need",
+      title: @goal,
+      description: "As a #{@role}, I need to #{@goal}, so that #{@benefit}",
+      details: details
+    }
   end
 
   def set_attribute(field, value)
