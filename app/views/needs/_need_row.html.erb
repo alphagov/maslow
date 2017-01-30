@@ -8,8 +8,14 @@
       </button>
     <% end %>
   </td>
-  <td><%= link_to need.need_id, need_path(need.id) %></td>
-  <td><%= link_to format_need_goal(need.goal), need_path(need.id) %></td>
+  <td>
+    <%=
+      link_to(
+        format_need_goal(need.goal) + (need.need_id ? " (#{need.need_id})" : ""),
+        need_path(need.id)
+      )
+    %>
+  </td>
   <td>
     <%= need.status %>
   </td>
