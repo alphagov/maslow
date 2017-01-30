@@ -427,7 +427,7 @@ private
       per_page: 50,
       fields: ['content_id', 'need_ids', 'details', 'publication_state'],
       locale: 'en',
-      order: '-public_updated_at'
+      order: '-updated_at'
     }
   end
 
