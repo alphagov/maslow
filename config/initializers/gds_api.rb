@@ -9,7 +9,10 @@ Maslow.need_api = GdsApi::NeedApi.new(Plek.current.find('need-api'),
 Maslow.content_api = GdsApi::ContentApi.new(Plek.current.find('contentapi'),
                                             API_CLIENT_CREDENTIALS[:content_api])
 
-Maslow.publishing_api_v2 = GdsApi::PublishingApiV2.new(Plek.current.find('publishing-api'), API_CLIENT_CREDENTIALS[:publishing_api_v2])
+Maslow.publishing_api_v2 = GdsApi::PublishingApiV2.new(
+  Plek.current.find('publishing-api'),
+  bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example'
+)
 
 Maslow.support_api = GdsApi::Support.new(Plek.current.find('support'),
                                          API_CLIENT_CREDENTIALS[:support])
