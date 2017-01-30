@@ -127,7 +127,7 @@ class NeedTest < ActiveSupport::TestCase
 
         stub_publishing_api_put_content(need.content_id, request, body: {})
 
-        assert need.save_as(author)
+        assert need.save
 
         assert_publishing_api_put_content(need.content_id, request)
       end
@@ -260,7 +260,7 @@ class NeedTest < ActiveSupport::TestCase
         GdsApi::HTTPErrorResponse.new(422, ["error"])
       )
 
-      assert_equal false, need.save_as(stub_user)
+      assert_equal false, need.save
     end
   end
 
@@ -569,7 +569,7 @@ class NeedTest < ActiveSupport::TestCase
 
       stub_publishing_api_put_content(@need.content_id, expected_request, body: {})
 
-      @need.save_as(author)
+      @need.save
     end
   end
 
