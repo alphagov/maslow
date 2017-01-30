@@ -327,7 +327,7 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal 2, need_list.pages
       assert_equal 60, need_list.total
       assert_equal 50, need_list.per_page
-      assert_equal 1, need_list.page
+      assert_equal 1, need_list.current_page
     end
   end
 
