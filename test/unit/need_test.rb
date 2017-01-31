@@ -88,7 +88,7 @@ class NeedTest < ActiveSupport::TestCase
     }
   end
 
-  context "saving need data to the Need API" do
+  context "saving need data to the Publishing API" do
     setup do
       @atts = {
         "content_id" => SecureRandom.uuid,
@@ -106,30 +106,20 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => 15000,
         "yearly_searches" => 2000
       }
+
+      @need_content_item = create(:need_content_item)
     end
 
     context "given valid attributes" do
-      should "make a request to the need API with an author" do
-        need = Need.new(@atts)
-        author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      should "make a request to the Publishing API" do
+        need = Need.need_from_publishing_api_payload(@need_content_item)
 
-        all_request_fields = Need::ALLOWED_FIELDS.each_with_object({}) do |field, hash|
-          hash[field] = nil
-        end
-
-        request = all_request_fields.merge(@atts.merge(
-          "author" => {
-            "name" => "O'Brien",
-            "email" => "obrien@alphagov.co.uk",
-            "uid" => "user-1234"
-          }
-        )).except("content_id", "organisations", "status")
-
-        stub_publishing_api_put_content(need.content_id, request, body: {})
+        stub_publishing_api_put_content(need.content_id, need.send(:publishing_api_payload))
+        stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
 
         assert need.save
 
-        assert_publishing_api_put_content(need.content_id, request)
+        assert_publishing_api_put_content(need.content_id, need.send(:publishing_api_payload))
       end
 
       should "set the 'met_when', 'justifications' and 'organisation_ids' fields to be empty arrays if not present" do
