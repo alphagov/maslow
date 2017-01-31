@@ -191,7 +191,7 @@ class NeedsController < ApplicationController
     else
       flash[:error] = "We had a problem updating the need’s status"
 
-      redirect_to need_path(@need.content_id)
+      redirect_to actions_need_path(@need.content_id)
     end
   end
 
