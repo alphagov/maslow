@@ -59,6 +59,15 @@ module NeedHelper
     Govspeak::Document.new(explanation, links: links).to_html.html_safe
   end
 
+  def options_for_withdrawing_as_duplicate(need)
+    Need.list(
+      per_page: 1e10,
+      states: ['published']
+    ).to_options.reject do |option|
+      option[1] == need.content_id
+    end
+  end
+
   # If no criteria present, insert a blank
   # one.
   def criteria_with_blank_value(criteria)

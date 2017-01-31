@@ -10,7 +10,7 @@
   <%=
   select_tag(
       :duplicate_of,
-      options_for_select(Need.list(per_page: 1e10, states: ['published']).to_options),
+      options_for_select(options_for_withdrawing_as_duplicate(@need)),
       { 'data-module' => 'chosen', 'style' => 'width:350px;' }
   )
   %>
