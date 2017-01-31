@@ -178,7 +178,7 @@ class NeedsController < ApplicationController
         return
       end
 
-      explanation = "This need is a duplicate of: [embed:link:#{params["duplicate_of"]}]"
+      explanation = "This need is a duplicate of: [embed:link:#{params['duplicate_of']}]"
     else
       explanation = params["explanation"]
     end

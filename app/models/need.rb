@@ -115,7 +115,7 @@ class Need
     validates_numericality_of field, only_integer: true, allow_blank: true, greater_than_or_equal_to: 0
   end
 
-  def initialize(attributes={})
+  def initialize(attributes = {})
     ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
 
     strip_newline_from_textareas(attributes)
@@ -184,7 +184,7 @@ class Need
     compute_changes(@responses)
   end
 
-  def fetch_from_publishing_api(content_id, params={})
+  def fetch_from_publishing_api(content_id, params = {})
     response = Maslow.publishing_api_v2.get_content(content_id, params).parsed_content
     self.class.move_details_to_top_level(response)
   end
@@ -250,7 +250,7 @@ class Need
       Maslow.publishing_api_v2.get_linked_items(
         content_id,
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w(title base_path document_type)
       )
   rescue GdsApi::HTTPErrorResponse => err
     logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
@@ -432,7 +432,7 @@ private
     {
       document_type: 'need',
       per_page: 50,
-      fields: ['content_id', 'need_ids', 'details', 'publication_state'],
+      fields: %w(content_id need_ids details publication_state),
       locale: 'en',
       order: '-updated_at'
     }
@@ -482,7 +482,7 @@ private
 
   def save_changes(responses, changes)
     responses.each_with_index do |version, index|
-      version["changes"]= changes[index]
+      version["changes"] = changes[index]
     end
   end
 end
