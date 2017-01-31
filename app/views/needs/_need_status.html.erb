@@ -1,7 +1,7 @@
 <% if @need.unpublished? %>
   <div class="callout callout-info add-bottom-margin">
     <div class="callout-body">
-      This need is closed as a duplicate of some unknown content
+      <%= render_unpublishing_explanation(@need) %>
     </div>
   </div>
 <% end %>
