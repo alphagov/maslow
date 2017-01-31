@@ -93,6 +93,7 @@ class Need
     schema_name
     state_history
     title
+    unpublishing
     update_type
     updated_at
     user_facing_version
