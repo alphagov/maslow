@@ -2,7 +2,7 @@ require 'gds_api/need_api'
 require 'gds_api/organisations'
 
 class Organisation
-  attr_reader :id, :content_id, :name, :abbreviation, :status
+  attr_reader :content_id, :title, :internal_name, :publication_state, :base_path
 
   def self.cache
     @cache ||= LRUCache.new(ttl: 1.hour)
@@ -13,26 +13,20 @@ class Organisation
   end
 
   def initialize(atts)
-    @id = atts[:details][:slug]
     @content_id = atts[:content_id]
-    @name = atts[:title]
-    @abbreviation = atts[:details][:abbreviation]
-    @status = atts[:details][:govuk_status]
+    @title = atts[:title]
+    @internal_name = atts[:internal_name]
+    @publication_state = atts[:publication_state]
+    @base_path = atts[:publication_state]
   end
 
   def to_option
-    [name_with_abbreviation_and_status, id]
+    [title_and_publication_state, content_id]
   end
 
-  def name_with_abbreviation_and_status
-    if abbreviation.present? && abbreviation != name
-      # Use square brackets around the abbreviation
-      # as Chosen doesn't like matching with
-      # parentheses at the start of a word
-      "#{name} [#{abbreviation}] (#{status})"
-    else
-      "#{name} (#{status})"
-    end
+  def title_and_publication_state
+    suffix = (publication_state == "draft" ? " (draft)" : "")
+    "#{title}#{suffix}"
   end
 
   def self.to_options
@@ -52,12 +46,12 @@ class Organisation
 
   private
   def self.load_organisations
-    (organisations || []).map {|atts|
-      self.new(atts.deep_symbolize_keys)
+    (organisations || []).map { |atts|
+      new(atts.deep_symbolize_keys)
     }
   end
 
   def self.organisations
-    GdsApi::Organisations.new(Plek.current.find('whitehall-admin')).organisations.with_subsequent_pages.to_a
+    Maslow.publishing_api_v2.get_linkables(document_type: "organisation")
   end
 end
