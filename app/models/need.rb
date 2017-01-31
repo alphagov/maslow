@@ -289,6 +289,8 @@ class Need
   end
 
   def save
+    strip_newline_from_textareas(publishing_api_payload)
+
     response = Maslow.publishing_api_v2.put_content(
       content_id,
       publishing_api_payload
@@ -443,7 +445,7 @@ private
   def strip_newline_from_textareas(attrs)
     # Rails prepends a newline character into the textarea fields in the form.
     # Strip these so that we don't send them to the Need API.
-    %w(legislation other_evidence).each do |field|
+    %i(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
   end

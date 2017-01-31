@@ -499,42 +499,43 @@ class NeedTest < ActiveSupport::TestCase
 
   context "updating needs" do
     setup do
-      need_hash = {
-        "content_id" => "2a0173df-7483-411c-abc7-4e648625eafe",
-        "need_id" => 100001,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things",
-      }
-      @need = Need.new(need_hash)
+      @need = Need.need_from_publishing_api_payload(create(:need_content_item))
     end
 
     context "updating fields" do
       should "update fields" do
-        @need.update(
-          "impact" => "Endangers people",
-          "yearly_searches" => 50000
-        )
+        @need.update({
+          impact: "Endangers people",
+          yearly_searches: 50000
+        })
 
-        assert_equal "person", @need.role
-        assert_equal "do things", @need.goal
-        assert_equal "good things", @need.benefit
+        stub_publishing_api_put_content(@need.content_id, {})
+        stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
+        @need.save
+
+        assert_equal "relative of a deceased person", @need.role
+        assert_equal "find out if an estate is claimable and how to make a claim on an estate", @need.goal
+        assert_equal "claim my entitlement", @need.benefit
         assert_equal "Endangers people", @need.impact
         assert_equal 50000, @need.yearly_searches
       end
 
       should "strip leading newline characters from textareas" do
-        @need.update(
-          "legislation" => "\nRemove the newline from legislation",
-          "other_evidence" => "\nRemove the newline from other_evidence"
-        )
+        @need.update({
+          "legislation": "\nRemove the newline from legislation",
+          "other_evidence": "\nRemove the newline from other_evidence"
+        })
+
+        stub_publishing_api_put_content(@need.content_id, {})
+        stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
+        @need.save
+
         assert_equal "Remove the newline from legislation", @need.legislation
         assert_equal "Remove the newline from other_evidence", @need.other_evidence
       end
     end
 
     should "call the Publishing API" do
-      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
 
       all_request_fields = Need::ALLOWED_FIELDS.each_with_object({}) do |field, hash|
         hash[field] = nil
@@ -558,6 +559,7 @@ class NeedTest < ActiveSupport::TestCase
       @need.update(update_hash)
 
       stub_publishing_api_put_content(@need.content_id, expected_request, body: {})
+      stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
 
       @need.save
     end
