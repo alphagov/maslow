@@ -161,7 +161,24 @@ class NeedsController < ApplicationController
     explanation = nil
 
     if params.key? "duplicate_of"
-      explanation = "Duplicate of #{params["duplicate_of"]}"
+      duplicate_content_id = params["duplicate_of"]
+
+      if duplicate_content_id == @need.content_id
+        flash[:error] = "Need cannot be a duplicate of itself"
+        redirect_to actions_need_path(@need.content_id)
+        return
+      end
+
+      begin
+        # Check the need exists
+        Need.find(duplicate_content_id)
+      rescue Need::NotFound
+        flash[:error] = "Duplicate need not found"
+        redirect_to actions_need_path(@need.content_id)
+        return
+      end
+
+      explanation = "This need is a duplicate of: [embed:link:#{params["duplicate_of"]}]"
     else
       explanation = params["explanation"]
     end
