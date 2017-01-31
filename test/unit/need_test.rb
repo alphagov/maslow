@@ -605,29 +605,22 @@ class NeedTest < ActiveSupport::TestCase
     end
   end
 
-  context "reopening needs" do
-    setup do
-      need_hash = {
-        "id" => 100002,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things",
-        "duplicate_of" => 100001
-      }
-      @need = Need.new(need_hash)
-    end
+  context "reopening closed needs" do
+    should "call Publishing API with the correct values" do
+      need = create(:need_content_item,
+        content_id: "f844c60e-05f9-4585-9c0f-fd48099ce81b",
+        publication_state: "unpublished")
 
-    should "call Need API with the correct values" do
-      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
-      GdsApi::NeedApi.any_instance.expects(:reopen).once
-        .with(100002, {
-          "author" => {
-            "name" => "O'Brien",
-            "email" => "obrien@alphagov.co.uk",
-            "uid" => "user-1234"
-          }
-        })
-      @need.reopen_as(author)
+      need_record = Need.need_from_publishing_api_payload(need)
+      need_from_publishing_api = need_record.send(:publishing_api_payload)
+
+      stub_publishing_api_put_content(need["content_id"], need_from_publishing_api)
+      stub_publishing_api_patch_links(need["content_id"], links: { organisations: [] })
+      stub_publishing_api_publish(need["content_id"], update_type: "major")
+
+      need_record.publish
+
+      assert_publishing_api_publish(need["content_id"], update_type: "major")
     end
   end
 end
