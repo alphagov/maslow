@@ -31,6 +31,34 @@ module NeedHelper
     name.titleize
   end
 
+  def render_unpublishing_explanation(need)
+    explanation = need.unpublishing["explanation"]
+
+    explanation_link_match_data = /\[embed:link:\s*(.*?)\s*\]/.match(explanation)
+
+    if explanation_link_match_data.nil?
+      links = []
+    else
+      links = explanation_link_match_data.captures.map do |content_id|
+        begin
+          need = Need.find(content_id)
+          {
+            content_id: content_id,
+            title: need.title,
+            url: need_path(content_id)
+          }
+        rescue Need::NotFound
+          {
+            content_id: content_id,
+            title: "an unknown need",
+          }
+        end
+      end
+    end
+
+    Govspeak::Document.new(explanation, links: links).to_html.html_safe
+  end
+
   # If no criteria present, insert a blank
   # one.
   def criteria_with_blank_value(criteria)
