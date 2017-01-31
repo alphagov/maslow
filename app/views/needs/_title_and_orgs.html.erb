@@ -2,7 +2,7 @@
   <% if @need.organisations.any? %>
     <p class="need-organisations">
       <%= @need.organisations.map do |o| %>
-        <%= o.name %>
+        <%= o.title %>
       <% end.join(", ") %>
     </p>
   <% end %>
