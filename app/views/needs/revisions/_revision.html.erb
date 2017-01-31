@@ -1,7 +1,7 @@
 <li class="revision">
   <h3 class="revision-title">
-    <%= Time.zone.parse(revision["created_at"]).to_s(:govuk_date) %> &mdash;
     <%= revision["action_type"].capitalize %> by
+    <%= Time.zone.parse(revision["updated_at"]).to_s(:govuk_date) %> &mdash;
     <% if revision["author"].present? -%>
       <%= revision["author"]["name"]%>
       <% if revision["author"]["email"].present? %>
