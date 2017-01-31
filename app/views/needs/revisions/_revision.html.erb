@@ -1,15 +1,6 @@
 <li class="revision">
   <h3 class="revision-title">
     <%= Time.zone.parse(revision["updated_at"]).to_s(:govuk_date) %> &mdash;
-    by
-    <% if revision["author"].present? -%>
-      <%= revision["author"]["name"]%>
-      <% if revision["author"]["email"].present? %>
-        &lt;<%= revision["author"]["email"] %>&gt;
-      <% end %>
-    <% else %>
-      unknown author
-    <% end %>
   </h3>
 
   <ul class="changes">
