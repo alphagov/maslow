@@ -189,17 +189,20 @@ class Need
     self.class.move_details_to_top_level(response)
   end
 
+  def load_organisation_ids
+    parsed_content =
+      Maslow.publishing_api_v2.get_links(@content_id).parsed_content
+    @organisation_ids = parsed_content["links"]["organisations"] || []
+  end
+
   def organisations
-    org_response = Maslow.publishing_api_v2.get_expanded_links(@content_id)
-    response = org_response["expanded_links"]["organisations"] || []
-    @organisations ||= response.map do |org|
-      Organisation.new(
-        title: org.deep_symbolize_keys[:title],
-        content_id: org.deep_symbolize_keys[:content_id],
-        details: {}
-      )
+    # There is currently no way to get organisations data from the
+    # Publishing API when getting the content, so to get the
+    # Organisation instances for a Need, filter the list of all
+    # organisations (which should be cached).
+    @organisations ||= Organisation.all.select do |organisation|
+      @organisation_ids.include? organisation.content_id
     end
-    @organisations
   end
 
   def add_more_criteria
@@ -347,6 +350,7 @@ private
   def self.need_from_publishing_api_payload(attributes)
     attributes = self.move_details_to_top_level(attributes)
     need = Need.new(attributes)
+    need.load_organisation_ids
     need.persisted = true
 
     need
