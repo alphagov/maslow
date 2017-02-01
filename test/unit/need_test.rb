@@ -499,25 +499,30 @@ class NeedTest < ActiveSupport::TestCase
 
   context "updating needs" do
     setup do
-      @need = Need.need_from_publishing_api_payload(create(:need_content_item))
+      @need_content_item = create(:need_content_item)
+      publishing_api_has_links({
+        content_id: @need_content_item["content_id"],
+        links: { organisations:[] }
+      })
+      @need = Need.need_from_publishing_api_payload(@need_content_item)
     end
 
     context "updating fields" do
-      should "update fields" do
+      should "update fields and send to the Publishing API" do
         @need.update({
           impact: "Endangers people",
           yearly_searches: 50000
         })
 
-        stub_publishing_api_put_content(@need.content_id, {})
-        stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
+        stub_publishing_api_put_content(@need_content_item["content_id"], @need_content_item)
+        stub_publishing_api_patch_links(@need_content_item["content_id"], links: { organisations: [] })
         @need.save
 
-        assert_equal "relative of a deceased person", @need.role
         assert_equal "find out if an estate is claimable and how to make a claim on an estate", @need.goal
-        assert_equal "claim my entitlement", @need.benefit
         assert_equal "Endangers people", @need.impact
         assert_equal 50000, @need.yearly_searches
+
+        assert_publishing_api_put_content(@need_content_item["content_id"], @need.publishing_api_payload)
       end
 
       should "strip leading newline characters from textareas" do
@@ -533,35 +538,6 @@ class NeedTest < ActiveSupport::TestCase
         assert_equal "Remove the newline from legislation", @need.legislation
         assert_equal "Remove the newline from other_evidence", @need.other_evidence
       end
-    end
-
-    should "call the Publishing API" do
-
-      all_request_fields = Need::ALLOWED_FIELDS.each_with_object({}) do |field, hash|
-        hash[field] = nil
-      end
-      update_hash = {
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "excellent things",
-        "organisation_ids" => [],
-        "justifications" => [],
-        "met_when" => [],
-      }
-
-      expected_request = all_request_fields
-                           .merge(update_hash)
-                           .except("content_id", "status")
-
-      expected_request["author"] = @need.send(:author_atts, author)
-      expected_request["need_id"] = @need.need_id
-
-      @need.update(update_hash)
-
-      stub_publishing_api_put_content(@need.content_id, expected_request, body: {})
-      stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
-
-      @need.save
     end
   end
 
