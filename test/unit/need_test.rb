@@ -280,11 +280,24 @@ class NeedTest < ActiveSupport::TestCase
       request_params = {
         document_type: 'need',
         per_page: 50,
-        publishing_app: 'need-api',
         fields: ['content_id', 'need_ids', 'details', 'publication_state'],
         locale: 'en',
-        order: '-public_updated_at'
+        order: '-updated_at'
       }
+
+      publishing_api_has_links({
+        content_id: @need_attributes_1["content_id"],
+        links: { organisations:[] }
+      })
+      publishing_api_has_links({
+        content_id: @need_attributes_2["content_id"],
+        links: { organisations:[] }
+      })
+      publishing_api_has_links({
+        content_id: @need_attributes_3["content_id"],
+        links: { organisations:[] }
+      })
+
 
       needs = [
         Need.new(@need_attributes_1["details"]),
