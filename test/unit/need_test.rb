@@ -642,9 +642,11 @@ class NeedTest < ActiveSupport::TestCase
 
   context "reopening closed needs" do
     should "call Publishing API with the correct values" do
-      need = create(:need_content_item,
+      need = create(
+        :need_content_item,
         content_id: "f844c60e-05f9-4585-9c0f-fd48099ce81b",
-        publication_state: "unpublished")
+        publication_state: "unpublished"
+      )
 
       publishing_api_has_links({
         content_id: need["content_id"],
