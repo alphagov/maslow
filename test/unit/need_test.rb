@@ -549,7 +549,17 @@ class NeedTest < ActiveSupport::TestCase
           "other_evidence": "\nRemove the newline from other_evidence"
         })
 
-        stub_publishing_api_put_content(@need.content_id, {})
+        stub_publishing_api_put_content(
+          @need.content_id,
+          @need.send(:publishing_api_payload),
+          response_hash = {
+            body: {
+              "content_id": @need_content_item["content_id"],
+              "legislation": "\nRemove the newline from legislation",
+              "other_evidence": "\nRemove the newline from other_evidence"
+            }
+          }
+        )
         stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
         @need.save
 
