@@ -118,8 +118,6 @@ class Need
   def initialize(attributes = {})
     ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
 
-    strip_newline_from_textareas(attributes)
-
     default_values = {
       "content_id" => SecureRandom.uuid,
       "met_when" => [],
@@ -227,6 +225,7 @@ class Need
 
   def update(attrs)
     strip_newline_from_textareas(attrs)
+
     attrs.each do |field, value|
       if FIELDS_WITH_ARRAY_VALUES.include?(field)
         case field
