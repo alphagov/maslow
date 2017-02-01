@@ -112,9 +112,19 @@ class NeedTest < ActiveSupport::TestCase
 
     context "given valid attributes" do
       should "make a request to the Publishing API" do
+        publishing_api_has_links({
+          content_id: @need_content_item["content_id"],
+          links: { organisations:[] }
+        })
         need = Need.need_from_publishing_api_payload(@need_content_item)
 
-        stub_publishing_api_put_content(need.content_id, need.send(:publishing_api_payload))
+        stub_publishing_api_put_content(
+          need.content_id,
+          need.send(:publishing_api_payload),
+          body: {
+            content_id: @need_content_item["content_id"]
+          }
+        )
         stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
 
         assert need.save
@@ -312,6 +322,14 @@ class NeedTest < ActiveSupport::TestCase
       multipage_response["page"]= 1
 
       GdsApi::PublishingApiV2.any_instance.expects(:get_content_items).once.returns(multipage_response)
+
+      @stub_publishing_api_response["results"].each do |need|
+        publishing_api_has_links({
+          content_id: need["content_id"],
+          links: { organisations:[] }
+        })
+      end
+
       need_list = Need.list
 
       assert_equal 2, need_list.pages
@@ -330,6 +348,17 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "return an array of matching Need objects" do
+
+      publishing_api_has_links({
+        content_id: @need1["content_id"],
+        links: { organisations:[] }
+      })
+
+      publishing_api_has_links({
+        content_id: @need2["content_id"],
+        links: { organisations:[] }
+      })
+
       needs = Need.by_content_ids(@need1["content_id"], @need2["content_id"])
 
       assert_equal 2, needs.size
@@ -364,6 +393,11 @@ class NeedTest < ActiveSupport::TestCase
       )
 
       publishing_api_has_item(need_content_item)
+      publishing_api_has_links({
+        content_id: content_id,
+        links: { organisations:[] }
+      })
+
 
       need = Need.find(content_id)
 
@@ -594,6 +628,11 @@ class NeedTest < ActiveSupport::TestCase
         }
       )
 
+      publishing_api_has_links({
+        content_id: need_content_item_duplicate["content_id"],
+        links: { organisations:[] }
+      })
+
       need = Need.need_from_publishing_api_payload(need_content_item_duplicate)
       need.unpublish(explanation)
 
@@ -606,6 +645,11 @@ class NeedTest < ActiveSupport::TestCase
       need = create(:need_content_item,
         content_id: "f844c60e-05f9-4585-9c0f-fd48099ce81b",
         publication_state: "unpublished")
+
+      publishing_api_has_links({
+        content_id: need["content_id"],
+        links: { organisations:[] }
+      })
 
       need_record = Need.need_from_publishing_api_payload(need)
       need_from_publishing_api = need_record.send(:publishing_api_payload)
