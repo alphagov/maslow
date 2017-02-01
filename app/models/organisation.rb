@@ -17,7 +17,7 @@ class Organisation
     @title = atts[:title]
     @internal_name = atts[:internal_name]
     @publication_state = atts[:publication_state]
-    @base_path = atts[:publication_state]
+    @base_path = atts[:base_path]
   end
 
   def to_option
