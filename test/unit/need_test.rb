@@ -656,7 +656,13 @@ class NeedTest < ActiveSupport::TestCase
       need_record = Need.need_from_publishing_api_payload(need)
       need_from_publishing_api = need_record.send(:publishing_api_payload)
 
-      stub_publishing_api_put_content(need["content_id"], need_from_publishing_api)
+      stub_publishing_api_put_content(
+        need["content_id"],
+        need_from_publishing_api,
+        body: {
+          content_id: need["content_id"]
+        }
+      )
       stub_publishing_api_patch_links(need["content_id"], links: { organisations: [] })
       stub_publishing_api_publish(need["content_id"], update_type: "major")
 
