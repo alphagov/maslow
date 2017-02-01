@@ -411,7 +411,6 @@ class NeedTest < ActiveSupport::TestCase
         links: { organisations:[] }
       })
 
-
       need = Need.find(content_id)
 
       assert_equal content_id, need.content_id
@@ -424,24 +423,35 @@ class NeedTest < ActiveSupport::TestCase
     should "return organisations for a need" do
       first_organisation_content_id = SecureRandom.uuid
       second_organisation_content_id = SecureRandom.uuid
-      response = {
-        "expanded_links" => {
-          "organisations" => [
-            {
-              title: "Her Majesty's Revenue and Customs",
-              content_id: first_organisation_content_id
-            },
-            {
-              title: "Department of Transport",
-              content_id: second_organisation_content_id
-            }
+      response = [
+        {
+          title: "Her Majesty's Revenue and Customs",
+          content_id: first_organisation_content_id
+        },
+        {
+          title: "Department of Transport",
+          content_id: second_organisation_content_id
+        }
+      ]
+
+      content_id = SecureRandom.uuid
+      need_content_item = create(:need_content_item, content_id: content_id)
+      publishing_api_has_item(need_content_item)
+
+      publishing_api_has_links({
+        content_id: content_id,
+        links: {
+          organisations:[
+            first_organisation_content_id,
+            second_organisation_content_id
           ]
         }
-      }
-      content_id = SecureRandom.uuid
-      publishing_api_has_item(create(:need_content_item, content_id: content_id))
+      })
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_expanded_links).once.with(content_id).returns(response)
+      publishing_api_has_linkables(
+        response,
+        document_type: "organisation",
+      )
 
       need = Need.find(content_id)
       organisations = need.organisations
