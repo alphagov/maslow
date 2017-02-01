@@ -499,7 +499,10 @@ class NeedTest < ActiveSupport::TestCase
 
   context "updating needs" do
     setup do
-      @need_content_item = create(:need_content_item)
+      @need_content_item = create(
+        :need_content_item,
+        content_id: "3e5aa539-79a1-4714-8714-4e3037f981bd"
+      )
       publishing_api_has_links({
         content_id: @need_content_item["content_id"],
         links: { organisations:[] }
@@ -509,20 +512,35 @@ class NeedTest < ActiveSupport::TestCase
 
     context "updating fields" do
       should "update fields and send to the Publishing API" do
-        @need.update({
+        @need.update(
           impact: "Endangers people",
           yearly_searches: 50000
-        })
+        )
 
-        stub_publishing_api_put_content(@need_content_item["content_id"], @need_content_item)
-        stub_publishing_api_patch_links(@need_content_item["content_id"], links: { organisations: [] })
+        stub_publishing_api_put_content(
+          @need_content_item["content_id"],
+          @need.send(:publishing_api_payload),
+          response_hash = {
+            body: {
+              content_id: @need_content_item["content_id"],
+              impact: "Endangers people",
+              yearly_searches: 50000
+            }
+          }
+        )
+
+        stub_publishing_api_patch_links(
+          @need_content_item["content_id"],
+          links: { organisations: [] }
+        )
+
         @need.save
 
         assert_equal "find out if an estate is claimable and how to make a claim on an estate", @need.goal
         assert_equal "Endangers people", @need.impact
         assert_equal 50000, @need.yearly_searches
 
-        assert_publishing_api_put_content(@need_content_item["content_id"], @need.publishing_api_payload)
+        assert_publishing_api_put_content(@need_content_item["content_id"], @need.send(:publishing_api_payload))
       end
 
       should "strip leading newline characters from textareas" do
