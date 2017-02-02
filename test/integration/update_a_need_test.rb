@@ -15,9 +15,9 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           per_page: 50
         )
       )
-      publishing_api_has_expanded_links(
-        content_id: content_item["content_id"],
-        expanded_links: {
+      publishing_api_has_links(
+        content_id: @content_item["content_id"],
+        links: {
           organisations: []
         }
       )

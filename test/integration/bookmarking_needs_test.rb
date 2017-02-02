@@ -19,9 +19,9 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
         per_page: 50
       )
     )
-    publishing_api_has_expanded_links(
+    publishing_api_has_links(
       content_id: @need_content_item["content_id"],
-      expanded_links: {}
+      links: {}
     )
     publishing_api_has_item(@need_content_item)
   end

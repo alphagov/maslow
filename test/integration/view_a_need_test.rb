@@ -24,9 +24,9 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       link_type: "meets_user_needs",
       fields: ["title", "base_path", "document_type"]
     )
-    publishing_api_has_expanded_links(
+    publishing_api_has_links(
       content_id: @content_item["content_id"],
-      expanded_links: {
+      links: {
         organisations: []
       }
     )

@@ -20,9 +20,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
         )
       )
       need_content_items.each do |need_content_item|
-        publishing_api_has_expanded_links(
+        publishing_api_has_links(
           content_id: need_content_item["content_id"],
-          expanded_links: {
+          links: {
             organisations: []
           }
         )
