@@ -16,18 +16,10 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     setup do
       content_item = create(:need_content_item)
       publishing_api_has_content(
-        [content_item],
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state"
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
+        [@content_item],
+        Need.default_options.merge(
+          per_page: 50
+        )
       )
       publishing_api_has_expanded_links(
         content_id: content_item["content_id"],

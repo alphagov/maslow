@@ -307,13 +307,9 @@ class NeedTest < ActiveSupport::TestCase
 
       publishing_api_has_content(
         needs,
-        document_type: 'need',
-        page: 1,
-        per_page: 50,
-        publishing_app: 'need-api',
-        fields: ['content_id', 'need_ids', 'details', 'publication_state'],
-        locale: 'en',
-        order: '-public_updated_at'
+        Need.default_options.merge(
+          per_page: 50
+        )
       )
 
       GdsApi::PublishingApiV2.any_instance.expects(:get_content_items)

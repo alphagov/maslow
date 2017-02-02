@@ -16,17 +16,9 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
     )
     publishing_api_has_content(
       [@need_content_item],
-      document_type: "need",
-      fields: [
-      "content_id",
-      "details",
-        "need_ids",
-        "publication_state"
-      ],
-      locale: "en",
-      order: "-public_updated_at",
-      per_page: 50,
-      publishing_app: "need-api"
+      Need.default_options.merge(
+        per_page: 50
+      )
     )
     publishing_api_has_expanded_links(
       content_id: @need_content_item["content_id"],

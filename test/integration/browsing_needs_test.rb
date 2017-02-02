@@ -16,17 +16,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
       need_content_items = FactoryGirl.create_list(:need_content_item, 3)
       publishing_api_has_content(
         need_content_items,
-        document_type: "need",
-        fields: [
-          "content_id",
-          "details",
-          "need_ids",
-          "publication_state",
-        ],
-        locale: "en",
-        order: "-public_updated_at",
-        per_page: 50,
-        publishing_app: "need-api"
+        Need.default_options.merge(
+          per_page: 50
+        )
       )
       need_content_items.each do |need_content_item|
         publishing_api_has_expanded_links(
@@ -67,17 +59,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   should "be able to navigate between pages of results" do
     publishing_api_has_content(
       FactoryGirl.create(:need_content_item),
-      document_type: "need",
-      fields: [
-        "content_id",
-        "details",
-        "need_ids",
-        "publication_state",
-      ],
-      locale: "en",
-      order: "-public_updated_at",
-      per_page: 50,
-      publishing_app: "need-api"
+      Need.default_options.merge(
+        per_page: 50
+      )
     )
 
     visit "/needs"

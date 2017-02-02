@@ -8,18 +8,10 @@ class BookmarkletTest < ActionDispatch::IntegrationTest
     organisations_api_has_organisations([])
     publishing_api_has_content(
       [],
-      document_type: "need",
-      fields: [
-      "content_id",
-      "details",
-        "need_ids",
-        "publication_state"
-      ],
-      locale: "en",
-      order: "-public_updated_at",
-      per_page: 50,
-      publishing_app: "need-api"
+      Need.default_options.merge(
+        per_page: 50
       )
+    )
   end
 
   context "on the navbar" do
