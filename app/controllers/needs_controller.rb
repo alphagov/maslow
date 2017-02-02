@@ -56,7 +56,7 @@ class NeedsController < ApplicationController
     authorize! :update, Need
     @need = load_need
     if @need.unpublished?
-      redirect_to need_url(@need.need_id),
+      redirect_to need_url(@need.content_id),
                   notice: "Closed needs cannot be edited",
                   status: 303
       return
