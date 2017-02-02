@@ -304,8 +304,6 @@ class Need
         "organisations": organisation_ids
       }
     )
-
-    Need.need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPErrorResponse => err
     if err.error_details.is_a?(Hash)
       message = err.error_details.dig "error", "message"
