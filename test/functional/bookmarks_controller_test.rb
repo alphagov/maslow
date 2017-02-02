@@ -8,10 +8,11 @@ class BookmarksControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
     publishing_api_has_item(need_content_item)
-    publishing_api_has_expanded_links(
-      content_id: need_content_item["content_id"],
-      expanded_links: {
-        organisations: []
+    publishing_api_has_linkables([], document_type: "organisation")
+    publishing_api_has_links(
+      "content_id" => need_content_item["content_id"],
+      "links" => {
+        "organisations" => []
       }
     )
     organisations_api_has_organisations({})
