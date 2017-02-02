@@ -1,12 +1,10 @@
 require_relative '../integration_test_helper'
 
 class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::Organisations
   include GdsApi::TestHelpers::PublishingApiV2
 
   setup do
     login_as_stub_user
-    organisations_api_has_organisations([])
     @need_content_item = create(:need_content_item,
       content_id: "c1573261-b973-467f-aa57-5a24435fa295", # Randomly generated.
       details: {
@@ -14,6 +12,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
         need_id: 10001,
       }
     )
+    publishing_api_has_linkables([], document_type: "organisation")
     publishing_api_has_content(
       [@need_content_item],
       Need.default_options.merge(

@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 require 'gds_api/test_helpers/publishing_api_v2'
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
@@ -8,12 +7,12 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
 
   setup do
     login_as_stub_user
-    organisations_api_has_organisations([])
   end
 
   context "viewing the list of needs" do
     should "display a table of all the needs" do
       need_content_items = FactoryGirl.create_list(:need_content_item, 3)
+      publishing_api_has_linkables([], document_type: "organisation")
       publishing_api_has_content(
         need_content_items,
         Need.default_options.merge(

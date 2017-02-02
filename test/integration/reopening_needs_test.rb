@@ -1,5 +1,4 @@
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 
 class ReopeningNeedsTest < ActionDispatch::IntegrationTest
   def need_hash
@@ -16,7 +15,6 @@ class ReopeningNeedsTest < ActionDispatch::IntegrationTest
       "duplicate_of" => nil
     })
     login_as(stub_user)
-    organisations_api_has_organisations({})
     need_api_has_needs([need_hash]) # For need list
     need_api_has_need(need_hash) # For individual need
     need_api_has_need(@canonical) # For individual need

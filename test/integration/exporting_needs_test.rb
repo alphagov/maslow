@@ -1,5 +1,4 @@
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 
 class ExportingNeedsTest < ActionDispatch::IntegrationTest
   def filter_needs
@@ -19,7 +18,6 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
   context "exporting a filtered list of needs" do
     context "no needs after filtering" do
       setup do
-        organisations_api_has_organisations(["department-for-education"])
         need_api_has_needs([])
         need_api_has_needs_for_organisation("department-for-education", [])
       end
@@ -36,7 +34,6 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
 
     context "one need after filtering" do
       setup do
-        organisations_api_has_organisations(["department-for-education"])
         @needs = [
           minimal_example_need(
             "id" => "100001",
@@ -64,7 +61,6 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
 
     context "several needs with met when criteria" do
       setup do
-        organisations_api_has_organisations(["department-for-education"])
         @needs = [
           minimal_example_need(
             "id" => "100001",

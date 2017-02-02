@@ -1,5 +1,4 @@
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 
 class FilteringNeedsTest < ActionDispatch::IntegrationTest
   setup do
@@ -8,12 +7,6 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
   context "filtering the list of needs" do
     setup do
-      organisations_api_has_organisations([
-        "department-for-education",
-        "hm-passport-office",
-        "home-office"
-      ])
-
       @needs = [
         minimal_example_need(
           "id" => "10001",

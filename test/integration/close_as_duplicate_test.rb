@@ -4,7 +4,6 @@ require_relative '../integration_test_helper'
 class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_editor
-    organisations_api_has_organisations([])
     @need = minimal_example_need(
       "id" => "100001",
       "goal" => "apply for a primary school place",

@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 require 'gds_api/test_helpers/publishing_api_v2'
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
@@ -9,12 +8,9 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
   setup do
     login_as_stub_user
-    organisations_api_has_organisations([
-      "driver-vehicle-licensing-agency",
-      "driving-standards-agency"
-    ])
 
     @content_item = create(:need_content_item)
+    publishing_api_has_linkables([], document_type: "organisation")
     publishing_api_has_content(
       [@content_item],
       Need.default_options.merge(

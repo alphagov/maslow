@@ -1,10 +1,7 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
-require 'gds_api/test_helpers/organisations'
 
 class NotesControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::Organisations
-
   setup do
     login_as_stub_editor
   end

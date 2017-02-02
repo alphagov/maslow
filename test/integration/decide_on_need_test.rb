@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 
 class DecideOnNeedTest < ActionDispatch::IntegrationTest
   def need_hash
@@ -19,11 +18,6 @@ class DecideOnNeedTest < ActionDispatch::IntegrationTest
 
   setup do
     login_as_stub_admin
-    organisations_api_has_organisations([
-      "committee-on-climate-change",
-      "competition-commission",
-      "ministry-of-justice"
-    ])
   end
 
   context "marking a need as not valid" do

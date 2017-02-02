@@ -1,8 +1,6 @@
 require_relative '../integration_test_helper'
 
 class BookmarksControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::Organisations
-
   need_content_item = FactoryGirl.create(:need_content_item)
 
   setup do
@@ -15,7 +13,6 @@ class BookmarksControllerTest < ActionController::TestCase
         "organisations" => []
       }
     )
-    organisations_api_has_organisations({})
   end
 
   context "GET bookmarks" do
