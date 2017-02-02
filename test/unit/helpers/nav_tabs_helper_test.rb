@@ -7,7 +7,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
   attr_reader :current_user
 
   setup do
-    @need = Need.new({ "id" => 100001 })
+    @need = Need.new
   end
 
   context "for an editor" do
@@ -22,8 +22,8 @@ class NavTabsHelperTest < ActiveSupport::TestCase
                    tab_names_on_needs_page_for(@need)
     end
 
-    should "not include an Edit link if the need is duplicated" do
-      @need.duplicate_of = 12345
+    should "not include an Edit link if the need is unpublished" do
+      @need.publication_state = "unpublished"
       refute tab_names_on_needs_page_for(@need).include?("Edit")
     end
   end
