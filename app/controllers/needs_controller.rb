@@ -189,7 +189,7 @@ class NeedsController < ApplicationController
         notice: "Need withdrawn"
       )
     else
-      flash[:error] = "We had a problem updating the need’s status"
+      flash[:error] = "There was a problem updating the need’s status"
 
       redirect_to actions_need_path(@need.content_id)
     end
