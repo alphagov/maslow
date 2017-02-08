@@ -467,11 +467,13 @@ class NeedTest < ActiveSupport::TestCase
       need_content_item_1 = create(
         :need_content_item,
         content_id: content_id,
+        publication_state: "superseded",
         user_facing_version: 1
       )
       need_content_item_2 = create(
         :need_content_item,
         content_id: content_id,
+        publication_state: "superseded",
         details: {
           goal: "how to make a claim on an estate"
         },
@@ -513,7 +515,7 @@ class NeedTest < ActiveSupport::TestCase
       second_revision = need.revisions[1]
 
       assert_equal %w(publication_state), first_revision["changes"].keys
-      assert_equal ["draft", "published"], first_revision["changes"]["publication_state"]
+      assert_equal %w(superseded published), first_revision["changes"]["publication_state"]
       assert_equal %w(goal), second_revision["changes"].keys
       assert_equal(
         [
