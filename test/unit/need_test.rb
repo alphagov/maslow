@@ -519,11 +519,13 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal %w(publication_state), first_revision["changes"].keys
       assert_equal ["draft", "published"], first_revision["changes"]["publication_state"]
       assert_equal %w(goal), second_revision["changes"].keys
-      assert_equal [
-        "find out if an estate is claimable and how to make a claim on an estate",
-        "how to make a claim on an estate"
+      assert_equal(
+        [
+          "find out if an estate is claimable and how to make a claim on an estate",
+          "how to make a claim on an estate"
         ],
-      second_revision["changes"]["goal"]
+        second_revision["changes"]["goal"]
+      )
     end
 
     should "raise an error when need not found" do
