@@ -325,6 +325,14 @@ class Need
     @persisted
   end
 
+  def to_key
+    if persisted?
+      [content_id]
+    else
+      nil
+    end
+  end
+
   def status
     case publication_state
     when "published"
