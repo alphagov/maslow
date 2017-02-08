@@ -461,19 +461,6 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 303
     end
 
-    should "return a 422 response if save fails" do
-      @need.expects(:unpublish).returns(false)
-
-      put :unpublish,
-          content_id: @need.content_id,
-          need: { duplicate_of: @duplicate_need.content_id }
-
-      refute @controller.flash[:notice]
-      assert_equal "There was a problem updating the need’s status",
-                   @controller.flash[:error]
-      assert_response 422
-    end
-
     should "stop viewers from marking needs as duplicates" do
       login_as_stub_user
       put :unpublish,
