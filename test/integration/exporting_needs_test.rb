@@ -1,98 +1,80 @@
 require_relative '../integration_test_helper'
 
 class ExportingNeedsTest < ActionDispatch::IntegrationTest
-  def filter_needs
-    visit "/needs"
-    select("Department For Education [DFE]", from: "Filter needs by organisation:")
-    click_on_first_button("Filter")
-  end
-
-  def csv_file(n)
-    File.read Rails.root.join("test", "fixtures", "needs", "needs-#{n}.csv")
-  end
-
   setup do
     login_as_stub_user
+
+    links_url = %r{\A#{Plek.find('publishing-api')}/v2/links/}
+    stub_request(:get, links_url).to_return(
+      body: {
+        links: {
+          organisations: []
+        }
+      }.to_json
+    )
+    linkables_url = %r{\A#{Plek.find('publishing-api')}/v2/linkables}
+    stub_request(:get, linkables_url).to_return(
+      body: {}.to_json
+    )
   end
 
-  context "exporting a filtered list of needs" do
-    context "no needs after filtering" do
-      setup do
-        need_api_has_needs([])
-        need_api_has_needs_for_organisation("department-for-education", [])
-      end
-
-      should "return a csv with only headers" do
-        filter_needs
-
-        click_on("Export as CSV")
-
-        assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
-        assert_equal csv_file(1), page.source
-      end
+  context "no needs to export" do
+    setup do
+      publishing_api_has_content(
+        [],
+        Need.default_options.merge(
+          per_page: 50
+        )
+      )
     end
 
-    context "one need after filtering" do
-      setup do
-        @needs = [
-          minimal_example_need(
-            "id" => "100001",
-            "role" => "Foo",
-            "goal" => "Bar",
-            "benefit" => "Baz",
-            "organisations" => ["department-for-education"]
-          )
-        ]
-        need_api_has_needs(@needs)
-        need_api_has_needs_for_organisation("department-for-education", @needs)
-      end
+    should "return a csv with only headers" do
+      visit "/needs"
 
-      should "return a csv of the filtered needs" do
-        filter_needs
+      click_on("Export as CSV")
 
-        need_api_has_need(@needs[0])
+      assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
+      assert_equal(page.source.lines.count, 1)
+    end
+  end
 
-        click_on("Export as CSV")
-
-        assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
-        assert_equal(csv_file(2), page.source)
-      end
+  context "one need" do
+    setup do
+      publishing_api_has_content(
+        [create(:need_content_item)],
+        Need.default_options.merge(
+          per_page: 50
+        )
+      )
     end
 
-    context "several needs with met when criteria" do
-      setup do
-        @needs = [
-          minimal_example_need(
-            "id" => "100001",
-            "role" => "Foo",
-            "goal" => "Bar",
-            "benefit" => "Baz",
-            "organisations" => []
-          ),
-          minimal_example_need(
-            "id" => "100002",
-            "role" => "Foo",
-            "goal" => "Bar",
-            "benefit" => "Baz",
-            "organisations" => [],
-            "met_when" => %w(a b)
-          )
-        ]
-        need_api_has_needs(@needs)
-        need_api_has_needs_for_organisation("department-for-education", @needs)
-      end
+    should "return a csv of the needs" do
+      visit "/needs"
 
-      should "return a csv of the filtered needs" do
-        filter_needs
+      click_on("Export as CSV")
 
-        need_api_has_need(@needs[0])
-        need_api_has_need(@needs[1])
+      assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
+      assert_equal(page.source.lines.count, 2)
+    end
+  end
 
-        click_on("Export as CSV")
+  context "several needs with met when criteria" do
+    setup do
+      publishing_api_has_content(
+        create_list(:need_content_item, 3),
+        Need.default_options.merge(
+          per_page: 50
+        )
+      )
+    end
 
-        assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
-        assert_equal(csv_file(3), page.source)
-      end
+    should "return a csv of the needs" do
+      visit "/needs"
+
+      click_on("Export as CSV")
+
+      assert_equal "text/csv; charset=utf-8", page.response_headers["Content-Type"]
+      assert_equal(page.source.lines.count, 4)
     end
   end
 end
