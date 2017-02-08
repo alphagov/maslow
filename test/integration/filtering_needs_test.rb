@@ -7,57 +7,36 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
   context "filtering the list of needs" do
     setup do
-      @needs = [
-        minimal_example_need(
-          "id" => "10001",
-          "goal" => "apply for a primary school place",
-          "organisation_ids" => ["department-for-education"],
-          "organisations" => [
-            {
-              "id" => "department-for-education",
-              "name" => "Department for Education",
-              "abbreviation" => "DfE"
-            }
-          ],
-        ),
-        minimal_example_need(
-          "id" => "10002",
-          "goal" => "apply for a secondary school place",
-          "organisation_ids" => ["department-for-education"],
-          "organisations" => [
-            {
-              "id" => "department-for-education",
-              "name" => "Department for Education",
-              "abbreviation" => "DfE"
-            }
-          ],
-        ),
-        minimal_example_need(
-          "id" => "10003",
-          "goal" => "find out about becoming a British citizen primary",
-          "organisation_ids" => ["home-office", "hm-passport-office"],
-          "organisations" => [
-            {
-              "id" => "home-office",
-              "name" => "Home Office",
-            },
-            {
-              "id" => "hm-passport-office",
-              "name" => "HM Passport Office",
-            }
-          ],
-        )
-      ]
+      @needs = create_list(:need_content_item, 3)
 
-      need_api_has_needs(@needs)
-      need_api_has_needs_for_organisation("department-for-education", [@needs[0], @needs[1]])
-      need_api_has_needs_for_search("primary", [@needs[0], @needs[3]])
-      need_api_has_needs_for_search_and_filter("primary", "department-for-education", [@needs[0]])
+      [
+        "apply for a primary school place",
+        "apply for a secondary school place",
+        "find out about becoming a British citizen primary"
+      ].zip(@needs).each { |goal, x| x["details"]["goal"] = goal }
+
+      publishing_api_has_content(
+        @needs,
+        Need.default_options.merge(
+          per_page: 50
+        )
+      )
+      publishing_api_has_linkables([], document_type: "organisation")
+      @needs.each do |need|
+        publishing_api_has_links(content_id: need["content_id"], links: {})
+      end
+
+      publishing_api_has_content(
+        @needs.select { |x| x["details"]["goal"].include? "primary" },
+        Need.default_options.merge(
+          per_page: 50,
+          q: "primary"
+        )
+      )
     end
 
     should "display needs related to an organisation and filtered by text" do
       visit "/needs"
-      click_on_first_button("Filter")
 
       within "#needs" do
         assert page.has_text?("Apply for a primary school place")
