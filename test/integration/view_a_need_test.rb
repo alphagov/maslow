@@ -257,6 +257,11 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   end
 
   context "given a need which applies to all organisations" do
+    setup do
+      @content_item["details"]["applies_to_all_organisations"] = true
+      publishing_api_has_item(@content_item)
+    end
+
     should "show basic information about the need" do
       visit "/needs"
       click_on format_need_goal(@content_item["details"]["goal"])
