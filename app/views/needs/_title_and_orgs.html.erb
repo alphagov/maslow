@@ -1,9 +1,7 @@
 <header class="block-border add-bottom-margin">
   <% if @need.organisations.any? %>
     <p class="need-organisations">
-      <%= @need.organisations.map do |o| %>
-        <%= o.title %>
-      <% end.join(", ") %>
+      <%= @need.organisations.map(&:title).join(", ") %>
     </p>
   <% end %>
   <div class="relative">
