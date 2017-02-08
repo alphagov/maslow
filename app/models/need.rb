@@ -401,6 +401,8 @@ private
     slug = @goal.parameterize
     base_path = "/needs/#{slug}"
 
+    title_suffix = need_id ? " (#{need_id})" : ""
+
     {
       schema_name: "need",
       publishing_app: "maslow",
@@ -414,7 +416,7 @@ private
         }
       ],
       document_type: "need",
-      title: @goal,
+      title: "As a #{@role}, I need to #{@goal}, so that #{@benefit}#{title_suffix}",
       details: details
     }
   end
