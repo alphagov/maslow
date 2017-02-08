@@ -22,7 +22,7 @@ class NeedsController < ApplicationController
       format.html
       format.csv do
         send_data NeedsCsvPresenter.new(needs_url, @needs).to_csv,
-                  filename: "#{params['organisation_id']}.csv",
+                  filename: "needs.csv",
                   type: "text/csv; charset=utf-8"
       end
     end
