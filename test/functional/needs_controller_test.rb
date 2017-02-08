@@ -287,7 +287,7 @@ class NeedsControllerTest < ActionController::TestCase
     }
   end
 
-  context "PUT update" do
+  context "POST update" do
     setup do
       login_as_stub_editor
     end
@@ -388,49 +388,6 @@ class NeedsControllerTest < ActionController::TestCase
 
         post :publish, content_id: @stub_need.content_id
       end
-    end
-  end
-
-  context "POST update" do
-    context "given a draft need" do
-      setup do
-        @stub_need = Need.new(publication_state: "draft")
-      end
-
-      should "save the need as the current user" do
-        @stub_need.expects(:save).returns(true)
-
-        post :update, content_id: @stub_need.content_id
-      end
-
-      should "redirect to the need once complete" do
-        @stub_need.stubs(:save).returns(true)
-
-        post :update, content_id: @stub_need.content_id
-
-        refute @controller.flash[:error]
-        assert_redirected_to need_path(@stub_need.content_id)
-      end
-
-      should "redirect to the need with an error if the save fails" do
-        @stub_need.stubs(:save).returns(false)
-
-        post :update, content_id: @stub_need.content_id
-
-        refute @controller.flash[:notice]
-        assert_equal "There was a problem saving your need.",
-                     @controller.flash[:error]
-        assert_redirected_to need_path(@stub_need)
-      end
-    end
-
-    should "404 if a need isn't found" do
-      content_id = SecureRandom.uuid
-      Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
-
-      post :update, content_id: content_id
-
-      assert_response :not_found
     end
   end
 
