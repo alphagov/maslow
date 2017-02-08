@@ -202,34 +202,6 @@ class NeedTest < ActiveSupport::TestCase
       assert need.errors.has_key?(:impact)
     end
 
-    should "be invalid with a non-numeric value for yearly_user_contacts" do
-      need = Need.new(@atts.merge("yearly_user_contacts" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_user_contacts)
-    end
-
-    should "be invalid with a non-numeric value for yearly_site_views" do
-      need = Need.new(@atts.merge("yearly_site_views" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_site_views)
-    end
-
-    should "be invalid with a non-numeric value for yearly_need_views" do
-      need = Need.new(@atts.merge("yearly_need_views" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_need_views)
-    end
-
-    should "be invalid with a non-numeric value for yearly_searches" do
-      need = Need.new(@atts.merge("yearly_searches" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_searches)
-    end
-
     should "be valid with a blank value for yearly_user_contacts" do
       need = Need.new(@atts.merge("yearly_user_contacts" => ""))
 
