@@ -487,19 +487,15 @@ class NeedTest < ActiveSupport::TestCase
         user_facing_version: 3
       )
 
+      publishing_api_has_item(need_content_item_3)
       publishing_api_has_item(
         need_content_item_1,
-        version: need_content_item_1["user_facing_version"]
+        version: need_content_item_1["user_facing_version"].to_s
       )
       publishing_api_has_item(
         need_content_item_2,
-        version: need_content_item_2["user_facing_version"]
+        version: need_content_item_2["user_facing_version"].to_s
       )
-      publishing_api_has_item(
-        need_content_item_3,
-        version: need_content_item_3["user_facing_version"]
-      )
-      publishing_api_has_item(need_content_item_3)
 
       publishing_api_has_links({
         content_id: content_id,
