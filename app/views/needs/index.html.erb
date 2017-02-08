@@ -2,7 +2,6 @@
 <h1 class="page-title-with-border">All needs</h1>
 <div>
   <%= form_tag("/needs", method: "get", class: "form-search-needs form-inline add-vertical-margins") do %>
-    <%= hidden_field_tag "organisation_id", params["organisation_id"] %>
     <%= label_tag "q", "Search needs:" %>
     &nbsp;
     <%= search_field_tag("q", params["q"], class: "search-term form-control") %>
