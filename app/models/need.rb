@@ -453,13 +453,11 @@ private
   end
 
   def compute_changes(responses)
-    changes = {}
     responses.each_with_index do |current_version, index|
       index_of_previous_version = index + 1
       previous_version = responses[index_of_previous_version] || {}
-      changes[index] = changes(previous_version, current_version)
+      current_version["changes"] = changes(previous_version, current_version)
     end
-    save_changes(responses, changes)
   end
 
   def changes(previous, current)
@@ -475,12 +473,6 @@ private
   def changed_keys(current, previous)
     (current.keys | previous.keys).reject do |key|
       current[key] == previous[key]
-    end
-  end
-
-  def save_changes(responses, changes)
-    responses.each_with_index do |version, index|
-      version["changes"] = changes[index]
     end
   end
 end
