@@ -415,7 +415,6 @@ private
       ],
       document_type: "need",
       title: @goal,
-      description: "As a #{@role}, I need to #{@goal}, so that #{@benefit}",
       details: details
     }
   end
