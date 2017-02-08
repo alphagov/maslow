@@ -269,7 +269,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".the-need" do
-          role, goal, benefit = @content_item["details"].slice("role", "goal", "benefit")
+          role, goal, benefit = @content_item["details"].values_at("role", "goal", "benefit")
           assert page.has_content?(
                    "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
                  )
