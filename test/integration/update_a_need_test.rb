@@ -223,8 +223,8 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "handle 422 errors from the Publishing API" do
-      post_url = "#{Plek.find('publishing-api')}/v2/content/#{@content_item['content_id']}"
-      stub_request(:put, post_url).to_return(status: 422)
+      put_url = "#{Plek.find('publishing-api')}/v2/content/#{@content_item['content_id']}"
+      stub_request(:put, put_url).to_return(status: 422)
 
       visit('/needs')
 
