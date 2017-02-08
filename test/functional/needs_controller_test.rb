@@ -360,7 +360,7 @@ class NeedsControllerTest < ActionController::TestCase
       }
       put(:update, content_id: need.content_id, need: need_data)
 
-      assert_response 422
+      assert_response 500
     end
 
     should "stop viewers from updating needs" do

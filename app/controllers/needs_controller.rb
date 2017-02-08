@@ -115,12 +115,12 @@ class NeedsController < ApplicationController
         return
       else
         flash[:error] = "There was a problem saving your need."
+        render "edit", status: 500
       end
     else
       flash[:error] = "There were errors in the need form."
+      render "edit", status: 422
     end
-
-    render "edit", status: 422
   rescue Need::BasePathAlreadyInUse => err
     logger.error("content_id: #{err.content_id}")
 
