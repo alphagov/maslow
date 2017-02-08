@@ -229,6 +229,11 @@ class Need
     attrs.each do |field, value|
       if FIELDS_WITH_ARRAY_VALUES.include?(field)
         set_attribute(field, value)
+      elsif NUMERIC_FIELDS.include?(field)
+        send(
+          "#{field}=",
+          value.blank? ? nil : value.to_i
+        )
       else
         send("#{field}=", value)
       end
