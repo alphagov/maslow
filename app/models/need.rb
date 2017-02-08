@@ -228,12 +228,7 @@ class Need
 
     attrs.each do |field, value|
       if FIELDS_WITH_ARRAY_VALUES.include?(field)
-        case field
-        when "organisations", "met_when", "justifications", "organisation_ids"
-          set_attribute(field, value)
-        else
-          raise "attribute unknown: #{field}"
-        end
+        set_attribute(field, value)
       else
         send("#{field}=", value)
       end
