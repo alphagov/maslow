@@ -54,6 +54,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       test_need.update(
         role: "grandparent",
         benefit: "my grandchild can start school",
+        legislation: ""
       )
       payload = test_need.send(:publishing_api_payload)
 
