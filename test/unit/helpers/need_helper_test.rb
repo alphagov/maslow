@@ -128,14 +128,6 @@ class NeedHelperTest < ActiveSupport::TestCase
     end
   end
 
-  context "feedback_for_page" do
-    should "return correct support URL" do
-      GdsApi::Support.any_instance.expects(:feedback_url).once.with('/sample-item').returns('support?path=/sample-item')
-      artefact = OpenStruct.new(web_url: "http://www.dev.gov.uk/sample-item")
-      assert_equal('support?path=/sample-item', feedback_for_page(artefact))
-    end
-  end
-
   context "bookmark_icon" do
     should "not return bookmarked if need is not in bookmarks" do
       assert_equal "glyphicon-star-empty", bookmark_icon([10002], 10001)
