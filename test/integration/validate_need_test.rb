@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
 
-class DecideOnNeedTest < ActionDispatch::IntegrationTest
+class ValidateNeedTest < ActionDispatch::IntegrationTest
   def need_hash
     {
       "id" => "100001",

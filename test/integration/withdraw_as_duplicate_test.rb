@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
 
-class CloseAsDuplicateTest < ActionDispatch::IntegrationTest
+class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_editor
     @need = minimal_example_need(
