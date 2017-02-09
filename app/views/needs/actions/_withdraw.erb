@@ -5,7 +5,8 @@
     Mark this need as withdrawn.
   </small>
 </h2>
-<%= form_tag(unpublish_need_path(@need.content_id), method: "post") do %>
+<%= form_tag(actions_need_path(@need.content_id), method: "post") do %>
+  <%= hidden_field_tag("need_action", "unpublish") %>
 
   Please describe why this need is being withdrawn, example reasons include:
   <ul>

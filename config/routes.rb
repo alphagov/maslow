@@ -15,9 +15,7 @@ Rails.application.routes.draw do
     member do
       get :revisions
       get :actions
-      post :publish
-      post :discard
-      post :unpublish
+      post :actions
     end
   end
 

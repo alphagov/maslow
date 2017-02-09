@@ -20,8 +20,9 @@ link_to(
 render(
     :layout => "needs/actions/confirm_modal",
     :locals => {
-        :action => "Discard",
-        :path => method(:discard_need_path),
+        :action_label => "Discard",
+        :action => "discard",
+        :path => method(:actions_need_path),
     }
 ) do %>
 Please confirm that you wish to discard this need. You cannot undo

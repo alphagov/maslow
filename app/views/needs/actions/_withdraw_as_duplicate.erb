@@ -6,7 +6,8 @@
   </small>
 </h2>
 <%= form_tag(
-    unpublish_need_path(@need.content_id), method: "post") do %>
+    actions_need_path(@need.content_id), method: "post") do %>
+  <%= hidden_field_tag("need_action", "unpublish") %>
   <%=
   select_tag(
       :duplicate_of,

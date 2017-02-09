@@ -20,7 +20,7 @@
       </div>
 
       <%= form_tag(path.call(@need.content_id), method: "post") do %>
-
+        <%= hidden_field_tag("need_action", action) %>
         <div class="modal-body">
           <%= yield %>
         </div>
@@ -31,7 +31,7 @@
                   aria-hidden="true">
             Cancel
           </button>
-          <%= submit_tag(action, { 'class' => 'btn btn-lg btn-danger' }) %>
+          <%= submit_tag(action_label, { 'class' => 'btn btn-lg btn-danger' }) %>
         </div>
       <% end %>
     </div>

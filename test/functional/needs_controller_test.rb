@@ -104,7 +104,7 @@ class NeedsControllerTest < ActionController::TestCase
       assert_template :new
     end
 
-    should "return a 422 response if save fails" do
+    should "return a 500 response if save fails" do
       Need.any_instance.expects(:save).returns(false)
 
       need_data = {
@@ -114,7 +114,7 @@ class NeedsControllerTest < ActionController::TestCase
       }
       post(:create, need: need_data)
 
-      assert_response 422
+      assert_response 500
     end
 
     should "remove blank entries from justifications" do
@@ -386,7 +386,7 @@ class NeedsControllerTest < ActionController::TestCase
         Need.stubs(:find).with(@stub_need.content_id).returns(@stub_need)
         @stub_need.expects(:publish)
 
-        post :publish, content_id: @stub_need.content_id
+        post :actions, need_action: "publish", content_id: @stub_need.content_id
       end
     end
   end
@@ -435,7 +435,8 @@ class NeedsControllerTest < ActionController::TestCase
     should "unpublish the need" do
       @need.expects(:unpublish).returns(true)
 
-      put :unpublish,
+      put :actions,
+          need_action: "unpublish",
           content_id: @need.content_id,
           need: { duplicate_of: @duplicate_need.content_id }
     end
@@ -443,7 +444,8 @@ class NeedsControllerTest < ActionController::TestCase
     should "redirect to the need with a success message once complete" do
       @need.stubs(:unpublish).returns(true)
 
-      put :unpublish,
+      put :actions,
+          need_action: "unpublish",
           content_id: @need.content_id,
           need: { duplicate_of: @duplicate_need.content_id }
 
@@ -463,7 +465,8 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "stop viewers from marking needs as duplicates" do
       login_as_stub_user
-      put :unpublish,
+      put :actions,
+          need_action: "unpublish",
           content_id: @need.content_id,
           duplicate_of: @duplicate_need.content_id
       assert_redirected_to needs_path

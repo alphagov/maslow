@@ -36,6 +36,20 @@ class NeedsController < ApplicationController
   def actions
     authorize! :perform_actions_on, Need
     @need = load_need
+    return if request.get?
+
+    logger.info params
+    case params["need_action"]
+    when "publish"
+      publish
+    when "unpublish"
+      unpublish
+    when "discard"
+      discard
+    else
+      flash[:error] = "Unknown action: #{params['action']}"
+      render "actions", status: 422
+    end
   end
 
   def revisions
@@ -84,12 +98,12 @@ class NeedsController < ApplicationController
         return
       else
         flash[:error] = "There was a problem saving your need."
+        render "new", status: 500
       end
     else
       flash[:error] = "Please fill in the required fields."
+      render "new", status: 422
     end
-
-    render "new", status: 422
   rescue Need::BasePathAlreadyInUse => err
     logger.error("content_id: #{err.content_id}")
 
@@ -129,34 +143,36 @@ class NeedsController < ApplicationController
     render "new", status: 422
   end
 
+private
+
   def publish
     authorize! :publish, Need
-    @need = load_need
 
-    unless @need.publish
+    if @need.publish
+      redirect_to need_path(@need.content_id)
+    else
       flash[:error] = "A problem was encountered when publishing"
+      render :status => 500
     end
-
-    redirect_to need_path(@need.content_id)
   end
 
   def discard
     authorize! :publish, Need
     @need = load_need
 
-    unless @need.discard
+    if @need.discard
+      redirect_to(
+        needs_path,
+        notice: "Need discarded"
+      )
+    else
       flash[:error] = "A problem was encountered when publishing"
+      render :status => 500
     end
-
-    redirect_to(
-      needs_path,
-      notice: "Need discarded"
-    )
   end
 
   def unpublish
     authorize! :unpublish, Need
-    @need = load_need
 
     explanation = nil
 
@@ -165,7 +181,7 @@ class NeedsController < ApplicationController
 
       if duplicate_content_id == @need.content_id
         flash[:error] = "Need cannot be a duplicate of itself"
-        redirect_to actions_need_path(@need.content_id)
+        render :status => 422
         return
       end
 
@@ -174,7 +190,7 @@ class NeedsController < ApplicationController
         Need.find(duplicate_content_id)
       rescue Need::NotFound
         flash[:error] = "Duplicate need not found"
-        redirect_to actions_need_path(@need.content_id)
+        render :status => 422
         return
       end
 
@@ -190,12 +206,9 @@ class NeedsController < ApplicationController
       )
     else
       flash[:error] = "There was a problem updating the need’s status"
-
-      redirect_to actions_need_path(@need.content_id)
+      render :status => 500
     end
   end
-
-  private
 
   def redirect_url
     params["add_new"] ? new_need_path : need_url(@need.content_id)
