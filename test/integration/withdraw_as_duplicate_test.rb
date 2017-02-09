@@ -2,150 +2,114 @@
 require_relative '../integration_test_helper'
 
 class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
+  include NeedHelper
+
   setup do
     login_as_stub_editor
-    @need = minimal_example_need(
-      "id" => "100001",
-      "goal" => "apply for a primary school place",
-    )
-    @duplicate = minimal_example_need(
-      "duplicate_of" => nil,
-      "id" => "100002"
-    )
-    need_api_has_needs([@need, @duplicate]) # For need list
-    content_api_has_artefacts_for_need_id("100002", [])
 
-    @api_url = Plek.current.find('need-api') + '/needs/100002'
+    content_item = create(:need_content_item)
+    duplicate_content_item = create(:need_content_item, publication_state: "published")
+    publishing_api_has_linkables([], document_type: "organisation")
+    publishing_api_has_content(
+      [content_item, duplicate_content_item],
+      Need.default_options
+    )
+    publishing_api_has_content(
+      [content_item, duplicate_content_item],
+      Need.default_options.merge(per_page: 1e10, states: ["published"])
+    )
+    publishing_api_has_item(content_item)
+    publishing_api_has_item(duplicate_content_item)
+    publishing_api_has_links(
+      content_id: content_item["content_id"],
+      links: { organisations: [] }
+    )
+    publishing_api_has_links(
+      content_id: duplicate_content_item["content_id"],
+      links: { organisations: [] }
+    )
+
+    publishing_api_has_linked_items(
+      [],
+      content_id: duplicate_content_item["content_id"],
+      link_type: "meets_user_needs",
+      fields: ["title", "base_path", "document_type"]
+    )
+
+    @need_content_id = content_item["content_id"]
+    @need_goal = content_item["details"]["goal"]
+    @duplicate_need_content_id = duplicate_content_item["content_id"]
+    @duplicate_need_goal = duplicate_content_item["content_id"]
   end
 
   should "be able to close a need as a duplicate" do
-    need_api_has_need(@duplicate) # For individual need
-    request_body = {
-      "duplicate_of" => 100001,
-      "author" => {
-        "name" => stub_user.name,
-        "email" => stub_user.email,
-        "uid" => stub_user.uid
-      }
-    }
-
-    request = stub_request(:put, @api_url + '/closed').with(body: request_body.to_json)
-
-    visit "/needs"
-    click_on "100002"
-    click_on "Actions"
-    within "#actions #duplicate" do
-      click_on "Close as a duplicate"
-    end
-
-    fill_in("This need is a duplicate of", with: 100001)
-
-    get_request = stub_request(:get, @api_url).to_return(
+    request = stub_publishing_api_unpublish(
+      @duplicate_need_content_id,
       body: {
-        "_response_info" => { "status" => "ok" },
-        "id" => "100002",
-        "role" => "User",
-        "goal" => "find my local register office",
-        "benefit" => "I can find records of birth, marriage or death",
-        "duplicate_of" => "100001",
-        "status" => {
-          "description" => "proposed"
-        }
-      }.to_json
+        type: "withdrawal",
+        explanation: "This need is a duplicate of: [embed:link:#{@need_content_id}]"
+      }
     )
-    need_api_has_need(@need)
+    visit "/needs/#{@duplicate_need_content_id}/actions"
 
-    click_on "Close as a duplicate"
+    click_on "Withdraw as a Duplicate"
 
-
-    assert page.has_no_button?("Edit")
-    assert page.has_content?("Need closed as a duplicate of 100001: apply for a primary school place")
+    assert_requested request
   end
 
   should "show an error message if there's a problem closing the need as a duplicate" do
-    need_api_has_need(@duplicate) # For individual need
-    request = stub_request(:put, @api_url + '/closed').to_return(status: 422)
+    Need.any_instance.expects(:unpublish).returns(false)
 
-    visit "/needs"
-    click_on "100002"
-    click_on "Actions"
-    within "#actions #duplicate" do
-      click_on "Close as a duplicate"
+    visit "/needs/#{@duplicate_need_content_id}/actions"
+
+    click_on "Withdraw as a Duplicate"
+
+    assert page.has_content?("There was a problem updating the need’s status")
+  end
+
+  context "with a withdrawn need" do
+    setup do
+      login_as_stub_editor
+
+      duplicate_content_item = create(
+        :need_content_item,
+        publication_state: "unpublished",
+        unpublishing: {
+          explanation: "Foo"
+        }
+      )
+      publishing_api_has_item(duplicate_content_item)
+
+      publishing_api_has_links(
+        content_id: duplicate_content_item["content_id"],
+        links: { organisations: [] }
+      )
+      publishing_api_has_linked_items(
+        [],
+        content_id: duplicate_content_item["content_id"],
+        link_type: "meets_user_needs",
+        fields: ["title", "base_path", "document_type"]
+      )
+
+      @content_id = duplicate_content_item["content_id"]
     end
 
-    fill_in("This need is a duplicate of", with: 100001)
-    click_on "Close as a duplicate"
+    should "not be able to edit" do
+      visit "/needs/#{@content_id}/edit"
 
-    assert page.has_content?("There was a problem closing the need as a duplicate")
-    assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
-  end
-
-  should "show an error message if no duplicate need ID is entered" do
-    need_api_has_need(@duplicate) # For individual need
-    request = stub_request(:put, @api_url + '/closed').to_return(status: 422)
-
-    visit "/needs"
-    click_on "100002"
-    click_on "Actions"
-    within "#actions #duplicate" do
-      click_on "Close as a duplicate"
+      assert page.has_content?("Closed needs cannot be edited")
+      assert page.has_no_link?("Edit")
     end
 
-    fill_in("This need is a duplicate of", with: "abc")
-    click_on "Close as a duplicate"
+    should "not be able to edit from the history page" do
+      visit "/needs/#{@content_id}/revisions"
 
-    assert_requested request
-
-    assert page.has_content?("There was a problem closing the need as a duplicate")
-    assert page.has_link?("Close as a duplicate", href: close_as_duplicate_need_path(100002))
-  end
-
-  should "not be able to edit a closed need" do
-    login_as_stub_editor
-
-    @duplicate.merge!("duplicate_of" => "100001")
-    need_api_has_need(@duplicate)
-    need_api_has_need(@need)
-    visit "/needs/100002/edit"
-
-    assert page.has_content?("Closed needs cannot be edited")
-    assert page.has_content?("This need is closed as a duplicate of 100001")
-    assert page.has_link?("100001", href: "/needs/100001")
-    assert page.has_no_link?("Edit")
-  end
-
-  should "not be able to edit a closed need from the history page" do
-    @duplicate.merge!("duplicate_of" => "100001")
-    need_api_has_need(@duplicate)
-    need_api_has_need(@need)
-    visit "/needs/100002/revisions"
-
-    assert page.has_no_link?("Edit")
-  end
-
-  should "not be able to access close page if already closed" do
-    @duplicate.merge!("duplicate_of" => "100001")
-    need_api_has_need(@duplicate)
-    need_api_has_need(@need)
-    visit "/needs/100002/close-as-duplicate"
-
-    assert page.has_no_link?("Edit")
-    assert page.has_content?("This need is already closed")
+      assert page.has_no_link?("Edit")
+    end
   end
 
   should "be able to add a new need from this page" do
-    need_api_has_need(@duplicate) # For individual need
-    visit "/needs"
-    click_on "100002"
-
-    click_on "Actions"
-    within "#workflow" do
-      assert page.has_link?("Add a new need", href: "/needs/new")
-    end
-
-    within "#actions #duplicate" do
-      click_on "Close as a duplicate"
-    end
+    visit "/needs/#{@duplicate_need_content_id}/actions"
 
     within "#workflow" do
       assert page.has_link?("Add a new need", href: "/needs/new")
