@@ -4,6 +4,7 @@ require 'gds_api/test_helpers/publishing_api_v2'
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2
+  include NeedHelper
 
   setup do
     login_as_stub_user
@@ -33,50 +34,44 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
       assert page.has_content?("All needs")
 
       within "table#needs" do
-        within "tbody tr:nth-of-type(1)" do
-          assert page.has_content?("10001")
-          assert page.has_content?("Apply for a primary school place")
-          assert page.has_content?("Department for Education")
-        end
-
-        within "tbody tr:nth-of-type(2)" do
-          assert page.has_content?("10002")
-          assert page.has_content?("Find out about becoming a British citizen")
-          assert page.has_content?("Home Office, HM Passport Office")
-        end
-
-        within "tbody tr:nth-of-type(3)" do
-          assert page.has_content?("10003")
-          assert page.has_content?("Find out about government policy")
-          assert page.has_content?("Not valid, Duplicate")
-          assert page.has_content?("Applies to all organisations")
+        need_content_items.each_with_index do |content_item, index|
+          within "tbody tr:nth-of-type(#{index + 1})" do
+            assert page.has_content?(format_need_goal(content_item["details"]["goal"]))
+          end
         end
       end
     end
   end
 
   should "be able to navigate between pages of results" do
-    publishing_api_has_content(
-      FactoryGirl.create(:need_content_item),
-      Need.default_options.merge(
-        per_page: 50
-      )
+    content = create_list(:need_content_item, 9)
+    options = Need.default_options.merge(per_page: 3)
+    Need.stubs(:default_options).returns(options)
+    publishing_api_has_content(content, options)
+    publishing_api_has_content(content, options.merge(page: 2))
+    publishing_api_has_content(content, options.merge(page: 3))
+
+    publishing_api_has_linkables([], document_type: "organisation")
+
+    get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
+    stub_request(:get, get_links_url).to_return(
+      body: { links: { organisations: [] } }.to_json
     )
+
 
     visit "/needs"
 
     # assert the content on page 1
     within "table#needs" do
-      assert page.has_content?("Tax my vehicle")
-      assert page.has_content?("Complain about an advert for a medical product")
-      assert page.has_content?("Advertise my product")
+      content[0..2].each do |need_content|
+        assert page.has_content?(format_need_goal(need_content["details"]["goal"]))
+      end
     end
 
     within ".pagination" do
       assert page.has_selector?("li.active", text: "1")
 
       assert page.has_link?("2", href: "/needs?page=2")
-      assert page.has_link?("3", href: "/needs?page=3")
 
       assert page.has_no_link?("‹ Prev")
       assert page.has_link?("Next ›", href: "/needs?page=2")
@@ -86,9 +81,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
 
     # assert the content on page 2
     within "table#needs" do
-      assert page.has_content?("Access employee deal data, terms and condition and the competency framework")
-      assert page.has_content?("Understand panel counsel appointments, rates and work opportunities")
-      assert page.has_content?("Buy or claim an asset of a dissolved company")
+      content[3..5].each do |need_content|
+        assert page.has_content?(format_need_goal(need_content["details"]["goal"]))
+      end
     end
 
     within ".pagination" do
@@ -105,9 +100,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
 
     # assert the content on page 3
     within "table#needs" do
-      assert page.has_content?("Find information about the Ogden Tables and look-up information in those tables")
-      assert page.has_content?("Know about Fair Deal policy, Broad Comparability, Bulk Transfers, Communicating to Staff, Bid Support etc")
-      assert page.has_content?("Know what services they provide")
+      content[6..8].each do |need_content|
+        assert page.has_content?(format_need_goal(need_content["details"]["goal"]))
+      end
     end
 
     within ".pagination" do
