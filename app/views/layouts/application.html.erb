@@ -18,9 +18,6 @@
   <li <% if current_page?(bookmarks_path) %> class="active" <% end %>>
     <%= link_to "Bookmarked needs", bookmarks_path %>
   </li>
-  <li <% if current_page?(bookmarklet_path) %> class="active" <% end %>>
-    <%= link_to 'Browser tools', bookmarklet_path %>
-  </li>
 <% end %>
 <% content_for :navbar_right do %>
   Hello, <%= link_to current_user.name, Plek.current.find('signon') %>
