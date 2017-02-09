@@ -126,25 +126,6 @@ class NeedHelperTest < ActiveSupport::TestCase
       need = OpenStruct.new(current_page: 1, pages: 5, page_size: nil)
       assert_nil paginate_needs(need)
     end
-
-    should "initialize an paginator with the correct values" do
-      stub_paginator = stub(to_s: "pagination")
-      Kaminari::Helpers::Paginator.expects(:new)
-        .with(
-          self,
-          has_entries(
-            current_page: 3,
-            total_pages: 5,
-            per_page: 10,
-            param_name: "page",
-            remote: false
-          )
-        )
-        .returns(stub_paginator)
-
-      need = OpenStruct.new(current_page: 3, pages: 5, page_size: 10)
-      assert_equal "pagination", paginate_needs(need)
-    end
   end
 
   context "feedback_for_page" do
