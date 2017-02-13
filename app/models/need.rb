@@ -161,7 +161,14 @@ class Need
   # Note that this returns the entire set of matching ids and not a
   # PaginatedList
   def self.by_content_ids(*content_ids)
-    content_ids.map { |content_id| Need.find(content_id) }
+    needs = content_ids.map do |content_id|
+      begin
+        Need.find(content_id)
+      rescue NotFound
+        nil
+      end
+    end
+    needs.compact
   end
 
   # Retrieve a need from the Publishing API, or raise NotFound if it doesn't exist.
