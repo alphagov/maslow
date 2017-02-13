@@ -122,7 +122,7 @@ class NeedsController < ApplicationController
     end
 
     if @need.valid?
-      if @need.save
+      if @need.save && (@need.draft? || @need.publish)
         redirect_to redirect_url, notice: "Need updated",
           flash: { need_id: @need.need_id, goal: @need.goal }
         return
