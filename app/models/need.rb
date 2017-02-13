@@ -140,8 +140,13 @@ class Need
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
   def self.list(options = {})
     options = default_options.merge(options.symbolize_keys)
-    response = Maslow.publishing_api_v2.get_content_items(options)
-    need_objects = needs_from_publishing_api_payloads(*response["results"].to_a)
+    response = Maslow.publishing_api_v2.get_content_items(
+      options.except(:load_organisation_ids)
+    )
+    need_objects = needs_from_publishing_api_payloads(
+      response["results"].to_a,
+      load_organisation_ids: options.fetch(:load_organisation_ids, true)
+    )
     PaginatedList.new(
       need_objects,
       pages: response["pages"],
@@ -348,14 +353,19 @@ class Need
 
 private
 
-  def self.needs_from_publishing_api_payloads(*responses)
-    responses.map { |x| need_from_publishing_api_payload(x) }
+  def self.needs_from_publishing_api_payloads(responses, load_organisation_ids: true)
+    responses.map do |x|
+      need_from_publishing_api_payload(
+        x,
+        load_organisation_ids: load_organisation_ids
+      )
+    end
   end
 
-  def self.need_from_publishing_api_payload(attributes)
+  def self.need_from_publishing_api_payload(attributes, load_organisation_ids: true)
     attributes = self.move_details_to_top_level(attributes)
     need = Need.new(attributes)
-    need.load_organisation_ids
+    need.load_organisation_ids if load_organisation_ids
     need.persisted = true
 
     need

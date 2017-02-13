@@ -62,7 +62,8 @@ module NeedHelper
   def options_for_withdrawing_as_duplicate(need)
     Need.list(
       per_page: 1e10,
-      states: ['published']
+      states: ['published'],
+      load_organisation_ids: false
     ).to_options.reject do |option|
       option[1] == need.content_id
     end
