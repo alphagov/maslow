@@ -7,7 +7,7 @@ class NotesController < ApplicationController
     authorize! :create, Note
     text = params["note"]["text"]
     need_id = params["need_id"]
-    content_id = params["content_id"] || Maslow.need_api.content_id(need_id).body
+    content_id = params["content_id"]
     author = current_user
 
     @note = Note.new(
@@ -22,7 +22,7 @@ class NotesController < ApplicationController
     else
       flash[:error] = "Note couldn't be saved: #{@note.errors.full_messages.first}"
     end
-    redirect_to revisions_need_path(need_id)
+    redirect_to revisions_need_path(content_id)
   end
 
 private

@@ -1,54 +1,41 @@
 require_relative '../test_helper'
 require 'gds_api/organisations'
-require 'gds_api/test_helpers/organisations'
 
 class OrganisationTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::Organisations
-
   context "loading organisations" do
     setup do
-      @organisation_attrs = [
+      publishing_api_has_linkables([
         {
+          "content_id": SecureRandom.uuid,
           "title" => "Committee on Climate Change",
-          "details" => {
-            "slug" => "committee-on-climate-change",
-            "abbreviation" => "CCC"
-          },
         },
         {
+          "content_id": SecureRandom.uuid,
           "title" => "Competition Commission",
-          "details" => {
-            "slug" => "competition-commission",
-            "abbreviation" => "CC"
-          }
         }
-      ]
+      ], document_type: "organisation")
+
+      @linkables_request_path =
+        "#{Plek.current.find('publishing-api')}/v2/linkables?document_type=organisation"
     end
 
     should "return organisations from the organisations api" do
-      organisations_api_has_organisations_with_bodies(@organisation_attrs)
-
       organisations = Organisation.all
 
       assert_equal 2, organisations.size
-      assert_equal(["committee-on-climate-change", "competition-commission"],
-                   organisations.map(&:id))
       assert_equal(["Committee on Climate Change", "Competition Commission"],
-                   organisations.map(&:name))
-      assert_equal(%w(CCC CC),
-                   organisations.map(&:abbreviation))
+                   organisations.map(&:title))
     end
 
     should "cache the organisation results" do
-      organisations_api_has_organisations_with_bodies(@organisation_attrs)
-
       5.times do
         Organisation.all
       end
+
+      assert_requested(:get, @linkables_request_path, times: 1)
     end
 
     should "cache the organisation results, but only for an hour" do
-      organisations_api_has_organisations_with_bodies(@organisation_attrs)
       Organisation.all
 
       Timecop.travel(Time.zone.now + 61.minutes) do
@@ -56,19 +43,9 @@ class OrganisationTest < ActiveSupport::TestCase
       end
     end
 
-    should "show the organisation abbreviation and status" do
-      organisation = Organisation.new(title: "name", details: { slug: "slug", abbreviation: "abbr", govuk_status: "live" })
-      assert_equal "name [abbr] (live)", organisation.name_with_abbreviation_and_status
-    end
-
-    should "not show the abbreviation if it is not present" do
-      organisation = Organisation.new(title: "name", details: { slug: "slug", govuk_status: "exempt" })
-      assert_equal "name (exempt)", organisation.name_with_abbreviation_and_status
-    end
-
-    should "not show the abbreviation if it is the same as the name" do
-      organisation = Organisation.new(title: "name", details: { slug: "slug", abbreviation: "name", govuk_status: "joining" })
-      assert_equal "name (joining)", organisation.name_with_abbreviation_and_status
+    should "show the title and publication state" do
+      organisation = Organisation.new(title: "name", publication_state: "draft")
+      assert_equal "name (draft)", organisation.title_and_publication_state
     end
   end
 end

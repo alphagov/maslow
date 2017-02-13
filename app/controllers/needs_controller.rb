@@ -12,7 +12,7 @@ class NeedsController < ApplicationController
 
   def index
     authorize! :index, Need
-    opts = params.slice("organisation_id", "page", "q").select { |_k, v| v.present? }
+    opts = params.slice("page", "q").select { |_k, v| v.present? }
 
     @bookmarks = current_user.bookmarks
     @current_page = needs_path
@@ -22,7 +22,7 @@ class NeedsController < ApplicationController
       format.html
       format.csv do
         send_data NeedsCsvPresenter.new(needs_url, @needs).to_csv,
-                  filename: "#{params['organisation_id']}.csv",
+                  filename: "needs.csv",
                   type: "text/csv; charset=utf-8"
       end
     end
@@ -36,6 +36,19 @@ class NeedsController < ApplicationController
   def actions
     authorize! :perform_actions_on, Need
     @need = load_need
+    return if request.get?
+
+    case params["need_action"]
+    when "publish"
+      publish
+    when "unpublish"
+      unpublish
+    when "discard"
+      discard
+    else
+      flash[:error] = "Unknown action: #{params['action']}"
+      render "actions", status: 422
+    end
   end
 
   def revisions
@@ -43,9 +56,9 @@ class NeedsController < ApplicationController
     @need = load_need
     @notes = load_notes_for_need
     @revisions_and_notes = (@need.revisions + @notes).sort_by do |x|
-      # Either a Hash or a Note, so transform the `created_at`s into
+      # Either a Hash or a Note, so transform the `updated_at`s into
       # the same type.
-      x.try(:created_at) || Time.zone.parse(x["created_at"])
+      x.try(:updated_at) || Time.zone.parse(x["updated_at"])
     end
     # `.sort_by` doesn't take "asc" or "desc" options, so sort in descending
     # order by reversing the array.
@@ -55,8 +68,8 @@ class NeedsController < ApplicationController
   def edit
     authorize! :update, Need
     @need = load_need
-    if @need.duplicate?
-      redirect_to need_url(@need.need_id),
+    if @need.unpublished?
+      redirect_to need_url(@need.content_id),
                   notice: "Closed needs cannot be edited",
                   status: 303
       return
@@ -72,21 +85,29 @@ class NeedsController < ApplicationController
     authorize! :create, Need
 
     @need = Need.new(need_params)
-
-    add_or_remove_criteria(:new) && return if criteria_params_present?
+    if criteria_params_present?
+      add_or_remove_criteria(:new)
+      return
+    end
 
     if @need.valid?
-      if @need.save_as(current_user)
+      if @need.save
         redirect_to redirect_url, notice: "Need created",
-          flash: { need_id: @need.need_id, goal: @need.goal }
+          flash: { goal: @need.goal }
         return
       else
         flash[:error] = "There was a problem saving your need."
+        render "new", status: 500
       end
     else
       flash[:error] = "Please fill in the required fields."
+      render "new", status: 422
     end
+  rescue Need::BasePathAlreadyInUse => err
+    logger.error("content_id: #{err.content_id}")
 
+    flash[:error] = true
+    flash[:base_path_already_in_use] = err.content_id
     render "new", status: 422
   end
 
@@ -95,102 +116,101 @@ class NeedsController < ApplicationController
     @need = load_need
     @need.update(need_params)
 
-    add_or_remove_criteria(:edit) && return if criteria_params_present?
+    if criteria_params_present?
+      add_or_remove_criteria(:edit)
+      return
+    end
 
     if @need.valid?
-      if @need.save_as(current_user)
+      if @need.save && (@need.draft? || @need.publish)
         redirect_to redirect_url, notice: "Need updated",
           flash: { need_id: @need.need_id, goal: @need.goal }
         return
       else
         flash[:error] = "There was a problem saving your need."
+        render "edit", status: 500
       end
     else
       flash[:error] = "There were errors in the need form."
+      render "edit", status: 422
     end
+  rescue Need::BasePathAlreadyInUse => err
+    logger.error("content_id: #{err.content_id}")
 
-    render "edit", status: 422
+    flash[:error] = true
+    flash[:base_path_already_in_use] = err.content_id
+    render "new", status: 422
   end
 
-  def close_as_duplicate
-    authorize! :close, Need
-    @need = load_need
-    if @need.duplicate?
-      redirect_to need_url(@need.need_id),
-                  notice: "This need is already closed",
-                  status: 303
-      return
+private
+
+  def publish
+    authorize! :publish, Need
+
+    if @need.publish
+      redirect_to need_path(@need.content_id)
+    else
+      flash[:error] = "A problem was encountered when publishing"
+      render status: 500
     end
   end
 
-  def closed
-    authorize! :close, Need
+  def discard
+    authorize! :publish, Need
     @need = load_need
-    @need.duplicate_of = params["need"]["duplicate_of"].to_i
 
-    if @need.valid?
-      if @need.close_as(current_user)
-        @canonical_need = Need.find(@need.duplicate_of)
-        redirect_to need_url(@need.need_id), notice: "Need closed as a duplicate of",
-          flash: { need_id: @canonical_need.need_id, goal: @canonical_need.goal }
+    if @need.discard
+      redirect_to(
+        needs_path,
+        notice: "Need discarded"
+      )
+    else
+      flash[:error] = "A problem was encountered when publishing"
+      render status: 500
+    end
+  end
+
+  def unpublish
+    authorize! :unpublish, Need
+
+    explanation = nil
+
+    if params.key? "duplicate_of"
+      duplicate_content_id = params["duplicate_of"]
+
+      if duplicate_content_id == @need.content_id
+        flash[:error] = "Need cannot be a duplicate of itself"
+        render status: 422
         return
-      else
-        flash[:error] = "There was a problem closing the need as a duplicate"
       end
+
+      begin
+        # Check the need exists
+        Need.find(duplicate_content_id)
+      rescue Need::NotFound
+        flash[:error] = "Duplicate need not found"
+        render status: 422
+        return
+      end
+
+      explanation = "This need is a duplicate of: [embed:link:#{params['duplicate_of']}]"
     else
-      flash[:error] = "The Need ID entered is invalid"
+      explanation = params["explanation"]
     end
 
-    @need.duplicate_of = nil
-    render "actions", status: 422
-  end
-
-  def reopen
-    authorize! :reopen, Need
-    @need = load_need
-    old_canonical_id = @need.duplicate_of
-
-    if @need.reopen_as(current_user)
-      redirect_to need_url(@need.need_id), notice: "Need is no longer a duplicate of",
-        flash: { need_id: old_canonical_id, goal: Need.find(old_canonical_id).goal }
-      return
+    if @need.unpublish(explanation)
+      redirect_to(
+        need_path(@need.content_id),
+        notice: "Need withdrawn"
+      )
     else
-      flash[:error] = "There was a problem reopening the need"
+      flash[:error] = "There was a problem updating the need’s status"
+      render status: 500
     end
-
-    render "show", status: 422
   end
-
-  def status
-    authorize! :validate, Need
-    @need = load_need
-  end
-
-  def update_status
-    authorize! :validate, Need
-    @need = load_need
-
-    need_status = NeedStatus.new(need_status_params)
-
-    unless need_status.valid?
-      flash[:error] = need_status.errors.full_messages.join(". ")
-      redirect_to need_path(@need)
-      return
-    end
-
-    @need.status = need_status.as_json
-
-    unless @need.save_as(current_user)
-      flash[:error] = "We had a problem updating the need’s status"
-    end
-
-    redirect_to need_path(@need)
-  end
-
-  private
 
   def redirect_url
-    params["add_new"] ? new_need_path : need_url(@need.need_id)
+    params["add_new"] ? new_need_path : need_url(@need.content_id)
   end
 
   def need_status_params
@@ -231,6 +251,8 @@ class NeedsController < ApplicationController
       justifications: [],
       met_when: [],
     ).tap do |cleaned_params|
+      cleaned_params[:met_when].delete_if(&:empty?) if cleaned_params.key? :met_when
+
       %w(justifications organisation_ids).each do |field|
         cleaned_params[field].select!(&:present?) if cleaned_params[field]
       end
@@ -239,8 +261,7 @@ class NeedsController < ApplicationController
 
   def load_need
     begin
-      need_id = Integer(params[:id])
-      Need.find(need_id)
+      Need.find(params[:content_id])
     rescue ArgumentError, TypeError # shouldn't happen; route is constrained
       raise Http404
     rescue Need::NotFound
@@ -249,8 +270,7 @@ class NeedsController < ApplicationController
   end
 
   def load_notes_for_need
-    need_id = Integer(params[:id])
-    Note.where(need_id: need_id).to_a
+    Note.where(content_id: params[:content_id]).to_a
   end
 
   def criteria_params_present?

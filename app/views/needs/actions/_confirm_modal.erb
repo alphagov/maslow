@@ -1,0 +1,39 @@
+<div id="confirm-<%= action.parameterize -%>-modal"
+     class="modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="confirm-<%= action.parameterize -%>-modal-label"
+     aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true">
+          ×
+        </button>
+        <h3 id="confirm-<%= action.parameterize -%>-modal-label" class="modal-title">
+          Confirm <%= action %>
+        </h3>
+      </div>
+
+      <%= form_tag(path.call(@need.content_id), method: "post") do %>
+        <%= hidden_field_tag("need_action", action) %>
+        <div class="modal-body">
+          <%= yield %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-lg btn-default"
+                  role="button"
+                  data-dismiss="modal"
+                  aria-hidden="true">
+            Cancel
+          </button>
+          <%= submit_tag(action_label, { 'class' => 'btn btn-lg btn-danger' }) %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

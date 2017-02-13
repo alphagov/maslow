@@ -2,6 +2,7 @@ require "active_model"
 
 class Need
   extend ActiveModel::Naming
+  include ActiveModel::Model
   include ActiveModel::Validations
   include ActiveModel::Conversion
   include ActiveModel::Serialization
@@ -15,20 +16,29 @@ class Need
     end
   end
 
+  class BasePathAlreadyInUse < StandardError
+    attr_reader :content_id
+
+    def initialize(content_id)
+      super("Publishing API rejected update as the base path is already in use")
+      @content_id = content_id
+    end
+  end
+
+
   # Allow us to convert the API response to a list of Need objects, but still
   # retain the pagination information
   class PaginatedList < Array
-    PAGINATION_PARAMS = [:pages, :total, :page_size, :current_page, :start_index]
+    PAGINATION_PARAMS = [:pages, :total, :per_page, :current_page]
     attr_reader *PAGINATION_PARAMS
 
-    def initialize(needs, pagination_info)
+    def initialize(needs, pages:, total:, current_page:, per_page:)
       super(needs)
 
-      @pages = pagination_info["pages"]
-      @total = pagination_info["total"]
-      @page_size = pagination_info["page_size"]
-      @current_page = pagination_info["current_page"]
-      @start_index = pagination_info["start_index"]
+      @pages = pages
+      @total = total
+      @per_page = per_page
+      @current_page = current_page
     end
 
     def inspect
@@ -36,6 +46,12 @@ class Need
         PAGINATION_PARAMS.map { |param_name| [param_name, send(param_name)] }
       ]
       "#<#{self.class} #{super}, #{pagination_params}>"
+    end
+
+    def to_options
+      map do |need|
+        [need.benefit, need.content_id]
+      end
     end
   end
 
@@ -58,25 +74,37 @@ class Need
   ]
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
-  MASS_ASSIGNABLE_FIELDS = %w(role goal benefit organisation_ids impact justifications met_when
-                              other_evidence legislation) + NUMERIC_FIELDS
 
-  # fields which should not be updated through mass-assignment.
-  # this is equivalent to using ActiveModel's attr_protected
-  PROTECTED_FIELDS = %w(duplicate_of status)
+  FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids)
 
-  # fields which we should create read and write accessors for
-  # and which we should send back to the Need API
-  WRITABLE_FIELDS = MASS_ASSIGNABLE_FIELDS + PROTECTED_FIELDS
+  PUBLISHING_API_FIELDS = %w(
+    base_path
+    content_id
+    description
+    details
+    first_published_at
+    last_edited_at
+    locale
+    phase
+    public_updated_at
+    publication_state
+    redirects
+    routes
+    schema_name
+    state_history
+    title
+    unpublishing
+    update_type
+    updated_at
+    user_facing_version
+    version
+  )
 
-  # non-writable fields returned from the API which we want to make accessible
-  # but which we don't want to send back to the Need API
-  READ_ONLY_FIELDS = %w(id revisions organisations applies_to_all_organisations)
+  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(need_id role goal benefit impact legislation other_evidence applies_to_all_organisations)
 
-  attr_accessor *WRITABLE_FIELDS
-  attr_reader *READ_ONLY_FIELDS
-
-  alias_method :need_id, :id
+  attr_accessor :persisted, :met_when, :justifications, :organisation_ids, :content_id
+  alias_method :persisted?, :persisted
+  alias_method :id, :content_id
 
   validates_presence_of %w(role goal benefit)
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
@@ -87,55 +115,104 @@ class Need
     validates_numericality_of field, only_integer: true, allow_blank: true, greater_than_or_equal_to: 0
   end
 
+  def initialize(attributes = {})
+    ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
+
+    default_values = {
+      "content_id" => SecureRandom.uuid,
+      "met_when" => [],
+      "justifications" => [],
+      "organisation_ids" => [],
+    }
+
+    update(
+      default_values.merge(attributes)
+    )
+
+    # This is set to true when data is loaded in from the Publishing
+    # API, forms use this to decide what route to post to
+    @persisted = false
+  end
+
   # Retrieve a list of needs from the Need API
   #
   # The parameters are the same as passed through to the Need API: as of
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
   def self.list(options = {})
-    need_response = Maslow.need_api.needs(options)
-
-    need_objects = need_response["results"].map { |need_hash| self.new(need_hash, true) }
-    PaginatedList.new(need_objects, need_response)
+    options = default_options.merge(options.symbolize_keys)
+    response = Maslow.publishing_api_v2.get_content_items(
+      options.except(:load_organisation_ids)
+    )
+    need_objects = needs_from_publishing_api_payloads(
+      response["results"].to_a,
+      load_organisation_ids: options.fetch(:load_organisation_ids, true)
+    )
+    PaginatedList.new(
+      need_objects,
+      pages: response["pages"],
+      total: response["total"],
+      current_page: response["current_page"],
+      per_page: options[:per_page]
+    )
   end
 
   # Retrieve a list of needs matching an array of ids
   #
   # Note that this returns the entire set of matching ids and not a
   # PaginatedList
-  def self.by_ids(*ids)
-    response = Maslow.need_api.needs_by_id(ids.flatten)
-
-    response.with_subsequent_pages.map { |need| self.new(need, true) }
+  def self.by_content_ids(*content_ids)
+    needs = content_ids.map do |content_id|
+      begin
+        Need.find(content_id)
+      rescue NotFound
+        nil
+      end
+    end
+    needs.compact
   end
 
-  # Retrieve a need from the Need API, or raise NotFound if it doesn't exist.
+  # Retrieve a need from the Publishing API, or raise NotFound if it doesn't exist.
   #
   # This works in roughly the same way as an ActiveRecord-style `find` method,
   # just with a different exception type.
-  def self.find(need_id)
-    need_response = Maslow.need_api.need(need_id)
-    self.new(need_response.to_hash, true)
+  def self.find(content_id)
+    response = Maslow.publishing_api_v2.get_content(content_id)
+    need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPNotFound
-    raise NotFound, need_id
+    raise NotFound, content_id
   end
 
-  def initialize(attrs, existing = false)
-    @existing = existing
-
-    if existing
-      assign_read_only_and_protected_attributes(attrs)
-
-      # discard all the read-only fields and anything else from the API which
-      # we don't understand, before calling the update method below
-      #
-      # we only do this for initializing an existing need from the API so that
-      # we can raise an error when invalid fields are submitted through the
-      # Maslow forms.
-      attrs = filtered_attributes(attrs)
+  def revisions
+    return @responses if @responses
+    latest_revision = fetch_from_publishing_api(@content_id)
+    version = latest_revision["user_facing_version"]
+    @responses = [latest_revision]
+    while version > 1
+      version -= 1
+      @responses << fetch_from_publishing_api(@content_id, version: version)
     end
+    compute_changes(@responses)
+  end
 
-    # assign all the writable attributes
-    update(attrs)
+  def fetch_from_publishing_api(content_id, params = {})
+    response = Maslow.publishing_api_v2.get_content(content_id, params).parsed_content
+    self.class.move_details_to_top_level(response)
+  end
+
+  def load_organisation_ids
+    parsed_content =
+      Maslow.publishing_api_v2.get_links(@content_id).parsed_content
+    @organisation_ids = parsed_content["links"]["organisations"] || []
+  end
+
+  def organisations
+    # There is currently no way to get organisations data from the
+    # Publishing API when getting the content, so to get the
+    # Organisation instances for a Need, filter the list of all
+    # organisations (which should be cached).
+    @organisations ||= Organisation.all.select do |organisation|
+      @organisation_ids.include? organisation.content_id
+    end
   end
 
   def add_more_criteria
@@ -146,18 +223,32 @@ class Need
     @met_when.delete_at(index)
   end
 
-  def duplicate?
-    duplicate_of.present?
+  def unpublished?
+    publication_state == "unpublished"
+  end
+
+  def published?
+    publication_state == "published"
+  end
+
+  def draft?
+    publication_state == "draft"
   end
 
   def update(attrs)
     strip_newline_from_textareas(attrs)
 
-    unless (attrs.keys - MASS_ASSIGNABLE_FIELDS).empty?
-      raise(ArgumentError, "Unrecognised attributes present in: #{attrs.keys}")
-    end
-    attrs.keys.each do |f|
-      send("#{f}=", attrs[f])
+    attrs.each do |field, value|
+      if FIELDS_WITH_ARRAY_VALUES.include?(field)
+        set_attribute(field, value)
+      elsif NUMERIC_FIELDS.include?(field)
+        send(
+          "#{field}=",
+          value.blank? ? nil : value.to_i
+        )
+      else
+        send("#{field}=", value)
+      end
     end
 
     @met_when ||= []
@@ -165,81 +256,211 @@ class Need
     @organisation_ids ||= []
   end
 
-  def artefacts
-    @artefacts ||= Maslow.content_api.for_need(@id)
-  rescue GdsApi::BaseError
-    []
+  def content_items_meeting_this_need
+    @content_items_meeting_this_need ||=
+      Maslow.publishing_api_v2.get_linked_items(
+        content_id,
+        link_type: "meets_user_needs",
+        fields: %w(title base_path document_type)
+      )
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
+    logger.error(err)
+    Airbrake.notify(err)
+    false
   end
 
-  def as_json(options = {})
-    # Build up the hash manually, as ActiveModel::Serialization's default
-    # behaviour serialises all attributes, including @errors and
-    # @validation_context.
-    remove_blank_met_when_criteria
-    res = (WRITABLE_FIELDS).each_with_object({}) do |field, hash|
-      value = send(field)
-      if value.present?
-        # if this is a numeric field, force the value we send to the API to be an
-        # integer
-        value = Integer(value) if NUMERIC_FIELDS.include?(field)
-      end
-
-      # catch empty text fields and send them as null values instead for consistency
-      # with updates on other fields
-      value = nil if value == ""
-
-      hash[field] = value.as_json
+  def publish
+    if unpublished?
+      # Save to ensure that a draft exists to Publish
+      save
     end
+
+    Maslow.publishing_api_v2.publish(content_id, "major")
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.publish")
+    logger.error(err)
+    Airbrake.notify(err)
+    false
+  end
+
+  def discard
+    Maslow.publishing_api_v2.discard_draft(content_id)
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.discard")
+    logger.error(err)
+    Airbrake.notify(err)
+    false
+  end
+
+  def unpublish(explanation)
+    Maslow.publishing_api_v2.unpublish(
+      content_id,
+      type: "withdrawal",
+      explanation: explanation
+    )
+  rescue GdsApi::HTTPErrorResponse => err
+    logger.error("GdsApi::HTTPErrorResponse in Need.unpublish")
+    logger.error(err)
+    Airbrake.notify(err)
+    false
   end
 
   def save
-    raise("The save_as method must be used when persisting a need, providing details about the author.")
-  end
+    strip_newline_from_textareas(publishing_api_payload)
 
-  def close_as(author)
-    duplicate_atts = {
-      "duplicate_of" => @duplicate_of,
-      "author" => author_atts(author)
-    }
-    Maslow.need_api.close(@id, duplicate_atts)
-    true
+    response = Maslow.publishing_api_v2.put_content(
+      content_id,
+      publishing_api_payload
+    )
+
+    Maslow.publishing_api_v2.patch_links(
+      content_id,
+      links: {
+        "organisations": organisation_ids
+      }
+    )
   rescue GdsApi::HTTPErrorResponse => err
-    false
-  end
+    if err.error_details.is_a?(Hash)
+      message = err.error_details.dig "error", "message"
+      if message
+        conflicting_content_id = /content_id=([^\s]+)/.match(message)[1]
 
-  def reopen_as(author)
-    Maslow.need_api.reopen(@id, "author" => author_atts(author))
-    true
-  rescue GdsApi::HTTPErrorResponse => err
-    false
-  end
-
-  def save_as(author)
-    atts = as_json.merge("author" => author_atts(author))
-
-    if persisted?
-      Maslow.need_api.update_need(@id, atts)
-    else
-      response_hash = Maslow.need_api.create_need(atts).to_hash
-      @existing = true
-
-      assign_read_only_and_protected_attributes(response_hash)
-      update(filtered_attributes(response_hash))
+        if conflicting_content_id
+          raise BasePathAlreadyInUse.new(conflicting_content_id)
+        end
+      end
     end
-    true
-  rescue GdsApi::HTTPErrorResponse => err
+
+    logger.error("GdsApi::HTTPErrorResponse in Need.save")
+    logger.error(err)
     false
   end
 
-  def persisted?
-    @existing
+  def to_key
+    if persisted?
+      [content_id]
+    else
+      nil
+    end
   end
 
-  def has_invalid_status?
-    status.description == "not valid"
+  def status
+    case publication_state
+    when "published"
+      "Valid"
+    when "draft"
+      "Proposed"
+    when "unpublished"
+      "Withdrawn"
+    else
+      raise "publication_state: #{publication_state} not recognised"
+    end
   end
 
 private
+
+  def self.needs_from_publishing_api_payloads(responses, load_organisation_ids: true)
+    responses.map do |x|
+      need_from_publishing_api_payload(
+        x,
+        load_organisation_ids: load_organisation_ids
+      )
+    end
+  end
+
+  def self.need_from_publishing_api_payload(attributes, load_organisation_ids: true)
+    attributes = self.move_details_to_top_level(attributes)
+    need = Need.new(attributes)
+    need.load_organisation_ids if load_organisation_ids
+    need.persisted = true
+
+    need
+  end
+
+  def self.move_details_to_top_level(attributes)
+    # Transforms the attributes to not have a nested details hash, and
+    # instead have all the values in the details hash as top level
+    # fields for convenience.
+    #
+    # {
+    #   "content_id": "...",
+    #   "details": {
+    #     "role": "foo",
+    #     ...
+    #   }
+    # }
+    #
+    # Would be transformed to:
+    #
+    # {
+    #   "content_id": "...",
+    #   "role": "foo"
+    # }
+
+    attributes_without_nested_details = attributes.except("details")
+    attributes_with_merged_details =
+      attributes_without_nested_details.merge(attributes["details"] || {})
+
+    fields_to_exclude = %w(
+      publishing_app
+      rendering_app
+      document_type
+      content_store
+      need_ids
+      lock_version
+      warnings
+    )
+
+    attributes_with_merged_details.except(*fields_to_exclude)
+  end
+
+  def publishing_api_payload
+    details_fields = (ALLOWED_FIELDS - PUBLISHING_API_FIELDS) - ["organisation_ids"]
+    details = details_fields.each_with_object({}) do |field, hash|
+      value = send(field)
+      next if value.blank?
+      hash[field] = value.as_json
+    end
+
+    slug = @goal.parameterize
+    base_path = "/needs/#{slug}"
+
+    title_suffix = need_id ? " (#{need_id})" : ""
+
+    {
+      schema_name: "need",
+      publishing_app: "maslow",
+      rendering_app: "info-frontend",
+      locale: "en",
+      base_path: base_path,
+      routes: [
+        {
+          path: base_path,
+          type: "exact"
+        }
+      ],
+      document_type: "need",
+      title: "As a #{@role}, I need to #{@goal}, so that #{@benefit}#{title_suffix}",
+      details: details
+    }
+  end
+
+  def set_attribute(field, value)
+    value = [] if value.blank?
+    instance_variable_set("@#{field}", value)
+  end
+
+  def self.default_options
+    {
+      document_type: 'need',
+      per_page: 50,
+      fields: %w(content_id need_ids details publication_state),
+      locale: 'en',
+      order: '-updated_at'
+    }
+  end
+
   def author_atts(author)
     {
       "name" => author.name,
@@ -248,60 +469,35 @@ private
     }
   end
 
-  def assign_read_only_and_protected_attributes(attrs)
-    # map the read only and protected fields from the API to instance
-    # variables of the same name
-    (READ_ONLY_FIELDS + PROTECTED_FIELDS).map(&:to_s).each do |field|
-      value = attrs[field]
-      prepared_value = case field
-                       when 'revisions'
-                         prepare_revisions(value)
-                       when 'organisations'
-                         prepare_organisations(value)
-                       when 'status'
-                         prepare_status(value)
-                       else
-                         value
-                       end
-
-      instance_variable_set("@#{field}", prepared_value)
-    end
-  end
-
-  def filtered_attributes(original_attrs)
-    # Discard fields from the API we don't understand. Coupling the fields
-    # this app understands to the fields it expects from clients is fine, but
-    # we don't want to couple that with the fields we can use in the API.
-    original_attrs.slice(*MASS_ASSIGNABLE_FIELDS)
-  end
-
-  def prepare_organisations(organisations)
-    return [] unless organisations.present?
-    organisations
-  end
-
-  def prepare_status(status)
-    return nil unless status.present?
-    NeedStatus.new(status)
-  end
-
-  def prepare_revisions(revisions)
-    return [] unless revisions.present?
-
-    revisions.each_with_index do |revision, i|
-      revision["changes"] = revisions[i]["changes"]
-    end
-  end
-
-  def remove_blank_met_when_criteria
-    met_when.delete_if(&:empty?) if met_when
-  end
-
   def strip_newline_from_textareas(attrs)
     # Rails prepends a newline character into the textarea fields in the form.
     # Strip these so that we don't send them to the Need API.
-    %w(legislation other_evidence).each do |field|
+    %i(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
+    end
+  end
+
+  def compute_changes(responses)
+    responses.each_with_index do |current_version, index|
+      index_of_previous_version = index + 1
+      previous_version = responses[index_of_previous_version] || {}
+      current_version["changes"] = changes(previous_version, current_version)
+    end
+  end
+
+  def changes(previous, current)
+    versions = [previous, current]
+
+    keys = changed_keys(current, previous) - ["user_facing_version"]
+
+    keys.inject({}) { |changes, key|
+      changes.merge(key => versions.map {|version| version[key] })
+    }
+  end
+
+  def changed_keys(current, previous)
+    (current.keys | previous.keys).reject do |key|
+      current[key] == previous[key]
     end
   end
 end

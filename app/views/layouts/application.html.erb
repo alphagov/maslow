@@ -18,9 +18,6 @@
   <li <% if current_page?(bookmarks_path) %> class="active" <% end %>>
     <%= link_to "Bookmarked needs", bookmarks_path %>
   </li>
-  <li <% if current_page?(bookmarklet_path) %> class="active" <% end %>>
-    <%= link_to 'Browser tools', bookmarklet_path %>
-  </li>
 <% end %>
 <% content_for :navbar_right do %>
   Hello, <%= link_to current_user.name, Plek.current.find('signon') %>
@@ -29,12 +26,21 @@
 <% content_for :footer_version do %><%= CURRENT_RELEASE_SHA %><% end %>
 <% content_for :app_title do %>GOV.UK Maslow<% end %>
 <% content_for :content do %>
-  <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
+<% [:notice, :alert, :error].select { |k|  flash[k].present? }.each do |k| %>
     <div class="main-alert <%= k %>">
-      <%= flash[k] %>
       <% if flash[:need_id] %>
+        <%= flash[k] %>
         <%= link_to "#{flash[:need_id]}: #{flash[:goal]}",
                     need_path(flash[:need_id]) %>
+      <% elsif flash[:base_path_already_in_use] && @need.present? %>
+        Cannot <% if @need.persisted? %>update<% else %>create<% end %> a new need with
+        a goal of "<%= @need.goal %>" as this is too similar to that of an existing need:
+        <%=
+          link_to "#{Need.find(flash[:base_path_already_in_use]).goal}",
+          need_path(flash[:base_path_already_in_use])
+        %>
+      <% else %>
+        <%= flash[k] %>
       <% end %>
     </div>
   <% end %>

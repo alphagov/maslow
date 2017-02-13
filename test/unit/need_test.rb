@@ -1,12 +1,97 @@
 require_relative '../test_helper'
 require 'gds_api/test_helpers/need_api'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 class NeedTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::NeedApi
+  include GdsApi::TestHelpers::PublishingApiV2
 
-  context "saving need data to the Need API" do
+  setup do
+    @stub_publishing_api_response = {
+      "total"=>3,
+      "pages"=>1,
+      "current_page"=>1,
+      "links"=>[
+        {
+          "href"=>"http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=need_ids&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=2",
+          "rel"=>"next"
+        },
+        {
+          "href"=>"http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=need_ids&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=1", "rel"=>"self"
+        }
+      ],
+      "results"=>[
+        {
+          "need_ids"=>["100523"],
+          "content_id"=>"0001c0c6-2dd3-4b56-87f1-815efe32c155",
+          "publication_state" => "draft",
+          "details"=>
+          {
+            "applies_to_all_organisations"=>false,
+            "benefit"=>"I can make sure I'm getting what I'm entitled to",
+            "goal"=>"know what my rights are after a crime",
+            "role"=>"citizen"
+          }
+        },
+        {
+          "need_ids"=>["100522"],
+          "content_id"=>"c867e5f7-2d68-42ad-bedb-20638b3bf58e",
+          "publication_state" => "draft",
+          "details"=>
+          {
+            "applies_to_all_organisations"=>false,
+            "benefit"=>"I can improve their services or stop them from operating",
+            "goal"=>"complain about a legal adviser",
+            "role"=>"citizen"
+          }
+        },
+        {
+          "need_ids"=>["100521"],
+          "content_id"=>"0925fd2b-6b59-4120-a849-96ab19b9c7df",
+          "publication_state" => "published",
+          "details"=>{
+            "applies_to_all_organisations"=>false,
+            "role"=>"citizen",
+            "goal"=>"take my tax appeal to a tribunal",
+            "benefit"=>"I can have my case heard again and get the decision reversed"
+          }
+        }
+      ]
+    }
+    @need_attributes_1 = {
+      "content_id"=>"0001c0c6-2dd3-4b56-87f1-815efe32c155",
+      "need_id" => 100523,
+      "details"=>{
+        "benefit"=>"I can make sure I'm getting what I'm entitled to",
+        "goal"=>"know what my rights are after a crime",
+        "role"=>"citizen"
+      }
+    }
+
+    @need_attributes_2 = {
+      "content_id"=>"c867e5f7-2d68-42ad-bedb-20638b3bf58e",
+      "need_id" => 100522,
+      "details"=>{
+        "benefit"=>"I can improve their services or stop them from operating",
+        "goal"=>"complain about a legal adviser",
+        "role"=>"citizen"
+      }
+    }
+
+    @need_attributes_3 = {
+      "content_id"=>"0925fd2b-6b59-4120-a849-96ab19b9c7df",
+      "need_id" => 100521,
+      "details"=>{
+        "role"=>"citizen",
+        "goal"=>"take my tax appeal to a tribunal",
+        "benefit"=>"I can have my case heard again and get the decision reversed"
+      }
+    }
+  end
+
+  context "saving need data to the Publishing API" do
     setup do
       @atts = {
+        "content_id" => SecureRandom.uuid,
         "role" => "user",
         "goal" => "do stuff",
         "benefit" => "get stuff",
@@ -21,33 +106,30 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_need_views" => 15000,
         "yearly_searches" => 2000
       }
+
+      @need_content_item = create(:need_content_item)
     end
 
     context "given valid attributes" do
-      should "make a request to the need API with an author" do
-        need = Need.new(@atts)
-        author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
+      should "make a request to the Publishing API" do
+        publishing_api_has_links({
+          content_id: @need_content_item["content_id"],
+          links: { organisations:[] }
+        })
+        need = Need.need_from_publishing_api_payload(@need_content_item)
 
-        request = @atts.merge(
-          "duplicate_of" => nil,
-          "status" => nil,
-          "author" => {
-            "name" => "O'Brien",
-            "email" => "obrien@alphagov.co.uk",
-            "uid" => "user-1234"
-          })
-        response = @atts.merge(
-          "_response_info" => {
-            "status" => "created"
-          },
-          "id" => "123456"
+        stub_publishing_api_put_content(
+          need.content_id,
+          need.send(:publishing_api_payload),
+          body: {
+            content_id: @need_content_item["content_id"]
+          }
         )
+        stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
 
-        GdsApi::NeedApi.any_instance.expects(:create_need).with(request).returns(response)
+        assert need.save
 
-        assert need.save_as(author)
-        assert need.persisted?
-        assert_equal "123456", need.need_id
+        assert_publishing_api_put_content(need.content_id, need.send(:publishing_api_payload))
       end
 
       should "set the 'met_when', 'justifications' and 'organisation_ids' fields to be empty arrays if not present" do
@@ -82,84 +164,6 @@ class NeedTest < ActiveSupport::TestCase
 
         need.remove_criteria(0)
         assert_equal [], need.met_when
-      end
-
-      context "preparing a need as json" do
-        should "present attributes as json" do
-          json = Need.new(@atts).as_json
-
-          # include protected fields in the list of keys to expect
-          expected_keys = (@atts.keys + %w(duplicate_of status)).sort
-
-          assert_equal expected_keys, json.keys.sort
-          assert_equal "user", json["role"]
-          assert_equal "do stuff", json["goal"]
-          assert_equal "get stuff", json["benefit"]
-          assert_equal ["ministry-of-justice"], json["organisation_ids"]
-          assert_equal "Endangers people", json["impact"]
-          assert_equal ["It's something only government does", "The government is legally obliged to provide it"], json["justifications"]
-          assert_equal ["Winning", "Winning More"], json["met_when"]
-        end
-
-        should "remove empty values from met_when when converted to json" do
-          @atts.merge!({ "met_when" => ["", "Winning", ""] })
-          json = Need.new(@atts).as_json
-
-          assert_equal ["Winning"], json["met_when"]
-        end
-
-        should "clear met_when if no values set when converted to json" do
-          @atts.merge!({ "met_when" => ["", "", ""] })
-          json = Need.new(@atts).as_json
-
-          assert json.has_key?("met_when")
-          assert_equal [], json["met_when"]
-        end
-
-        should "ignore the errors attribute" do
-          need = Need.new(@atts)
-          need.valid? # invoking this sets the errors attribute
-
-          json = need.as_json
-
-          assert json.has_key?("role")
-          refute json.has_key?("errors")
-        end
-
-        should "strip leading newlines from textarea fields" do
-          need = Need.new("legislation" => "\nNew Line Act 2013", "other_evidence" => "\nNew line characters everywhere")
-
-          assert_equal "New Line Act 2013", need.as_json["legislation"]
-          assert_equal "New line characters everywhere", need.as_json["other_evidence"]
-        end
-
-        should "return nil values in the hash" do
-          need = Need.new("role" => nil, "goal" => nil, "benefit" => nil)
-
-          assert need.as_json.has_key?("role")
-          assert need.as_json.has_key?("goal")
-          assert need.as_json.has_key?("benefit")
-        end
-
-        should "return empty strings as nil in the hash" do
-          need = Need.new("role" => "", "goal" => "", "benefit" => "")
-
-          assert_equal nil, need.as_json["role"]
-          assert_equal nil, need.as_json["goal"]
-          assert_equal nil, need.as_json["benefit"]
-        end
-      end
-    end
-
-    should "raise an exception when non-whitelisted fields are present" do
-      assert_raises(ArgumentError) do
-        Need.new(@atts.merge("foo" => "bar", "bar" => "baz"))
-      end
-    end
-
-    should "raise an exception when protected fields are present" do
-      assert_raises ArgumentError do
-        Need.new(@atts.merge("duplicate_of" => "foo"))
       end
     end
 
@@ -198,34 +202,6 @@ class NeedTest < ActiveSupport::TestCase
       assert need.errors.has_key?(:impact)
     end
 
-    should "be invalid with a non-numeric value for yearly_user_contacts" do
-      need = Need.new(@atts.merge("yearly_user_contacts" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_user_contacts)
-    end
-
-    should "be invalid with a non-numeric value for yearly_site_views" do
-      need = Need.new(@atts.merge("yearly_site_views" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_site_views)
-    end
-
-    should "be invalid with a non-numeric value for yearly_need_views" do
-      need = Need.new(@atts.merge("yearly_need_views" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_need_views)
-    end
-
-    should "be invalid with a non-numeric value for yearly_searches" do
-      need = Need.new(@atts.merge("yearly_searches" => "foo"))
-
-      refute need.valid?
-      assert need.errors.has_key?(:yearly_searches)
-    end
-
     should "be valid with a blank value for yearly_user_contacts" do
       need = Need.new(@atts.merge("yearly_user_contacts" => ""))
 
@@ -252,15 +228,11 @@ class NeedTest < ActiveSupport::TestCase
 
     should "report a problem if unable to save the need" do
       need = Need.new(@atts)
-      GdsApi::NeedApi.any_instance.expects(:create_need).raises(
+      GdsApi::PublishingApiV2.any_instance.expects(:put_content).raises(
         GdsApi::HTTPErrorResponse.new(422, ["error"])
       )
 
-      assert_equal false, need.save_as(stub_user)
-    end
-
-    should "report new needs as not persisted" do
-      refute Need.new({}).persisted?
+      assert_equal false, need.save
     end
   end
 
@@ -276,69 +248,102 @@ class NeedTest < ActiveSupport::TestCase
   end
 
   context "listing needs" do
-    should "call the need API adapter" do
-      GdsApi::NeedApi.any_instance.expects(:needs)
-        .with({})
-        .returns(stub_need_response)
+    should "call the Publishing API V2 adapter and return a list of needs" do
+      request_params = {
+        document_type: 'need',
+        per_page: 50,
+        fields: ['content_id', 'need_ids', 'details', 'publication_state'],
+        locale: 'en',
+        order: '-updated_at'
+      }
 
-      Need.list
-    end
+      publishing_api_has_links({
+        content_id: @need_attributes_1["content_id"],
+        links: { organisations:[] }
+      })
+      publishing_api_has_links({
+        content_id: @need_attributes_2["content_id"],
+        links: { organisations:[] }
+      })
+      publishing_api_has_links({
+        content_id: @need_attributes_3["content_id"],
+        links: { organisations:[] }
+      })
 
-    should "pass parameters to the API adapter" do
-      GdsApi::NeedApi.any_instance.expects(:needs)
-        .with({page: 2})
-        .returns(stub_need_response)
 
-      Need.list(page: 2)
-    end
+      needs = [
+        Need.new(@need_attributes_1["details"]),
+        Need.new(@need_attributes_2["details"]),
+        Need.new(@need_attributes_3["details"])
+      ]
 
-    should "return a list of Need objects" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
-      need_list = Need.list
-      assert_equal 1, need_list.length
-      assert need_list.all? { |need| need.is_a? Need }
-    end
+      publishing_api_has_content(
+        needs,
+        Need.default_options.merge(
+          per_page: 50
+        )
+      )
 
-    should "report each need as existing" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
-      assert Need.list.all?(&:persisted?)
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items)
+        .with(request_params)
+        .returns(@stub_publishing_api_response)
+
+      list = Need.list
+
+      assert 3, list.length
+      assert list.all? { |need| need.is_a? Need }
     end
 
     should "retain pagination info" do
-      GdsApi::NeedApi.any_instance.expects(:needs).once.returns(stub_need_response)
+
+      multipage_response = @stub_publishing_api_response
+      multipage_response["total"]= 60
+      multipage_response["per_page"]= 50
+      multipage_response["pages"]= 2
+      multipage_response["page"]= 1
+
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items).once.returns(multipage_response)
+
+      @stub_publishing_api_response["results"].each do |need|
+        publishing_api_has_links({
+          content_id: need["content_id"],
+          links: { organisations:[] }
+        })
+      end
+
       need_list = Need.list
 
       assert_equal 2, need_list.pages
       assert_equal 60, need_list.total
-      assert_equal 50, need_list.page_size
+      assert_equal 50, need_list.per_page
       assert_equal 1, need_list.current_page
-      assert_equal 1, need_list.start_index
     end
   end
 
-  context "requesting needs by IDs" do
+  context "requesting needs by content_ids" do
     setup do
-      @need1 = {
-        "id" => "10001",
-        "role" => "parent",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my child can start school" }
-
-      @need2 = {
-        "id" => "10002",
-        "role" => "person",
-        "goal" => "do stuff",
-        "benefit" => "get stuff done" }
-
-      need_api_has_need_ids([@need1, @need2])
+      @need1 = create(:need_content_item)
+      @need2 = create(:need_content_item)
+      publishing_api_has_item(@need1)
+      publishing_api_has_item(@need2)
     end
 
     should "return an array of matching Need objects" do
-      needs = Need.by_ids(10001, 10002)
+
+      publishing_api_has_links({
+        content_id: @need1["content_id"],
+        links: { organisations:[] }
+      })
+
+      publishing_api_has_links({
+        content_id: @need2["content_id"],
+        links: { organisations:[] }
+      })
+
+      needs = Need.by_content_ids(@need1["content_id"], @need2["content_id"])
 
       assert_equal 2, needs.size
-      assert_equal %w(10001 10002), needs.map(&:id)
-      assert_equal %w(parent person), needs.map(&:role)
+      assert_equal [@need1["content_id"], @need2["content_id"]], needs.map(&:content_id)
     end
   end
 
@@ -355,39 +360,77 @@ class NeedTest < ActiveSupport::TestCase
 
   context "loading needs" do
     should "construct a need from an API response" do
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
 
-      need = Need.find(100001)
+      content_id = SecureRandom.uuid
+      need_content_item = create(
+        :need_content_item,
+        content_id: content_id,
+        details: {
+          need_id: 100001,
+          role: "human",
+          goal: "I want to do something",
+          benefit: "so that I can be happy"
+        }
+      )
 
+      publishing_api_has_item(need_content_item)
+      publishing_api_has_links({
+        content_id: content_id,
+        links: { organisations:[] }
+      })
+
+      need = Need.find(content_id)
+
+      assert_equal content_id, need.content_id
       assert_equal 100001, need.need_id
-      assert_equal "person", need.role
-      assert_equal "do things", need.goal
-      assert_equal "good things", need.benefit
-      assert need.persisted?
+      assert_equal "human", need.role
+      assert_equal "I want to do something", need.goal
+      assert_equal "so that I can be happy", need.benefit
     end
 
     should "return organisations for a need" do
-      response = stub_response(
-        "organisations" => [
-          {
-            "id" => "ministry-of-joy",
-            "name" => "Ministry of Joy"
-          },
-          {
-            "id" => "ministry-of-plenty",
-            "name" => "Ministry of Plenty"
-          }
-        ]
+      first_organisation_content_id = SecureRandom.uuid
+      second_organisation_content_id = SecureRandom.uuid
+      response = [
+        {
+          title: "Her Majesty's Revenue and Customs",
+          content_id: first_organisation_content_id
+        },
+        {
+          title: "Department of Transport",
+          content_id: second_organisation_content_id
+        }
+      ]
+
+      content_id = SecureRandom.uuid
+      need_content_item = create(:need_content_item, content_id: content_id)
+      publishing_api_has_item(need_content_item)
+
+      publishing_api_has_links({
+        content_id: content_id,
+        links: {
+          organisations:[
+            first_organisation_content_id,
+            second_organisation_content_id
+          ]
+        }
+      })
+
+      publishing_api_has_linkables(
+        response,
+        document_type: "organisation",
       )
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
 
-      need = Need.find(100001)
-      assert_equal 2, need.organisations.count
+      need = Need.find(content_id)
+      organisations = need.organisations
 
-      first_organisation = need.organisations.first
+      assert_equal 2, organisations.count
 
-      assert_equal "ministry-of-joy", first_organisation["id"]
-      assert_equal "Ministry of Joy", first_organisation["name"]
+      first_organisation = organisations.first
+      second_organisation = organisations[1]
+
+      assert_equal first_organisation_content_id, first_organisation.content_id
+      assert_equal second_organisation_content_id, second_organisation.content_id
     end
 
     should "return revisions for a need" do
@@ -419,226 +462,221 @@ class NeedTest < ActiveSupport::TestCase
           }
         ]
       )
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
 
-      need = Need.find(100001)
+      content_id = SecureRandom.uuid
+      need_content_item_1 = create(
+        :need_content_item,
+        content_id: content_id,
+        publication_state: "superseded",
+        user_facing_version: 1
+      )
+      need_content_item_2 = create(
+        :need_content_item,
+        content_id: content_id,
+        publication_state: "superseded",
+        details: {
+          goal: "how to make a claim on an estate"
+        },
+        user_facing_version: 2
+      )
+      need_content_item_3 = create(
+        :need_content_item,
+        content_id: content_id,
+        publication_state: "published",
+        details: {
+          goal: "how to make a claim on an estate"
+        },
+        user_facing_version: 3
+      )
 
-      assert_equal 2, need.revisions.count
+      publishing_api_has_item(need_content_item_3)
+      publishing_api_has_item(
+        need_content_item_1,
+        version: need_content_item_1["user_facing_version"].to_s
+      )
+      publishing_api_has_item(
+        need_content_item_2,
+        version: need_content_item_2["user_facing_version"].to_s
+      )
+
+      publishing_api_has_links({
+        content_id: content_id,
+        links: {
+          organisations:[
+          ]
+        }
+      })
+
+      need = Need.find(content_id)
+
+      assert_equal 3, need.revisions.count
 
       first_revision = need.revisions.first
+      second_revision = need.revisions[1]
 
-      assert_equal "update", first_revision["action_type"]
-      assert_equal "Jack Bauer", first_revision["author"]["name"]
-      assert_equal "jack.bauer@test.com", first_revision["author"]["email"]
-
-      assert_nil first_revision["author"]["uid"]
-
-      assert_equal %w(goal role), first_revision["changes"].keys
-      assert_equal ["apply for a secondary school place", "apply for a primary school place"], first_revision["changes"]["goal"]
-      assert_equal [nil, "parent"], first_revision["changes"]["role"]
-
-      assert_equal "2013-05-01T00:00:00+00:00", first_revision["created_at"]
-    end
-
-    should "correctly assign protected fields" do
-      response = stub_response(
-        "status" => { "description" => "some status" }
+      assert_equal %w(publication_state), first_revision["changes"].keys
+      assert_equal %w(superseded published), first_revision["changes"]["publication_state"]
+      assert_equal %w(goal), second_revision["changes"].keys
+      assert_equal(
+        [
+          "find out if an estate is claimable and how to make a claim on an estate",
+          "how to make a claim on an estate"
+        ],
+        second_revision["changes"]["goal"]
       )
-      GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(response)
-
-      need = Need.find(100001)
-      assert_equal "some status", need.status.description
-    end
-
-    context "returning artefacts for a need" do
-      setup do
-        GdsApi::NeedApi.any_instance.expects(:need).once.with(100001).returns(stub_response)
-        @need = Need.find(100001)
-      end
-
-      should "fetch artefacts from the content api" do
-        artefacts = [
-          OpenStruct.new(
-            id: "http://contentapi.dev.gov.uk/pay-council-tax",
-            web_url: "http://www.dev.gov.uk/pay-council-tax",
-            title: "Pay your council tax",
-            format: "transaction"
-          ),
-          OpenStruct.new(
-            id: "http://contentapi.dev.gov.uk/council-tax",
-            web_url: "http://www.dev.gov.uk/council-tax",
-            title: "Council tax",
-            format: "guide"
-          )
-        ]
-        GdsApi::ContentApi.any_instance.expects(:for_need).once.with(100001).returns(artefacts)
-
-        assert_equal 2, @need.artefacts.count
-        assert_equal "http://contentapi.dev.gov.uk/pay-council-tax", @need.artefacts[0].id
-        assert_equal "http://www.dev.gov.uk/pay-council-tax", @need.artefacts[0].web_url
-        assert_equal "Pay your council tax", @need.artefacts[0].title
-        assert_equal "transaction", @need.artefacts[0].format
-      end
-
-      should "be an empty array if there are any api errors" do
-        GdsApi::ContentApi.any_instance.expects(:for_need).once
-          .with(100001)
-          .raises(GdsApi::HTTPErrorResponse.new(500))
-
-        assert_equal [], @need.artefacts
-      end
     end
 
     should "raise an error when need not found" do
-      GdsApi::NeedApi.any_instance.expects(:need).once
-        .with(100001)
+      content_id = SecureRandom.uuid
+
+      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once
+        .with(content_id)
         .raises(GdsApi::HTTPNotFound.new(404))
 
       assert_raises Need::NotFound do
-        Need.find(100001)
+        Need.find(content_id)
       end
     end
   end
 
   context "updating needs" do
     setup do
-      need_hash = {
-        "id" => 100001,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }
-      @need = Need.new(need_hash, existing = true)
+      @need_content_item = create(
+        :need_content_item,
+        content_id: "3e5aa539-79a1-4714-8714-4e3037f981bd"
+      )
+      publishing_api_has_links({
+        content_id: @need_content_item["content_id"],
+        links: { organisations:[] }
+      })
+      @need = Need.need_from_publishing_api_payload(@need_content_item)
     end
 
     context "updating fields" do
-      should "update fields" do
+      should "update fields and send to the Publishing API" do
         @need.update(
-          "impact" => "Endangers people",
-          "yearly_searches" => 50000
+          impact: "Endangers people",
+          yearly_searches: 50000
         )
 
-        assert_equal "person", @need.role
-        assert_equal "do things", @need.goal
-        assert_equal "good things", @need.benefit
+        stub_publishing_api_put_content(
+          @need_content_item["content_id"],
+          @need.send(:publishing_api_payload),
+          response_hash = {
+            body: {
+              content_id: @need_content_item["content_id"],
+              impact: "Endangers people",
+              yearly_searches: 50000
+            }
+          }
+        )
+
+        stub_publishing_api_patch_links(
+          @need_content_item["content_id"],
+          links: { organisations: [] }
+        )
+
+        @need.save
+
+        assert_equal "find out if an estate is claimable and how to make a claim on an estate", @need.goal
         assert_equal "Endangers people", @need.impact
         assert_equal 50000, @need.yearly_searches
+
+        assert_publishing_api_put_content(@need_content_item["content_id"], @need.send(:publishing_api_payload))
       end
 
       should "strip leading newline characters from textareas" do
-        @need.update(
-          "legislation" => "\nRemove the newline from legislation",
-          "other_evidence" => "\nRemove the newline from other_evidence"
+        @need.update({
+          "legislation": "\nRemove the newline from legislation",
+          "other_evidence": "\nRemove the newline from other_evidence"
+        })
+
+        stub_publishing_api_put_content(
+          @need.content_id,
+          @need.send(:publishing_api_payload),
+          response_hash = {
+            body: {
+              "content_id": @need_content_item["content_id"],
+              "legislation": "\nRemove the newline from legislation",
+              "other_evidence": "\nRemove the newline from other_evidence"
+            }
+          }
         )
+        stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
+        @need.save
+
         assert_equal "Remove the newline from legislation", @need.legislation
         assert_equal "Remove the newline from other_evidence", @need.other_evidence
       end
-
-      should "reject unrecognised fields" do
-        assert_raises ArgumentError do
-          @need.update("cheese" => "obstinate")
-        end
-      end
-
-      should "reject a protected field" do
-        assert_raises ArgumentError do
-          @need.update("duplicate_of" => "foo")
-        end
-      end
-
-      should "create an accessor to update the protected field" do
-        @need.status = NeedStatus.new("description" => "some status")
-        assert_equal "some status", @need.status.description
-      end
     end
-
-    should "call the need API" do
-      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
-      update_hash = {
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "excellent things",
-        "organisation_ids" => [],
-        "impact" => nil,
-        "justifications" => [],
-        "met_when" => [],
-        "other_evidence" => nil,
-        "legislation" => nil,
-        "yearly_user_contacts" => nil,
-        "yearly_site_views" => nil,
-        "yearly_need_views" => nil,
-        "yearly_searches" => nil,
-        "duplicate_of" => nil,
-        "status" => nil,
-        "author" => {
-          "name" => "O'Brien", "email" => "obrien@alphagov.co.uk", "uid" => "user-1234"
-        }
-      }
-      GdsApi::NeedApi.any_instance.expects(:update_need).once.with(100001, update_hash)
-      @need.update("benefit" => "excellent things")
-      @need.save_as(author)
-    end
-  end
-
-  should "return whether a need state is 'valid' or not" do
-    need = Need.new({ "status" => { "description" => "not valid" } }, true)
-    assert need.has_invalid_status?
-
-    need = Need.new({ "status" => { "description" => "proposed" } }, true)
-    refute need.has_invalid_status?
   end
 
   context "closing needs as duplicates" do
-    setup do
-      need_hash = {
-        "id" => 100002,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things"
-      }
-      @need = Need.new(need_hash, existing = true)
-    end
+    should "call Publishing API with the correct values" do
 
-    should "call Need API with the correct values" do
-      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
-      duplicate_atts = {
-        "duplicate_of" => 100001,
-        "author" => {
-          "name" => "O'Brien",
-          "email" => "obrien@alphagov.co.uk",
-          "uid" => "user-1234"
+      need_content_item = create(
+        :need_content_item,
+        need_id: 100001
+      )
+
+      need_content_item_duplicate = create(
+        :need_content_item,
+        need_id: 100002
+      )
+
+      explanation = "Duplicate of #{need_content_item["content_id"]}"
+
+      stub_publishing_api_unpublish(
+        need_content_item_duplicate["content_id"],
+        query: {
+        },
+        "body": {
+          "type": "withdrawal",
+          explanation: explanation
         }
-      }
-      GdsApi::NeedApi.any_instance.expects(:close).once.with(100002, duplicate_atts)
-      @need.duplicate_of = 100001
-      @need.close_as(author)
-      assert @need.duplicate?
+      )
+
+      publishing_api_has_links({
+        content_id: need_content_item_duplicate["content_id"],
+        links: { organisations:[] }
+      })
+
+      need = Need.need_from_publishing_api_payload(need_content_item_duplicate)
+      need.unpublish(explanation)
+
+      assert_publishing_api_unpublish(need.content_id, attributes_or_matcher = nil, times = 1)
     end
   end
 
-  context "reopening needs" do
-    setup do
-      need_hash = {
-        "id" => 100002,
-        "role" => "person",
-        "goal" => "do things",
-        "benefit" => "good things",
-        "duplicate_of" => 100001
-      }
-      @need = Need.new(need_hash, existing = true)
-    end
+  context "reopening closed needs" do
+    should "call Publishing API with the correct values" do
+      need = create(
+        :need_content_item,
+        content_id: "f844c60e-05f9-4585-9c0f-fd48099ce81b",
+        publication_state: "unpublished"
+      )
 
-    should "call Need API with the correct values" do
-      author = User.new(name: "O'Brien", email: "obrien@alphagov.co.uk", uid: "user-1234")
-      GdsApi::NeedApi.any_instance.expects(:reopen).once
-        .with(100002, {
-          "author" => {
-            "name" => "O'Brien",
-            "email" => "obrien@alphagov.co.uk",
-            "uid" => "user-1234"
-          }
-        })
-      @need.reopen_as(author)
+      publishing_api_has_links({
+        content_id: need["content_id"],
+        links: { organisations:[] }
+      })
+
+      need_record = Need.need_from_publishing_api_payload(need)
+      need_from_publishing_api = need_record.send(:publishing_api_payload)
+
+      stub_publishing_api_put_content(
+        need["content_id"],
+        need_from_publishing_api,
+        body: {
+          content_id: need["content_id"]
+        }
+      )
+      stub_publishing_api_patch_links(need["content_id"], links: { organisations: [] })
+      stub_publishing_api_publish(need["content_id"], update_type: "major")
+
+      need_record.publish
+
+      assert_publishing_api_publish(need["content_id"], update_type: "major")
     end
   end
 end

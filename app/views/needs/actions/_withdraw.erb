@@ -1,0 +1,31 @@
+<h2>
+  Withdraw
+  <br/>
+  <small>
+    Mark this need as withdrawn.
+  </small>
+</h2>
+<%= form_tag(actions_need_path(@need.content_id), method: "post") do %>
+  <%= hidden_field_tag("need_action", "unpublish") %>
+
+  Please describe why this need is being withdrawn, example reasons include:
+  <ul>
+    <li>it has typos or acronyms that aren’t defined</li>
+    <li>it’s incomplete or imprecise</li>
+    <li>it contains sensitive or politically controversial information</li>
+    <li>it’s an organisational need or isn’t properly defined as a user need</li>
+    <li>it’s an acceptance criterion of another need</li>
+    <li>it’s not in proposition</li>
+  </ul>
+
+  <%=
+  text_area_tag(
+      :explanation,
+      "",
+      class: "form-control",
+      rows: "3"
+  )
+  %>
+
+  <%= submit_tag("Withdraw", { 'class' => 'btn btn-lg btn-warning' }) %>
+<% end %>

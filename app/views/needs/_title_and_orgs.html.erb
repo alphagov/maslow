@@ -1,9 +1,7 @@
 <header class="block-border add-bottom-margin">
   <% if @need.organisations.any? %>
     <p class="need-organisations">
-      <%= @need.organisations.map do |o| %>
-        <% link_to o["name"], needs_url(organisation_id: o["id"]) %>
-      <% end.join(", ").html_safe %>
+      <%= @need.organisations.map(&:title).join(", ") %>
     </p>
   <% end %>
   <div class="relative">
@@ -12,8 +10,8 @@
     </h1>
   </div>
   <span class="lead">
-    <span class="status label <%= status_label_class(@need.status.description) %>">
-      Status: <%= @need.status.description %>
+    <span class="status label <%= publication_state_label_class(@need.publication_state) %>">
+      Status: <%= @need.status %>
     </span>
   </span>
 </header>

@@ -1,0 +1,30 @@
+<h2>
+  Discard
+  <br/>
+  <small>
+    When discarded, all information about this need will be lost.
+  </small>
+</h2>
+<%=
+link_to(
+    "Discard",
+    "#confirm-discard-modal",
+    "id" => "discard-action",
+    "class" => "btn btn-lg btn-danger",
+    "data-toggle" => "modal",
+    "role" => "button"
+)
+%>
+
+<%=
+render(
+    :layout => "needs/actions/confirm_modal",
+    :locals => {
+        :action_label => "Discard",
+        :action => "discard",
+        :path => method(:actions_need_path),
+    }
+) do %>
+Please confirm that you wish to discard this need. You cannot undo
+this operation.
+<% end %>

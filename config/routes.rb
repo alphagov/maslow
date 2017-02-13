@@ -3,9 +3,7 @@ Rails.application.routes.draw do
 
   get "/healthcheck" => Proc.new { [200, { "Content-type" => "text/plain" }, ["OK"]] }
 
-  get :bookmarklet, controller: :bookmarklet, path: 'bookmarklet'
-
-  resources :bookmarks, only: [:index] do
+  resources :bookmarks, only: [:index], param: :content_id do
     collection do
       post :toggle
     end
@@ -13,15 +11,11 @@ Rails.application.routes.draw do
 
   resources :notes, only: [:create]
 
-  resources :needs, except: [:destroy], constraints: { id: /[0-9]+/ } do
+  resources :needs, except: [:destroy], param: :content_id do
     member do
       get :revisions
-      patch :closed
-      get :status
-      patch :status, to: 'needs#update_status', as: 'update_status'
-      delete :closed, to: 'needs#reopen', as: :reopen
       get :actions
-      get :close_as_duplicate, path: 'close-as-duplicate'
+      post :actions
     end
   end
 

@@ -4,6 +4,7 @@ gem 'rails', '~> 4.0'
 
 gem 'mongoid', '4.0.2'
 gem 'plek', '~> 1.11.0'
+gem 'govspeak', '~> 5'
 
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'

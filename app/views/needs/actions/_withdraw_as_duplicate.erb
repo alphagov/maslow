@@ -1,0 +1,20 @@
+<h2>
+  Withdraw as Duplicate
+  <br/>
+  <small>
+    Mark this need as withdrawn, as it is a duplicate of another valid need.
+  </small>
+</h2>
+<%= form_tag(
+    actions_need_path(@need.content_id), method: "post") do %>
+  <%= hidden_field_tag("need_action", "unpublish") %>
+  <%=
+  select_tag(
+      :duplicate_of,
+      options_for_select(options_for_withdrawing_as_duplicate(@need)),
+      { 'data-module' => 'chosen', 'style' => 'width:350px;' }
+  )
+  %>
+
+  <%= submit_tag("Withdraw as a Duplicate", { 'class' => 'btn btn-lg btn-warning' }) %>
+<% end %>

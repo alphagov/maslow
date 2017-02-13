@@ -1,9 +1,6 @@
 require_relative '../test_helper'
-require 'gds_api/test_helpers/need_api'
 
 class NoteTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::NeedApi
-
   setup do
     @author = {
       name: "Winston Smith-Churchill",

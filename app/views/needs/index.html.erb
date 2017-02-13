@@ -1,29 +1,7 @@
 <% content_for :page_title, "All needs" %>
 <h1 class="page-title-with-border">All needs</h1>
 <div>
-  <%= form_tag("/needs", method: "get", class: "form-filter-needs form-inline") do %>
-    <%= hidden_field_tag "q", params["q"] %>
-    <%= label_tag "organisation_id", "Filter needs by organisation:" %>
-    &nbsp;
-    <%= select_tag "organisation_id",
-      options_from_collection_for_select(
-        Organisation.all,
-        "id",
-        "name_with_abbreviation_and_status",
-        params[:organisation_id]
-      ),
-      prompt: "All organisations",
-      'data-module' => 'chosen',
-      class: "organisation-select" %>
-    <%= submit_tag "Filter", name: nil, class: "btn btn-default if-js-hide" %>
-  <% end %>
-  <script>
-    $('select').change(function () {
-      $(this.form).submit();
-    });
-  </script>
   <%= form_tag("/needs", method: "get", class: "form-search-needs form-inline add-vertical-margins") do %>
-    <%= hidden_field_tag "organisation_id", params["organisation_id"] %>
     <%= label_tag "q", "Search needs:" %>
     &nbsp;
     <%= search_field_tag("q", params["q"], class: "search-term form-control") %>
@@ -33,11 +11,8 @@
 
 <%= render partial: "collection" %>
 
-<% unless params[:organisation_id].blank? %>
-  <span><%= link_to "Export as CSV", needs_path(organisation_id: params[:organisation_id],
-                                                format: :csv) %></span>
-<% end %>
-
+<span><%= link_to "Export as CSV", needs_path(organisation_id: params[:organisation_id],
+                                              format: :csv) %></span>
 <%= paginate_needs @needs %>
 
 <%= render partial: "workflow_buttons" %>

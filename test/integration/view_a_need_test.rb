@@ -1,73 +1,102 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
+  include GdsApi::TestHelpers::PublishingApiV2
+  include NeedHelper
+
   setup do
     login_as_stub_user
-    organisations_api_has_organisations([
-      "driver-vehicle-licensing-agency",
-      "driving-standards-agency"
-    ])
+
+    @content_item = create(:need_content_item)
+    @dvla_content_id, @dsa_content_id = SecureRandom.uuid, SecureRandom.uuid
+    publishing_api_has_linkables([
+      {
+        "content_id": @dvla_content_id,
+        "title" => "Driver and Vehicle Licensing Agency",
+      },
+      {
+        "content_id": @dsa_content_id,
+        "title" => "Driving Standards Agency",
+      }
+    ], document_type: "organisation")
+    publishing_api_has_content(
+      [@content_item],
+      Need.default_options.merge(
+        per_page: 50
+      )
+    )
+    publishing_api_has_item(@content_item)
+    publishing_api_has_linked_items(
+      [
+        {
+          title: "Linked item title",
+          base_path: "linked_foo",
+          document_type: "guide"
+        }
+      ],
+      content_id: @content_item["content_id"],
+      link_type: "meets_user_needs",
+      fields: ["title", "base_path", "document_type"]
+    )
+    publishing_api_has_links(
+      content_id: @content_item["content_id"],
+      links: {
+        organisations: [@dvla_content_id, @dsa_content_id]
+      }
+    )
+
+    Note.create(
+      content_id: @content_item["content_id"],
+      text: "looks good",
+      author: { name: "Testy McTestFace" },
+      created_at: DateTime.new(2017, 1, 5, 13)
+    )
   end
 
   context "given a need which exists" do
-    setup do
-      setup_need_api_responses(101350)
-
-      Note.new({
-        "text" => "looks good",
-        "need_id" => 101350,
-        "content_id" => SecureRandom.uuid,
-        "author" => {
-          "name" => "Testy McTestFace",
-          "email" => "test@example.com",
-          "uid" => "123456"
-        },
-        "created_at" => "2017-01-05 13:00:00 UTC"
-        }).save!
-    end
-
     should "show basic information about the need" do
       visit "/needs"
-      click_on "101350"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
-        assert page.has_content?("101350: Book a driving test")
+        assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
       end
 
       within ".need" do
         within "header" do
           within ".need-organisations" do
-            assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
-            assert page.has_link?("Driver and Vehicle Licensing Agency",
-                                  href: needs_url(organisation_id: "driver-vehicle-licencing-agency"))
-            assert page.has_link?("Driving Standards Agency",
-                                  href: needs_url(organisation_id: "driving-standards-agency"))
+            assert page.has_content?(
+                     "Driver and Vehicle Licensing Agency, Driving Standards Agency"
+                   )
           end
 
-          assert page.has_content?("Book a driving test")
-
-          assert page.has_content?("Status: proposed")
+          assert page.has_content?("Status: Proposed")
         end
 
         within ".nav-tabs" do
-          assert page.has_link?("History & Notes", href: "/needs/101350/revisions")
+          assert page.has_link?(
+                   "History & Notes",
+                   href: "/needs/#{@content_item['content_id']}/revisions"
+                 )
         end
 
         within ".the-need" do
-          assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
+          assert page.has_content?("As a #{@content_item['details']['role']}\nI need to #{@content_item['details']['goal']}\nSo that #{@content_item['details']['benefit']}")
         end
 
         within ".met-when" do
-          assert page.has_content?("Users can book their driving test")
-          assert page.has_content?("Users can find out information about the format of the test and how much it costs")
+          @content_item['details']['met_when'].each do |content|
+            assert page.has_content?(content)
+          end
         end
 
         within ".justifications" do
-          assert page.has_content?("It's something only government does")
-          assert page.has_content?("It's straightforward advice that helps people to comply with their statutory obligations")
+          @content_item['details']['justifications'].each do |content|
+            assert page.has_content?(content)
+          end
         end
 
         within ".impact" do
@@ -88,7 +117,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".other-evidence" do
-          assert page.has_content?("Primary service provided by the DVLA")
+          assert page.has_content?("Relatives are entitled to claim up to 30 years after the death; it is their money to claim and it can only be claimed through the Treasury Solicitor")
         end
       end
     end
@@ -96,32 +125,15 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     should "show the recent revisions and notes" do
       visit "/needs"
 
-      click_on "101350"
+      click_on format_need_goal(@content_item["details"]["goal"])
       click_on "History & Notes"
 
       within ".breadcrumb" do
         assert page.has_link?("All needs", href: "/needs")
-        assert page.has_link?("101350: Book a driving test", href: "/needs/101350")
         assert page.has_content?("History & Notes")
       end
 
       within ".need" do
-        within "header" do
-          within ".need-organisations" do
-            assert page.has_content?("Driver and Vehicle Licensing Agency, Driving Standards Agency")
-            assert page.has_link?("Driver and Vehicle Licensing Agency",
-                                  href: needs_url(organisation_id: "driver-vehicle-licencing-agency"))
-            assert page.has_link?("Driving Standards Agency",
-                                  href: needs_url(organisation_id: "driving-standards-agency"))
-          end
-
-          assert page.has_content?("Book a driving test")
-        end
-
-        within ".nav-tabs" do
-          assert page.has_no_link?("See history")
-        end
-
         within ".revisions" do
           assert_equal 3, page.all(".revision").count
           assert_equal 1, page.all(".note-history").count
@@ -133,136 +145,91 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
 
           within(:xpath, "//*[@id='revision-history']/ul/li[2]") do
-            assert page.has_content?("Update by Mickey Mouse <mickey.mouse@test.com>")
-            assert page.has_content?("2:00pm, 1 May 2013")
+            assert page.has_content?("11:53am, 16 November 2015")
 
             within ".changes" do
-              assert_equal 2, page.all("li").count
-
-              assert page.has_content?("Goal: apply for a secondary school place → apply for a primary school place")
-              assert page.has_content?("Role: blank → parent")
-            end
-          end
-
-          within(:xpath, "//*[@id='revision-history']/ul/li[3]") do
-            assert page.has_content?("Update by unknown author")
-            assert page.has_no_content?("<>") # catch missing email
-            assert page.has_content?("2:00pm, 1 April 2013")
-          end
-
-          within(:xpath, "//*[@id='revision-history']/ul/li[4]") do
-            assert page.has_content?("Create by Donald Duck")
-            assert page.has_no_content?("<>") # catch an empty email string
-            assert page.has_content?("1:00pm, 1 January 2013")
-
-            within ".changes" do
-              assert_equal 2, page.all("li").count
-
-              assert page.has_content?("Goal: apply for a school place → apply for a secondary school place")
-              assert page.has_content?("Role: grandparent → blank")
+              assert page.has_content?("Goal: blank → find out if an estate is claimable and how to make a claim on an estate")
+              assert page.has_content?("Role: blank → relative of a deceased person")
             end
           end
         end
       end
     end # should show recent revisions
 
-    context "showing artefacts which meet the need" do
-      should "display artefacts from the content api" do
-        content_api_has_artefacts_for_need_id(101350, [
-          {
-            id: "http://contentapi.dev.gov.uk/vat-rates.json",
-            web_url: "http://www.dev.gov.uk/vat-rates",
-            title: "VAT rates",
-            format: "answer"
-          },
-          {
-            id: "http://contentapi.dev.gov.uk/vat.json",
-            web_url: "http://www.dev.gov.uk/vat",
-            title: "VAT",
-            format: "business_support"
-          }
-        ])
-
+    context "showing content which meet the need" do
+      should "display content from the publishing api" do
         visit "/needs"
-        click_on "101350"
+        click_on format_need_goal(@content_item["details"]["goal"])
 
         within ".need" do
-          assert page.has_selector?("table#artefacts-for-need")
+          assert page.has_selector?("table#content-items-meeting-this-need")
 
-          within "table#artefacts-for-need" do
-            assert page.has_selector?("tbody tr", count: 2)
+          within "table#content-items-meeting-this-need" do
+            assert page.has_selector?("tbody tr", count: 1)
 
             within "tbody" do
               within "tr:first-child" do
-                assert page.has_link?("VAT rates", href: "http://www.dev.gov.uk/vat-rates")
-                assert page.has_content?("Answer")
-              end
-
-              within "tr:nth-child(2)" do
-                assert page.has_link?("VAT", href: "http://www.dev.gov.uk/vat")
-                assert page.has_content?("Business support")
+                assert page.has_link?(
+                         "Linked item title",
+                         href: "#{Plek.new.website_root}/linked_foo"
+                       )
               end
             end # within tbody
           end # within table
         end # within .need
       end # should display artefacts from the content api
 
-      should "not display a table when there are no artefacts for this need" do
-        content_api_has_artefacts_for_need_id(101350, [])
+      should "not display a table when there are no content items for this need" do
+        publishing_api_has_linked_items(
+          [],
+          content_id: @content_item["content_id"],
+          link_type: "meets_user_needs",
+          fields: ["title", "base_path", "document_type"]
+        )
 
         visit "/needs"
-        click_on "101350"
+        click_on format_need_goal(@content_item["details"]["goal"])
 
         # check the page has loaded correctly
-        assert page.has_content?("Book a driving test")
+        assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
 
         within ".need" do
-          assert page.has_no_selector?("table#artefacts-for-need")
+          assert page.has_no_selector?("table#content-items-meeting-this-need")
         end
       end
-
-      should "not display a table when the Content API returns an error" do
-        GdsApi::ContentApi.any_instance.expects(:for_need).once
-          .with(101350)
-          .raises(GdsApi::HTTPErrorResponse.new(500))
-
-        visit "/needs"
-        click_on "101350"
-
-        # check the page has loaded correctly
-        assert page.has_content?("Book a driving test")
-
-        within ".need" do
-          assert page.has_no_selector?("table#artefacts-for-need")
-        end
-      end
-    end # context showing artefacts which meet the need
+    end
   end
 
   context "given a need with missing attributes" do
     setup do
-      setup_need_api_responses(101500)
+      @content_item["details"].delete("met_when")
+      @content_item["details"].delete("justifications")
+      @content_item["details"].delete("impact")
+      @content_item["details"].delete("legislation")
+      @content_item["details"].delete("other_evidence")
+
+      publishing_api_has_item(@content_item)
     end
 
     should "show basic information about the need" do
       visit "/needs"
-      click_on "101500"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       within ".need" do
         within "header" do
-          assert page.has_no_selector?(".need-organisations")
-
-          assert page.has_content?("Book a driving test")
+          assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
         end
 
         within ".the-need" do
-          assert page.has_content?("As a user \nI need to book a driving test \nSo that I can get my driving licence")
+          role, goal, benefit = @content_item["details"].values_at("role", "goal", "benefit")
+          assert page.has_content?(
+                   "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
+                 )
         end
 
         assert page.has_no_selector?(".met-when")
         assert page.has_no_selector?(".justifications")
         assert page.has_no_selector?(".impact")
-        assert page.has_no_selector?(".interactions")
         assert page.has_no_selector?(".legislation")
         assert page.has_no_selector?(".other-evidence")
       end
@@ -271,22 +238,32 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
   context "given a need which applies to all organisations" do
     setup do
-      setup_need_api_responses(101700)
+      @content_item["details"]["applies_to_all_organisations"] = true
+      publishing_api_has_item(@content_item)
+      publishing_api_has_links(
+        content_id: @content_item["content_id"],
+        links: {
+          organisations: []
+        }
+      )
     end
 
     should "show basic information about the need" do
       visit "/needs"
-      click_on "101700"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       within ".need" do
         within "header" do
           assert page.has_no_selector?(".need-organisations")
 
-          assert page.has_content?("Find out news from government")
+          assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
         end
 
         within ".the-need" do
-          assert page.has_content?("As a user \nI need to find out news from government \nSo that I know what government is doing")
+          role, goal, benefit = @content_item["details"].values_at("role", "goal", "benefit")
+          assert page.has_content?(
+                   "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
+                 )
         end
 
         assert page.has_content?("This need applies to all organisations.")
@@ -296,48 +273,32 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
   context "given a need which is not valid" do
     setup do
-      setup_need_api_responses(101800)
+      @content_item["publication_state"] = "unpublished"
+      @content_item["unpublishing"] = {
+        "type" => "withdrawal",
+        "explanation" => "This need is not valid because: x"
+      }
+
+      publishing_api_has_item(@content_item)
     end
 
     should "indicate that it is not valid" do
       visit "/needs"
-      click_on "101800"
+      click_on format_need_goal(@content_item["details"]["goal"])
 
       assert page.has_content?("This need is not valid because:")
-      assert page.has_no_button?("Decide on need")
-    end
-  end
-
-  context "given a need which is valid with conditions" do
-    setup do
-      need = example_need(
-        "id" => "10001",
-        "status" => {
-          "description" => "valid with conditions",
-          "validation_conditions" => "a and b must be changed",
-        })
-
-      organisations_api_has_organisations([])
-      need_api_has_needs([need])
-      need_api_has_need(need)
-      content_api_has_artefacts_for_need_id("10001", [])
-    end
-
-    should "indicate that it is valid with conditions" do
-      visit "/needs"
-      click_on "10001"
-
-      assert page.has_content?("This need is valid under the following conditions: a and b must be changed")
     end
   end
 
   context "given a need which doesn't exist" do
+    content_id = SecureRandom.uuid
+
     setup do
-      need_api_has_no_need("101007")
+      publishing_api_does_not_have_item(content_id)
     end
 
     should "display a not found error message" do
-      visit "/needs/101007"
+      visit "/needs/#{content_id}"
 
       assert page.has_content?("The page you were looking for doesn't exist.")
     end

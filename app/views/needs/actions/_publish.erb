@@ -1,0 +1,12 @@
+<h2>
+  Validate
+  <br/>
+  <small>
+    When validated, this need will appear on the Info pages for
+    content that meets this need.
+  </small>
+</h2>
+<%= form_tag(actions_need_path(@need.content_id), method: "post") do %>
+  <%= hidden_field_tag("need_action", "publish") %>
+  <%= submit_tag("Validate", { 'class' => 'btn btn-lg btn-success' }) %>
+<% end %>

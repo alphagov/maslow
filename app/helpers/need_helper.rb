@@ -3,11 +3,12 @@ module NeedHelper
   include ActionView::Helpers::NumberHelper
 
   def breadcrumb_link_for(need)
-    link_to breadcrumb_label_for(need), need_path(need)
+    link_to short_label_for_need(need), need_path(need.content_id)
   end
 
-  def breadcrumb_label_for(need)
-    "#{need.need_id}: #{format_need_goal(need.goal)}"
+  def short_label_for_need(need)
+    need_id_suffix = need.need_id ? " (#{need.need_id})" : ""
+    "#{format_need_goal(need.goal)}#{need_id_suffix}"
   end
 
   def format_need_goal(goal)
@@ -28,6 +29,44 @@ module NeedHelper
 
   def format_field_name(name)
     name.titleize
+  end
+
+  def render_unpublishing_explanation(need)
+    explanation = need.unpublishing["explanation"]
+
+    explanation_link_match_data = /\[embed:link:\s*(.*?)\s*\]/.match(explanation)
+
+    if explanation_link_match_data.nil?
+      links = []
+    else
+      links = explanation_link_match_data.captures.map do |content_id|
+        begin
+          need = Need.find(content_id)
+          {
+            content_id: content_id,
+            title: need.title,
+            url: need_path(content_id)
+          }
+        rescue Need::NotFound
+          {
+            content_id: content_id,
+            title: "an unknown need",
+          }
+        end
+      end
+    end
+
+    Govspeak::Document.new(explanation, links: links).to_html.html_safe
+  end
+
+  def options_for_withdrawing_as_duplicate(need)
+    Need.list(
+      per_page: 1e10,
+      states: ['published'],
+      load_organisation_ids: false
+    ).to_options.reject do |option|
+      option[1] == need.content_id
+    end
   end
 
   # If no criteria present, insert a blank
@@ -69,13 +108,13 @@ module NeedHelper
   end
 
   def paginate_needs(needs)
-    return unless needs.present? && needs.current_page.present? && needs.pages.present? && needs.page_size.present?
+    return unless needs.present? && needs.current_page.present? && needs.pages.present? && needs.per_page.present?
 
     Kaminari::Helpers::Paginator.new(
       self,
       current_page: needs.current_page,
       total_pages: needs.pages,
-      per_page: needs.page_size,
+      per_page: needs.per_page,
       param_name: "page",
       remote: false
     ).to_s
@@ -85,27 +124,22 @@ module NeedHelper
     Need.find(@need.duplicate_of).goal
   end
 
-  def format_decision_made(need)
-    decision = []
-    decision << need.status.description.capitalize
-    decision << "Duplicate" if need.duplicate?
-    decision.join(", ")
+  def feedback_for_page(base_path)
+    Maslow.support_api.feedback_url base_path
   end
 
-  def feedback_for_page(artefact)
-    path = URI(artefact["web_url"]).path
-    Maslow.support_api.feedback_url path
+  def full_url_for_base_path(base_path)
+    URI.join(Plek.new.website_root, base_path).to_s
   end
 
-  def bookmark_icon(bookmarks, need_id)
-    bookmarks.include?(need_id.to_i) ? 'glyphicon-star' : 'glyphicon-star-empty'
+  def bookmark_icon(bookmarks, content_id)
+    bookmarks.include?(content_id) ? 'glyphicon-star' : 'glyphicon-star-empty'
   end
 
-  def status_label_class(status_description)
-    case status_description
-    when "valid" then "label-success"
-    when "not valid" then "label-danger"
-    when "valid with conditions" then "label-warning"
+  def publication_state_label_class(state)
+    case state
+    when "published" then "label-success"
+    when "unpublished" then "label-warning"
     else "label-info"
     end
   end

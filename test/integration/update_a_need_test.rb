@@ -1,53 +1,44 @@
 # encoding: UTF-8
 require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/organisations'
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
-  def need_hash
-    {
-      "id" => "100001",
-      "role" => "parent",
-      "goal" => "apply for a primary school place",
-      "benefit" => "my child can start school",
-      "met_when" => %w(win awesome more),
-      "organisations" => [],
-      "legislation" => "Blank Fields Act 2013",
-      "revisions" => [],
-      "applies_to_all_organisations" => false,
-      "status" => {
-        "description" => "proposed"
-      }
-    }
-  end
+  include NeedHelper
 
   setup do
     login_as_stub_editor
-    organisations_api_has_organisations([
-      "committee-on-climate-change",
-      "competition-commission",
-      "ministry-of-justice"
-    ])
+    publishing_api_has_linkables([], document_type: "organisation")
   end
 
   context "updating a need" do
     setup do
-      need_api_has_needs([need_hash]) # For need list
-      need_api_has_need(need_hash) # For individual need
-      content_api_has_artefacts_for_need_id("100001", [])
+      @content_item = create(:need_content_item)
+      publishing_api_has_content(
+        [@content_item],
+        Need.default_options.merge(
+          per_page: 50
+        )
+      )
+      publishing_api_has_linked_items(
+        [],
+        content_id: @content_item["content_id"],
+        link_type: "meets_user_needs",
+        fields: ["title", "base_path", "document_type"]
+      )
+      publishing_api_has_links(
+        content_id: @content_item["content_id"],
+        links: {
+          organisations: []
+        }
+      )
+      publishing_api_has_item(@content_item)
     end
 
     should "be able to access edit form" do
       visit('/needs')
 
-      click_on("100001")
+      click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
-      end
-
-      within ".breadcrumb" do
-        assert page.has_link?("All needs", href: "/needs")
-        assert page.has_link?("100001: Apply for a primary school place", href: "/needs/100001")
-        assert page.has_content?("Edit")
       end
 
       assert page.has_content?("Edit need")
@@ -59,26 +50,27 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to update a need" do
-      api_url = Plek.current.find('need-api') + '/needs/100001'
-      request_body = blank_need_request.merge(
-        "role" => "grandparent",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my grandchild can start school",
-        "legislation" => nil,
-        "met_when" => %w(win awesome more),
-        "author" => {
-          "name" => stub_user.name,
-          "email" => stub_user.email,
-          "uid" => stub_user.uid
+      test_need = Need.find(@content_item["content_id"])
+      test_need.update(
+        role: "grandparent",
+        benefit: "my grandchild can start school",
+        legislation: ""
+      )
+      payload = test_need.send(:publishing_api_payload)
+
+      stub_publishing_api_put_content(@content_item["content_id"], payload)
+      stub_publishing_api_patch_links(
+        @content_item["content_id"],
+        {
+          links: { "organisations" => [] }
         }
-      ).to_json
-      request = stub_request(:put, api_url).with(body: request_body)
+      )
 
       visit('/needs')
 
-      click_on('100001')
+      click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
-        assert page.has_link?("Edit", href: "/needs/100001/edit")
+        assert page.has_link?("Edit", href: "/needs/#{@content_item["content_id"]}/edit")
         click_on("Edit")
       end
 
@@ -89,49 +81,94 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         click_on_first_button("Save")
       end
 
+      assert_publishing_api_put_content(@content_item["content_id"], payload)
+      assert page.has_text?("Need updated"), "No success message displayed"
+    end
+
+    should "be able to update the organisations for a need" do
+      content_id_of_organisation_to_add = SecureRandom.uuid
+      publishing_api_has_linkables([
+        {
+          "content_id": SecureRandom.uuid,
+          "title" => "Committee on Climate Change",
+        },
+        {
+          "content_id": content_id_of_organisation_to_add,
+          "title" => "Ministry Of Justice",
+        }
+      ], document_type: "organisation")
+
+      test_need = Need.find(@content_item["content_id"])
+      payload = test_need.send(:publishing_api_payload)
+
+      stub_publishing_api_put_content(@content_item["content_id"], payload)
+
+      request = stub_publishing_api_patch_links(
+        @content_item["content_id"],
+        links: {
+          "organisations" => [content_id_of_organisation_to_add]
+        }
+      )
+
+      visit('/needs')
+
+      click_on(format_need_goal(@content_item["details"]["goal"]))
+      within "#workflow" do
+        assert page.has_link?("Edit", href: "/needs/#{@content_item["content_id"]}/edit")
+        click_on("Edit")
+      end
+
+      select("Ministry Of Justice", from: "Departments and agencies")
+      within "#workflow" do
+        click_on_first_button("Save")
+      end
+
       assert_requested request
-      assert page.has_text?("Need updated 100001: apply for a primary school"), "No success message displayed"
-      assert page.has_link?("100001: apply for a primary school", href: "/needs/100001")
     end
 
     should "display met_when criteria on multiple lines" do
-      need_api_has_need(need_hash.merge("met_when" => %w(win awesome)))
+      met_when = %w(win awesome)
+      @content_item["details"]["met_when"] = met_when
+      publishing_api_has_item(@content_item)
+
       visit('/needs')
-      click_on('100001')
+      click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
       end
 
       within "#met-when-criteria" do
-        assert_equal("win", find_field("criteria-0").value)
-        assert_equal("awesome", find_field("criteria-1").value)
+        met_when.each_with_index do |criteria, index|
+          assert_equal(criteria, find_field("criteria-#{index}").value)
+        end
       end
     end
 
     should "be able to add more met_when criteria" do
-      api_url = Plek.current.find('need-api') + '/needs/100001'
-      request_body = blank_need_request.merge(
-        "role" => "parent",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my child can start school",
-        "legislation" => "Blank Fields Act 2013",
-        "met_when" => %w(win awesome more),
-        "author" => {
-          "name" => stub_user.name,
-          "email" => stub_user.email,
-          "uid" => stub_user.uid
+      need = Need.send(:need_from_publishing_api_payload, @content_item)
+      expected_payload = need.send(:publishing_api_payload)
+      expected_payload[:details]["met_when"] << "more"
+      request = stub_publishing_api_put_content(
+        @content_item["content_id"],
+        expected_payload
+      )
+
+      stub_publishing_api_patch_links(
+        @content_item["content_id"],
+        {
+          links: { "organisations" => [] }
         }
-      ).to_json
-      request = stub_request(:put, api_url).with(body: request_body)
+      )
 
       visit('/needs')
-      click_on('100001')
+      click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
       end
 
-      assert_equal("win", find_field("criteria-0").value)
-      assert_equal("awesome", find_field("criteria-1").value)
+      @content_item["details"]["met_when"].each_with_index do |criteria, index|
+        assert_equal(criteria, find_field("criteria-#{index}").value)
+      end
 
       within "#met-when-criteria" do
         click_on('Enter another criteria')
@@ -146,20 +183,25 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
 
       assert_requested request
-      assert page.has_text?("Need updated 100001: apply for a primary school"), "No success message displayed"
-      assert page.has_link?("100001: apply for a primary school", href: "/needs/100001")
+      assert page.has_text?("Need updated"), "No success message displayed"
     end
 
     should "be able to delete met_when criteria" do
+      @content_item["details"]["met_when"] = %w(win awesome more)
+      publishing_api_has_item(@content_item)
+
       visit('/needs')
-      click_on('100001')
+      click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
       end
 
-      assert_equal("win", find_field("criteria-0").value)
-      assert_equal("awesome", find_field("criteria-1").value)
-      assert_equal("more", find_field("criteria-2").value)
+      met_when_initial_count = @content_item["details"]["met_when"].length
+      assert met_when_initial_count >= 2
+
+      @content_item["details"]["met_when"].each_with_index do |criteria, index|
+        assert_equal(criteria, find_field("criteria-#{index}").value)
+      end
 
       within "#met-when-criteria" do
         # delete criteria buttons
@@ -181,33 +223,13 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
     end
 
-    should "handle 422 errors from the Need API" do
-      api_url = Plek.current.find('need-api') + '/needs/100001'
-      request_body = blank_need_request.merge(
-        "role" => "grandparent",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my grandchild can start school",
-        "legislation" => "Blank Fields Act 2013",
-        "met_when" => %w(win awesome more),
-        "author" => {
-          "name" => stub_user.name,
-          "email" => stub_user.email,
-          "uid" => stub_user.uid
-        }
-      ).to_json
-      request = stub_request(:put, api_url)
-        .with(body: request_body)
-        .to_return(
-          status: 422,
-          body: {
-            _response_info: { status: "invalid_attributes" },
-            errors: ["error"]
-          }.to_json
-        )
+    should "handle 422 errors from the Publishing API" do
+      put_url = "#{Plek.find('publishing-api')}/v2/content/#{@content_item['content_id']}"
+      stub_request(:put, put_url).to_return(status: 422)
 
       visit('/needs')
 
-      click_on("100001")
+      click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
       end
@@ -221,96 +243,49 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Edit need")
       assert page.has_text?("There was a problem saving your need.")
     end
-
-    should "be able to save and add a new need" do
-      api_url = Plek.current.find('need-api') + '/needs/100001'
-      request_body = blank_need_request.merge(
-        "role" => "Person",
-        "goal" => "apply for a primary school place",
-        "benefit" => "my child can start school",
-        "legislation" => "Blank Fields Act 2013",
-        "met_when" => %w(win awesome more),
-        "author" => {
-          "name" => stub_user.name,
-          "email" => stub_user.email,
-          "uid" => stub_user.uid
-        }
-      ).to_json
-      request = stub_request(:put, api_url).with(body: request_body)
-
-      visit('/needs')
-
-      click_on("100001")
-      within "#workflow" do
-        click_on("Edit")
-      end
-
-      fill_in("As a", with: "Person")
-
-      within "#workflow" do
-        click_on("Save and add a new need")
-      end
-
-      assert_requested request
-      assert page.has_content?("Add a new need")
-      assert page.has_content?("Need updated 100001: apply for a primary school place")
-      assert page.has_link?("100001: apply for a primary school place",
-                            href: "/needs/100001")
-    end
   end
 
   context "updating a need which applies to all organisations" do
     setup do
-      @need = need_hash.merge(
-        "id" => 100200,
-        "applies_to_all_organisations" => true
+      @content_item = create(:need_content_item)
+      @content_item["details"]["applies_to_all_organisations"] = true
+      publishing_api_has_content(
+        [@content_item],
+        Need.default_options.merge(
+          per_page: 50
+        )
       )
-
-      need_api_has_needs([@need]) # For need list
-      need_api_has_need(@need) # For individual need
-      content_api_has_artefacts_for_need_id("100200", [])
+      publishing_api_has_linked_items(
+        [],
+        content_id: @content_item["content_id"],
+        link_type: "meets_user_needs",
+        fields: ["title", "base_path", "document_type"]
+      )
+      publishing_api_has_links(
+        content_id: @content_item["content_id"],
+        links: {
+          organisations: []
+        }
+      )
+      publishing_api_has_item(@content_item)
     end
 
     should "not show the organisations field" do
-      # stub the put request to the Need API
-      request_body = blank_need_request.merge(
-        "role" => "parent",
-        "goal" => "apply for a primary school place",
-        "organisation_ids" => [],
-        "benefit" => "my child can start school",
-        "legislation" => "Blank Fields Act 2013",
-        "met_when" => %w(win awesome more),
-        "author" => {
-          "name" => stub_user.name,
-          "email" => stub_user.email,
-          "uid" => stub_user.uid
-        }
-      )
-      request = stub_request(:put, Plek.current.find('need-api') + '/needs/100200')
-        .with(body: request_body.to_json)
-
       visit "/needs"
-      click_on "100200"
+      click_on(format_need_goal(@content_item["details"]["goal"]))
 
-      within "header h1" do
-        assert page.has_content? "Apply for a primary school place"
+      within ".need-title" do
+        assert page.has_content?(format_need_goal(@content_item["details"]["goal"]))
       end
 
       within ".nav-tabs" do
-        assert page.has_link?("Edit", href: "/needs/100200/edit")
+        assert page.has_link?("Edit", href: "/needs/#{@content_item['content_id']}/edit")
         click_on "Edit"
       end
 
       assert page.has_selector? "h3", text: "Edit need"
       assert page.has_no_select? "Organisations"
       assert page.has_content? "This need applies to all organisations"
-
-      within "#workflow" do
-        click_on_first_button("Save")
-      end
-      assert_requested request
-      assert page.has_text?("Need updated 100200: apply for a primary school place"), "No success message displayed"
-      assert page.has_link?("100200: apply for a primary school place", href: "/needs/100200")
     end
   end
 end

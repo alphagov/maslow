@@ -1,40 +1,36 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
-require 'gds_api/test_helpers/organisations'
 
 class NotesControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::NeedApi
-  include GdsApi::TestHelpers::Organisations
-
   setup do
     login_as_stub_editor
   end
 
   context "POST create" do
     should "be successful" do
+      content_id = SecureRandom.uuid
       @note_atts = {
         "note" => {
           "text" => "test"
         },
-        "need_id" => "100001"
+        "content_id" => content_id
       }
-      need_api_has_content_id_for_need(id: @note_atts["need_id"], content_id: SecureRandom.uuid)
 
       post :create, @note_atts
 
-      assert_redirected_to revisions_need_path("100001")
+      assert_redirected_to revisions_need_path(content_id)
       assert_equal "Note saved", flash[:notice]
       refute flash[:error]
     end
 
     should "return an error message if the save fails" do
+      content_id = SecureRandom.uuid
       @blank_note_atts = {
         "note" => {
           "text" => ""
         },
-        "need_id" => "100002"
+        "content_id" => content_id
       }
-      need_api_has_content_id_for_need(id: @blank_note_atts["need_id"], content_id: SecureRandom.uuid)
 
       post :create, @blank_note_atts
 

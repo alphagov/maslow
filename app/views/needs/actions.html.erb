@@ -5,8 +5,22 @@
   <%= render :partial => "need_header" %>
 
   <div id="actions">
-    <% if current_user.can?(:close, Need) %>
-      <%= render partial: "needs/actions/duplicate_of" %>
+    <% if @need.draft? %>
+      <% if current_user.can?(:publish, Need) %>
+        <%= render partial: "needs/actions/publish" %>
+      <% end %>
+      <% if current_user.can?(:discard, Need) %>
+        <%= render partial: "needs/actions/discard_draft" %>
+      <% end %>
+    <% elsif @need.published? %>
+      <% if current_user.can?(:unpublish, Need) %>
+        <%= render partial: "needs/actions/withdraw" %>
+        <%= render partial: "needs/actions/withdraw_as_duplicate" %>
+      <% end %>
+    <% elsif @need.unpublished? %>
+      <% if current_user.can?(:publish, Need) %>
+        <%= render partial: "needs/actions/publish" %>
+      <% end %>
     <% end %>
   </div>
 

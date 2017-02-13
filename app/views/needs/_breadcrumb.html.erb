@@ -8,7 +8,7 @@
     <% elsif defined?(action) and not defined?(need) %>
       <li class="active"><%= action %></li>
     <% else %>
-      <li class="active"><%= breadcrumb_label_for(need) %></li>
+      <li class="active"><%= short_label_for_need(need) %></li>
     <% end %>
   </ul>
 </nav>

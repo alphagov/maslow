@@ -1,10 +1,8 @@
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/need_api'
-require 'gds_api/test_helpers/organisations'
 
 class SearchingNeedsTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::NeedApi
-  include GdsApi::TestHelpers::Organisations
+  include NeedHelper
 
   setup do
     login_as_stub_user
@@ -12,83 +10,41 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
 
   context "filtering the list of needs" do
     setup do
-      organisations_api_has_organisations([])
+      @content = [
+        create(:need_content_item),
+        create(
+          :need_content_item,
+          title: "Foo",
+          details: {
+            goal: "Foo goal"
+          }
+        )
+      ]
 
-      need_api_has_needs([
-        {
-          "id" => "10001",
-          "goal" => "apply for a primary school place",
-          "organisation_ids" => ["department-for-education"],
-          "organisations" => [
-            {
-              "id" => "department-for-education",
-              "name" => "Department for Education",
-            }
-          ],
-          "status" => {
-            "description" => "proposed",
-          },
-        },
-        {
-          "id" => "10002",
-          "goal" => "find out about becoming a British citizen",
-          "organisation_ids" => ["home-office", "hm-passport-office"],
-          "organisations" => [
-            {
-              "id" => "home-office",
-              "name" => "Home Office",
-            },
-            {
-              "id" => "hm-passport-office",
-              "name" => "HM Passport Office",
-            }
-          ],
-          "status" => {
-            "description" => "proposed",
-          },
-        }
-      ])
+      publishing_api_has_content([@content[1]], Need.default_options.merge(q: "Foo"))
+      publishing_api_has_content(@content, Need.default_options)
 
-      need_api_has_needs_for_search("citizenship", [
-        {
-          "id" => "10002",
-          "goal" => "find out about becoming a British citizen",
-          "organisation_ids" => ["home-office", "hm-passport-office"],
-          "organisations" => [
-            {
-              "id" => "home-office",
-              "name" => "Home Office",
-            },
-            {
-              "id" => "hm-passport-office",
-              "name" => "HM Passport Office",
-            }
-          ],
-          "status" => {
-            "description" => "proposed",
-          },
-        }
-      ])
+      publishing_api_has_linkables([], document_type: "organisation")
+
+      get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
+      stub_request(:get, get_links_url).to_return(
+        body: { links: { organisations: [] } }.to_json
+      )
     end
 
     should "display a list of search results" do
       visit "/needs"
 
-      assert page.has_text?("10001")
-      assert page.has_text?("Apply for a primary school place")
-      assert page.has_text?("Department for Education")
+      @content.each do |need_content|
+        assert page.has_text?(format_need_goal(need_content["details"]["goal"]))
+      end
 
-      assert page.has_text?("10002")
-      assert page.has_text?("Find out about becoming a British citizen")
-      assert page.has_text?("Home Office")
-      assert page.has_text?("HM Passport Office")
-
-      fill_in("Search needs:", with: "citizenship")
+      fill_in("Search needs:", with: "Foo")
       click_on_first_button("Search")
 
-      assert page.has_text?("Find out about becoming a British citizen")
-      assert page.has_no_text?("Apply for a primary school place")
-      assert_equal("citizenship", find_field("Search needs:").value)
+      assert page.has_text?(format_need_goal(@content[1]["details"]["goal"]))
+      assert page.has_no_text?(format_need_goal(@content[0]["details"]["goal"]))
+      assert_equal("Foo", find_field("Search needs:").value)
     end
   end
 end
