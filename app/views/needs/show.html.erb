@@ -60,14 +60,16 @@
         </div>
       <% end %>
 
-      <%=
+      <% unless @need.unpublished? %>
+        <%=
         render(
-          partial: "content_items_meeting_this_need",
-          locals: {
-            content_items_meeting_this_need: @need.content_items_meeting_this_need
-          }
-       )
-      %>
+            partial: "content_items_meeting_this_need",
+            locals: {
+                content_items_meeting_this_need: @need.content_items_meeting_this_need
+            }
+        )
+        %>
+      <% end %>
     </div>
 
     <% if show_interactions_column?(@need) %>
