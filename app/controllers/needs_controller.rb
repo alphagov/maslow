@@ -38,7 +38,6 @@ class NeedsController < ApplicationController
     @need = load_need
     return if request.get?
 
-    logger.info params
     case params["need_action"]
     when "publish"
       publish
