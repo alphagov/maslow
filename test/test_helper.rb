@@ -25,8 +25,6 @@ class ActiveSupport::TestCase
     Timecop.return
   end
 
-  ActiveSupport::TestCase.test_order = :sorted
-
   def stub_user
     @stub_user ||= create(:user)
   end
