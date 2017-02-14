@@ -1,14 +1,13 @@
 # Maslow
 
-Maslow is a tool to create and manage needs. It's a frontend for the [Need API](https://github.com/alphagov/govuk_need_api). It's a Rails app which is part of the GOV.UK Publishing Platform.
+Maslow is a tool to create and manage needs. It's a Rails app which is
+part of the GOV.UK Publishing Platform.
 
 ## Dependencies
 
 - Ruby (1.9.3)
 - Bundler
-- A running instance of the [Need API](https://github.com/alphagov/govuk_need_api)
-
-If you'd like to show a list of content for a need, you can also run the [Content API](https://github.com/alphagov/govuk_content_api) (and its dependencies). However, Maslow will still work when the Content API isn't present.
+- A running instance of the [Publishing API](https://github.com/alphagov/publishing-api)
 
 ## Getting started
 
