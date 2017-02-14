@@ -423,10 +423,8 @@ private
       hash[field] = value.as_json
     end
 
-    slug = @goal.parameterize
-    base_path = "/needs/#{slug}"
-
     title_suffix = need_id ? " (#{need_id})" : ""
+    update(base_path: "/needs/#{goal.parameterize}") unless base_path
 
     {
       schema_name: "need",
