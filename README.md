@@ -7,6 +7,7 @@ part of the GOV.UK Publishing Platform.
 
 - Ruby
 - Bundler
+- The Ruby Gems listed in the Gemfile
 - A running instance of the [Publishing API](https://github.com/alphagov/publishing-api)
 
 ## Getting started
