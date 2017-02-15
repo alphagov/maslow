@@ -5,7 +5,7 @@ part of the GOV.UK Publishing Platform.
 
 ## Dependencies
 
-- Ruby (1.9.3)
+- Ruby
 - Bundler
 - A running instance of the [Publishing API](https://github.com/alphagov/publishing-api)
 
