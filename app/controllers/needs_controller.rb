@@ -1,4 +1,3 @@
-require 'gds_api/need_api'
 require 'plek'
 require 'json'
 

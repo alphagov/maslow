@@ -2,7 +2,5 @@
 # the Need API.
 #
 API_CLIENT_CREDENTIALS = {
-  content_api: { },
-  need_api: { bearer_token: 'xxxxx' },
   support: { }
 }

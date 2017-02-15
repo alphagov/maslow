@@ -1,6 +1,3 @@
-require 'gds_api/need_api'
-require 'gds_api/organisations'
-
 class Organisation
   attr_reader :content_id, :title, :internal_name, :publication_state, :base_path
 
