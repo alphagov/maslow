@@ -371,7 +371,9 @@ private
 
   def self.need_from_publishing_api_payload(attributes, load_organisation_ids: true)
     attributes = self.move_details_to_top_level(attributes)
-    need = Need.new(attributes)
+    whitelisted_attributes = attributes.slice(*ALLOWED_FIELDS)
+
+    need = Need.new(whitelisted_attributes)
     need.load_organisation_ids if load_organisation_ids
     need.persisted = true
 
@@ -399,20 +401,8 @@ private
     # }
 
     attributes_without_nested_details = attributes.except("details")
-    attributes_with_merged_details =
-      attributes_without_nested_details.merge(attributes["details"] || {})
 
-    fields_to_exclude = %w(
-      publishing_app
-      rendering_app
-      document_type
-      content_store
-      need_ids
-      lock_version
-      warnings
-    )
-
-    attributes_with_merged_details.except(*fields_to_exclude)
+    attributes_without_nested_details.merge(attributes["details"] || {})
   end
 
   def publishing_api_payload
