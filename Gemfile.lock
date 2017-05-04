@@ -142,8 +142,8 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.8.1)
-    jasmine (2.3.1)
-      jasmine-core (~> 2.3)
+    jasmine (2.6.0)
+      jasmine-core (>= 2.6.0, < 3.0.0)
       phantomjs
       rack (>= 1.2.1)
       rake
@@ -336,7 +336,7 @@ DEPENDENCIES
   govspeak (~> 5)
   govuk-lint
   govuk_admin_template (= 6.0.0)
-  jasmine (= 2.3.1)
+  jasmine (= 2.6.0)
   kaminari (= 0.16.3)
   logstasher (= 0.4.8)
   lrucache (= 0.1.4)
