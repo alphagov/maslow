@@ -22,7 +22,7 @@ group :test do
   gem 'pry-byebug'
   gem 'webmock', '1.22.1'
   gem 'test-unit'
-  gem 'capybara', '2.5.0'
+  gem 'capybara', '2.14.0'
   gem 'database_cleaner', '1.5.3', require: false
   gem 'factory_girl_rails', '4.5.0'
   gem 'shoulda-context', '1.2.1'
