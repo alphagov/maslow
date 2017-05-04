@@ -1,10 +1,10 @@
 development:
-  sessions:
+  clients:
     default:
       uri: <%= ENV.fetch('MONGODB_URI', 'mongodb://localhost/maslow_development') %>
 
 test:
-  sessions:
+  clients:
     default:
       uri: <%= ENV.fetch('MONGODB_URI', 'mongodb://localhost/maslow_test') %>
       options:
