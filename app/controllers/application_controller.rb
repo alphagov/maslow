@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   check_authorization
 
   rescue_from ActionController::InvalidAuthenticityToken do
-    render text: "Invalid authenticity token", status: 403
+    render plain: "Invalid authenticity token", status: 403
   end
 
   rescue_from CanCan::AccessDenied do |_exception|
