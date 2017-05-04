@@ -1,15 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.0'
+gem 'rails', '5.0.2'
 
-gem 'mongoid', '4.0.2'
+gem 'mongoid', '6.1.0'
 gem 'plek', '~> 1.11.0'
 gem 'govspeak', '~> 5'
 
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '~> 11.0'
+  gem 'gds-sso', '~> 13.0'
 end
 
 gem 'kaminari', '0.16.3'
@@ -41,7 +41,7 @@ gem 'uglifier', '2.7.1'
 
 gem 'chosen-rails'
 
-gem 'govuk_admin_template', '3.0.0'
+gem 'govuk_admin_template', '6.0.0'
 gem 'unicorn'
 gem 'formtastic', '3.1.3'
 gem 'formtastic-bootstrap', '3.1.1'
