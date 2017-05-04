@@ -23,8 +23,7 @@ group :test do
   gem 'webmock', '1.22.1'
   gem 'test-unit'
   gem 'capybara', '2.5.0'
-  # https://github.com/DatabaseCleaner/database_cleaner/issues/299
-  gem 'database_cleaner', '1.4.1', require: false
+  gem 'database_cleaner', '1.5.3', require: false
   gem 'factory_girl_rails', '4.5.0'
   gem 'shoulda-context', '1.2.1'
   gem 'mocha', '1.1.0', require: false
