@@ -28,7 +28,7 @@ class BookmarksControllerTest < ActionController::TestCase
     should "toggle the bookmark" do
       stub_user.expects(:toggle_bookmark).with(need_content_item["content_id"])
 
-      post :toggle, {
+      post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id"],
           "redirect_to" => "/foo"
@@ -37,7 +37,7 @@ class BookmarksControllerTest < ActionController::TestCase
     end
 
     should "redirect to the correct page" do
-      post :toggle, {
+      post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id"],
           "redirect_to" => "/needs"
@@ -45,7 +45,7 @@ class BookmarksControllerTest < ActionController::TestCase
       }
       assert_redirected_to "/needs"
 
-      post :toggle, {
+      post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id"],
           "redirect_to" => "/bookmarks"
@@ -55,7 +55,7 @@ class BookmarksControllerTest < ActionController::TestCase
     end
 
     should "redirect unknown paths to /needs" do
-      post :toggle, {
+      post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id]"],
           "redirect_to" => "http://foo.com"
