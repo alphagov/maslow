@@ -126,7 +126,7 @@ class Need
     }
 
     update(
-      default_values.merge(attributes)
+      default_values.merge(attributes.to_h)
     )
 
     # This is set to true when data is loaded in from the Publishing
@@ -139,7 +139,7 @@ class Need
   # The parameters are the same as passed through to the Need API: as of
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
   def self.list(options = {})
-    options = default_options.merge(options.symbolize_keys)
+    options = default_options.merge(options.to_h.symbolize_keys)
     response = Maslow.publishing_api_v2.get_content_items(
       options.except(:load_organisation_ids)
     )
