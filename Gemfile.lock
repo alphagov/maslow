@@ -61,7 +61,7 @@ GEM
     bson (4.2.1)
     builder (3.2.3)
     byebug (9.0.6)
-    cancan (1.6.10)
+    cancancan (1.16.0)
     capybara (2.14.0)
       addressable
       mime-types (>= 1.16)
@@ -325,7 +325,7 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake!
-  cancan (= 1.6.10)
+  cancancan (= 1.16.0)
   capybara (= 2.14.0)
   chosen-rails
   database_cleaner (= 1.5.3)

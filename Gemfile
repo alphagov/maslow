@@ -15,7 +15,7 @@ end
 gem 'kaminari', '0.16.3'
 gem 'logstasher', '0.4.8'
 gem 'airbrake', github: 'alphagov/airbrake', branch: 'silence-dep-warnings-for-rails-5'
-gem 'cancan', '1.6.10'
+gem 'cancancan', '1.16.0'
 gem 'lrucache', '0.1.4'
 
 group :test do
