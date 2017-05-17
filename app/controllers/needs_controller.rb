@@ -11,7 +11,7 @@ class NeedsController < ApplicationController
 
   def index
     authorize! :index, Need
-    opts = params.slice("page", "q").select { |_k, v| v.present? }
+    opts = params.permit("page", "q").slice("page", "q").select { |_k, v| v.present? }
 
     @bookmarks = current_user.bookmarks
     @current_page = needs_path
