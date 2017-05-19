@@ -12,7 +12,7 @@ else
   gem 'gds-sso', '~> 13.0'
 end
 
-gem 'kaminari', '0.16.3'
+gem 'kaminari', '1.0.1'
 gem 'logstasher', '0.4.8'
 gem 'airbrake', github: 'alphagov/airbrake', branch: 'silence-dep-warnings-for-rails-5'
 gem 'cancancan', '1.16.0'
