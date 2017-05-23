@@ -309,7 +309,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge(goal: "")
+        need: base_need_fields.merge("goal" => "")
       }
       assert_response 422
     end
@@ -321,7 +321,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge(benefit: "be awesome")
+        need: base_need_fields.merge("benefit" => "be awesome")
       }
       assert_redirected_to need_path(need.content_id)
     end
@@ -333,7 +333,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge(benefit: "be awesome"),
+        need: base_need_fields.merge("benefit" => "be awesome"),
         add_new: ""
       }
       assert_redirected_to new_need_path
@@ -348,7 +348,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge(met_when: ["something", "something else"])
+        need: base_need_fields.merge("met_when" => ["something", "something else"])
       }
 
       assert_response 422
