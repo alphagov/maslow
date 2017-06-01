@@ -15,7 +15,7 @@ class NotesControllerTest < ActionController::TestCase
         "content_id" => content_id
       }
 
-      post :create, @note_atts
+      post :create, params: @note_atts
 
       assert_redirected_to revisions_need_path(content_id)
       assert_equal "Note saved", flash[:notice]
@@ -31,7 +31,7 @@ class NotesControllerTest < ActionController::TestCase
         "content_id" => content_id
       }
 
-      post :create, @blank_note_atts
+      post :create, params: @blank_note_atts
 
       assert_equal "Note couldn't be saved: Text can't be blank", flash[:error]
       refute flash[:notice]
@@ -39,7 +39,7 @@ class NotesControllerTest < ActionController::TestCase
 
     should "stop viewers from creating notes" do
       login_as_stub_user
-      post :create, @note_atts
+      post :create, params: @note_atts
       assert_redirected_to needs_path
     end
   end
