@@ -10,3 +10,8 @@ test:
       options:
         max_retries: 1
         retry_interval: 0
+
+production:
+  clients:
+    default:
+      uri: <%= ENV["MONGODB_URI"] %>
