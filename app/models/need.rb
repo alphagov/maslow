@@ -140,6 +140,9 @@ class Need
   # 2014-03-12, they are `organisation_id`, `page` and `q`.
   def self.list(options = {})
     options = default_options.merge(options.to_h.symbolize_keys)
+    if options.key? :organisation_id
+      options[:link_organisations] = options.delete(:organisation_id)
+    end
     response = Maslow.publishing_api_v2.get_content_items(
       options.except(:load_organisation_ids)
     )
