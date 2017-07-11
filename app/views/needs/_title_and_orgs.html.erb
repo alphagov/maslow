@@ -1,7 +1,9 @@
 <header class="block-border add-bottom-margin">
   <% if @need.organisations.any? %>
     <p class="need-organisations">
-      <%= @need.organisations.map(&:title).join(", ") %>
+      <%= @need.organisations.map do |o| %>
+        <% link_to o.title, needs_url(organisation_id: o.content_id) %>
+      <% end.join(", ").html_safe %>
     </p>
   <% end %>
   <div class="relative">
