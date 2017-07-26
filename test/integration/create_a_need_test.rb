@@ -68,6 +68,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
             type: "exact"
           }
         ],
+        update_type: "major",
         document_type: "need",
         title: "As a User, I need to find my local register office, so that I can find records of birth, marriage or death",
         details: {
