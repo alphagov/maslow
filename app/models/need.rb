@@ -123,6 +123,7 @@ class Need
       "met_when" => [],
       "justifications" => [],
       "organisation_ids" => [],
+      "update_type" => "major",
     }
 
     update(
@@ -433,7 +434,8 @@ private
       ],
       document_type: "need",
       title: "As a #{@role}, I need to #{@goal}, so that #{@benefit}#{title_suffix}",
-      details: details
+      details: details,
+      update_type: update_type,
     }
   end
 
