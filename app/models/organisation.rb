@@ -49,6 +49,6 @@ class Organisation
   end
 
   def self.organisations
-    Maslow.publishing_api_v2.get_linkables(document_type: "organisation")
+    Services.publishing_api_v2.get_linkables(document_type: "organisation")
   end
 end
