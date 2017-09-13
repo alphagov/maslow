@@ -270,7 +270,7 @@ class Need
   rescue GdsApi::HTTPErrorResponse => err
     logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
     logger.error(err)
-    Airbrake.notify(err)
+    GovukError.notify(err)
     false
   end
 
@@ -284,7 +284,7 @@ class Need
   rescue GdsApi::HTTPErrorResponse => err
     logger.error("GdsApi::HTTPErrorResponse in Need.publish")
     logger.error(err)
-    Airbrake.notify(err)
+    GovukError.notify(err)
     false
   end
 
@@ -293,7 +293,7 @@ class Need
   rescue GdsApi::HTTPErrorResponse => err
     logger.error("GdsApi::HTTPErrorResponse in Need.discard")
     logger.error(err)
-    Airbrake.notify(err)
+    GovukError.notify(err)
     false
   end
 
@@ -306,7 +306,7 @@ class Need
   rescue GdsApi::HTTPErrorResponse => err
     logger.error("GdsApi::HTTPErrorResponse in Need.unpublish")
     logger.error(err)
-    Airbrake.notify(err)
+    GovukError.notify(err)
     false
   end
 
@@ -338,6 +338,7 @@ class Need
 
     logger.error("GdsApi::HTTPErrorResponse in Need.save")
     logger.error(err)
+    GovukError.notify(err)
     false
   end
 
