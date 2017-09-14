@@ -12,8 +12,6 @@ require "rails/test_unit/railtie"
 Bundler.require(*Rails.groups)
 
 module Maslow
-  mattr_accessor :support_api, :publishing_api_v2
-
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

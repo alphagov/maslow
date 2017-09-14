@@ -14,7 +14,6 @@ end
 
 gem 'kaminari', '1.0.1'
 gem 'logstasher', '0.4.8'
-gem 'airbrake', github: 'alphagov/airbrake', branch: 'silence-dep-warnings-for-rails-5'
 gem 'cancancan', '1.16.0'
 gem 'lrucache', '0.1.4'
 
@@ -49,5 +48,7 @@ gem 'formtastic-bootstrap', '3.1.1'
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '~> 39.0'
+  gem 'gds-api-adapters', '~> 48.0.0'
 end
+
+gem "govuk_app_config", "~> 0.2.0"
