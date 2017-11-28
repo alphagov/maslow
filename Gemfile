@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.2'
+gem 'rails', '~> 5.0.2'
 
 gem 'mongoid', '6.1.0'
 gem 'plek', '~> 1.11.0'
@@ -19,7 +19,7 @@ gem 'lrucache', '0.1.4'
 
 group :test do
   gem 'pry-byebug'
-  gem 'webmock', '1.22.1'
+  gem 'webmock', '~> 2.3.0'
   gem 'test-unit'
   gem 'capybara', '2.14.0'
   gem 'database_cleaner', '1.5.3', require: false
@@ -42,8 +42,8 @@ gem 'chosen-rails'
 
 gem 'govuk_admin_template', '6.0.0'
 gem 'unicorn'
-gem 'formtastic', '3.1.3'
-gem 'formtastic-bootstrap', '3.1.1'
+gem 'formtastic', '~> 3.1.3'
+gem 'formtastic-bootstrap', '~> 3.1.1'
 
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
