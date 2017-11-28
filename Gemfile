@@ -42,8 +42,8 @@ gem 'chosen-rails'
 
 gem 'govuk_admin_template', '6.0.0'
 gem 'unicorn'
-gem 'formtastic', '3.1.3'
-gem 'formtastic-bootstrap', '3.1.1'
+gem 'formtastic', '~> 3.1.3'
+gem 'formtastic-bootstrap', '~> 3.1.1'
 
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
