@@ -21,7 +21,7 @@ group :test do
   gem 'pry-byebug'
   gem 'webmock', '~> 2.3.0'
   gem 'test-unit'
-  gem 'capybara', '2.14.0'
+  gem 'capybara', '2.16.1'
   gem 'database_cleaner', '1.5.3', require: false
   gem 'factory_girl_rails', '4.9.0'
   gem 'rails-controller-testing', '1.0.2'
