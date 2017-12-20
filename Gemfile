@@ -27,7 +27,7 @@ group :test do
   gem 'rails-controller-testing', '1.0.2'
   gem 'shoulda-context', '1.2.2'
   gem 'mocha', '1.1.0', require: false
-  gem 'timecop', '0.8.0'
+  gem 'timecop', '0.9.1'
 end
 
 group :development, :test do
