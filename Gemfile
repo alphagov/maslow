@@ -12,7 +12,7 @@ else
   gem 'gds-sso', '~> 13.0'
 end
 
-gem 'kaminari', '1.0.1'
+gem 'kaminari', '1.1.1'
 gem 'logstasher', '0.4.8'
 gem 'cancancan', '1.16.0'
 gem 'lrucache', '0.1.4'
