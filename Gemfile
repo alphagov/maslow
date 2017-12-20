@@ -22,7 +22,7 @@ group :test do
   gem 'webmock', '~> 2.3.0'
   gem 'test-unit'
   gem 'capybara', '2.16.1'
-  gem 'database_cleaner', '1.5.3', require: false
+  gem 'database_cleaner', '1.6.2', require: false
   gem 'factory_girl_rails', '4.9.0'
   gem 'rails-controller-testing', '1.0.2'
   gem 'shoulda-context', '1.2.2'
