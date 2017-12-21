@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0.2'
+gem 'rails', '~> 5.1.4'
 
 gem 'mongoid', '6.1.0'
 gem 'plek', '~> 2.0.0'
