@@ -13,7 +13,7 @@ else
 end
 
 gem 'kaminari', '1.1.1'
-gem 'logstasher', '0.4.8'
+gem 'logstasher', '1.2.2'
 gem 'cancancan', '1.16.0'
 gem 'lrucache', '0.1.4'
 
