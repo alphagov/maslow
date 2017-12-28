@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.0.2'
 
-gem 'mongoid', '6.1.0'
+gem 'mongoid', '6.1.1'
 gem 'plek', '~> 2.0.0'
 gem 'govspeak', '~> 5'
 
