@@ -40,7 +40,7 @@ gem 'uglifier', '2.7.1'
 
 gem 'chosen-rails'
 
-gem 'govuk_admin_template', '6.0.0'
+gem 'govuk_admin_template', '6.4.0'
 gem 'unicorn'
 gem 'formtastic', '~> 3.1.3'
 gem 'formtastic-bootstrap', '~> 3.1.1'
