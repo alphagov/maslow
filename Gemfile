@@ -14,7 +14,7 @@ end
 
 gem 'kaminari', '1.1.1'
 gem 'logstasher', '1.2.2'
-gem 'cancancan', '1.16.0'
+gem 'cancancan', '2.1.2'
 gem 'lrucache', '0.1.4'
 
 group :test do
