@@ -13,7 +13,6 @@ else
 end
 
 gem 'kaminari', '1.1.1'
-gem 'logstasher', '1.2.2'
 gem 'cancancan', '2.1.3'
 gem 'lrucache', '0.1.4'
 
@@ -41,7 +40,6 @@ gem 'uglifier', '4.1.3'
 gem 'chosen-rails'
 
 gem 'govuk_admin_template', '6.4.0'
-gem 'unicorn'
 gem 'formtastic', '~> 3.1.3'
 gem 'formtastic-bootstrap', '~> 3.1.1'
 
@@ -51,4 +49,4 @@ else
   gem 'gds-api-adapters', '~> 51.0.0'
 end
 
-gem "govuk_app_config", "~> 0.2.0"
+gem "govuk_app_config", "~> 1.2.1"
