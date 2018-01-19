@@ -18,7 +18,7 @@ gem 'lrucache', '0.1.4'
 
 group :test do
   gem 'pry-byebug'
-  gem 'webmock', '~> 3.2.1'
+  gem 'webmock', '~> 3.3.0'
   gem 'test-unit'
   gem 'capybara', '2.17.0'
   gem 'database_cleaner', '1.6.2', require: false
