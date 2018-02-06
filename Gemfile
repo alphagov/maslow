@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.0.2'
 
 gem 'mongoid', '6.1.1'
-gem 'plek', '~> 2.1.0'
+gem 'plek', '~> 2.1.1'
 gem 'govspeak', '~> 5'
 
 if ENV['SSO_DEV']
