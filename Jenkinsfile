@@ -1,9 +1,10 @@
 #!/usr/bin/env groovy
 
+library("govuk")
+
 REPOSITORY = 'maslow'
 
 node {
-  def govuk = load '/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy'
 
   try {
     stage("Checkout") {
