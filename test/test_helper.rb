@@ -14,7 +14,7 @@ DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 class ActiveSupport::TestCase
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
   include WebMock::API
   include GdsApi::TestHelpers::PublishingApiV2
 

@@ -1,7 +1,7 @@
 require_relative '../integration_test_helper'
 
 class BookmarksControllerTest < ActionController::TestCase
-  need_content_item = FactoryGirl.create(:need_content_item)
+  need_content_item = FactoryBot.create(:need_content_item)
 
   setup do
     login_as_stub_user
