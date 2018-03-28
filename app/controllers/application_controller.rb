@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   include GDS::SSO::ControllerMethods
 
   before_action :authenticate_user!
-  before_action :require_signin_permission!
 
   private
   def verify_authenticity_token
