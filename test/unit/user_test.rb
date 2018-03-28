@@ -7,7 +7,7 @@ class GDS::SSO::Lint::UserTest
   end
 end
 
-class UserTest < ActiveModel::TestCase
+class UserTest < ActiveSupport::TestCase
   context "a normal user" do
     should "just be a viewer" do
       user = create(:user)
