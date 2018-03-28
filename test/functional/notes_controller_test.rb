@@ -8,14 +8,8 @@ class NotesControllerTest < ActionController::TestCase
   context "POST create" do
     should "be successful" do
       content_id = SecureRandom.uuid
-      @note_atts = {
-        "note" => {
-          "text" => "test"
-        },
-        "content_id" => content_id
-      }
 
-      post :create, params: @note_atts
+      post :create, params: note_atts(content_id: content_id)
 
       assert_redirected_to revisions_need_path(content_id)
       assert_equal "Note saved", flash[:notice]
@@ -23,15 +17,9 @@ class NotesControllerTest < ActionController::TestCase
     end
 
     should "return an error message if the save fails" do
-      content_id = SecureRandom.uuid
-      @blank_note_atts = {
-        "note" => {
-          "text" => ""
-        },
-        "content_id" => content_id
-      }
+      blank_note_atts = note_atts(text: "")
 
-      post :create, params: @blank_note_atts
+      post :create, params: blank_note_atts
 
       assert_equal "Note couldn't be saved: Text can't be blank", flash[:error]
       refute flash[:notice]
@@ -39,8 +27,17 @@ class NotesControllerTest < ActionController::TestCase
 
     should "stop viewers from creating notes" do
       login_as_stub_user
-      post :create, params: @note_atts
+      post :create, params: note_atts
       assert_redirected_to needs_path
     end
+  end
+
+  def note_atts(content_id: SecureRandom.uuid, text: "test")
+    {
+      "note" => {
+        "text" => text
+      },
+      "content_id" => content_id
+    }
   end
 end
