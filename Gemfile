@@ -20,7 +20,7 @@ group :test do
   gem 'pry-byebug'
   gem 'webmock', '~> 3.3.0'
   gem 'test-unit'
-  gem 'capybara', '2.18.0'
+  gem 'capybara', '3.0.0'
   gem 'database_cleaner', '1.6.2', require: false
   gem 'factory_bot_rails', '4.8.2'
   gem 'rails-controller-testing', '1.0.2'
