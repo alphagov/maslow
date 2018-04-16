@@ -43,7 +43,7 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
     ast (2.4.0)
-    autoprefixer-rails (7.2.5)
+    autoprefixer-rails (8.3.0)
       execjs
     bootstrap-sass (3.3.5.1)
       autoprefixer-rails (>= 5.0.0.1)
@@ -76,7 +76,7 @@ GEM
     concurrent-ruby (1.0.5)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.3)
+    crass (1.0.4)
     database_cleaner (1.6.2)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
@@ -126,9 +126,10 @@ GEM
       rubocop (~> 0.52.0)
       rubocop-rspec (~> 1.19.0)
       scss_lint
-    govuk_admin_template (6.5.0)
+    govuk_admin_template (6.6.0)
       bootstrap-sass (= 3.3.5.1)
       jquery-rails (~> 4.3.1)
+      plek (>= 2.1.0)
       rails (>= 3.2.0)
     govuk_app_config (1.4.2)
       logstasher (~> 1.2.2)
@@ -367,7 +368,7 @@ DEPENDENCIES
   gds-sso (~> 13.6)
   govspeak (~> 5)
   govuk-lint
-  govuk_admin_template (= 6.5.0)
+  govuk_admin_template (= 6.6.0)
   govuk_app_config (~> 1.4.2)
   jasmine (= 3.1.0)
   kaminari (= 1.1.1)
