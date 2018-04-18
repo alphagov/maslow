@@ -84,7 +84,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".the-need" do
-          assert page.has_content?("As a #{@content_item['details']['role']}\nI need to #{@content_item['details']['goal']}\nSo that #{@content_item['details']['benefit']}")
+          assert page.has_content?("As a #{@content_item['details']['role']} I need to #{@content_item['details']['goal']} So that #{@content_item['details']['benefit']}")
         end
 
         within ".met-when" do
@@ -222,9 +222,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
         within ".the-need" do
           role, goal, benefit = @content_item["details"].values_at("role", "goal", "benefit")
-          assert page.has_content?(
-                   "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
-                 )
+          assert page.has_content?("As a #{role} I need to #{goal} So that #{benefit}")
         end
 
         assert page.has_no_selector?(".met-when")
@@ -261,9 +259,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
         within ".the-need" do
           role, goal, benefit = @content_item["details"].values_at("role", "goal", "benefit")
-          assert page.has_content?(
-                   "As a #{role}\nI need to #{goal}\nSo that #{benefit}"
-                 )
+          assert page.has_content?("As a #{role} I need to #{goal} So that #{benefit}")
         end
 
         assert page.has_content?("This need applies to all organisations.")
