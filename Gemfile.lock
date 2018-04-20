@@ -77,7 +77,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
-    database_cleaner (1.6.2)
+    database_cleaner (1.7.0)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.7.1)
@@ -360,7 +360,7 @@ DEPENDENCIES
   cancancan (= 2.2.0)
   capybara (= 3.0.2)
   chosen-rails
-  database_cleaner (= 1.6.2)
+  database_cleaner (= 1.7.0)
   factory_bot_rails (= 4.8.2)
   formtastic (~> 3.1.3)
   formtastic-bootstrap (~> 3.1.1)
