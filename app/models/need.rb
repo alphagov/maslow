@@ -449,7 +449,7 @@ private
     {
       document_type: 'need',
       per_page: 50,
-      fields: %w(content_id need_ids details publication_state),
+      fields: %w(content_id details publication_state),
       locale: 'en',
       order: '-updated_at'
     }

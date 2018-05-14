@@ -11,16 +11,16 @@ class NeedTest < ActiveSupport::TestCase
       "current_page"=>1,
       "links"=>[
         {
-          "href"=>"http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=need_ids&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=2",
+          "href" => "http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=2",
           "rel"=>"next"
         },
         {
-          "href"=>"http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=need_ids&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=1", "rel"=>"self"
+          "href" => "http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=1",
+          "rel" => "self"
         }
       ],
       "results"=>[
         {
-          "need_ids"=>["100523"],
           "content_id"=>"0001c0c6-2dd3-4b56-87f1-815efe32c155",
           "publication_state" => "draft",
           "details"=>
@@ -32,7 +32,6 @@ class NeedTest < ActiveSupport::TestCase
           }
         },
         {
-          "need_ids"=>["100522"],
           "content_id"=>"c867e5f7-2d68-42ad-bedb-20638b3bf58e",
           "publication_state" => "draft",
           "details"=>
@@ -44,7 +43,6 @@ class NeedTest < ActiveSupport::TestCase
           }
         },
         {
-          "need_ids"=>["100521"],
           "content_id"=>"0925fd2b-6b59-4120-a849-96ab19b9c7df",
           "publication_state" => "published",
           "details"=>{
@@ -251,7 +249,7 @@ class NeedTest < ActiveSupport::TestCase
       request_params = {
         document_type: 'need',
         per_page: 50,
-        fields: ['content_id', 'need_ids', 'details', 'publication_state'],
+        fields: %w(content_id details publication_state),
         locale: 'en',
         order: '-updated_at'
       }
