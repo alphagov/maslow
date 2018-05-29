@@ -89,7 +89,7 @@ module NeedHelper
     percent = numerator.to_f / denominator.to_f * 100.0
 
     # don't include the fractional part if the percentage is X.0%
-    format = percent.modulo(1) < 0.1 ? "%.0f\%" : "%.1f\%"
+    format = percent.modulo(1) < 0.1 ? "%.0f%%" : "%.1f%%"
     (format % percent)
   end
 
