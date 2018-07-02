@@ -35,7 +35,7 @@ group :development, :test do
 end
 
 gem 'sass-rails', '~> 5.0.3'
-gem 'uglifier', '4.1.12'
+gem 'uglifier', '4.1.13'
 
 gem 'chosen-rails'
 
