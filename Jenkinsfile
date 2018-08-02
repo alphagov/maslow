@@ -5,6 +5,7 @@ library("govuk")
 node {
   govuk.buildProject(
     // TODO: SASS linting is disabled because it currently fails
-    sassLint: false
+    sassLint: false,
+    brakeman: true,
   )
 }
