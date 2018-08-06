@@ -56,7 +56,7 @@ GEM
     builder (3.2.3)
     byebug (9.1.0)
     cancancan (2.2.0)
-    capybara (3.3.1)
+    capybara (3.5.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -211,7 +211,7 @@ GEM
     multipart-post (2.0.0)
     netrc (0.11.0)
     nio4r (2.3.0)
-    nokogiri (1.8.3)
+    nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     nokogumbo (1.5.0)
       nokogiri
@@ -248,7 +248,7 @@ GEM
     rack (2.0.5)
     rack-cache (1.8.0)
       rack (>= 0.4)
-    rack-test (1.0.0)
+    rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.0)
       actioncable (= 5.2.0)
@@ -366,7 +366,7 @@ PLATFORMS
 
 DEPENDENCIES
   cancancan (= 2.2.0)
-  capybara (= 3.3.1)
+  capybara (= 3.5.1)
   chosen-rails
   database_cleaner (= 1.7.0)
   factory_bot_rails (= 4.10.0)
