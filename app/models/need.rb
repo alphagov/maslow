@@ -408,6 +408,16 @@ private
     attributes_without_nested_details.merge(attributes["details"] || {})
   end
 
+  def self.default_options
+    {
+      document_type: 'need',
+      per_page: 50,
+      fields: %w(content_id details publication_state),
+      locale: 'en',
+      order: '-updated_at'
+    }
+  end
+
   def publishing_api_payload
     details_fields = (ALLOWED_FIELDS - PUBLISHING_API_FIELDS) - %w[organisation_ids]
     details = details_fields.each_with_object({}) do |field, hash|
@@ -441,16 +451,6 @@ private
   def set_attribute(field, value)
     value = [] if value.blank?
     instance_variable_set("@#{field}", value)
-  end
-
-  def self.default_options
-    {
-      document_type: 'need',
-      per_page: 50,
-      fields: %w(content_id details publication_state),
-      locale: 'en',
-      order: '-updated_at'
-    }
   end
 
   def author_atts(author)
