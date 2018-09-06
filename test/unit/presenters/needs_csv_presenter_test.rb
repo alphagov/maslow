@@ -5,8 +5,8 @@ class NeedsCsvPresenterTest < ActiveSupport::TestCase
     "http://www.example.com/needs"
   end
 
-  def csv_file(n)
-    File.read(Rails.root.join("test", "fixtures", "needs", "needs-#{n}.csv"))
+  def csv_file(number)
+    File.read(Rails.root.join("test", "fixtures", "needs", "needs-#{number}.csv"))
   end
 
   context "csv_from_need_ids" do
