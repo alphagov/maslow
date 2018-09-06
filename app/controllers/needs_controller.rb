@@ -291,6 +291,6 @@ private
   def remove_criteria
     index = Integer(params[:delete_criteria])
     @need.remove_criteria(index)
-  rescue ArgumentError
+  rescue ArgumentError # rubocop:disable Lint/HandleExceptions
   end
 end
