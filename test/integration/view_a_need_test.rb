@@ -156,7 +156,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
         end
       end
-    end # should show recent revisions
+    end
 
     context "showing content which meet the need" do
       should "display content from the publishing api" do
@@ -176,10 +176,10 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
                          href: "#{Plek.new.website_root}/linked_foo"
                        )
               end
-            end # within tbody
-          end # within table
-        end # within .need
-      end # should display artefacts from the content api
+            end
+          end
+        end
+      end
 
       should "not display a table when there are no content items for this need" do
         publishing_api_has_linked_items(
