@@ -428,7 +428,7 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "return revisions for a need" do
-      response = stub_response(
+      stub_response(
         "revisions" => [
           {
             "action_type" => "update",
@@ -556,12 +556,10 @@ class NeedTest < ActiveSupport::TestCase
         stub_publishing_api_put_content(
           @need_content_item["content_id"],
           @need.send(:publishing_api_payload),
-          response_hash = {
-            body: {
-              content_id: @need_content_item["content_id"],
-              impact: "Endangers people",
-              yearly_searches: 50000
-            }
+          body: {
+            content_id: @need_content_item["content_id"],
+            impact: "Endangers people",
+            yearly_searches: 50000
           }
         )
 
@@ -588,12 +586,10 @@ class NeedTest < ActiveSupport::TestCase
         stub_publishing_api_put_content(
           @need.content_id,
           @need.send(:publishing_api_payload),
-          response_hash = {
-            body: {
-              "content_id": @need_content_item["content_id"],
-              "legislation": "\nRemove the newline from legislation",
-              "other_evidence": "\nRemove the newline from other_evidence"
-            }
+          body: {
+            "content_id": @need_content_item["content_id"],
+                 "legislation": "\nRemove the newline from legislation",
+                 "other_evidence": "\nRemove the newline from other_evidence"
           }
         )
         stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
@@ -637,7 +633,7 @@ class NeedTest < ActiveSupport::TestCase
       need = Need.need_from_publishing_api_payload(need_content_item_duplicate)
       need.unpublish(explanation)
 
-      assert_publishing_api_unpublish(need.content_id, attributes_or_matcher = nil, times = 1)
+      assert_publishing_api_unpublish(need.content_id, nil, 1)
     end
   end
 

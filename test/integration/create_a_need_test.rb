@@ -103,17 +103,17 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       ).with(body: { links: { organisations: [@ministry_of_justice_content_id] } })
 
       get_url = %r{\A#{Plek.find('publishing-api')}/v2/content}
-      get_request = stub_request(:get, put_content_url).to_return(
+      stub_request(:get, get_url).to_return(
         body: payload.merge(publication_state: "draft").to_json
       )
 
       get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
-      get_links_request = stub_request(:get, get_links_url).to_return(
+      stub_request(:get, get_links_url).to_return(
         body: { links: { organisations: [@ministry_of_justice_content_id] } }.to_json
       )
 
       get_linked_url = %r{\A#{Plek.find('publishing-api')}/v2/linked}
-      get_linked_request = stub_request(:get, get_linked_url).to_return(
+      stub_request(:get, get_linked_url).to_return(
         body: {}.to_json
       )
 
