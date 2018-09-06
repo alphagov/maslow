@@ -30,7 +30,7 @@ class Need
   # retain the pagination information
   class PaginatedList < Array
     PAGINATION_PARAMS = %i[pages total per_page current_page].freeze
-    attr_reader *PAGINATION_PARAMS
+    attr_reader(*PAGINATION_PARAMS)
 
     def initialize(needs, pages:, total:, current_page:, per_page:)
       super(needs)
