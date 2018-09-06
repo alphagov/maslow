@@ -257,7 +257,7 @@ class Need
 
     @met_when ||= []
     @justifications ||= []
-    @organisation_ids ||= []
+    @organisation_ids ||= [] # rubocop:disable Naming/MemoizedInstanceVariableName
   end
 
   def content_items_meeting_this_need
