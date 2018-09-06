@@ -17,7 +17,7 @@ class BookmarksController < ApplicationController
     redirect_to whitelist_redirect_to
   end
 
-  private
+private
 
   def whitelist_redirect_to
     path = params["bookmark"]["redirect_to"]

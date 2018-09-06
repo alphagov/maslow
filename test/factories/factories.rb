@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
-    sequence(:name) { |n| "Winston #{n}"}
-    permissions { ["signin"] }
+    sequence(:name) { |n| "Winston #{n}" }
+    permissions { %w[signin] }
 
     factory :editor do
       permissions { %w(signin editor) }

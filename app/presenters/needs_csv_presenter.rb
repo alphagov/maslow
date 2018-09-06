@@ -11,7 +11,7 @@ class NeedsCsvPresenter
     generate_csv(csv_fields(@criteria_length), @needs)
   end
 
-  private
+private
 
   def generate_csv(fields, values)
     CSV.generate do |csv|
@@ -34,7 +34,7 @@ class NeedsCsvPresenter
   end
 
   def acceptance_field_names(length)
-    (1..length).map {|n| "Met when criteria #{n}"}
+    (1..length).map { |n| "Met when criteria #{n}" }
   end
 
   def longest_criteria(needs)

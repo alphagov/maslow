@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require_relative '../integration_test_helper'
 
 class ValidateNeedTest < ActionDispatch::IntegrationTest
@@ -22,7 +23,7 @@ class ValidateNeedTest < ActionDispatch::IntegrationTest
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w[title base_path document_type]
       )
     end
 

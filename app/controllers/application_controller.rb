@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
-  private
+private
+
   def verify_authenticity_token
     raise ActionController::InvalidAuthenticityToken unless verified_request?
   end

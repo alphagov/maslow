@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require_relative '../integration_test_helper'
 
 class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
@@ -16,7 +17,7 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
     )
     publishing_api_has_content(
       [content_item, duplicate_content_item],
-      Need.default_options.merge(per_page: 1e10, states: ["published"])
+      Need.default_options.merge(per_page: 1e10, states: %w[published])
     )
     publishing_api_has_item(content_item)
     publishing_api_has_item(duplicate_content_item)
@@ -33,7 +34,7 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
       [],
       content_id: duplicate_content_item["content_id"],
       link_type: "meets_user_needs",
-      fields: ["title", "base_path", "document_type"]
+      fields: %w[title base_path document_type]
     )
 
     @need_content_id = content_item["content_id"]
@@ -88,7 +89,7 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
         [],
         content_id: duplicate_content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w[title base_path document_type]
       )
 
       @content_id = duplicate_content_item["content_id"]

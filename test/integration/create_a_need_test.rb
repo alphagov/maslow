@@ -268,7 +268,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w[title base_path document_type]
       )
       publishing_api_has_links(
         content_id: @content_item["content_id"],
@@ -281,14 +281,14 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to add a new need from the need page" do
-      visit "/needs/#{@content_item["content_id"]}"
+      visit "/needs/#{@content_item['content_id']}"
       within "#workflow" do
         assert page.has_link?("Add a new need", href: "/needs/new")
       end
     end
 
     should "be able to add a new need from the history page" do
-      visit "/needs/#{@content_item["content_id"]}/revisions"
+      visit "/needs/#{@content_item['content_id']}/revisions"
       within "#workflow" do
         assert page.has_link?("Add a new need", href: "/needs/new")
       end

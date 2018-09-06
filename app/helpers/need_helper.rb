@@ -36,25 +36,25 @@ module NeedHelper
 
     explanation_link_match_data = /\[embed:link:\s*(.*?)\s*\]/.match(explanation)
 
-    if explanation_link_match_data.nil?
-      links = []
-    else
-      links = explanation_link_match_data.captures.map do |content_id|
-        begin
-          need = Need.find(content_id)
-          {
-            content_id: content_id,
-            title: need.title,
-            url: need_path(content_id)
-          }
-        rescue Need::NotFound
-          {
-            content_id: content_id,
-            title: "an unknown need",
-          }
-        end
-      end
-    end
+    links = if explanation_link_match_data.nil?
+              []
+            else
+              explanation_link_match_data.captures.map do |content_id|
+                begin
+                  need = Need.find(content_id)
+                  {
+                    content_id: content_id,
+                    title: need.title,
+                    url: need_path(content_id)
+                  }
+                rescue Need::NotFound
+                  {
+                    content_id: content_id,
+                    title: "an unknown need",
+                  }
+                end
+              end
+            end
 
     Govspeak::Document.new(explanation, links: links).to_html.html_safe
   end
@@ -62,7 +62,7 @@ module NeedHelper
   def options_for_withdrawing_as_duplicate(need)
     Need.list(
       per_page: 1e10,
-      states: ['published'],
+      states: %w[published],
       load_organisation_ids: false
     ).to_options.reject do |option|
       option[1] == need.content_id

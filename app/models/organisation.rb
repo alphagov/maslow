@@ -41,7 +41,8 @@ class Organisation
     end
   end
 
-  private
+private
+
   def self.load_organisations
     (organisations || []).map { |atts|
       new(atts.deep_symbolize_keys)
