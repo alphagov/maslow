@@ -54,7 +54,7 @@ class NeedTest < ActiveSupport::TestCase
         }
       ]
     }
-    @need_attributes_1 = {
+    @need_attributes1 = {
       "content_id" => "0001c0c6-2dd3-4b56-87f1-815efe32c155",
       "need_id" => 100523,
       "details" => {
@@ -64,7 +64,7 @@ class NeedTest < ActiveSupport::TestCase
       }
     }
 
-    @need_attributes_2 = {
+    @need_attributes2 = {
       "content_id" => "c867e5f7-2d68-42ad-bedb-20638b3bf58e",
       "need_id" => 100522,
       "details" => {
@@ -74,7 +74,7 @@ class NeedTest < ActiveSupport::TestCase
       }
     }
 
-    @need_attributes_3 = {
+    @need_attributes3 = {
       "content_id" => "0925fd2b-6b59-4120-a849-96ab19b9c7df",
       "need_id" => 100521,
       "details" => {
@@ -255,23 +255,23 @@ class NeedTest < ActiveSupport::TestCase
       }
 
       publishing_api_has_links(
-        content_id: @need_attributes_1["content_id"],
+        content_id: @need_attributes1["content_id"],
         links: { organisations: [] }
       )
       publishing_api_has_links(
-        content_id: @need_attributes_2["content_id"],
+        content_id: @need_attributes2["content_id"],
         links: { organisations: [] }
       )
       publishing_api_has_links(
-        content_id: @need_attributes_3["content_id"],
+        content_id: @need_attributes3["content_id"],
         links: { organisations: [] }
       )
 
 
       needs = [
-        Need.new(@need_attributes_1["details"]),
-        Need.new(@need_attributes_2["details"]),
-        Need.new(@need_attributes_3["details"])
+        Need.new(@need_attributes1["details"]),
+        Need.new(@need_attributes2["details"]),
+        Need.new(@need_attributes3["details"])
       ]
 
       publishing_api_has_content(
@@ -288,7 +288,7 @@ class NeedTest < ActiveSupport::TestCase
       list = Need.list
 
       assert 3, list.length
-      assert list.all? { |need| need.is_a? Need }
+      assert(list.all? { |need| need.is_a? Need })
     end
 
     should "retain pagination info" do
@@ -458,13 +458,13 @@ class NeedTest < ActiveSupport::TestCase
       )
 
       content_id = SecureRandom.uuid
-      need_content_item_1 = create(
+      need_content_item1 = create(
         :need_content_item,
         content_id: content_id,
         publication_state: "superseded",
         user_facing_version: 1
       )
-      need_content_item_2 = create(
+      need_content_item2 = create(
         :need_content_item,
         content_id: content_id,
         publication_state: "superseded",
@@ -473,7 +473,7 @@ class NeedTest < ActiveSupport::TestCase
         },
         user_facing_version: 2
       )
-      need_content_item_3 = create(
+      need_content_item3 = create(
         :need_content_item,
         content_id: content_id,
         publication_state: "published",
@@ -483,14 +483,14 @@ class NeedTest < ActiveSupport::TestCase
         user_facing_version: 3
       )
 
-      publishing_api_has_item(need_content_item_3)
+      publishing_api_has_item(need_content_item3)
       publishing_api_has_item(
-        need_content_item_1,
-        version: need_content_item_1["user_facing_version"].to_s
+        need_content_item1,
+        version: need_content_item1["user_facing_version"].to_s
       )
       publishing_api_has_item(
-        need_content_item_2,
-        version: need_content_item_2["user_facing_version"].to_s
+        need_content_item2,
+        version: need_content_item2["user_facing_version"].to_s
       )
 
       publishing_api_has_links(
