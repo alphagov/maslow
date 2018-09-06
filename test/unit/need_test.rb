@@ -496,8 +496,7 @@ class NeedTest < ActiveSupport::TestCase
       publishing_api_has_links(
         content_id: content_id,
         links: {
-          organisations: [
-          ]
+          organisations: []
         }
       )
 
