@@ -361,8 +361,6 @@ class Need
     end
   end
 
-private
-
   def self.needs_from_publishing_api_payloads(responses, load_organisation_ids: true)
     responses.map do |x|
       need_from_publishing_api_payload(
@@ -417,6 +415,8 @@ private
       order: '-updated_at'
     }
   end
+
+private
 
   def publishing_api_payload
     details_fields = (ALLOWED_FIELDS - PUBLISHING_API_FIELDS) - %w[organisation_ids]
