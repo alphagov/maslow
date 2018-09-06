@@ -84,7 +84,7 @@ module NeedHelper
 
   def calculate_percentage(numerator, denominator)
     return unless numerator.present? && denominator.present?
-    return if denominator == 0
+    return if denominator.zero?
 
     percent = numerator.to_f / denominator.to_f * 100.0
 
