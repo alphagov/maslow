@@ -29,8 +29,8 @@ class Need
   # Allow us to convert the API response to a list of Need objects, but still
   # retain the pagination information
   class PaginatedList < Array
-    PAGINATION_PARAMS = [:pages, :total, :per_page, :current_page]
-    attr_reader *PAGINATION_PARAMS
+    PAGINATION_PARAMS = %i[pages total per_page current_page].freeze
+    attr_reader(*PAGINATION_PARAMS)
 
     def initialize(needs, pages:, total:, current_page:, per_page:)
       super(needs)
@@ -63,7 +63,7 @@ class Need
     "There is clear demand for it from users",
     "It's something the government provides/does/pays for",
     "It's straightforward advice that helps people to comply with their statutory obligations"
-  ]
+  ].freeze
   IMPACT = [
     "No impact",
     "Noticed only by an expert audience",
@@ -71,11 +71,11 @@ class Need
     "Has consequences for the majority of your users",
     "Has serious consequences for your users and/or their customers",
     "Endangers people"
-  ]
+  ].freeze
 
-  NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches)
+  NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches).freeze
 
-  FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids)
+  FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids).freeze
 
   PUBLISHING_API_FIELDS = %w(
     base_path
@@ -98,7 +98,7 @@ class Need
     updated_at
     user_facing_version
     version
-  )
+  ).freeze
 
   ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(need_id role goal benefit impact legislation other_evidence applies_to_all_organisations)
 
@@ -116,7 +116,7 @@ class Need
   end
 
   def initialize(attributes = {})
-    ALLOWED_FIELDS.each {|field| singleton_class.class_eval { attr_accessor "#{field}" } }
+    ALLOWED_FIELDS.each { |field| singleton_class.class_eval { attr_accessor field.to_s } }
 
     default_values = {
       "content_id" => SecureRandom.uuid,
@@ -257,7 +257,7 @@ class Need
 
     @met_when ||= []
     @justifications ||= []
-    @organisation_ids ||= []
+    @organisation_ids ||= [] # rubocop:disable Naming/MemoizedInstanceVariableName
   end
 
   def content_items_meeting_this_need
@@ -345,8 +345,6 @@ class Need
   def to_key
     if persisted?
       [content_id]
-    else
-      nil
     end
   end
 
@@ -362,8 +360,6 @@ class Need
       raise "publication_state: #{publication_state} not recognised"
     end
   end
-
-private
 
   def self.needs_from_publishing_api_payloads(responses, load_organisation_ids: true)
     responses.map do |x|
@@ -410,8 +406,20 @@ private
     attributes_without_nested_details.merge(attributes["details"] || {})
   end
 
+  def self.default_options
+    {
+      document_type: 'need',
+      per_page: 50,
+      fields: %w(content_id details publication_state),
+      locale: 'en',
+      order: '-updated_at'
+    }
+  end
+
+private
+
   def publishing_api_payload
-    details_fields = (ALLOWED_FIELDS - PUBLISHING_API_FIELDS) - ["organisation_ids"]
+    details_fields = (ALLOWED_FIELDS - PUBLISHING_API_FIELDS) - %w[organisation_ids]
     details = details_fields.each_with_object({}) do |field, hash|
       value = send(field)
       next if value.blank?
@@ -445,16 +453,6 @@ private
     instance_variable_set("@#{field}", value)
   end
 
-  def self.default_options
-    {
-      document_type: 'need',
-      per_page: 50,
-      fields: %w(content_id details publication_state),
-      locale: 'en',
-      order: '-updated_at'
-    }
-  end
-
   def author_atts(author)
     {
       "name" => author.name,
@@ -482,10 +480,10 @@ private
   def changes(previous, current)
     versions = [previous, current]
 
-    keys = changed_keys(current, previous) - ["user_facing_version"]
+    keys = changed_keys(current, previous) - %w[user_facing_version]
 
     keys.inject({}) { |changes, key|
-      changes.merge(key => versions.map {|version| version[key] })
+      changes.merge(key => versions.map { |version| version[key] })
     }
   end
 

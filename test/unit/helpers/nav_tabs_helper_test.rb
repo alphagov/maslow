@@ -39,7 +39,8 @@ class NavTabsHelperTest < ActiveSupport::TestCase
     end
   end
 
-  private
+private
+
   def tab_names_on_needs_page_for(need)
     nav_tabs_for(need).map(&:first)
   end

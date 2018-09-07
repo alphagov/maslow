@@ -67,7 +67,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "searching needs" do
       should "send the search query" do
-        Need.expects(:list).with({ "q" => "citizenship" })
+        Need.expects(:list).with("q" => "citizenship")
         get(:index, params: { "q" => "citizenship" })
       end
     end
@@ -122,7 +122,7 @@ class NeedsControllerTest < ActionController::TestCase
         "justifications" => ["", "It's something only government does"]
       )
 
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).with() do |_, body|
+      GdsApi::PublishingApiV2.any_instance.expects(:put_content).with do |_, body|
         assert_equal body[:details]["justifications"],
                      ["It's something only government does"]
       end
@@ -169,12 +169,12 @@ class NeedsControllerTest < ActionController::TestCase
   context "GET show" do
     context "given a valid need" do
       setup do
-        @stub_need = Need.new({
+        @stub_need = Need.new(
           "role" => "person",
           "goal" => "do things",
           "benefit" => "good things",
           "publication_state": "draft"
-        })
+        )
 
         @stub_need.stubs(:content_items_meeting_this_need).returns([])
 
@@ -404,7 +404,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "remove the only value" do
-      need = complete_need_data.merge("met_when" => ["Winning"])
+      need = complete_need_data.merge("met_when" => %w[Winning])
       post(:create, params: { delete_criteria: "0", need: need })
 
       assert_response 200
@@ -412,9 +412,9 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "remove one of many values" do
-      data = complete_need_data.merge({
+      data = complete_need_data.merge(
         "met_when" => %w(0 1 2 3)
-      })
+      )
       post(:create, params: { delete_criteria: "2", need: data })
 
       assert_response 200

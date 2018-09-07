@@ -10,21 +10,21 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   should "save note data to the database" do
-    Note.new({
+    Note.new(
       "text" => "test",
       "need_id" => "100001",
       "content_id" => "123abc",
       "author" => @author
-    }).save
+    ).save
   end
 
   should "have errors set if the note couldn't be saved" do
-    note = Note.new({
+    note = Note.new(
       "text" => "",
       "need_id" => "100001",
       "content_id" => "123abc",
       "author" => @author
-    })
+    )
     note.save
 
     assert_equal "Text can't be blank", note.errors.full_messages.first

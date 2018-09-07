@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/publishing_api_v2'
 

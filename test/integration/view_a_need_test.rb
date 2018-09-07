@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require_relative '../integration_test_helper'
 require 'gds_api/test_helpers/publishing_api_v2'
 
@@ -10,7 +11,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     login_as_stub_user
 
     @content_item = create(:need_content_item)
-    @dvla_content_id, @dsa_content_id = SecureRandom.uuid, SecureRandom.uuid
+    @dvla_content_id = SecureRandom.uuid
+    @dsa_content_id = SecureRandom.uuid
     publishing_api_has_linkables([
       {
         "content_id": @dvla_content_id,
@@ -38,7 +40,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       ],
       content_id: @content_item["content_id"],
       link_type: "meets_user_needs",
-      fields: ["title", "base_path", "document_type"]
+      fields: %w[title base_path document_type]
     )
     publishing_api_has_links(
       content_id: @content_item["content_id"],
@@ -51,7 +53,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       content_id: @content_item["content_id"],
       text: "looks good",
       author: { name: "Testy McTestFace" },
-      created_at: DateTime.new(2017, 1, 5, 13)
+      created_at: Time.new(2017, 1, 5, 13)
     )
   end
 
@@ -69,7 +71,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         within "header" do
           within ".need-organisations" do
             assert page.has_content?(
-                     "Driver and Vehicle Licensing Agency, Driving Standards Agency"
+              "Driver and Vehicle Licensing Agency, Driving Standards Agency"
                    )
           end
 
@@ -78,7 +80,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
 
         within ".nav-tabs" do
           assert page.has_link?(
-                   "History & Notes",
+            "History & Notes",
                    href: "/needs/#{@content_item['content_id']}/revisions"
                  )
         end
@@ -154,7 +156,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           end
         end
       end
-    end # should show recent revisions
+    end
 
     context "showing content which meet the need" do
       should "display content from the publishing api" do
@@ -170,21 +172,21 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
             within "tbody" do
               within "tr:first-child" do
                 assert page.has_link?(
-                         "Linked item title",
+                  "Linked item title",
                          href: "#{Plek.new.website_root}/linked_foo"
                        )
               end
-            end # within tbody
-          end # within table
-        end # within .need
-      end # should display artefacts from the content api
+            end
+          end
+        end
+      end
 
       should "not display a table when there are no content items for this need" do
         publishing_api_has_linked_items(
           [],
           content_id: @content_item["content_id"],
           link_type: "meets_user_needs",
-          fields: ["title", "base_path", "document_type"]
+          fields: %w[title base_path document_type]
         )
 
         visit "/needs"

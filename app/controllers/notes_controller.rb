@@ -25,6 +25,7 @@ class NotesController < ApplicationController
   end
 
 private
+
   def author_attributes(author)
     {
       "name" => author.name,

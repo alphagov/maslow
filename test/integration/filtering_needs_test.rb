@@ -27,7 +27,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         ],
         content_id: @needs[0]["content_id"],
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w[title base_path document_type]
       )
 
       @department_of_education = SecureRandom.uuid
@@ -150,7 +150,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
         within ".need-organisations" do
           assert page.has_link?(
-                   "Department for Education",
+            "Department for Education",
                    href: needs_url(organisation_id: @department_of_education)
                  )
         end

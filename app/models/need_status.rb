@@ -13,12 +13,12 @@ class NeedStatus
     "it’s an organisational need or isn’t properly defined as a user need",
     "it’s an acceptance criterion of another need",
     "it’s not in proposition",
-  ]
+  ].freeze
 
-  PROPOSED = "proposed"
-  NOT_VALID = "not valid"
-  VALID = "valid"
-  VALID_WITH_CONDITIONS = "valid with conditions"
+  PROPOSED = "proposed".freeze
+  NOT_VALID = "not valid".freeze
+  VALID = "valid".freeze
+  VALID_WITH_CONDITIONS = "valid with conditions".freeze
 
   attr_reader :description, :reasons, :additional_comments, :validation_conditions
 

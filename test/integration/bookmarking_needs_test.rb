@@ -10,8 +10,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
       details: {
         goal: "Apply for a primary school place",
         need_id: 10001,
-      }
-    )
+      })
     publishing_api_has_linkables([], document_type: "organisation")
     publishing_api_has_content(
       [@need_content_item],

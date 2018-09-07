@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require_relative '../integration_test_helper'
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
@@ -22,7 +23,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w[title base_path document_type]
       )
       publishing_api_has_links(
         content_id: @content_item["content_id"],
@@ -61,16 +62,14 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       stub_publishing_api_put_content(@content_item["content_id"], payload)
       stub_publishing_api_patch_links(
         @content_item["content_id"],
-        {
-          links: { "organisations" => [] }
-        }
+        links: { "organisations" => [] }
       )
 
       visit('/needs')
 
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
-        assert page.has_link?("Edit", href: "/needs/#{@content_item["content_id"]}/edit")
+        assert page.has_link?("Edit", href: "/needs/#{@content_item['content_id']}/edit")
         click_on("Edit")
       end
 
@@ -114,7 +113,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
-        assert page.has_link?("Edit", href: "/needs/#{@content_item["content_id"]}/edit")
+        assert page.has_link?("Edit", href: "/needs/#{@content_item['content_id']}/edit")
         click_on("Edit")
       end
 
@@ -155,9 +154,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
       stub_publishing_api_patch_links(
         @content_item["content_id"],
-        {
-          links: { "organisations" => [] }
-        }
+        links: { "organisations" => [] }
       )
 
       visit('/needs')
@@ -259,7 +256,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: ["title", "base_path", "document_type"]
+        fields: %w[title base_path document_type]
       )
       publishing_api_has_links(
         content_id: @content_item["content_id"],
