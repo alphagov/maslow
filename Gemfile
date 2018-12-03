@@ -23,7 +23,7 @@ group :test do
   gem 'capybara', '3.12.0'
   gem 'database_cleaner', '1.7.0', require: false
   gem 'factory_bot_rails', '4.11.1'
-  gem 'rails-controller-testing', '1.0.2'
+  gem 'rails-controller-testing', '1.0.3'
   gem 'shoulda-context', '1.2.2'
   gem 'mocha', '1.7.0', require: false
   gem 'timecop', '0.9.1'
