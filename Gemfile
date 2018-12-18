@@ -9,7 +9,7 @@ gem 'govspeak', '~> 5'
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '~> 13.6'
+  gem 'gds-sso', '~> 14.0'
 end
 
 gem 'kaminari', '1.1.1'
