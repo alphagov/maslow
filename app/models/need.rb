@@ -188,6 +188,7 @@ class Need
 
   def revisions
     return @responses if @responses
+
     latest_revision = fetch_from_publishing_api(@content_id)
     version = latest_revision["user_facing_version"]
     @responses = [latest_revision]
@@ -423,6 +424,7 @@ private
     details = details_fields.each_with_object({}) do |field, hash|
       value = send(field)
       next if value.blank?
+
       hash[field] = value.as_json
     end
 
