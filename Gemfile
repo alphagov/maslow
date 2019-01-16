@@ -25,7 +25,7 @@ group :test do
   gem 'factory_bot_rails', '4.11.1'
   gem 'rails-controller-testing', '1.0.4'
   gem 'shoulda-context', '1.2.2'
-  gem 'mocha', '1.7.0', require: false
+  gem 'mocha', '1.8.0', require: false
   gem 'timecop', '0.9.1'
 end
 
