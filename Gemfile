@@ -49,4 +49,4 @@ else
   gem 'gds-api-adapters', '~> 57.2.3'
 end
 
-gem "govuk_app_config", "~> 1.11.2"
+gem "govuk_app_config", "~> 1.11.3"
