@@ -14,7 +14,6 @@ end
 
 gem 'kaminari', '1.1.1'
 gem 'cancancan', '3.0.1'
-gem 'lrucache', '0.1.4'
 
 group :test do
   gem 'pry-byebug'

@@ -21,7 +21,7 @@ class ActiveSupport::TestCase
   teardown do
     DatabaseCleaner.clean
     WebMock.reset!
-    Organisation.reset_cache
+    Rails.cache.clear
     Timecop.return
   end
 
