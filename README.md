@@ -19,7 +19,8 @@ The bootstrap script should get you up and running in the development environmen
 
 ### GDS development
 
-If you're using the development VM, you should run the app from the `development` repository using Bowler and Foreman. The Need API will automatically be started alongside Maslow.
+If you're using the development VM, you should run the app from the
+`development` repository using Bowler and Foreman.
 
     cd development/
     bowl maslow

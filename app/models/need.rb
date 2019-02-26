@@ -135,10 +135,7 @@ class Need
     @persisted = false
   end
 
-  # Retrieve a list of needs from the Need API
-  #
-  # The parameters are the same as passed through to the Need API: as of
-  # 2014-03-12, they are `organisation_id`, `page` and `q`.
+  # Retrieve a list of needs from the Publishing API
   def self.list(options = {})
     options = default_options.merge(options.to_h.symbolize_keys)
     if options.key? :organisation_id
@@ -465,7 +462,7 @@ private
 
   def strip_newline_from_textareas(attrs)
     # Rails prepends a newline character into the textarea fields in the form.
-    # Strip these so that we don't send them to the Need API.
+    # Strip these so that we don't send them to the Publishing API.
     %i(legislation other_evidence).each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
