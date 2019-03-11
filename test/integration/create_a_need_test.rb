@@ -200,7 +200,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       end
     end
 
-    should "handle 422 errors from the Need API" do
+    should "handle 422 errors from the Publishing API" do
       put_url = %r{\A#{Plek.find('publishing-api')}/v2/content/}
       stub_request(:put, put_url).to_return(status: 422)
 
