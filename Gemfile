@@ -39,7 +39,7 @@ gem 'uglifier', '4.1.20'
 
 gem 'chosen-rails'
 
-gem 'govuk_admin_template', '6.6.0'
+gem 'govuk_admin_template', '6.7.0'
 gem 'formtastic', '~> 3.1.3'
 gem 'formtastic-bootstrap', '~> 3.1.1'
 
