@@ -13,7 +13,7 @@ else
 end
 
 gem 'kaminari', '1.1.1'
-gem 'cancancan', '2.3.0'
+gem 'cancancan', '3.0.0'
 gem 'lrucache', '0.1.4'
 
 group :test do
