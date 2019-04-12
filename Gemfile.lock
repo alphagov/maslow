@@ -135,7 +135,7 @@ GEM
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
       rails (>= 3.2.0)
-    govuk_app_config (1.14.0)
+    govuk_app_config (1.15.1)
       aws-xray-sdk (~> 0.10.0)
       logstasher (~> 1.2.2)
       sentry-raven (~> 2.7.1)
@@ -385,7 +385,7 @@ DEPENDENCIES
   govspeak (~> 6)
   govuk-lint
   govuk_admin_template (= 6.7.0)
-  govuk_app_config (~> 1.14.0)
+  govuk_app_config (~> 1.15.1)
   jasmine (= 3.3.0)
   kaminari (= 1.1.1)
   lrucache (= 0.1.4)
