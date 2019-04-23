@@ -31,7 +31,7 @@ end
 
 group :development, :test do
   gem 'govuk-lint'
-  gem 'jasmine', '3.3.0'
+  gem 'jasmine', '3.4.0'
 end
 
 gem 'sass-rails', '~> 5.0.3'
