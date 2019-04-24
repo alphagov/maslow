@@ -2,51 +2,50 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.3'
 
-gem 'mongoid', '6.1.1'
-gem 'plek', '~> 2.1.1'
 gem 'govspeak', '~> 6'
+gem 'mongoid', '~> 6'
+gem 'plek', '~> 2'
 
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '~> 14.0'
+  gem 'gds-sso', '~> 14'
 end
 
-gem 'kaminari', '1.1.1'
-gem 'cancancan', '3.0.1'
-gem 'lrucache', '0.1.4'
+gem 'cancancan', '~> 3'
+gem 'kaminari', '~> 1'
 
-group :test do
-  gem 'pry-byebug'
-  gem 'webmock', '~> 3.5.1'
-  gem 'test-unit'
-  gem 'capybara', '3.18.0'
-  gem 'database_cleaner', '1.7.0', require: false
-  gem 'factory_bot_rails', '~> 5'
-  gem 'rails-controller-testing', '1.0.4'
-  gem 'shoulda-context', '1.2.2'
-  gem 'mocha', '1.8.0', require: false
-  gem 'timecop', '0.9.1'
-end
-
-group :development, :test do
-  gem 'govuk-lint'
-  gem 'jasmine', '3.4.0'
-end
-
-gem 'sass-rails', '~> 5.0.3'
-gem 'uglifier', '4.1.20'
+gem 'sass-rails', '~> 5'
+gem 'uglifier', '~> 4'
 
 gem 'chosen-rails'
 
-gem 'govuk_admin_template', '6.7.0'
-gem 'formtastic', '~> 3.1.3'
-gem 'formtastic-bootstrap', '~> 3.1.1'
+gem 'formtastic', '~> 3'
+gem 'formtastic-bootstrap', '~> 3'
+gem 'govuk_admin_template', '~> 6'
 
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '~> 59.1.0'
+  gem 'gds-api-adapters', '~> 59'
 end
 
-gem "govuk_app_config", "~> 1.15.1"
+gem 'govuk_app_config', '~> 1'
+
+group :test do
+  gem 'capybara', '~> 3'
+  gem 'database_cleaner', '~> 1', require: false
+  gem 'factory_bot_rails', '~> 5'
+  gem 'mocha', '~> 1', require: false
+  gem 'pry-byebug'
+  gem 'rails-controller-testing', '~> 1'
+  gem 'shoulda-context', '~> 1'
+  gem 'test-unit'
+  gem 'timecop', '~> 0.9'
+  gem 'webmock', '~> 3'
+end
+
+group :development, :test do
+  gem 'govuk-lint'
+  gem 'jasmine', '~> 3'
+end
