@@ -81,6 +81,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
+    dalli (2.7.10)
     database_cleaner (1.7.0)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
@@ -373,6 +374,7 @@ DEPENDENCIES
   cancancan (~> 3)
   capybara (~> 3)
   chosen-rails
+  dalli (~> 2.7)
   database_cleaner (~> 1)
   factory_bot_rails (~> 5)
   formtastic (~> 3)

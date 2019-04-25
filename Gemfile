@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.3'
 
+gem 'dalli', '~> 2.7'
 gem 'govspeak', '~> 6'
 gem 'mongoid', '~> 6'
 gem 'plek', '~> 2'
