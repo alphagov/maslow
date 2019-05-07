@@ -151,8 +151,8 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         within ".need-organisations" do
           assert page.has_link?(
             "Department for Education",
-                   href: needs_url(organisation_id: @department_of_education)
-                 )
+            href: needs_url(organisation_id: @department_of_education)
+          )
         end
 
         click_on "Department for Education"
