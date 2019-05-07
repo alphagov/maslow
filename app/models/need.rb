@@ -265,10 +265,10 @@ class Need
         link_type: "meets_user_needs",
         fields: %w(title base_path document_type)
       )
-  rescue GdsApi::HTTPErrorResponse => err
+  rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
-    logger.error(err)
-    GovukError.notify(err)
+    logger.error(e)
+    GovukError.notify(e)
     false
   end
 
@@ -279,19 +279,19 @@ class Need
     end
 
     Services.publishing_api_v2.publish(content_id, "major")
-  rescue GdsApi::HTTPErrorResponse => err
+  rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.publish")
-    logger.error(err)
-    GovukError.notify(err)
+    logger.error(e)
+    GovukError.notify(e)
     false
   end
 
   def discard
     Services.publishing_api_v2.discard_draft(content_id)
-  rescue GdsApi::HTTPErrorResponse => err
+  rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.discard")
-    logger.error(err)
-    GovukError.notify(err)
+    logger.error(e)
+    GovukError.notify(e)
     false
   end
 
@@ -301,10 +301,10 @@ class Need
       type: "withdrawal",
       explanation: explanation
     )
-  rescue GdsApi::HTTPErrorResponse => err
+  rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.unpublish")
-    logger.error(err)
-    GovukError.notify(err)
+    logger.error(e)
+    GovukError.notify(e)
     false
   end
 
@@ -322,9 +322,9 @@ class Need
         "organisations": organisation_ids
       }
     )
-  rescue GdsApi::HTTPErrorResponse => err
-    if err.error_details.is_a?(Hash)
-      message = err.error_details.dig "error", "message"
+  rescue GdsApi::HTTPErrorResponse => e
+    if e.error_details.is_a?(Hash)
+      message = e.error_details.dig "error", "message"
       if message
         conflicting_content_id = /content_id=([^\s]+)/.match(message)[1]
 
@@ -335,8 +335,8 @@ class Need
     end
 
     logger.error("GdsApi::HTTPErrorResponse in Need.save")
-    logger.error(err)
-    GovukError.notify(err)
+    logger.error(e)
+    GovukError.notify(e)
     false
   end
 

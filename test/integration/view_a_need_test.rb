@@ -81,8 +81,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         within ".nav-tabs" do
           assert page.has_link?(
             "History & Notes",
-                   href: "/needs/#{@content_item['content_id']}/revisions"
-                 )
+            href: "/needs/#{@content_item['content_id']}/revisions"
+          )
         end
 
         within ".the-need" do
@@ -173,8 +173,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
               within "tr:first-child" do
                 assert page.has_link?(
                   "Linked item title",
-                         href: "#{Plek.new.website_root}/linked_foo"
-                       )
+                  href: "#{Plek.new.website_root}/linked_foo"
+                )
               end
             end
           end
