@@ -246,7 +246,7 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     phantomjs (2.1.1.0)
-    plek (2.1.1)
+    plek (3.0.0)
     power_assert (1.1.4)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -405,7 +405,7 @@ DEPENDENCIES
   kaminari (~> 1)
   mocha (~> 1)
   mongoid (~> 6)
-  plek (~> 2)
+  plek (~> 3)
   pry-byebug
   rails (~> 5.2.3)
   rails-controller-testing (~> 1)

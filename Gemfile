@@ -5,7 +5,7 @@ gem 'rails', '~> 5.2.3'
 gem 'dalli', '~> 2.7'
 gem 'govspeak', '~> 6'
 gem 'mongoid', '~> 6'
-gem 'plek', '~> 2'
+gem 'plek', '~> 3'
 
 if ENV['SSO_DEV']
   gem 'gds-sso', path: '../gds-sso'
