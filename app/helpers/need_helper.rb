@@ -86,7 +86,7 @@ module NeedHelper
     return unless numerator.present? && denominator.present?
     return if denominator.zero?
 
-    percent = numerator.to_f / denominator.to_f * 100.0
+    percent = numerator / denominator.to_f * 100.0
 
     # don't include the fractional part if the percentage is X.0%
     format = percent.modulo(1) < 0.1 ? "%.0f%%" : "%.1f%%"

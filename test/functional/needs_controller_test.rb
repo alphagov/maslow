@@ -78,7 +78,7 @@ class NeedsControllerTest < ActionController::TestCase
       "role" => "User",
       "goal" => "do stuff",
       "benefit" => "get stuff",
-      "organisation_ids" => ["ministry-of-justice"],
+      "organisation_ids" => %w(ministry-of-justice),
       "impact" => "Endangers people",
       "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
       "met_when" => %w(Winning Awesome)
@@ -97,7 +97,7 @@ class NeedsControllerTest < ActionController::TestCase
         "role" => "User",
         "goal" => "do stuff",
         # No benefit
-        "organisation_ids" => ["ministry-of-justice"]
+        "organisation_ids" => %w(ministry-of-justice)
       }
 
       post(:create, params: { need: need_data })
