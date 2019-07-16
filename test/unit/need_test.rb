@@ -92,7 +92,7 @@ class NeedTest < ActiveSupport::TestCase
         "role" => "user",
         "goal" => "do stuff",
         "benefit" => "get stuff",
-        "organisation_ids" => ["ministry-of-justice"],
+        "organisation_ids" => %w(ministry-of-justice),
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
         "met_when" => ["Winning", "Winning More"],

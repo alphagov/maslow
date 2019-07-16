@@ -40,13 +40,13 @@ class UserTest < ActiveSupport::TestCase
       user = create(:user)
 
       user.toggle_bookmark("c2639b9c-27af-4684-8635-6a149346d967")
-      assert_equal ["c2639b9c-27af-4684-8635-6a149346d967"], user.bookmarks
+      assert_equal %w(c2639b9c-27af-4684-8635-6a149346d967), user.bookmarks
 
       user.toggle_bookmark("f97b9f26-6a04-4ef8-aa75-b429a8662b5e")
-      assert_equal ["c2639b9c-27af-4684-8635-6a149346d967", "f97b9f26-6a04-4ef8-aa75-b429a8662b5e"], user.bookmarks
+      assert_equal %w(c2639b9c-27af-4684-8635-6a149346d967 f97b9f26-6a04-4ef8-aa75-b429a8662b5e), user.bookmarks
 
       user.toggle_bookmark("c2639b9c-27af-4684-8635-6a149346d967")
-      assert_equal ["f97b9f26-6a04-4ef8-aa75-b429a8662b5e"], user.bookmarks
+      assert_equal %w(f97b9f26-6a04-4ef8-aa75-b429a8662b5e), user.bookmarks
     end
   end
 end
