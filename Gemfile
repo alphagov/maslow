@@ -16,7 +16,7 @@ end
 gem 'cancancan', '~> 3'
 gem 'kaminari', '~> 1'
 
-gem 'sass-rails', '~> 5'
+gem 'sass-rails', '~> 6'
 gem 'uglifier', '~> 4'
 
 gem 'chosen-rails'
