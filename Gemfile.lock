@@ -99,7 +99,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    gds-api-adapters (59.6.0)
+    gds-api-adapters (60.0.0)
       addressable
       link_header
       null_logger
@@ -159,6 +159,7 @@ GEM
     hashdiff (1.0.0)
     hashie (3.6.0)
     htmlentities (4.3.4)
+    http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.9.5)
@@ -299,7 +300,8 @@ GEM
     regexp_parser (1.6.0)
     request_store (1.4.1)
       rack (>= 1.4)
-    rest-client (2.0.2)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
@@ -396,7 +398,7 @@ DEPENDENCIES
   factory_bot_rails (~> 5)
   formtastic (~> 3)
   formtastic-bootstrap (~> 3)
-  gds-api-adapters (~> 59)
+  gds-api-adapters (~> 60)
   gds-sso (~> 14)
   govspeak (~> 6)
   govuk-lint
