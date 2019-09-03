@@ -31,7 +31,7 @@ else
   gem 'gds-api-adapters', '~> 60'
 end
 
-gem 'govuk_app_config', '~> 1'
+gem 'govuk_app_config', '~> 2'
 
 group :test do
   gem 'capybara', '~> 3'
