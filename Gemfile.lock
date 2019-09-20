@@ -97,7 +97,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    gds-api-adapters (60.0.0)
+    gds-api-adapters (60.1.0)
       addressable
       link_header
       null_logger
@@ -202,9 +202,9 @@ GEM
       mimemagic (~> 0.3.2)
     metaclass (0.0.4)
     method_source (0.9.2)
-    mime-types (3.2.2)
+    mime-types (3.3)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0331)
+    mime-types-data (3.2019.0904)
     mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
