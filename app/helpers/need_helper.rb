@@ -45,7 +45,7 @@ module NeedHelper
                   {
                     content_id: content_id,
                     title: need.title,
-                    url: need_path(content_id)
+                    url: need_path(content_id),
                   }
                 rescue Need::NotFound
                   {
@@ -63,7 +63,7 @@ module NeedHelper
     Need.list(
       per_page: 1e10,
       states: %w[published],
-      load_organisation_ids: false
+      load_organisation_ids: false,
     ).to_options.reject do |option|
       option[1] == need.content_id
     end
@@ -116,7 +116,7 @@ module NeedHelper
       total_pages: needs.pages,
       per_page: needs.per_page,
       param_name: "page",
-      remote: false
+      remote: false,
     ).to_s
   end
 
@@ -133,7 +133,7 @@ module NeedHelper
   end
 
   def bookmark_icon(bookmarks, content_id)
-    bookmarks.include?(content_id) ? 'glyphicon-star' : 'glyphicon-star-empty'
+    bookmarks.include?(content_id) ? "glyphicon-star" : "glyphicon-star-empty"
   end
 
   def publication_state_label_class(state)

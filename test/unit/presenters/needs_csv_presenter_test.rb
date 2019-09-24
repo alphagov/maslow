@@ -1,4 +1,4 @@
-require_relative '../../test_helper'
+require_relative "../../test_helper"
 
 class NeedsCsvPresenterTest < ActiveSupport::TestCase
   def base_url
@@ -15,14 +15,14 @@ class NeedsCsvPresenterTest < ActiveSupport::TestCase
         "need_id" => "100001",
         "role" => "Foo",
         "goal" => "Bar",
-        "benefit" => "Baz"
+        "benefit" => "Baz",
       }
       @need2 = {
         "need_id" => "100002",
         "role" => "Foo",
         "goal" => "Bar",
         "benefit" => "Baz",
-        "met_when" => %w(a b)
+        "met_when" => %w(a b),
       }
     end
 

@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest
   include NeedHelper
@@ -16,26 +16,26 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
       publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: %w[title base_path document_type]
+        fields: %w[title base_path document_type],
       )
       publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
-          organisations: []
-        }
+          organisations: [],
+        },
       )
       publishing_api_has_item(@content_item)
     end
 
     should "be able to access edit form" do
-      visit('/needs')
+      visit("/needs")
 
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
@@ -55,17 +55,17 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       test_need.update(
         role: "grandparent",
         benefit: "my grandchild can start school",
-        legislation: ""
+        legislation: "",
       )
       payload = test_need.send(:publishing_api_payload)
 
       stub_publishing_api_put_content(@content_item["content_id"], payload)
       stub_publishing_api_patch_links(
         @content_item["content_id"],
-        links: { "organisations" => [] }
+        links: { "organisations" => [] },
       )
 
-      visit('/needs')
+      visit("/needs")
 
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
@@ -94,7 +94,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         {
           "content_id": content_id_of_organisation_to_add,
           "title" => "Ministry Of Justice",
-        }
+        },
       ], document_type: "organisation")
 
       test_need = Need.find(@content_item["content_id"])
@@ -105,11 +105,11 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       request = stub_publishing_api_patch_links(
         @content_item["content_id"],
         links: {
-          "organisations" => [content_id_of_organisation_to_add]
-        }
+          "organisations" => [content_id_of_organisation_to_add],
+        },
       )
 
-      visit('/needs')
+      visit("/needs")
 
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
@@ -130,7 +130,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       @content_item["details"]["met_when"] = met_when
       publishing_api_has_item(@content_item)
 
-      visit('/needs')
+      visit("/needs")
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
@@ -149,15 +149,15 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       expected_payload[:details]["met_when"] << "more"
       request = stub_publishing_api_put_content(
         @content_item["content_id"],
-        expected_payload
+        expected_payload,
       )
 
       stub_publishing_api_patch_links(
         @content_item["content_id"],
-        links: { "organisations" => [] }
+        links: { "organisations" => [] },
       )
 
-      visit('/needs')
+      visit("/needs")
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
@@ -168,7 +168,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
 
       within "#met-when-criteria" do
-        click_on('Enter another criteria')
+        click_on("Enter another criteria")
       end
 
       within "#met-when-criteria" do
@@ -187,7 +187,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       @content_item["details"]["met_when"] = %w(win awesome more)
       publishing_api_has_item(@content_item)
 
-      visit('/needs')
+      visit("/needs")
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
         click_on("Edit")
@@ -208,7 +208,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       end
 
       within "#met-when-criteria" do
-        click_on_first_button('delete-criteria')
+        click_on_first_button("delete-criteria")
       end
 
       assert_equal("awesome", find_field("criteria-0").value)
@@ -224,7 +224,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       put_url = "#{Plek.find('publishing-api')}/v2/content/#{@content_item['content_id']}"
       stub_request(:put, put_url).to_return(status: 422)
 
-      visit('/needs')
+      visit("/needs")
 
       click_on(format_need_goal(@content_item["details"]["goal"]))
       within "#workflow" do
@@ -249,20 +249,20 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
       publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: %w[title base_path document_type]
+        fields: %w[title base_path document_type],
       )
       publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
-          organisations: []
-        }
+          organisations: [],
+        },
       )
       publishing_api_has_item(@content_item)
     end

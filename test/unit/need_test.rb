@@ -1,5 +1,5 @@
-require_relative '../test_helper'
-require 'gds_api/test_helpers/publishing_api_v2'
+require_relative "../test_helper"
+require "gds_api/test_helpers/publishing_api_v2"
 
 class NeedTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::PublishingApiV2
@@ -12,12 +12,12 @@ class NeedTest < ActiveSupport::TestCase
       "links" => [
         {
           "href" => "http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=2",
-          "rel" => "next"
+          "rel" => "next",
         },
         {
           "href" => "http://publishing-api.dev.gov.uk/v2/content?document_type=need&fields%5B%5D=content_id&fields%5B%5D=details&locale=en&order=-public_updated_at&per_page=50&publishing_app=need-api&page=1",
-          "rel" => "self"
-        }
+          "rel" => "self",
+        },
       ],
       "results" => [
         {
@@ -28,8 +28,8 @@ class NeedTest < ActiveSupport::TestCase
             "applies_to_all_organisations" => false,
             "benefit" => "I can make sure I'm getting what I'm entitled to",
             "goal" => "know what my rights are after a crime",
-            "role" => "citizen"
-          }
+            "role" => "citizen",
+          },
         },
         {
           "content_id" => "c867e5f7-2d68-42ad-bedb-20638b3bf58e",
@@ -39,8 +39,8 @@ class NeedTest < ActiveSupport::TestCase
             "applies_to_all_organisations" => false,
             "benefit" => "I can improve their services or stop them from operating",
             "goal" => "complain about a legal adviser",
-            "role" => "citizen"
-          }
+            "role" => "citizen",
+          },
         },
         {
           "content_id" => "0925fd2b-6b59-4120-a849-96ab19b9c7df",
@@ -49,10 +49,10 @@ class NeedTest < ActiveSupport::TestCase
             "applies_to_all_organisations" => false,
             "role" => "citizen",
             "goal" => "take my tax appeal to a tribunal",
-            "benefit" => "I can have my case heard again and get the decision reversed"
-          }
-        }
-      ]
+            "benefit" => "I can have my case heard again and get the decision reversed",
+          },
+        },
+      ],
     }
     @need_attributes1 = {
       "content_id" => "0001c0c6-2dd3-4b56-87f1-815efe32c155",
@@ -60,8 +60,8 @@ class NeedTest < ActiveSupport::TestCase
       "details" => {
         "benefit" => "I can make sure I'm getting what I'm entitled to",
         "goal" => "know what my rights are after a crime",
-        "role" => "citizen"
-      }
+        "role" => "citizen",
+      },
     }
 
     @need_attributes2 = {
@@ -70,8 +70,8 @@ class NeedTest < ActiveSupport::TestCase
       "details" => {
         "benefit" => "I can improve their services or stop them from operating",
         "goal" => "complain about a legal adviser",
-        "role" => "citizen"
-      }
+        "role" => "citizen",
+      },
     }
 
     @need_attributes3 = {
@@ -80,8 +80,8 @@ class NeedTest < ActiveSupport::TestCase
       "details" => {
         "role" => "citizen",
         "goal" => "take my tax appeal to a tribunal",
-        "benefit" => "I can have my case heard again and get the decision reversed"
-      }
+        "benefit" => "I can have my case heard again and get the decision reversed",
+      },
     }
   end
 
@@ -101,7 +101,7 @@ class NeedTest < ActiveSupport::TestCase
         "yearly_user_contacts" => 500,
         "yearly_site_views" => 70000,
         "yearly_need_views" => 15000,
-        "yearly_searches" => 2000
+        "yearly_searches" => 2000,
       }
 
       @need_content_item = create(:need_content_item)
@@ -111,7 +111,7 @@ class NeedTest < ActiveSupport::TestCase
       should "make a request to the Publishing API" do
         publishing_api_has_links(
           content_id: @need_content_item["content_id"],
-          links: { organisations: [] }
+          links: { organisations: [] },
         )
         need = Need.need_from_publishing_api_payload(@need_content_item)
 
@@ -119,8 +119,8 @@ class NeedTest < ActiveSupport::TestCase
           need.content_id,
           need.send(:publishing_api_payload),
           body: {
-            content_id: @need_content_item["content_id"]
-          }
+            content_id: @need_content_item["content_id"],
+          },
         )
         stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
 
@@ -226,7 +226,7 @@ class NeedTest < ActiveSupport::TestCase
     should "report a problem if unable to save the need" do
       need = Need.new(@atts)
       GdsApi::PublishingApiV2.any_instance.expects(:put_content).raises(
-        GdsApi::HTTPErrorResponse.new(422, %w[error])
+        GdsApi::HTTPErrorResponse.new(422, %w[error]),
       )
 
       assert_equal false, need.save
@@ -247,38 +247,38 @@ class NeedTest < ActiveSupport::TestCase
   context "listing needs" do
     should "call the Publishing API V2 adapter and return a list of needs" do
       request_params = {
-        document_type: 'need',
+        document_type: "need",
         per_page: 50,
         fields: %w(content_id details publication_state),
-        locale: 'en',
-        order: '-updated_at'
+        locale: "en",
+        order: "-updated_at",
       }
 
       publishing_api_has_links(
         content_id: @need_attributes1["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
       publishing_api_has_links(
         content_id: @need_attributes2["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
       publishing_api_has_links(
         content_id: @need_attributes3["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
 
 
       needs = [
         Need.new(@need_attributes1["details"]),
         Need.new(@need_attributes2["details"]),
-        Need.new(@need_attributes3["details"])
+        Need.new(@need_attributes3["details"]),
       ]
 
       publishing_api_has_content(
         needs,
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
 
       GdsApi::PublishingApiV2.any_instance.expects(:get_content_items)
@@ -303,7 +303,7 @@ class NeedTest < ActiveSupport::TestCase
       @stub_publishing_api_response["results"].each do |need|
         publishing_api_has_links(
           content_id: need["content_id"],
-          links: { organisations: [] }
+          links: { organisations: [] },
         )
       end
 
@@ -327,12 +327,12 @@ class NeedTest < ActiveSupport::TestCase
     should "return an array of matching Need objects" do
       publishing_api_has_links(
         content_id: @need1["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
 
       publishing_api_has_links(
         content_id: @need2["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
 
       needs = Need.by_content_ids(@need1["content_id"], @need2["content_id"])
@@ -348,7 +348,7 @@ class NeedTest < ActiveSupport::TestCase
       "id" => 100001,
       "role" => "person",
       "goal" => "do things",
-      "benefit" => "good things"
+      "benefit" => "good things",
     }.merge(additional_atts)
     stub("response", to_hash: response_hash)
   end
@@ -363,14 +363,14 @@ class NeedTest < ActiveSupport::TestCase
           need_id: 100001,
           role: "human",
           goal: "I want to do something",
-          benefit: "so that I can be happy"
-        }
+          benefit: "so that I can be happy",
+        },
       )
 
       publishing_api_has_item(need_content_item)
       publishing_api_has_links(
         content_id: content_id,
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
 
       need = Need.find(content_id)
@@ -388,12 +388,12 @@ class NeedTest < ActiveSupport::TestCase
       response = [
         {
           title: "Her Majesty's Revenue and Customs",
-          content_id: first_organisation_content_id
+          content_id: first_organisation_content_id,
         },
         {
           title: "Department of Transport",
-          content_id: second_organisation_content_id
-        }
+          content_id: second_organisation_content_id,
+        },
       ]
 
       content_id = SecureRandom.uuid
@@ -405,9 +405,9 @@ class NeedTest < ActiveSupport::TestCase
         links: {
           organisations: [
             first_organisation_content_id,
-            second_organisation_content_id
-          ]
-        }
+            second_organisation_content_id,
+          ],
+        },
       )
 
       publishing_api_has_linkables(
@@ -434,13 +434,13 @@ class NeedTest < ActiveSupport::TestCase
             "action_type" => "update",
             "author" => {
               "name" => "Jack Bauer",
-              "email" => "jack.bauer@test.com"
+              "email" => "jack.bauer@test.com",
             },
             "changes" => {
               "goal" => ["apply for a secondary school place", "apply for a primary school place"],
-              "role" => [nil, "parent"]
+              "role" => [nil, "parent"],
             },
-            "created_at" => "2013-05-01T00:00:00+00:00"
+            "created_at" => "2013-05-01T00:00:00+00:00",
           },
           {
             "action_type" => "create",
@@ -450,11 +450,11 @@ class NeedTest < ActiveSupport::TestCase
             },
             "changes" => {
               "goal" => ["apply for a school place", "apply for a secondary school place"],
-              "role" => ["grandparent", nil]
+              "role" => ["grandparent", nil],
             },
-            "created_at" => "2013-01-01T00:00:00+00:00"
-          }
-        ]
+            "created_at" => "2013-01-01T00:00:00+00:00",
+          },
+        ],
       )
 
       content_id = SecureRandom.uuid
@@ -462,42 +462,42 @@ class NeedTest < ActiveSupport::TestCase
         :need_content_item,
         content_id: content_id,
         publication_state: "superseded",
-        user_facing_version: 1
+        user_facing_version: 1,
       )
       need_content_item2 = create(
         :need_content_item,
         content_id: content_id,
         publication_state: "superseded",
         details: {
-          goal: "how to make a claim on an estate"
+          goal: "how to make a claim on an estate",
         },
-        user_facing_version: 2
+        user_facing_version: 2,
       )
       need_content_item3 = create(
         :need_content_item,
         content_id: content_id,
         publication_state: "published",
         details: {
-          goal: "how to make a claim on an estate"
+          goal: "how to make a claim on an estate",
         },
-        user_facing_version: 3
+        user_facing_version: 3,
       )
 
       publishing_api_has_item(need_content_item3)
       publishing_api_has_item(
         need_content_item1,
-        version: need_content_item1["user_facing_version"].to_s
+        version: need_content_item1["user_facing_version"].to_s,
       )
       publishing_api_has_item(
         need_content_item2,
-        version: need_content_item2["user_facing_version"].to_s
+        version: need_content_item2["user_facing_version"].to_s,
       )
 
       publishing_api_has_links(
         content_id: content_id,
         links: {
-          organisations: []
-        }
+          organisations: [],
+        },
       )
 
       need = Need.find(content_id)
@@ -513,9 +513,9 @@ class NeedTest < ActiveSupport::TestCase
       assert_equal(
         [
           "find out if an estate is claimable and how to make a claim on an estate",
-          "how to make a claim on an estate"
+          "how to make a claim on an estate",
         ],
-        second_revision["changes"]["goal"]
+        second_revision["changes"]["goal"],
       )
     end
 
@@ -536,11 +536,11 @@ class NeedTest < ActiveSupport::TestCase
     setup do
       @need_content_item = create(
         :need_content_item,
-        content_id: "3e5aa539-79a1-4714-8714-4e3037f981bd"
+        content_id: "3e5aa539-79a1-4714-8714-4e3037f981bd",
       )
       publishing_api_has_links(
         content_id: @need_content_item["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
       @need = Need.need_from_publishing_api_payload(@need_content_item)
     end
@@ -549,7 +549,7 @@ class NeedTest < ActiveSupport::TestCase
       should "update fields and send to the Publishing API" do
         @need.update(
           impact: "Endangers people",
-          yearly_searches: 50000
+          yearly_searches: 50000,
         )
 
         stub_publishing_api_put_content(
@@ -558,13 +558,13 @@ class NeedTest < ActiveSupport::TestCase
           body: {
             content_id: @need_content_item["content_id"],
             impact: "Endangers people",
-            yearly_searches: 50000
-          }
+            yearly_searches: 50000,
+          },
         )
 
         stub_publishing_api_patch_links(
           @need_content_item["content_id"],
-          links: { organisations: [] }
+          links: { organisations: [] },
         )
 
         @need.save
@@ -579,7 +579,7 @@ class NeedTest < ActiveSupport::TestCase
       should "strip leading newline characters from textareas" do
         @need.update(
           "legislation": "\nRemove the newline from legislation",
-          "other_evidence": "\nRemove the newline from other_evidence"
+          "other_evidence": "\nRemove the newline from other_evidence",
         )
 
         stub_publishing_api_put_content(
@@ -588,8 +588,8 @@ class NeedTest < ActiveSupport::TestCase
           body: {
             "content_id": @need_content_item["content_id"],
                  "legislation": "\nRemove the newline from legislation",
-                 "other_evidence": "\nRemove the newline from other_evidence"
-          }
+                 "other_evidence": "\nRemove the newline from other_evidence",
+          },
         )
         stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
         @need.save
@@ -604,12 +604,12 @@ class NeedTest < ActiveSupport::TestCase
     should "call Publishing API with the correct values" do
       need_content_item = create(
         :need_content_item,
-        need_id: 100001
+        need_id: 100001,
       )
 
       need_content_item_duplicate = create(
         :need_content_item,
-        need_id: 100002
+        need_id: 100002,
       )
 
       explanation = "Duplicate of #{need_content_item['content_id']}"
@@ -620,13 +620,13 @@ class NeedTest < ActiveSupport::TestCase
         },
         "body": {
           "type": "withdrawal",
-          explanation: explanation
-        }
+          explanation: explanation,
+        },
       )
 
       publishing_api_has_links(
         content_id: need_content_item_duplicate["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
 
       need = Need.need_from_publishing_api_payload(need_content_item_duplicate)
@@ -641,12 +641,12 @@ class NeedTest < ActiveSupport::TestCase
       need = create(
         :need_content_item,
         content_id: "f844c60e-05f9-4585-9c0f-fd48099ce81b",
-        publication_state: "unpublished"
+        publication_state: "unpublished",
       )
 
       publishing_api_has_links(
         content_id: need["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
 
       need_record = Need.need_from_publishing_api_payload(need)
@@ -656,8 +656,8 @@ class NeedTest < ActiveSupport::TestCase
         need["content_id"],
         need_from_publishing_api,
         body: {
-          content_id: need["content_id"]
-        }
+          content_id: need["content_id"],
+        },
       )
       stub_publishing_api_patch_links(need["content_id"], links: { organisations: [] })
       stub_publishing_api_publish(need["content_id"], update_type: "major")

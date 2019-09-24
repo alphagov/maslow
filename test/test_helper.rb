@@ -1,12 +1,12 @@
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path('../config/environment', __dir__)
-require 'rails/test_help'
-require 'shoulda/context'
-require 'database_cleaner'
-require 'mocha/setup'
-require 'webmock/test_unit'
-require 'gds_api/test_helpers/publishing_api_v2'
+require File.expand_path("../config/environment", __dir__)
+require "rails/test_help"
+require "shoulda/context"
+require "database_cleaner"
+require "mocha/setup"
+require "webmock/test_unit"
+require "gds_api/test_helpers/publishing_api_v2"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
@@ -45,10 +45,10 @@ class ActiveSupport::TestCase
   end
 
   def login_as(user)
-    request.env['warden'] = stub(
+    request.env["warden"] = stub(
       authenticate!: true,
       authenticated?: true,
-      user: user
+      user: user,
     )
   end
 
@@ -69,7 +69,7 @@ class ActiveSupport::TestCase
       "yearly_searches" => nil,
       "duplicate_of" => nil,
       "status" => {
-        "description" => "proposed"
+        "description" => "proposed",
       },
     }
   end

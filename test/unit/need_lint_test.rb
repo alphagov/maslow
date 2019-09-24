@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 # The lint test makes sure that Need will act like an ActiveModel
 # instance

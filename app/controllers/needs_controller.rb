@@ -1,5 +1,5 @@
-require 'plek'
-require 'json'
+require "plek"
+require "json"
 
 class NeedsController < ApplicationController
   class Http404 < StandardError
@@ -163,7 +163,7 @@ private
     if @need.discard
       redirect_to(
         needs_path,
-        notice: "Need discarded"
+        notice: "Need discarded",
       )
     else
       flash[:error] = "A problem was encountered when publishing"
@@ -202,7 +202,7 @@ private
     if @need.unpublish(explanation)
       redirect_to(
         need_path(@need.content_id),
-        notice: "Need withdrawn"
+        notice: "Need withdrawn",
       )
     else
       flash[:error] = "There was a problem updating the need’s status"

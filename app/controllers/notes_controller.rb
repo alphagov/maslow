@@ -1,5 +1,5 @@
-require 'plek'
-require 'json'
+require "plek"
+require "json"
 
 class NotesController < ApplicationController
   def create
@@ -13,7 +13,7 @@ class NotesController < ApplicationController
       text: text,
       need_id: need_id,
       content_id: content_id,
-      author: author_attributes(author)
+      author: author_attributes(author),
     )
 
     if @note.save
@@ -30,7 +30,7 @@ private
     {
       "name" => author.name,
       "email" => author.email,
-      "uid" => author.uid
+      "uid" => author.uid,
     }
   end
 end

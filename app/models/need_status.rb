@@ -49,15 +49,15 @@ class NeedStatus
 
   def as_json
     additional_attributes = case description
-                            when VALID then
+                            when VALID
                               if additional_comments.present?
                                 { additional_comments: additional_comments }
                               else
                                 {}
                               end
-                            when NOT_VALID then
+                            when NOT_VALID
                               { reasons: reasons }
-                            when VALID_WITH_CONDITIONS then
+                            when VALID_WITH_CONDITIONS
                               { validation_conditions: validation_conditions }
                             else
                               {}

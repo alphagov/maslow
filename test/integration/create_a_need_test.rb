@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class CreateANeedTest < ActionDispatch::IntegrationTest
   setup do
@@ -6,8 +6,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     publishing_api_has_content(
       [],
       Need.default_options.merge(
-        per_page: 50
-      )
+        per_page: 50,
+      ),
     )
     @ministry_of_justice_content_id = SecureRandom.uuid
     publishing_api_has_linkables([
@@ -18,15 +18,15 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       {
         "content_id": @ministry_of_justice_content_id,
         "title" => "Ministry Of Justice",
-      }
+      },
     ], document_type: "organisation")
   end
 
   context "Creating a need" do
     should "be able to access 'Add a Need' page" do
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       assert page.has_field?("As a")
@@ -65,8 +65,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
         routes: [
           {
             path: "/needs/find-my-local-register-office",
-            type: "exact"
-          }
+            type: "exact",
+          },
         ],
         update_type: "major",
         document_type: "need",
@@ -77,49 +77,49 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           yearly_need_views: 1000,
           yearly_searches: 2000,
           met_when: [
-            "Can download a birth certificate."
+            "Can download a birth certificate.",
           ],
           justifications: [
             "It's something only government does",
-            "It's straightforward advice that helps people to comply with their statutory obligations"
+            "It's straightforward advice that helps people to comply with their statutory obligations",
           ],
           role: "User",
           goal: "find my local register office",
           benefit: "I can find records of birth, marriage or death",
           impact: "Noticed by the average member of the public",
           legislation: "http://www.legislation.gov.uk/stuff\r\nhttp://www.legislation.gov.uk/stuff",
-          other_evidence: "Free text evidence with lots more evidence"
-        }
+          other_evidence: "Free text evidence with lots more evidence",
+        },
       }
 
       put_content_url = %r{\A#{Plek.find('publishing-api')}/v2/content}
       put_content_request = stub_request(:put, put_content_url).with(
-        body: payload
+        body: payload,
       )
       patch_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
       patch_links_request = stub_request(
         :patch,
-        patch_links_url
+        patch_links_url,
       ).with(body: { links: { organisations: [@ministry_of_justice_content_id] } })
 
       get_url = %r{\A#{Plek.find('publishing-api')}/v2/content}
       stub_request(:get, get_url).to_return(
-        body: payload.merge(publication_state: "draft").to_json
+        body: payload.merge(publication_state: "draft").to_json,
       )
 
       get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
       stub_request(:get, get_links_url).to_return(
-        body: { links: { organisations: [@ministry_of_justice_content_id] } }.to_json
+        body: { links: { organisations: [@ministry_of_justice_content_id] } }.to_json,
       )
 
       get_linked_url = %r{\A#{Plek.find('publishing-api')}/v2/linked}
       stub_request(:get, get_linked_url).to_return(
-        body: {}.to_json
+        body: {}.to_json,
       )
 
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       fill_in("As a", with: "User")
@@ -147,9 +147,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to add more met_when criteria" do
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       assert page.has_field?("criteria-0")
@@ -157,7 +157,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       within "#met-when-criteria" do
         fill_in("criteria-0", with: "New Criteria")
-        click_on('Enter another criteria')
+        click_on("Enter another criteria")
       end
 
       within "#met-when-criteria" do
@@ -167,9 +167,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "retain previous values when the need content is incomplete" do
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       fill_in("As a", with: "User")
@@ -188,9 +188,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "not have any fields filled in when submitting a blank form" do
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       click_on_first_button("Save")
@@ -204,9 +204,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       put_url = %r{\A#{Plek.find('publishing-api')}/v2/content/}
       stub_request(:put, put_url).to_return(status: 422)
 
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       fill_in("As a", with: "User")
@@ -222,7 +222,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       test_need = Need.new(
         role: "User",
         goal: "find my local register office",
-        benefit: "I can find records of birth, marriage or death"
+        benefit: "I can find records of birth, marriage or death",
       )
       payload = test_need.send(:publishing_api_payload)
 
@@ -232,12 +232,12 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       patch_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
       patch_links_request = stub_request(
         :patch,
-        patch_links_url
+        patch_links_url,
       ).with(body: { links: { organisations: [] } })
 
-      visit('/needs')
+      visit("/needs")
       within "#workflow" do
-        click_on('Add a new need')
+        click_on("Add a new need")
       end
 
       fill_in("As a", with: "User")
@@ -261,20 +261,20 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
       publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: %w[title base_path document_type]
+        fields: %w[title base_path document_type],
       )
       publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
-          organisations: []
-        }
+          organisations: [],
+        },
       )
       publishing_api_has_item(@content_item)
       publishing_api_has_item(@content_item, version: 2)

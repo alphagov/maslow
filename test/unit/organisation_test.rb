@@ -1,5 +1,5 @@
-require_relative '../test_helper'
-require 'gds_api/organisations'
+require_relative "../test_helper"
+require "gds_api/organisations"
 
 class OrganisationTest < ActiveSupport::TestCase
   context "loading organisations" do
@@ -12,7 +12,7 @@ class OrganisationTest < ActiveSupport::TestCase
         {
           "content_id": SecureRandom.uuid,
           "title" => "Competition Commission",
-        }
+        },
       ], document_type: "organisation")
 
       @linkables_request_path =

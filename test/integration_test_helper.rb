@@ -1,7 +1,7 @@
-require_relative 'test_helper'
+require_relative "test_helper"
 
-require 'capybara/rails'
-require 'gds_api/test_helpers/publishing_api_v2'
+require "capybara/rails"
+require "gds_api/test_helpers/publishing_api_v2"
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL

@@ -45,7 +45,7 @@ FactoryBot.define do
         {
           "path" => base_path,
           "type" => "exact",
-        }
+        },
       ]
     }
 
@@ -59,12 +59,12 @@ FactoryBot.define do
           "goal": "find out if an estate is claimable and how to make a claim on an estate",
           "justifications": [
             "The government is legally obliged to provide it",
-            "It's inherent to a person's or an organisation's rights and obligations"
+            "It's inherent to a person's or an organisation's rights and obligations",
           ],
           "impact": "Noticed by the average member of the public",
           "met_when": [
                        "Knows how to find the list and claim an estate",
-                       "Claims an estate"
+                       "Claims an estate",
                       ],
           "legislation": "Driving Test Act 1994, Schedule 8",
           "yearly_need_views": 824000,
@@ -73,7 +73,7 @@ FactoryBot.define do
           "yearly_searches": 630000,
           "need_id": 100002,
           "other_evidence": "Relatives are entitled to claim up to 30 years after the death; it is their money to claim and it can only be claimed through the Treasury Solicitor",
-          "role": "relative of a deceased person"
+          "role": "relative of a deceased person",
         }
       }
       default_metadata { {} }

@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class ExportingNeedsTest < ActionDispatch::IntegrationTest
   setup do
@@ -8,13 +8,13 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
     stub_request(:get, links_url).to_return(
       body: {
         links: {
-          organisations: []
-        }
-      }.to_json
+          organisations: [],
+        },
+      }.to_json,
     )
     linkables_url = %r{\A#{Plek.find('publishing-api')}/v2/linkables}
     stub_request(:get, linkables_url).to_return(
-      body: {}.to_json
+      body: {}.to_json,
     )
   end
 
@@ -23,8 +23,8 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         [],
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
     end
 
@@ -43,8 +43,8 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         [create(:need_content_item)],
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
     end
 
@@ -63,8 +63,8 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         create_list(:need_content_item, 3),
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
     end
 

@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class BookmarksControllerTest < ActionController::TestCase
   need_content_item = FactoryBot.create(:need_content_item)
@@ -10,8 +10,8 @@ class BookmarksControllerTest < ActionController::TestCase
     publishing_api_has_links(
       "content_id" => need_content_item["content_id"],
       "links" => {
-        "organisations" => []
-      }
+        "organisations" => [],
+      },
     )
   end
 
@@ -31,8 +31,8 @@ class BookmarksControllerTest < ActionController::TestCase
       post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id"],
-          "redirect_to" => "/foo"
-        }
+          "redirect_to" => "/foo",
+        },
       }
     end
 
@@ -40,16 +40,16 @@ class BookmarksControllerTest < ActionController::TestCase
       post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id"],
-          "redirect_to" => "/needs"
-        }
+          "redirect_to" => "/needs",
+        },
       }
       assert_redirected_to "/needs"
 
       post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id"],
-          "redirect_to" => "/bookmarks"
-        }
+          "redirect_to" => "/bookmarks",
+        },
       }
       assert_redirected_to "/bookmarks"
     end
@@ -58,8 +58,8 @@ class BookmarksControllerTest < ActionController::TestCase
       post :toggle, params: {
         "bookmark" => {
           "content_id" => need_content_item["content_id]"],
-          "redirect_to" => "http://foo.com"
-        }
+          "redirect_to" => "http://foo.com",
+        },
       }
       assert_redirected_to "/needs"
     end
