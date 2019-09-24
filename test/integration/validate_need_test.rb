@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class ValidateNeedTest < ActionDispatch::IntegrationTest
   setup do
@@ -16,14 +16,14 @@ class ValidateNeedTest < ActionDispatch::IntegrationTest
       publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
-          organisations: []
-        }
+          organisations: [],
+        },
       )
       publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: %w[title base_path document_type]
+        fields: %w[title base_path document_type],
       )
     end
 

@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
   include NeedHelper
@@ -13,28 +13,28 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
     publishing_api_has_linkables([], document_type: "organisation")
     publishing_api_has_content(
       [content_item, duplicate_content_item],
-      Need.default_options
+      Need.default_options,
     )
     publishing_api_has_content(
       [content_item, duplicate_content_item],
-      Need.default_options.merge(per_page: 1e10, states: %w[published])
+      Need.default_options.merge(per_page: 1e10, states: %w[published]),
     )
     publishing_api_has_item(content_item)
     publishing_api_has_item(duplicate_content_item)
     publishing_api_has_links(
       content_id: content_item["content_id"],
-      links: { organisations: [] }
+      links: { organisations: [] },
     )
     publishing_api_has_links(
       content_id: duplicate_content_item["content_id"],
-      links: { organisations: [] }
+      links: { organisations: [] },
     )
 
     publishing_api_has_linked_items(
       [],
       content_id: duplicate_content_item["content_id"],
       link_type: "meets_user_needs",
-      fields: %w[title base_path document_type]
+      fields: %w[title base_path document_type],
     )
 
     @need_content_id = content_item["content_id"]
@@ -48,8 +48,8 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
       @duplicate_need_content_id,
       body: {
         type: "withdrawal",
-        explanation: "This need is a duplicate of: [embed:link:#{@need_content_id}]"
-      }
+        explanation: "This need is a duplicate of: [embed:link:#{@need_content_id}]",
+      },
     )
     visit "/needs/#{@duplicate_need_content_id}/actions"
 
@@ -76,20 +76,20 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
         :need_content_item,
         publication_state: "unpublished",
         unpublishing: {
-          explanation: "Foo"
-        }
+          explanation: "Foo",
+        },
       )
       publishing_api_has_item(duplicate_content_item)
 
       publishing_api_has_links(
         content_id: duplicate_content_item["content_id"],
-        links: { organisations: [] }
+        links: { organisations: [] },
       )
       publishing_api_has_linked_items(
         [],
         content_id: duplicate_content_item["content_id"],
         link_type: "meets_user_needs",
-        fields: %w[title base_path document_type]
+        fields: %w[title base_path document_type],
       )
 
       @content_id = duplicate_content_item["content_id"]

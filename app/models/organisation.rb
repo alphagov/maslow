@@ -27,9 +27,9 @@ class Organisation
   end
 
   def self.organisations
-    Rails.cache.fetch('organisations') do
+    Rails.cache.fetch("organisations") do
       response = Services.publishing_api_v2.get_linkables(
-        document_type: "organisation"
+        document_type: "organisation",
       )
 
       (response || []).map(&:deep_symbolize_keys)

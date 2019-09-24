@@ -1,5 +1,5 @@
-require_relative '../integration_test_helper'
-require 'gds_api/publishing_api_v2'
+require_relative "../integration_test_helper"
+require "gds_api/publishing_api_v2"
 
 class NeedsControllerTest < ActionController::TestCase
   include GdsApi::TestHelpers::PublishingApiV2
@@ -27,8 +27,8 @@ class NeedsControllerTest < ActionController::TestCase
       publishing_api_has_content(
         [],
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
     end
 
@@ -81,7 +81,7 @@ class NeedsControllerTest < ActionController::TestCase
       "organisation_ids" => %w(ministry-of-justice),
       "impact" => "Endangers people",
       "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-      "met_when" => %w(Winning Awesome)
+      "met_when" => %w(Winning Awesome),
     }
   end
 
@@ -97,7 +97,7 @@ class NeedsControllerTest < ActionController::TestCase
         "role" => "User",
         "goal" => "do stuff",
         # No benefit
-        "organisation_ids" => %w(ministry-of-justice)
+        "organisation_ids" => %w(ministry-of-justice),
       }
 
       post(:create, params: { need: need_data })
@@ -110,7 +110,7 @@ class NeedsControllerTest < ActionController::TestCase
       need_data = {
         "role" => "User",
         "goal" => "Do Stuff",
-        "benefit" => "test"
+        "benefit" => "test",
       }
       post(:create, params: { need: need_data })
 
@@ -119,7 +119,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "remove blank entries from justifications" do
       need_data = complete_need_data.merge(
-        "justifications" => ["", "It's something only government does"]
+        "justifications" => ["", "It's something only government does"],
       )
 
       GdsApi::PublishingApiV2.any_instance.expects(:put_content).with do |_, body|
@@ -173,7 +173,7 @@ class NeedsControllerTest < ActionController::TestCase
           "role" => "person",
           "goal" => "do things",
           "benefit" => "good things",
-          "publication_state": "draft"
+          "publication_state": "draft",
         )
 
         @stub_need.stubs(:content_items_meeting_this_need).returns([])
@@ -283,7 +283,7 @@ class NeedsControllerTest < ActionController::TestCase
     {
       "role" => "person",
       "goal" => "do things",
-      "benefit" => "good things"
+      "benefit" => "good things",
     }
   end
 
@@ -297,7 +297,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
       put :update, params: {
         content_id: content_id,
-        need: { goal: "do things" }
+        need: { goal: "do things" },
       }
       assert_response :not_found
     end
@@ -309,7 +309,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge("goal" => "")
+        need: base_need_fields.merge("goal" => ""),
       }
       assert_response 422
     end
@@ -321,7 +321,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge("benefit" => "be awesome")
+        need: base_need_fields.merge("benefit" => "be awesome"),
       }
       assert_redirected_to need_path(need.content_id)
     end
@@ -334,7 +334,7 @@ class NeedsControllerTest < ActionController::TestCase
       put :update, params: {
         content_id: need.content_id,
         need: base_need_fields.merge("benefit" => "be awesome"),
-        add_new: ""
+        add_new: "",
       }
       assert_redirected_to new_need_path
     end
@@ -348,7 +348,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       put :update, params: {
         content_id: need.content_id,
-        need: base_need_fields.merge("met_when" => ["something", "something else"])
+        need: base_need_fields.merge("met_when" => ["something", "something else"]),
       }
 
       assert_response 422
@@ -363,7 +363,7 @@ class NeedsControllerTest < ActionController::TestCase
       need_data = {
         "role" => "User",
         "goal" => "Do Stuff",
-        "benefit" => "test"
+        "benefit" => "test",
       }
       put(:update, params: { content_id: need.content_id, need: need_data })
 
@@ -413,7 +413,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "remove one of many values" do
       data = complete_need_data.merge(
-        "met_when" => %w(0 1 2 3)
+        "met_when" => %w(0 1 2 3),
       )
       post(:create, params: { delete_criteria: "2", need: data })
 
@@ -445,7 +445,7 @@ class NeedsControllerTest < ActionController::TestCase
       put :actions, params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id }
+            need: { duplicate_of: @duplicate_need.content_id },
           }
     end
 
@@ -455,7 +455,7 @@ class NeedsControllerTest < ActionController::TestCase
       put :actions, params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id }
+            need: { duplicate_of: @duplicate_need.content_id },
           }
 
       refute @controller.flash[:error]
@@ -477,7 +477,7 @@ class NeedsControllerTest < ActionController::TestCase
       put :actions, params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            duplicate_of: @duplicate_need.content_id
+            duplicate_of: @duplicate_need.content_id,
           }
       assert_redirected_to needs_path
     end

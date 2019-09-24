@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class NotesControllerTest < ActionController::TestCase
   setup do
@@ -35,9 +35,9 @@ class NotesControllerTest < ActionController::TestCase
   def note_atts(content_id: SecureRandom.uuid, text: "test")
     {
       "note" => {
-        "text" => text
+        "text" => text,
       },
-      "content_id" => content_id
+      "content_id" => content_id,
     }
   end
 end

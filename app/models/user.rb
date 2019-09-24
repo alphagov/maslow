@@ -1,5 +1,5 @@
 require "gds-sso/user"
-require 'ability'
+require "ability"
 
 class User
   include Mongoid::Document
@@ -28,15 +28,15 @@ class User
   end
 
   def viewer?
-    has_permission?('signin')
+    has_permission?("signin")
   end
 
   def editor?
-    has_permission?('editor') || admin?
+    has_permission?("editor") || admin?
   end
 
   def admin?
-    viewer? && has_permission?('admin')
+    viewer? && has_permission?("admin")
   end
 
   def toggle_bookmark(content_id)

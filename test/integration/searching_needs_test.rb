@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class SearchingNeedsTest < ActionDispatch::IntegrationTest
   include NeedHelper
@@ -15,9 +15,9 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
           :need_content_item,
           title: "Foo",
           details: {
-            goal: "Foo goal"
-          }
-        )
+            goal: "Foo goal",
+          },
+        ),
       ]
 
       publishing_api_has_content([@content[1]], Need.default_options.merge(q: "Foo"))
@@ -27,7 +27,7 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
 
       get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
       stub_request(:get, get_links_url).to_return(
-        body: { links: { organisations: [] } }.to_json
+        body: { links: { organisations: [] } }.to_json,
       )
     end
 

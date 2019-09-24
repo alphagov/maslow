@@ -1,11 +1,11 @@
-require_relative '../test_helper'
+require_relative "../test_helper"
 
 class NoteTest < ActiveSupport::TestCase
   setup do
     @author = {
       name: "Winston Smith-Churchill",
       email: "winston@alphagov.co.uk",
-      uid: "win5t0n"
+      uid: "win5t0n",
     }
   end
 
@@ -14,7 +14,7 @@ class NoteTest < ActiveSupport::TestCase
       "text" => "test",
       "need_id" => "100001",
       "content_id" => "123abc",
-      "author" => @author
+      "author" => @author,
     ).save
   end
 
@@ -23,7 +23,7 @@ class NoteTest < ActiveSupport::TestCase
       "text" => "",
       "need_id" => "100001",
       "content_id" => "123abc",
-      "author" => @author
+      "author" => @author,
     )
     note.save
 

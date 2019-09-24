@@ -1,5 +1,5 @@
-require_relative '../../test_helper'
-require_relative '../../../app/helpers/nav_tabs_helper'
+require_relative "../../test_helper"
+require_relative "../../../app/helpers/nav_tabs_helper"
 
 class NavTabsHelperTest < ActiveSupport::TestCase
   include NavTabsHelper

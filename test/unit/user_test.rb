@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'gds-sso/lint/user_test'
+require "test_helper"
+require "gds-sso/lint/user_test"
 
 class GDS::SSO::Lint::UserTest
   def user_class

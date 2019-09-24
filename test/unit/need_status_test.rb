@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require_relative "../test_helper"
 
 class NeedStatusTest < ActiveSupport::TestCase
   context "(invalid status)" do

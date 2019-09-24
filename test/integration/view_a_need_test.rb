@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
-require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/publishing_api_v2'
+require_relative "../integration_test_helper"
+require "gds_api/test_helpers/publishing_api_v2"
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2
@@ -21,13 +21,13 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       {
         "content_id": @dsa_content_id,
         "title" => "Driving Standards Agency",
-      }
+      },
     ], document_type: "organisation")
     publishing_api_has_content(
       [@content_item],
       Need.default_options.merge(
-        per_page: 50
-      )
+        per_page: 50,
+      ),
     )
     publishing_api_has_item(@content_item)
     publishing_api_has_linked_items(
@@ -35,25 +35,25 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         {
           title: "Linked item title",
           base_path: "linked_foo",
-          document_type: "guide"
-        }
+          document_type: "guide",
+        },
       ],
       content_id: @content_item["content_id"],
       link_type: "meets_user_needs",
-      fields: %w[title base_path document_type]
+      fields: %w[title base_path document_type],
     )
     publishing_api_has_links(
       content_id: @content_item["content_id"],
       links: {
-        organisations: [@dvla_content_id, @dsa_content_id]
-      }
+        organisations: [@dvla_content_id, @dsa_content_id],
+      },
     )
 
     Note.create(
       content_id: @content_item["content_id"],
       text: "looks good",
       author: { name: "Testy McTestFace" },
-      created_at: Time.new(2017, 1, 5, 13)
+      created_at: Time.new(2017, 1, 5, 13),
     )
   end
 
@@ -71,7 +71,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         within "header" do
           within ".need-organisations" do
             assert page.has_content?(
-              "Driver and Vehicle Licensing Agency, Driving Standards Agency"
+              "Driver and Vehicle Licensing Agency, Driving Standards Agency",
                    )
           end
 
@@ -81,7 +81,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         within ".nav-tabs" do
           assert page.has_link?(
             "History & Notes",
-            href: "/needs/#{@content_item['content_id']}/revisions"
+            href: "/needs/#{@content_item['content_id']}/revisions",
           )
         end
 
@@ -90,13 +90,13 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         end
 
         within ".met-when" do
-          @content_item['details']['met_when'].each do |content|
+          @content_item["details"]["met_when"].each do |content|
             assert page.has_content?(content)
           end
         end
 
         within ".justifications" do
-          @content_item['details']['justifications'].each do |content|
+          @content_item["details"]["justifications"].each do |content|
             assert page.has_content?(content)
           end
         end
@@ -173,7 +173,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
               within "tr:first-child" do
                 assert page.has_link?(
                   "Linked item title",
-                  href: "#{Plek.new.website_root}/linked_foo"
+                  href: "#{Plek.new.website_root}/linked_foo",
                 )
               end
             end
@@ -186,7 +186,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           [],
           content_id: @content_item["content_id"],
           link_type: "meets_user_needs",
-          fields: %w[title base_path document_type]
+          fields: %w[title base_path document_type],
         )
 
         visit "/needs"
@@ -243,8 +243,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
-          organisations: []
-        }
+          organisations: [],
+        },
       )
     end
 
@@ -274,7 +274,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       @content_item["publication_state"] = "unpublished"
       @content_item["unpublishing"] = {
         "type" => "withdrawal",
-        "explanation" => "This need is not valid because: x"
+        "explanation" => "This need is not valid because: x",
       }
 
       publishing_api_has_item(@content_item)

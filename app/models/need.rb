@@ -62,7 +62,7 @@ class Need
     "It's something that people can do or it's something people need to know before they can do something that's regulated by/related to government",
     "There is clear demand for it from users",
     "It's something the government provides/does/pays for",
-    "It's straightforward advice that helps people to comply with their statutory obligations"
+    "It's straightforward advice that helps people to comply with their statutory obligations",
   ].freeze
   IMPACT = [
     "No impact",
@@ -70,7 +70,7 @@ class Need
     "Noticed by the average member of the public",
     "Has consequences for the majority of your users",
     "Has serious consequences for your users and/or their customers",
-    "Endangers people"
+    "Endangers people",
   ].freeze
 
   NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches).freeze
@@ -127,7 +127,7 @@ class Need
     }
 
     update(
-      default_values.merge(attributes.to_h)
+      default_values.merge(attributes.to_h),
     )
 
     # This is set to true when data is loaded in from the Publishing
@@ -142,18 +142,18 @@ class Need
       options[:link_organisations] = options.delete(:organisation_id)
     end
     response = Services.publishing_api_v2.get_content_items(
-      options.except(:load_organisation_ids)
+      options.except(:load_organisation_ids),
     )
     need_objects = needs_from_publishing_api_payloads(
       response["results"].to_a,
-      load_organisation_ids: options.fetch(:load_organisation_ids, true)
+      load_organisation_ids: options.fetch(:load_organisation_ids, true),
     )
     PaginatedList.new(
       need_objects,
       pages: response["pages"],
       total: response["total"],
       current_page: response["current_page"],
-      per_page: options[:per_page]
+      per_page: options[:per_page],
     )
   end
 
@@ -246,7 +246,7 @@ class Need
       elsif NUMERIC_FIELDS.include?(field)
         send(
           "#{field}=",
-          value.blank? ? nil : value.to_i
+          value.blank? ? nil : value.to_i,
         )
       else
         send("#{field}=", value)
@@ -263,7 +263,7 @@ class Need
       Services.publishing_api_v2.get_linked_items(
         content_id,
         link_type: "meets_user_needs",
-        fields: %w(title base_path document_type)
+        fields: %w(title base_path document_type),
       )
   rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
@@ -299,7 +299,7 @@ class Need
     Services.publishing_api_v2.unpublish(
       content_id,
       type: "withdrawal",
-      explanation: explanation
+      explanation: explanation,
     )
   rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.unpublish")
@@ -313,14 +313,14 @@ class Need
 
     Services.publishing_api_v2.put_content(
       content_id,
-      publishing_api_payload
+      publishing_api_payload,
     )
 
     Services.publishing_api_v2.patch_links(
       content_id,
       links: {
-        "organisations": organisation_ids
-      }
+        "organisations": organisation_ids,
+      },
     )
   rescue GdsApi::HTTPErrorResponse => e
     if e.error_details.is_a?(Hash)
@@ -363,7 +363,7 @@ class Need
     responses.map do |x|
       need_from_publishing_api_payload(
         x,
-        load_organisation_ids: load_organisation_ids
+        load_organisation_ids: load_organisation_ids,
       )
     end
   end
@@ -406,11 +406,11 @@ class Need
 
   def self.default_options
     {
-      document_type: 'need',
+      document_type: "need",
       per_page: 50,
       fields: %w(content_id details publication_state),
-      locale: 'en',
-      order: '-updated_at'
+      locale: "en",
+      order: "-updated_at",
     }
   end
 
@@ -437,8 +437,8 @@ private
       routes: [
         {
           path: base_path,
-          type: "exact"
-        }
+          type: "exact",
+        },
       ],
       document_type: "need",
       title: "As a #{@role}, I need to #{@goal}, so that #{@benefit}#{title_suffix}",
@@ -456,7 +456,7 @@ private
     {
       "name" => author.name,
       "email" => author.email,
-      "uid" => author.uid
+      "uid" => author.uid,
     }
   end
 

@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
-require_relative '../integration_test_helper'
-require 'gds_api/test_helpers/publishing_api_v2'
+require_relative "../integration_test_helper"
+require "gds_api/test_helpers/publishing_api_v2"
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2
@@ -18,15 +18,15 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
       publishing_api_has_content(
         need_content_items,
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
       need_content_items.each do |need_content_item|
         publishing_api_has_links(
           content_id: need_content_item["content_id"],
           links: {
-            organisations: []
-          }
+            organisations: [],
+          },
         )
       end
 
@@ -56,7 +56,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
 
     get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
     stub_request(:get, get_links_url).to_return(
-      body: { links: { organisations: [] } }.to_json
+      body: { links: { organisations: [] } }.to_json,
     )
 
 

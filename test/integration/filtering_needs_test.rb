@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class FilteringNeedsTest < ActionDispatch::IntegrationTest
   setup do
@@ -12,7 +12,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       [
         "apply for a primary school place",
         "apply for a secondary school place",
-        "find out about becoming a British citizen"
+        "find out about becoming a British citizen",
       ].zip(@needs).each { |goal, x| x["details"]["goal"] = goal }
 
       @needs.each { |need| publishing_api_has_item(need) }
@@ -22,12 +22,12 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
           {
             title: "Linked item title",
             base_path: "linked_foo",
-            document_type: "guide"
-          }
+            document_type: "guide",
+          },
         ],
         content_id: @needs[0]["content_id"],
         link_type: "meets_user_needs",
-        fields: %w[title base_path document_type]
+        fields: %w[title base_path document_type],
       )
 
       @department_of_education = SecureRandom.uuid
@@ -54,24 +54,24 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         content_id: @needs[0]["content_id"],
         links: {
           organisations: [@department_of_education],
-        }
+        },
       )
       publishing_api_has_links(
         content_id: @needs[1]["content_id"],
         links: {
           organisations: [@department_of_education],
-        }
+        },
       )
       publishing_api_has_links(
         content_id: @needs[2]["content_id"],
-        links: {}
+        links: {},
       )
 
       publishing_api_has_content(
         @needs,
         Need.default_options.merge(
-          per_page: 50
-        )
+          per_page: 50,
+        ),
       )
 
       needs_linked_to_education = @needs[0..1]
@@ -80,16 +80,16 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         @needs.select { |x| x["details"]["goal"].include? "primary" },
         Need.default_options.merge(
           per_page: 50,
-          q: "primary"
-        )
+          q: "primary",
+        ),
       )
 
       publishing_api_has_content(
         needs_linked_to_education,
         Need.default_options.merge(
           per_page: 50,
-          link_organisations: @department_of_education
-        )
+          link_organisations: @department_of_education,
+        ),
       )
 
       publishing_api_has_content(
@@ -97,8 +97,8 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         Need.default_options.merge(
           per_page: 50,
           q: "primary",
-          link_organisations: @department_of_education
-        )
+          link_organisations: @department_of_education,
+        ),
       )
     end
 
@@ -151,7 +151,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         within ".need-organisations" do
           assert page.has_link?(
             "Department for Education",
-            href: needs_url(organisation_id: @department_of_education)
+            href: needs_url(organisation_id: @department_of_education),
           )
         end
 

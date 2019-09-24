@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2
@@ -17,12 +17,12 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
     publishing_api_has_content(
       [@need_content_item],
       Need.default_options.merge(
-        per_page: 50
-      )
+        per_page: 50,
+      ),
     )
     publishing_api_has_links(
       content_id: @need_content_item["content_id"],
-      links: {}
+      links: {},
     )
     publishing_api_has_item(@need_content_item)
   end
