@@ -1,52 +1,52 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rails', '~> 5.2.3'
+gem "rails", "~> 5.2.3"
 
-gem 'dalli', '~> 2.7'
-gem 'govspeak', '~> 6'
-gem 'mongoid', '~> 6'
-gem 'plek', '~> 3'
+gem "dalli", "~> 2.7"
+gem "govspeak", "~> 6"
+gem "mongoid", "~> 6"
+gem "plek", "~> 3"
 
-if ENV['SSO_DEV']
-  gem 'gds-sso', path: '../gds-sso'
+if ENV["SSO_DEV"]
+  gem "gds-sso", path: "../gds-sso"
 else
-  gem 'gds-sso', '~> 14'
+  gem "gds-sso", "~> 14"
 end
 
-gem 'cancancan', '~> 3'
-gem 'kaminari', '~> 1'
+gem "cancancan", "~> 3"
+gem "kaminari", "~> 1"
 
-gem 'sass-rails', '~> 6'
-gem 'uglifier', '~> 4'
+gem "sass-rails", "~> 6"
+gem "uglifier", "~> 4"
 
-gem 'chosen-rails'
+gem "chosen-rails"
 
-gem 'formtastic', '~> 3'
-gem 'formtastic-bootstrap', '~> 3'
-gem 'govuk_admin_template', '~> 6'
+gem "formtastic", "~> 3"
+gem "formtastic-bootstrap", "~> 3"
+gem "govuk_admin_template", "~> 6"
 
-if ENV['API_DEV']
-  gem 'gds-api-adapters', path: '../gds-api-adapters'
+if ENV["API_DEV"]
+  gem "gds-api-adapters", path: "../gds-api-adapters"
 else
-  gem 'gds-api-adapters', '~> 60'
+  gem "gds-api-adapters", "~> 60"
 end
 
-gem 'govuk_app_config', '~> 2'
+gem "govuk_app_config", "~> 2"
 
 group :test do
-  gem 'capybara', '~> 3'
-  gem 'database_cleaner', '~> 1', require: false
-  gem 'factory_bot_rails', '~> 5'
-  gem 'mocha', '~> 1', require: false
-  gem 'pry-byebug'
-  gem 'rails-controller-testing', '~> 1'
-  gem 'shoulda-context', '~> 1'
-  gem 'test-unit'
-  gem 'timecop', '~> 0.9'
-  gem 'webmock', '~> 3'
+  gem "capybara", "~> 3"
+  gem "database_cleaner", "~> 1", require: false
+  gem "factory_bot_rails", "~> 5"
+  gem "mocha", "~> 1", require: false
+  gem "pry-byebug"
+  gem "rails-controller-testing", "~> 1"
+  gem "shoulda-context", "~> 1"
+  gem "test-unit"
+  gem "timecop", "~> 0.9"
+  gem "webmock", "~> 3"
 end
 
 group :development, :test do
-  gem 'govuk-lint'
-  gem 'jasmine', '~> 3'
+  gem "govuk-lint"
+  gem "jasmine", "~> 3"
 end
