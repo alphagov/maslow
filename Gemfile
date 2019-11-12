@@ -47,6 +47,6 @@ group :test do
 end
 
 group :development, :test do
-  gem "govuk-lint"
   gem "jasmine", "~> 3"
+  gem "rubocop-govuk"
 end
