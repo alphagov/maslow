@@ -125,11 +125,6 @@ GEM
       nokogumbo (~> 2)
       rinku (~> 2.0)
       sanitize (~> 5)
-    govuk-lint (4.3.0)
-      rubocop (~> 0.76)
-      rubocop-rails (~> 2)
-      rubocop-rspec (~> 1.28)
-      scss_lint
     govuk_admin_template (6.7.0)
       bootstrap-sass (= 3.4.1)
       jquery-rails (~> 4.3.1)
@@ -310,6 +305,10 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-govuk (1.0.0)
+      rubocop (~> 0.76)
+      rubocop-rails (~> 2)
+      rubocop-rspec (~> 1.28)
     rubocop-rails (2.3.2)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
@@ -336,8 +335,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scss_lint (0.59.0)
-      sass (~> 3.5, >= 3.5.5)
     sentry-raven (2.11.3)
       faraday (>= 0.7.6, < 1.0)
     shoulda-context (1.2.2)
@@ -395,7 +392,6 @@ DEPENDENCIES
   gds-api-adapters (~> 61)
   gds-sso (~> 14)
   govspeak (~> 6)
-  govuk-lint
   govuk_admin_template (~> 6)
   govuk_app_config (~> 2)
   jasmine (~> 3)
@@ -406,6 +402,7 @@ DEPENDENCIES
   pry-byebug
   rails (~> 5.2.3)
   rails-controller-testing (~> 1)
+  rubocop-govuk
   sass-rails (~> 6)
   shoulda-context (~> 1)
   test-unit
