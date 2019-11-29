@@ -458,7 +458,7 @@ class NeedsControllerTest < ActionController::TestCase
             need: { duplicate_of: @duplicate_need.content_id },
           }
 
-      refute @controller.flash[:error]
+      assert_not @controller.flash[:error]
       assert_equal "Need withdrawn", @controller.flash[:notice]
       assert_redirected_to need_path(@need.content_id)
     end

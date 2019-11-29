@@ -53,7 +53,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       content_id: @content_item["content_id"],
       text: "looks good",
       author: { name: "Testy McTestFace" },
-      created_at: Time.new(2017, 1, 5, 13),
+      created_at: Time.zone.local(2017, 1, 5, 13),
     )
   end
 

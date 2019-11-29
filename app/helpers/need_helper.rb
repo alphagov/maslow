@@ -72,7 +72,7 @@ module NeedHelper
   # If no criteria present, insert a blank
   # one.
   def criteria_with_blank_value(criteria)
-    criteria.present? ? criteria : [""]
+    criteria.presence || [""]
   end
 
   def format_need_impact(impact)

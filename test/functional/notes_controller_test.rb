@@ -13,7 +13,7 @@ class NotesControllerTest < ActionController::TestCase
 
       assert_redirected_to revisions_need_path(content_id)
       assert_equal "Note saved", flash[:notice]
-      refute flash[:error]
+      assert_not flash[:error]
     end
 
     should "return an error message if the save fails" do
@@ -22,7 +22,7 @@ class NotesControllerTest < ActionController::TestCase
       post :create, params: blank_note_atts
 
       assert_equal "Note couldn't be saved: Text can't be blank", flash[:error]
-      refute flash[:notice]
+      assert_not flash[:notice]
     end
 
     should "stop viewers from creating notes" do

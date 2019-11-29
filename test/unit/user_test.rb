@@ -12,8 +12,8 @@ class UserTest < ActiveSupport::TestCase
     should "just be a viewer" do
       user = create(:user)
       assert user.viewer?
-      refute user.editor?
-      refute user.admin?
+      assert_not user.editor?
+      assert_not user.admin?
     end
   end
 
@@ -22,7 +22,7 @@ class UserTest < ActiveSupport::TestCase
       editor = create(:editor)
       assert editor.viewer?
       assert editor.editor?
-      refute editor.admin?
+      assert_not editor.admin?
     end
   end
 

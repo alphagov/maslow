@@ -48,7 +48,7 @@ class NeedsController < ApplicationController
       discard
     else
       flash[:error] = "Unknown action: #{params['action']}"
-      render "actions", status: 422
+      render "actions", status: :unprocessable_entity
     end
   end
 
@@ -72,7 +72,7 @@ class NeedsController < ApplicationController
     if @need.unpublished?
       redirect_to need_url(@need.content_id),
                   notice: "Closed needs cannot be edited",
-                  status: 303
+                  status: :see_other
       return
     end
   end
@@ -98,18 +98,18 @@ class NeedsController < ApplicationController
         return
       else
         flash[:error] = "There was a problem saving your need."
-        render "new", status: 500
+        render "new", status: :internal_server_error
       end
     else
       flash[:error] = "Please fill in the required fields."
-      render "new", status: 422
+      render "new", status: :unprocessable_entity
     end
   rescue Need::BasePathAlreadyInUse => e
     logger.error("content_id: #{e.content_id}")
 
     flash[:error] = true
     flash[:base_path_already_in_use] = e.content_id
-    render "new", status: 422
+    render "new", status: :unprocessable_entity
   end
 
   def update
@@ -129,18 +129,18 @@ class NeedsController < ApplicationController
         return
       else
         flash[:error] = "There was a problem saving your need."
-        render "edit", status: 500
+        render "edit", status: :internal_server_error
       end
     else
       flash[:error] = "There were errors in the need form."
-      render "edit", status: 422
+      render "edit", status: :unprocessable_entity
     end
   rescue Need::BasePathAlreadyInUse => e
     logger.error("content_id: #{e.content_id}")
 
     flash[:error] = true
     flash[:base_path_already_in_use] = e.content_id
-    render "new", status: 422
+    render "new", status: :unprocessable_entity
   end
 
 private
@@ -152,7 +152,7 @@ private
       redirect_to need_path(@need.content_id)
     else
       flash[:error] = "A problem was encountered when publishing"
-      render status: 500
+      render status: :internal_server_error
     end
   end
 
@@ -167,7 +167,7 @@ private
       )
     else
       flash[:error] = "A problem was encountered when publishing"
-      render status: 500
+      render status: :internal_server_error
     end
   end
 
@@ -181,7 +181,7 @@ private
 
       if duplicate_content_id == @need.content_id
         flash[:error] = "Need cannot be a duplicate of itself"
-        render status: 422
+        render status: :unprocessable_entity
         return
       end
 
@@ -190,7 +190,7 @@ private
         Need.find(duplicate_content_id)
       rescue Need::NotFound
         flash[:error] = "Duplicate need not found"
-        render status: 422
+        render status: :unprocessable_entity
         return
       end
 
@@ -206,7 +206,7 @@ private
       )
     else
       flash[:error] = "There was a problem updating the need’s status"
-      render status: 500
+      render status: :internal_server_error
     end
   end
 
