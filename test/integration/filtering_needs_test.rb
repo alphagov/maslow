@@ -130,7 +130,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       within "#needs" do
         assert page.has_text?("Apply for a primary school place")
         assert page.has_text?("Apply for a secondary school place")
-        refute page.has_text?("find out about becoming a British citizen")
+        assert_not page.has_text?("find out about becoming a British citizen")
       end
 
       fill_in("Search needs", with: "primary")
@@ -138,8 +138,8 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
       within "#needs" do
         assert page.has_text?("Apply for a primary school place")
-        refute page.has_text?("Apply for a secondary school place")
-        refute page.has_text?("find out about becoming a British citizen")
+        assert_not page.has_text?("Apply for a secondary school place")
+        assert_not page.has_text?("find out about becoming a British citizen")
       end
     end
 

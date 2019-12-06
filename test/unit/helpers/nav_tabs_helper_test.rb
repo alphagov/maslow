@@ -24,7 +24,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
 
     should "not include an Edit link if the need is unpublished" do
       @need.publication_state = "unpublished"
-      refute tab_names_on_needs_page_for(@need).include?("Edit")
+      assert_not tab_names_on_needs_page_for(@need).include?("Edit")
     end
   end
 
