@@ -28,7 +28,7 @@ gem "govuk_admin_template", "~> 6"
 if ENV["API_DEV"]
   gem "gds-api-adapters", path: "../gds-api-adapters"
 else
-  gem "gds-api-adapters", "~> 61"
+  gem "gds-api-adapters", "~> 62"
 end
 
 gem "govuk_app_config", "~> 2"
