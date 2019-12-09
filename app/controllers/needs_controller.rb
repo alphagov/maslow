@@ -73,7 +73,6 @@ class NeedsController < ApplicationController
       redirect_to need_url(@need.content_id),
                   notice: "Closed needs cannot be edited",
                   status: :see_other
-      return
     end
   end
 
@@ -95,7 +94,6 @@ class NeedsController < ApplicationController
       if @need.save
         redirect_to redirect_url, notice: "Need created",
           flash: { goal: @need.goal }
-        return
       else
         flash[:error] = "There was a problem saving your need."
         render "new", status: :internal_server_error
@@ -126,7 +124,6 @@ class NeedsController < ApplicationController
       if @need.save && (@need.draft? || @need.publish)
         redirect_to redirect_url, notice: "Need updated",
           flash: { need_id: @need.need_id, goal: @need.goal }
-        return
       else
         flash[:error] = "There was a problem saving your need."
         render "edit", status: :internal_server_error
@@ -291,6 +288,6 @@ private
   def remove_criteria
     index = Integer(params[:delete_criteria])
     @need.remove_criteria(index)
-  rescue ArgumentError # rubocop:disable Lint/HandleExceptions
+  rescue ArgumentError # rubocop:disable Lint/SuppressedException
   end
 end
