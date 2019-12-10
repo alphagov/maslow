@@ -97,7 +97,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    gds-api-adapters (62.0.0)
+    gds-api-adapters (63.0.0)
       addressable
       link_header
       null_logger
@@ -376,7 +376,7 @@ DEPENDENCIES
   factory_bot_rails (~> 5)
   formtastic (~> 3)
   formtastic-bootstrap (~> 3)
-  gds-api-adapters (~> 62)
+  gds-api-adapters (~> 63)
   gds-sso (~> 14)
   govspeak (~> 6)
   govuk_admin_template (~> 6)
