@@ -97,7 +97,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    gds-api-adapters (63.2.0)
+    gds-api-adapters (63.3.0)
       addressable
       link_header
       null_logger
@@ -244,7 +244,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.10)
     public_suffix (4.0.3)
-    rack (2.0.8)
+    rack (2.1.1)
     rack-cache (1.11.0)
       rack (>= 0.4)
     rack-test (1.1.0)
