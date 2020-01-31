@@ -80,7 +80,7 @@ GEM
       safe_yaml (~> 1.0.0)
     crass (1.0.5)
     dalli (2.7.10)
-    database_cleaner (1.7.0)
+    database_cleaner (1.8.1)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.9.0)
