@@ -19,8 +19,8 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
       [content_item, duplicate_content_item],
       Need.default_options.merge(per_page: 1e10, states: %w[published]),
     )
-    publishing_api_has_item(content_item)
-    publishing_api_has_item(duplicate_content_item)
+    stub_publishing_api_has_item(content_item)
+    stub_publishing_api_has_item(duplicate_content_item)
     stub_publishing_api_has_links(
       content_id: content_item["content_id"],
       links: { organisations: [] },
@@ -79,7 +79,7 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
           explanation: "Foo",
         },
       )
-      publishing_api_has_item(duplicate_content_item)
+      stub_publishing_api_has_item(duplicate_content_item)
 
       stub_publishing_api_has_links(
         content_id: duplicate_content_item["content_id"],

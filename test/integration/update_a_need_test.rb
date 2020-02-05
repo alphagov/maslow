@@ -31,7 +31,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           organisations: [],
         },
       )
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
     end
 
     should "be able to access edit form" do
@@ -128,7 +128,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     should "display met_when criteria on multiple lines" do
       met_when = %w(win awesome)
       @content_item["details"]["met_when"] = met_when
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
 
       visit("/needs")
       click_on(format_need_goal(@content_item["details"]["goal"]))
@@ -185,7 +185,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to delete met_when criteria" do
       @content_item["details"]["met_when"] = %w(win awesome more)
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
 
       visit("/needs")
       click_on(format_need_goal(@content_item["details"]["goal"]))
@@ -264,7 +264,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
           organisations: [],
         },
       )
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
     end
 
     should "not show the organisations field" do

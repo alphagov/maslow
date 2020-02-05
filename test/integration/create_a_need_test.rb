@@ -276,8 +276,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           organisations: [],
         },
       )
-      publishing_api_has_item(@content_item)
-      publishing_api_has_item(@content_item, version: 2)
+      stub_publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item, version: 2)
     end
 
     should "be able to add a new need from the need page" do

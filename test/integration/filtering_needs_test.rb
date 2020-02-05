@@ -15,7 +15,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         "find out about becoming a British citizen",
       ].zip(@needs).each { |goal, x| x["details"]["goal"] = goal }
 
-      @needs.each { |need| publishing_api_has_item(need) }
+      @needs.each { |need| stub_publishing_api_has_item(need) }
 
       publishing_api_has_linked_items(
         [

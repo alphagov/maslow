@@ -29,7 +29,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         per_page: 50,
       ),
     )
-    publishing_api_has_item(@content_item)
+    stub_publishing_api_has_item(@content_item)
     publishing_api_has_linked_items(
       [
         {
@@ -210,7 +210,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       @content_item["details"].delete("legislation")
       @content_item["details"].delete("other_evidence")
 
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
     end
 
     should "show basic information about the need" do
@@ -239,7 +239,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   context "given a need which applies to all organisations" do
     setup do
       @content_item["details"]["applies_to_all_organisations"] = true
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
       stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
@@ -277,7 +277,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         "explanation" => "This need is not valid because: x",
       }
 
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
     end
 
     should "indicate that it is not valid" do

@@ -320,8 +320,8 @@ class NeedTest < ActiveSupport::TestCase
     setup do
       @need1 = create(:need_content_item)
       @need2 = create(:need_content_item)
-      publishing_api_has_item(@need1)
-      publishing_api_has_item(@need2)
+      stub_publishing_api_has_item(@need1)
+      stub_publishing_api_has_item(@need2)
     end
 
     should "return an array of matching Need objects" do
@@ -367,7 +367,7 @@ class NeedTest < ActiveSupport::TestCase
         },
       )
 
-      publishing_api_has_item(need_content_item)
+      stub_publishing_api_has_item(need_content_item)
       stub_publishing_api_has_links(
         content_id: content_id,
         links: { organisations: [] },
@@ -398,7 +398,7 @@ class NeedTest < ActiveSupport::TestCase
 
       content_id = SecureRandom.uuid
       need_content_item = create(:need_content_item, content_id: content_id)
-      publishing_api_has_item(need_content_item)
+      stub_publishing_api_has_item(need_content_item)
 
       stub_publishing_api_has_links(
         content_id: content_id,
@@ -483,12 +483,12 @@ class NeedTest < ActiveSupport::TestCase
         user_facing_version: 3,
       )
 
-      publishing_api_has_item(need_content_item3)
-      publishing_api_has_item(
+      stub_publishing_api_has_item(need_content_item3)
+      stub_publishing_api_has_item(
         need_content_item1,
         version: need_content_item1["user_facing_version"].to_s,
       )
-      publishing_api_has_item(
+      stub_publishing_api_has_item(
         need_content_item2,
         version: need_content_item2["user_facing_version"].to_s,
       )

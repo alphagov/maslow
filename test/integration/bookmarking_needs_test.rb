@@ -24,7 +24,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
       content_id: @need_content_item["content_id"],
       links: {},
     )
-    publishing_api_has_item(@need_content_item)
+    stub_publishing_api_has_item(@need_content_item)
   end
 
   context "Bookmarking needs" do
