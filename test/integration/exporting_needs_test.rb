@@ -20,7 +20,7 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
 
   context "no needs to export" do
     setup do
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [],
         Need.default_options.merge(
           per_page: 50,
@@ -40,7 +40,7 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
 
   context "one need" do
     setup do
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [create(:need_content_item)],
         Need.default_options.merge(
           per_page: 50,
@@ -60,7 +60,7 @@ class ExportingNeedsTest < ActionDispatch::IntegrationTest
 
   context "several needs with met when criteria" do
     setup do
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         create_list(:need_content_item, 3),
         Need.default_options.merge(
           per_page: 50,

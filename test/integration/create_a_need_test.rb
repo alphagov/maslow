@@ -3,7 +3,7 @@ require_relative "../integration_test_helper"
 class CreateANeedTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_editor
-    publishing_api_has_content(
+    stub_publishing_api_has_content(
       [],
       Need.default_options.merge(
         per_page: 50,
@@ -258,7 +258,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
   context "given a need which exists" do
     setup do
       @content_item = create(:need_content_item)
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
           per_page: 50,

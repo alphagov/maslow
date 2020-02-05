@@ -274,7 +274,7 @@ class NeedTest < ActiveSupport::TestCase
         Need.new(@need_attributes3["details"]),
       ]
 
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         needs,
         Need.default_options.merge(
           per_page: 50,

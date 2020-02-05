@@ -23,7 +23,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         "title" => "Driving Standards Agency",
       },
     ], document_type: "organisation")
-    publishing_api_has_content(
+    stub_publishing_api_has_content(
       [@content_item],
       Need.default_options.merge(
         per_page: 50,

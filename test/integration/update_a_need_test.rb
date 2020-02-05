@@ -13,7 +13,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
   context "updating a need" do
     setup do
       @content_item = create(:need_content_item)
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
           per_page: 50,
@@ -246,7 +246,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     setup do
       @content_item = create(:need_content_item)
       @content_item["details"]["applies_to_all_organisations"] = true
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
           per_page: 50,

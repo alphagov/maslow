@@ -67,7 +67,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         links: {},
       )
 
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         @needs,
         Need.default_options.merge(
           per_page: 50,
@@ -76,7 +76,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
       needs_linked_to_education = @needs[0..1]
 
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         @needs.select { |x| x["details"]["goal"].include? "primary" },
         Need.default_options.merge(
           per_page: 50,
@@ -84,7 +84,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         ),
       )
 
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         needs_linked_to_education,
         Need.default_options.merge(
           per_page: 50,
@@ -92,7 +92,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         ),
       )
 
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         needs_linked_to_education.select { |x| x["details"]["goal"].include? "primary" },
         Need.default_options.merge(
           per_page: 50,

@@ -20,8 +20,8 @@ class SearchingNeedsTest < ActionDispatch::IntegrationTest
         ),
       ]
 
-      publishing_api_has_content([@content[1]], Need.default_options.merge(q: "Foo"))
-      publishing_api_has_content(@content, Need.default_options)
+      stub_publishing_api_has_content([@content[1]], Need.default_options.merge(q: "Foo"))
+      stub_publishing_api_has_content(@content, Need.default_options)
 
       stub_publishing_api_has_linkables([], document_type: "organisation")
 

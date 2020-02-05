@@ -24,7 +24,7 @@ class NeedsControllerTest < ActionController::TestCase
 
   context "GET index" do
     setup do
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [],
         Need.default_options.merge(
           per_page: 50,

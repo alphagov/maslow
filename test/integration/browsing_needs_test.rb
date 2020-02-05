@@ -15,7 +15,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     should "display a table of all the needs" do
       need_content_items = FactoryBot.create_list(:need_content_item, 3)
       stub_publishing_api_has_linkables([], document_type: "organisation")
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         need_content_items,
         Need.default_options.merge(
           per_page: 50,
@@ -48,9 +48,9 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     content = create_list(:need_content_item, 9)
     options = Need.default_options.merge(per_page: 3)
     Need.stubs(:default_options).returns(options)
-    publishing_api_has_content(content, options)
-    publishing_api_has_content(content, options.merge(page: 2))
-    publishing_api_has_content(content, options.merge(page: 3))
+    stub_publishing_api_has_content(content, options)
+    stub_publishing_api_has_content(content, options.merge(page: 2))
+    stub_publishing_api_has_content(content, options.merge(page: 3))
 
     stub_publishing_api_has_linkables([], document_type: "organisation")
 

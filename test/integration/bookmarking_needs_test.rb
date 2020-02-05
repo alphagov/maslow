@@ -14,7 +14,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
                                 })
 
     stub_publishing_api_has_linkables([], document_type: "organisation")
-    publishing_api_has_content(
+    stub_publishing_api_has_content(
       [@need_content_item],
       Need.default_options.merge(
         per_page: 50,
