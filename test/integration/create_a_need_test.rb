@@ -264,7 +264,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
           per_page: 50,
         ),
       )
-      publishing_api_has_linked_items(
+      stub_publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",

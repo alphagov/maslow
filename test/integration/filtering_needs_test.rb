@@ -17,7 +17,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
 
       @needs.each { |need| stub_publishing_api_has_item(need) }
 
-      publishing_api_has_linked_items(
+      stub_publishing_api_has_linked_items(
         [
           {
             title: "Linked item title",

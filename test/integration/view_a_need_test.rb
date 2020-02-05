@@ -30,7 +30,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       ),
     )
     stub_publishing_api_has_item(@content_item)
-    publishing_api_has_linked_items(
+    stub_publishing_api_has_linked_items(
       [
         {
           title: "Linked item title",
@@ -182,7 +182,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       end
 
       should "not display a table when there are no content items for this need" do
-        publishing_api_has_linked_items(
+        stub_publishing_api_has_linked_items(
           [],
           content_id: @content_item["content_id"],
           link_type: "meets_user_needs",
