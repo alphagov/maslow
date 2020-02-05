@@ -410,7 +410,7 @@ class NeedTest < ActiveSupport::TestCase
         },
       )
 
-      publishing_api_has_linkables(
+      stub_publishing_api_has_linkables(
         response,
         document_type: "organisation",
       )

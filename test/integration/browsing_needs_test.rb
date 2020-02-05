@@ -14,7 +14,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   context "viewing the list of needs" do
     should "display a table of all the needs" do
       need_content_items = FactoryBot.create_list(:need_content_item, 3)
-      publishing_api_has_linkables([], document_type: "organisation")
+      stub_publishing_api_has_linkables([], document_type: "organisation")
       publishing_api_has_content(
         need_content_items,
         Need.default_options.merge(
@@ -52,7 +52,7 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     publishing_api_has_content(content, options.merge(page: 2))
     publishing_api_has_content(content, options.merge(page: 3))
 
-    publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_linkables([], document_type: "organisation")
 
     get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
     stub_request(:get, get_links_url).to_return(

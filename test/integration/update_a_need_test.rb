@@ -7,7 +7,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
   setup do
     login_as_stub_editor
-    publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_linkables([], document_type: "organisation")
   end
 
   context "updating a need" do
@@ -86,7 +86,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to update the organisations for a need" do
       content_id_of_organisation_to_add = SecureRandom.uuid
-      publishing_api_has_linkables([
+      stub_publishing_api_has_linkables([
         {
           "content_id": SecureRandom.uuid,
           "title" => "Committee on Climate Change",

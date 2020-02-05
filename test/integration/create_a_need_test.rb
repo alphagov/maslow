@@ -10,7 +10,7 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       ),
     )
     @ministry_of_justice_content_id = SecureRandom.uuid
-    publishing_api_has_linkables([
+    stub_publishing_api_has_linkables([
       {
         "content_id": SecureRandom.uuid,
         "title" => "Committee On Climate Change",

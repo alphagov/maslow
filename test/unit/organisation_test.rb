@@ -4,7 +4,7 @@ require "gds_api/organisations"
 class OrganisationTest < ActiveSupport::TestCase
   context "loading organisations" do
     setup do
-      publishing_api_has_linkables([
+      stub_publishing_api_has_linkables([
         {
           "content_id": SecureRandom.uuid,
           "title" => "Committee on Climate Change",

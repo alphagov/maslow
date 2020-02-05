@@ -33,7 +33,7 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
       @department_of_education = SecureRandom.uuid
       @home_office = SecureRandom.uuid
       @hm_passport_office = SecureRandom.uuid
-      publishing_api_has_linkables(
+      stub_publishing_api_has_linkables(
         [
           {
             content_id: @department_of_education,

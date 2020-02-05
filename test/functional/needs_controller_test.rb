@@ -16,7 +16,7 @@ class NeedsControllerTest < ActionController::TestCase
 
   setup do
     login_as_stub_user
-    publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_linkables([], document_type: "organisation")
     stub_any_publishing_api_put_content
     stub_any_publishing_api_patch_links
     Need.any_instance.stubs(:organisations).returns([])

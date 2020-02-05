@@ -13,7 +13,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     @content_item = create(:need_content_item)
     @dvla_content_id = SecureRandom.uuid
     @dsa_content_id = SecureRandom.uuid
-    publishing_api_has_linkables([
+    stub_publishing_api_has_linkables([
       {
         "content_id": @dvla_content_id,
         "title" => "Driver and Vehicle Licensing Agency",

@@ -13,7 +13,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
                                   need_id: 10001,
                                 })
 
-    publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_linkables([], document_type: "organisation")
     publishing_api_has_content(
       [@need_content_item],
       Need.default_options.merge(

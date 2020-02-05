@@ -10,7 +10,7 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
 
     content_item = create(:need_content_item)
     duplicate_content_item = create(:need_content_item, publication_state: "published")
-    publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_linkables([], document_type: "organisation")
     publishing_api_has_content(
       [content_item, duplicate_content_item],
       Need.default_options,
