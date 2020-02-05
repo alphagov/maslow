@@ -125,7 +125,7 @@ module NeedHelper
   end
 
   def feedback_for_page(base_path)
-    Services.support.feedback_url base_path
+    GdsApi.support.feedback_url base_path
   end
 
   def full_url_for_base_path(base_path)

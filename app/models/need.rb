@@ -141,7 +141,7 @@ class Need
     if options.key? :organisation_id
       options[:link_organisations] = options.delete(:organisation_id)
     end
-    response = Services.publishing_api_v2.get_content_items(
+    response = GdsApi.publishing_api.get_content_items(
       options.except(:load_organisation_ids),
     )
     need_objects = needs_from_publishing_api_payloads(
@@ -177,7 +177,7 @@ class Need
   # This works in roughly the same way as an ActiveRecord-style `find` method,
   # just with a different exception type.
   def self.find(content_id)
-    response = Services.publishing_api_v2.get_content(content_id)
+    response = GdsApi.publishing_api.get_content(content_id)
     need_from_publishing_api_payload(response.parsed_content)
   rescue GdsApi::HTTPNotFound
     raise NotFound, content_id
@@ -197,13 +197,13 @@ class Need
   end
 
   def fetch_from_publishing_api(content_id, params = {})
-    response = Services.publishing_api_v2.get_content(content_id, params).parsed_content
+    response = GdsApi.publishing_api.get_content(content_id, params).parsed_content
     self.class.move_details_to_top_level(response)
   end
 
   def load_organisation_ids
     parsed_content =
-      Services.publishing_api_v2.get_links(@content_id).parsed_content
+      GdsApi.publishing_api.get_links(@content_id).parsed_content
     @organisation_ids = parsed_content["links"]["organisations"] || []
   end
 
@@ -260,7 +260,7 @@ class Need
 
   def content_items_meeting_this_need
     @content_items_meeting_this_need ||=
-      Services.publishing_api_v2.get_linked_items(
+      GdsApi.publishing_api.get_linked_items(
         content_id,
         link_type: "meets_user_needs",
         fields: %w(title base_path document_type),
@@ -278,7 +278,7 @@ class Need
       save
     end
 
-    Services.publishing_api_v2.publish(content_id, "major")
+    GdsApi.publishing_api.publish(content_id, "major")
   rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.publish")
     logger.error(e)
@@ -287,7 +287,7 @@ class Need
   end
 
   def discard
-    Services.publishing_api_v2.discard_draft(content_id)
+    GdsApi.publishing_api.discard_draft(content_id)
   rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.discard")
     logger.error(e)
@@ -296,7 +296,7 @@ class Need
   end
 
   def unpublish(explanation)
-    Services.publishing_api_v2.unpublish(
+    GdsApi.publishing_api.unpublish(
       content_id,
       type: "withdrawal",
       explanation: explanation,
@@ -311,12 +311,12 @@ class Need
   def save
     strip_newline_from_textareas(publishing_api_payload)
 
-    Services.publishing_api_v2.put_content(
+    GdsApi.publishing_api.put_content(
       content_id,
       publishing_api_payload,
     )
 
-    Services.publishing_api_v2.patch_links(
+    GdsApi.publishing_api.patch_links(
       content_id,
       links: {
         "organisations": organisation_ids,

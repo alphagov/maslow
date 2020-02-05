@@ -28,7 +28,7 @@ class Organisation
 
   def self.organisations
     Rails.cache.fetch("organisations") do
-      response = Services.publishing_api_v2.get_linkables(
+      response = GdsApi.publishing_api.get_linkables(
         document_type: "organisation",
       )
 
