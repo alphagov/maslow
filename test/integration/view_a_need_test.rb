@@ -292,7 +292,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     content_id = SecureRandom.uuid
 
     setup do
-      publishing_api_does_not_have_item(content_id)
+      stub_publishing_api_does_not_have_item(content_id)
     end
 
     should "display a not found error message" do
