@@ -1,8 +1,8 @@
 require_relative "../integration_test_helper"
-require "gds_api/publishing_api_v2"
+require "gds_api/publishing_api"
 
 class NeedsControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   def existing_need(options = {})
     defaults = {
@@ -122,7 +122,7 @@ class NeedsControllerTest < ActionController::TestCase
         "justifications" => ["", "It's something only government does"],
       )
 
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).with do |_, body|
+      GdsApi::PublishingApi.any_instance.expects(:put_content).with do |_, body|
         assert_equal body[:details]["justifications"],
                      ["It's something only government does"]
       end

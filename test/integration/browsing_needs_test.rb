@@ -4,7 +4,7 @@ require_relative "../integration_test_helper"
 require "gds_api/test_helpers/publishing_api_v2"
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
   include NeedHelper
 
   setup do

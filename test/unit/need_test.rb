@@ -1,8 +1,8 @@
 require_relative "../test_helper"
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 class NeedTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   setup do
     @stub_publishing_api_response = {
@@ -225,7 +225,7 @@ class NeedTest < ActiveSupport::TestCase
 
     should "report a problem if unable to save the need" do
       need = Need.new(@atts)
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).raises(
+      GdsApi::PublishingApi.any_instance.expects(:put_content).raises(
         GdsApi::HTTPErrorResponse.new(422, %w[error]),
       )
 
@@ -281,7 +281,7 @@ class NeedTest < ActiveSupport::TestCase
         ),
       )
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items)
+      GdsApi::PublishingApi.any_instance.expects(:get_content_items)
         .with(request_params)
         .returns(@stub_publishing_api_response)
 
@@ -298,7 +298,7 @@ class NeedTest < ActiveSupport::TestCase
       multipage_response["pages"] = 2
       multipage_response["page"] = 1
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items).once.returns(multipage_response)
+      GdsApi::PublishingApi.any_instance.expects(:get_content_items).once.returns(multipage_response)
 
       @stub_publishing_api_response["results"].each do |need|
         publishing_api_has_links(
@@ -522,7 +522,7 @@ class NeedTest < ActiveSupport::TestCase
     should "raise an error when need not found" do
       content_id = SecureRandom.uuid
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once
+      GdsApi::PublishingApi.any_instance.expects(:get_content).once
         .with(content_id)
         .raises(GdsApi::HTTPNotFound.new(404))
 
