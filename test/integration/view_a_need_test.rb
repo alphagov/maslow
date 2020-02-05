@@ -42,7 +42,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       link_type: "meets_user_needs",
       fields: %w[title base_path document_type],
     )
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: @content_item["content_id"],
       links: {
         organisations: [@dvla_content_id, @dsa_content_id],
@@ -240,7 +240,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     setup do
       @content_item["details"]["applies_to_all_organisations"] = true
       publishing_api_has_item(@content_item)
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
           organisations: [],

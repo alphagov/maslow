@@ -50,19 +50,19 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
         ], document_type: "organisation"
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @needs[0]["content_id"],
         links: {
           organisations: [@department_of_education],
         },
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @needs[1]["content_id"],
         links: {
           organisations: [@department_of_education],
         },
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @needs[2]["content_id"],
         links: {},
       )

@@ -109,7 +109,7 @@ class NeedTest < ActiveSupport::TestCase
 
     context "given valid attributes" do
       should "make a request to the Publishing API" do
-        publishing_api_has_links(
+        stub_publishing_api_has_links(
           content_id: @need_content_item["content_id"],
           links: { organisations: [] },
         )
@@ -254,15 +254,15 @@ class NeedTest < ActiveSupport::TestCase
         order: "-updated_at",
       }
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_attributes1["content_id"],
         links: { organisations: [] },
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_attributes2["content_id"],
         links: { organisations: [] },
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_attributes3["content_id"],
         links: { organisations: [] },
       )
@@ -301,7 +301,7 @@ class NeedTest < ActiveSupport::TestCase
       GdsApi::PublishingApi.any_instance.expects(:get_content_items).once.returns(multipage_response)
 
       @stub_publishing_api_response["results"].each do |need|
-        publishing_api_has_links(
+        stub_publishing_api_has_links(
           content_id: need["content_id"],
           links: { organisations: [] },
         )
@@ -325,12 +325,12 @@ class NeedTest < ActiveSupport::TestCase
     end
 
     should "return an array of matching Need objects" do
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need1["content_id"],
         links: { organisations: [] },
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need2["content_id"],
         links: { organisations: [] },
       )
@@ -368,7 +368,7 @@ class NeedTest < ActiveSupport::TestCase
       )
 
       publishing_api_has_item(need_content_item)
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: content_id,
         links: { organisations: [] },
       )
@@ -400,7 +400,7 @@ class NeedTest < ActiveSupport::TestCase
       need_content_item = create(:need_content_item, content_id: content_id)
       publishing_api_has_item(need_content_item)
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: content_id,
         links: {
           organisations: [
@@ -493,7 +493,7 @@ class NeedTest < ActiveSupport::TestCase
         version: need_content_item2["user_facing_version"].to_s,
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: content_id,
         links: {
           organisations: [],
@@ -538,7 +538,7 @@ class NeedTest < ActiveSupport::TestCase
         :need_content_item,
         content_id: "3e5aa539-79a1-4714-8714-4e3037f981bd",
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_content_item["content_id"],
         links: { organisations: [] },
       )
@@ -624,7 +624,7 @@ class NeedTest < ActiveSupport::TestCase
         },
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: need_content_item_duplicate["content_id"],
         links: { organisations: [] },
       )
@@ -644,7 +644,7 @@ class NeedTest < ActiveSupport::TestCase
         publication_state: "unpublished",
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: need["content_id"],
         links: { organisations: [] },
       )

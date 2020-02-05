@@ -20,7 +20,7 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
         per_page: 50,
       ),
     )
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: @need_content_item["content_id"],
       links: {},
     )

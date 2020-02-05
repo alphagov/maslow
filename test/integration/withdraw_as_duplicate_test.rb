@@ -21,11 +21,11 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
     )
     publishing_api_has_item(content_item)
     publishing_api_has_item(duplicate_content_item)
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: content_item["content_id"],
       links: { organisations: [] },
     )
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: duplicate_content_item["content_id"],
       links: { organisations: [] },
     )
@@ -81,7 +81,7 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
       )
       publishing_api_has_item(duplicate_content_item)
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: duplicate_content_item["content_id"],
         links: { organisations: [] },
       )

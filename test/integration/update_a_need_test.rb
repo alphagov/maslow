@@ -25,7 +25,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         link_type: "meets_user_needs",
         fields: %w[title base_path document_type],
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
           organisations: [],
@@ -258,7 +258,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
         link_type: "meets_user_needs",
         fields: %w[title base_path document_type],
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
           organisations: [],
