@@ -11,15 +11,15 @@ class ValidateNeedTest < ActionDispatch::IntegrationTest
     setup do
       @content_item = create(:need_content_item)
 
-      publishing_api_has_item(@content_item)
-      publishing_api_has_linkables([], document_type: "organisation")
-      publishing_api_has_links(
+      stub_publishing_api_has_item(@content_item)
+      stub_publishing_api_has_linkables([], document_type: "organisation")
+      stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
           organisations: [],
         },
       )
-      publishing_api_has_linked_items(
+      stub_publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",

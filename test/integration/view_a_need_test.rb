@@ -1,10 +1,10 @@
 # encoding: UTF-8
 
 require_relative "../integration_test_helper"
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 class ViewANeedTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
   include NeedHelper
 
   setup do
@@ -13,7 +13,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     @content_item = create(:need_content_item)
     @dvla_content_id = SecureRandom.uuid
     @dsa_content_id = SecureRandom.uuid
-    publishing_api_has_linkables([
+    stub_publishing_api_has_linkables([
       {
         "content_id": @dvla_content_id,
         "title" => "Driver and Vehicle Licensing Agency",
@@ -23,14 +23,14 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         "title" => "Driving Standards Agency",
       },
     ], document_type: "organisation")
-    publishing_api_has_content(
+    stub_publishing_api_has_content(
       [@content_item],
       Need.default_options.merge(
         per_page: 50,
       ),
     )
-    publishing_api_has_item(@content_item)
-    publishing_api_has_linked_items(
+    stub_publishing_api_has_item(@content_item)
+    stub_publishing_api_has_linked_items(
       [
         {
           title: "Linked item title",
@@ -42,7 +42,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       link_type: "meets_user_needs",
       fields: %w[title base_path document_type],
     )
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: @content_item["content_id"],
       links: {
         organisations: [@dvla_content_id, @dsa_content_id],
@@ -182,7 +182,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       end
 
       should "not display a table when there are no content items for this need" do
-        publishing_api_has_linked_items(
+        stub_publishing_api_has_linked_items(
           [],
           content_id: @content_item["content_id"],
           link_type: "meets_user_needs",
@@ -210,7 +210,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       @content_item["details"].delete("legislation")
       @content_item["details"].delete("other_evidence")
 
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
     end
 
     should "show basic information about the need" do
@@ -239,8 +239,8 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
   context "given a need which applies to all organisations" do
     setup do
       @content_item["details"]["applies_to_all_organisations"] = true
-      publishing_api_has_item(@content_item)
-      publishing_api_has_links(
+      stub_publishing_api_has_item(@content_item)
+      stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
           organisations: [],
@@ -277,7 +277,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
         "explanation" => "This need is not valid because: x",
       }
 
-      publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item)
     end
 
     should "indicate that it is not valid" do
@@ -292,7 +292,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     content_id = SecureRandom.uuid
 
     setup do
-      publishing_api_does_not_have_item(content_id)
+      stub_publishing_api_does_not_have_item(content_id)
     end
 
     should "display a not found error message" do

@@ -3,14 +3,14 @@ require_relative "../integration_test_helper"
 class CreateANeedTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_editor
-    publishing_api_has_content(
+    stub_publishing_api_has_content(
       [],
       Need.default_options.merge(
         per_page: 50,
       ),
     )
     @ministry_of_justice_content_id = SecureRandom.uuid
-    publishing_api_has_linkables([
+    stub_publishing_api_has_linkables([
       {
         "content_id": SecureRandom.uuid,
         "title" => "Committee On Climate Change",
@@ -258,26 +258,26 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
   context "given a need which exists" do
     setup do
       @content_item = create(:need_content_item)
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         [@content_item],
         Need.default_options.merge(
           per_page: 50,
         ),
       )
-      publishing_api_has_linked_items(
+      stub_publishing_api_has_linked_items(
         [],
         content_id: @content_item["content_id"],
         link_type: "meets_user_needs",
         fields: %w[title base_path document_type],
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @content_item["content_id"],
         links: {
           organisations: [],
         },
       )
-      publishing_api_has_item(@content_item)
-      publishing_api_has_item(@content_item, version: 2)
+      stub_publishing_api_has_item(@content_item)
+      stub_publishing_api_has_item(@content_item, version: 2)
     end
 
     should "be able to add a new need from the need page" do

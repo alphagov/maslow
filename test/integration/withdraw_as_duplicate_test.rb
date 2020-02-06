@@ -10,27 +10,27 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
 
     content_item = create(:need_content_item)
     duplicate_content_item = create(:need_content_item, publication_state: "published")
-    publishing_api_has_linkables([], document_type: "organisation")
-    publishing_api_has_content(
+    stub_publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_content(
       [content_item, duplicate_content_item],
       Need.default_options,
     )
-    publishing_api_has_content(
+    stub_publishing_api_has_content(
       [content_item, duplicate_content_item],
       Need.default_options.merge(per_page: 1e10, states: %w[published]),
     )
-    publishing_api_has_item(content_item)
-    publishing_api_has_item(duplicate_content_item)
-    publishing_api_has_links(
+    stub_publishing_api_has_item(content_item)
+    stub_publishing_api_has_item(duplicate_content_item)
+    stub_publishing_api_has_links(
       content_id: content_item["content_id"],
       links: { organisations: [] },
     )
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: duplicate_content_item["content_id"],
       links: { organisations: [] },
     )
 
-    publishing_api_has_linked_items(
+    stub_publishing_api_has_linked_items(
       [],
       content_id: duplicate_content_item["content_id"],
       link_type: "meets_user_needs",
@@ -79,13 +79,13 @@ class WithdrawAsDuplicateTest < ActionDispatch::IntegrationTest
           explanation: "Foo",
         },
       )
-      publishing_api_has_item(duplicate_content_item)
+      stub_publishing_api_has_item(duplicate_content_item)
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: duplicate_content_item["content_id"],
         links: { organisations: [] },
       )
-      publishing_api_has_linked_items(
+      stub_publishing_api_has_linked_items(
         [],
         content_id: duplicate_content_item["content_id"],
         link_type: "meets_user_needs",

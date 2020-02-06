@@ -1,11 +1,11 @@
 require_relative "test_helper"
 
 require "capybara/rails"
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   def login_as(user)
     GDS::SSO.test_user = user

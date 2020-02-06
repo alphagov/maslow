@@ -1,10 +1,10 @@
 # encoding: UTF-8
 
 require_relative "../integration_test_helper"
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 class BrowsingNeedsTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
   include NeedHelper
 
   setup do
@@ -14,15 +14,15 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
   context "viewing the list of needs" do
     should "display a table of all the needs" do
       need_content_items = FactoryBot.create_list(:need_content_item, 3)
-      publishing_api_has_linkables([], document_type: "organisation")
-      publishing_api_has_content(
+      stub_publishing_api_has_linkables([], document_type: "organisation")
+      stub_publishing_api_has_content(
         need_content_items,
         Need.default_options.merge(
           per_page: 50,
         ),
       )
       need_content_items.each do |need_content_item|
-        publishing_api_has_links(
+        stub_publishing_api_has_links(
           content_id: need_content_item["content_id"],
           links: {
             organisations: [],
@@ -48,11 +48,11 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
     content = create_list(:need_content_item, 9)
     options = Need.default_options.merge(per_page: 3)
     Need.stubs(:default_options).returns(options)
-    publishing_api_has_content(content, options)
-    publishing_api_has_content(content, options.merge(page: 2))
-    publishing_api_has_content(content, options.merge(page: 3))
+    stub_publishing_api_has_content(content, options)
+    stub_publishing_api_has_content(content, options.merge(page: 2))
+    stub_publishing_api_has_content(content, options.merge(page: 3))
 
-    publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_linkables([], document_type: "organisation")
 
     get_links_url = %r{\A#{Plek.find('publishing-api')}/v2/links}
     stub_request(:get, get_links_url).to_return(

@@ -1,7 +1,7 @@
 require_relative "../integration_test_helper"
 
 class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   setup do
     login_as_stub_user
@@ -13,18 +13,18 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
                                   need_id: 10001,
                                 })
 
-    publishing_api_has_linkables([], document_type: "organisation")
-    publishing_api_has_content(
+    stub_publishing_api_has_linkables([], document_type: "organisation")
+    stub_publishing_api_has_content(
       [@need_content_item],
       Need.default_options.merge(
         per_page: 50,
       ),
     )
-    publishing_api_has_links(
+    stub_publishing_api_has_links(
       content_id: @need_content_item["content_id"],
       links: {},
     )
-    publishing_api_has_item(@need_content_item)
+    stub_publishing_api_has_item(@need_content_item)
   end
 
   context "Bookmarking needs" do

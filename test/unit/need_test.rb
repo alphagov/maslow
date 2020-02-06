@@ -1,8 +1,8 @@
 require_relative "../test_helper"
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 class NeedTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   setup do
     @stub_publishing_api_response = {
@@ -109,7 +109,7 @@ class NeedTest < ActiveSupport::TestCase
 
     context "given valid attributes" do
       should "make a request to the Publishing API" do
-        publishing_api_has_links(
+        stub_publishing_api_has_links(
           content_id: @need_content_item["content_id"],
           links: { organisations: [] },
         )
@@ -225,7 +225,7 @@ class NeedTest < ActiveSupport::TestCase
 
     should "report a problem if unable to save the need" do
       need = Need.new(@atts)
-      GdsApi::PublishingApiV2.any_instance.expects(:put_content).raises(
+      GdsApi::PublishingApi.any_instance.expects(:put_content).raises(
         GdsApi::HTTPErrorResponse.new(422, %w[error]),
       )
 
@@ -254,15 +254,15 @@ class NeedTest < ActiveSupport::TestCase
         order: "-updated_at",
       }
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_attributes1["content_id"],
         links: { organisations: [] },
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_attributes2["content_id"],
         links: { organisations: [] },
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_attributes3["content_id"],
         links: { organisations: [] },
       )
@@ -274,14 +274,14 @@ class NeedTest < ActiveSupport::TestCase
         Need.new(@need_attributes3["details"]),
       ]
 
-      publishing_api_has_content(
+      stub_publishing_api_has_content(
         needs,
         Need.default_options.merge(
           per_page: 50,
         ),
       )
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items)
+      GdsApi::PublishingApi.any_instance.expects(:get_content_items)
         .with(request_params)
         .returns(@stub_publishing_api_response)
 
@@ -298,10 +298,10 @@ class NeedTest < ActiveSupport::TestCase
       multipage_response["pages"] = 2
       multipage_response["page"] = 1
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content_items).once.returns(multipage_response)
+      GdsApi::PublishingApi.any_instance.expects(:get_content_items).once.returns(multipage_response)
 
       @stub_publishing_api_response["results"].each do |need|
-        publishing_api_has_links(
+        stub_publishing_api_has_links(
           content_id: need["content_id"],
           links: { organisations: [] },
         )
@@ -320,17 +320,17 @@ class NeedTest < ActiveSupport::TestCase
     setup do
       @need1 = create(:need_content_item)
       @need2 = create(:need_content_item)
-      publishing_api_has_item(@need1)
-      publishing_api_has_item(@need2)
+      stub_publishing_api_has_item(@need1)
+      stub_publishing_api_has_item(@need2)
     end
 
     should "return an array of matching Need objects" do
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need1["content_id"],
         links: { organisations: [] },
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need2["content_id"],
         links: { organisations: [] },
       )
@@ -367,8 +367,8 @@ class NeedTest < ActiveSupport::TestCase
         },
       )
 
-      publishing_api_has_item(need_content_item)
-      publishing_api_has_links(
+      stub_publishing_api_has_item(need_content_item)
+      stub_publishing_api_has_links(
         content_id: content_id,
         links: { organisations: [] },
       )
@@ -398,9 +398,9 @@ class NeedTest < ActiveSupport::TestCase
 
       content_id = SecureRandom.uuid
       need_content_item = create(:need_content_item, content_id: content_id)
-      publishing_api_has_item(need_content_item)
+      stub_publishing_api_has_item(need_content_item)
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: content_id,
         links: {
           organisations: [
@@ -410,7 +410,7 @@ class NeedTest < ActiveSupport::TestCase
         },
       )
 
-      publishing_api_has_linkables(
+      stub_publishing_api_has_linkables(
         response,
         document_type: "organisation",
       )
@@ -483,17 +483,17 @@ class NeedTest < ActiveSupport::TestCase
         user_facing_version: 3,
       )
 
-      publishing_api_has_item(need_content_item3)
-      publishing_api_has_item(
+      stub_publishing_api_has_item(need_content_item3)
+      stub_publishing_api_has_item(
         need_content_item1,
         version: need_content_item1["user_facing_version"].to_s,
       )
-      publishing_api_has_item(
+      stub_publishing_api_has_item(
         need_content_item2,
         version: need_content_item2["user_facing_version"].to_s,
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: content_id,
         links: {
           organisations: [],
@@ -522,7 +522,7 @@ class NeedTest < ActiveSupport::TestCase
     should "raise an error when need not found" do
       content_id = SecureRandom.uuid
 
-      GdsApi::PublishingApiV2.any_instance.expects(:get_content).once
+      GdsApi::PublishingApi.any_instance.expects(:get_content).once
         .with(content_id)
         .raises(GdsApi::HTTPNotFound.new(404))
 
@@ -538,7 +538,7 @@ class NeedTest < ActiveSupport::TestCase
         :need_content_item,
         content_id: "3e5aa539-79a1-4714-8714-4e3037f981bd",
       )
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: @need_content_item["content_id"],
         links: { organisations: [] },
       )
@@ -624,7 +624,7 @@ class NeedTest < ActiveSupport::TestCase
         },
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: need_content_item_duplicate["content_id"],
         links: { organisations: [] },
       )
@@ -644,7 +644,7 @@ class NeedTest < ActiveSupport::TestCase
         publication_state: "unpublished",
       )
 
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         content_id: need["content_id"],
         links: { organisations: [] },
       )
