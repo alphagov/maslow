@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.4"
+gem "rails", "~> 6.0.2"
 
 gem "dalli", "~> 2.7"
 gem "govspeak", "~> 6"
-gem "mongoid", "~> 6"
+gem "mongoid", "~> 7.0.5"
 gem "plek", "~> 3"
 
 if ENV["SSO_DEV"]
