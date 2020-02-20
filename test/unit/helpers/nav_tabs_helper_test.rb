@@ -12,7 +12,7 @@ class NavTabsHelperTest < ActiveSupport::TestCase
 
   context "for an editor" do
     setup do
-      @current_user = stub(:user)
+      @current_user = stub(user: nil)
       @current_user.stubs(:can?).with(:update, Need).returns(true)
       @current_user.stubs(:can?).with(:perform_actions_on, Need).returns(true)
     end
