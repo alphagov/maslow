@@ -4,7 +4,7 @@ require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "shoulda/context"
 require "database_cleaner"
-require "mocha/setup"
+require "mocha/minitest"
 require "webmock/test_unit"
 require "gds_api/test_helpers/publishing_api"
 
