@@ -41,9 +41,7 @@ class Need
     end
 
     def inspect
-      pagination_params = Hash[
-        PAGINATION_PARAMS.map { |param_name| [param_name, send(param_name)] }
-      ]
+      pagination_params = PAGINATION_PARAMS.index_with { |param_name| send(param_name) }
       "#<#{self.class} #{super}, #{pagination_params}>"
     end
 
