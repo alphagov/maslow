@@ -2,11 +2,13 @@
 
 library("govuk")
 
-node {
-  govuk.buildProject(
-    // TODO: SASS linting is disabled because it currently fails
-    sassLint: false,
-    brakeman: true,
-    rubyLintDiff: false,
-  )
+node("mongodb-2.4") {
+  node {
+    govuk.buildProject(
+      // TODO: SASS linting is disabled because it currently fails
+      sassLint: false,
+      brakeman: true,
+      rubyLintDiff: false,
+    )
+  }
 }
