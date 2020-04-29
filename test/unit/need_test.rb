@@ -267,7 +267,6 @@ class NeedTest < ActiveSupport::TestCase
         links: { organisations: [] },
       )
 
-
       needs = [
         Need.new(@need_attributes1["details"]),
         Need.new(@need_attributes2["details"]),
