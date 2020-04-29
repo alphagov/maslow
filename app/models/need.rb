@@ -25,7 +25,6 @@ class Need
     end
   end
 
-
   # Allow us to convert the API response to a list of Need objects, but still
   # retain the pagination information
   class PaginatedList < Array

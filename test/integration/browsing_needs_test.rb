@@ -59,7 +59,6 @@ class BrowsingNeedsTest < ActionDispatch::IntegrationTest
       body: { links: { organisations: [] } }.to_json,
     )
 
-
     visit "/needs"
 
     # assert the content on page 1
