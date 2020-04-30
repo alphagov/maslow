@@ -22,7 +22,7 @@ class NeedsCsvPresenterTest < ActiveSupport::TestCase
         "role" => "Foo",
         "goal" => "Bar",
         "benefit" => "Baz",
-        "met_when" => %w(a b),
+        "met_when" => %w[a b],
       }
     end
 

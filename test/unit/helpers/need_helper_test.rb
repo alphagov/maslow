@@ -55,7 +55,7 @@ class NeedHelperTest < ActiveSupport::TestCase
     end
 
     should "return the criteria if values are present" do
-      assert_equal %w(1 2), criteria_with_blank_value(%w(1 2))
+      assert_equal %w[1 2], criteria_with_blank_value(%w[1 2])
     end
   end
 

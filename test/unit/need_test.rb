@@ -92,7 +92,7 @@ class NeedTest < ActiveSupport::TestCase
         "role" => "user",
         "goal" => "do stuff",
         "benefit" => "get stuff",
-        "organisation_ids" => %w(ministry-of-justice),
+        "organisation_ids" => %w[ministry-of-justice],
         "impact" => "Endangers people",
         "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
         "met_when" => ["Winning", "Winning More"],
@@ -151,10 +151,10 @@ class NeedTest < ActiveSupport::TestCase
       end
 
       should "be able to delete criteria" do
-        need = Need.new("met_when" => %w(0 1 2))
+        need = Need.new("met_when" => %w[0 1 2])
 
         need.remove_criteria(0)
-        assert_equal %w(1 2), need.met_when
+        assert_equal %w[1 2], need.met_when
 
         need.remove_criteria(1)
         assert_equal %w[1], need.met_when
@@ -249,7 +249,7 @@ class NeedTest < ActiveSupport::TestCase
       request_params = {
         document_type: "need",
         per_page: 50,
-        fields: %w(content_id details publication_state),
+        fields: %w[content_id details publication_state],
         locale: "en",
         order: "-updated_at",
       }
@@ -506,9 +506,9 @@ class NeedTest < ActiveSupport::TestCase
       first_revision = need.revisions.first
       second_revision = need.revisions[1]
 
-      assert_equal %w(publication_state), first_revision["changes"].keys
-      assert_equal %w(superseded published), first_revision["changes"]["publication_state"]
-      assert_equal %w(goal), second_revision["changes"].keys
+      assert_equal %w[publication_state], first_revision["changes"].keys
+      assert_equal %w[superseded published], first_revision["changes"]["publication_state"]
+      assert_equal %w[goal], second_revision["changes"].keys
       assert_equal(
         [
           "find out if an estate is claimable and how to make a claim on an estate",
@@ -586,8 +586,8 @@ class NeedTest < ActiveSupport::TestCase
           @need.send(:publishing_api_payload),
           body: {
             "content_id": @need_content_item["content_id"],
-                 "legislation": "\nRemove the newline from legislation",
-                 "other_evidence": "\nRemove the newline from other_evidence",
+            "legislation": "\nRemove the newline from legislation",
+            "other_evidence": "\nRemove the newline from other_evidence",
           },
         )
         stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })

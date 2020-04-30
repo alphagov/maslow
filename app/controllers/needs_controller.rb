@@ -57,11 +57,11 @@ class NeedsController < ApplicationController
     @need = load_need
     @notes = load_notes_for_need
     @revisions_and_notes = (@need.revisions + @notes).sort_by do |x|
-      # Either a Hash or a Note, so transform the `updated_at`s into
+      # Either a Hash or a Note, so transform the `updated_at`s into
       # the same type.
       x.try(:updated_at) || Time.zone.parse(x["updated_at"])
     end
-    # `.sort_by` doesn't take "asc" or "desc" options, so sort in descending
+    # `.sort_by` doesn't take "asc" or "desc" options, so sort in descending
     # order by reversing the array.
     @revisions_and_notes.reverse!
   end
@@ -93,7 +93,7 @@ class NeedsController < ApplicationController
     if @need.valid?
       if @need.save
         redirect_to redirect_url, notice: "Need created",
-          flash: { goal: @need.goal }
+                                  flash: { goal: @need.goal }
       else
         flash[:error] = "There was a problem saving your need."
         render "new", status: :internal_server_error
@@ -123,7 +123,7 @@ class NeedsController < ApplicationController
     if @need.valid?
       if @need.save && (@need.draft? || @need.publish)
         redirect_to redirect_url, notice: "Need updated",
-          flash: { need_id: @need.need_id, goal: @need.goal }
+                                  flash: { need_id: @need.need_id, goal: @need.goal }
       else
         flash[:error] = "There was a problem saving your need."
         render "edit", status: :internal_server_error
@@ -251,20 +251,18 @@ private
     ).tap do |cleaned_params|
       cleaned_params[:met_when].delete_if(&:empty?) if cleaned_params.key? :met_when
 
-      %w(justifications organisation_ids).each do |field|
+      %w[justifications organisation_ids].each do |field|
         cleaned_params[field].select!(&:present?) if cleaned_params[field]
       end
     end
   end
 
   def load_need
-    begin
-      Need.find(params[:content_id])
-    rescue ArgumentError, TypeError # shouldn't happen; route is constrained
-      raise Http404
-    rescue Need::NotFound
-      raise Http404
-    end
+    Need.find(params[:content_id])
+  rescue ArgumentError, TypeError # shouldn't happen; route is constrained
+    raise Http404
+  rescue Need::NotFound
+    raise Http404
   end
 
   def load_notes_for_need
