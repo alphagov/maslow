@@ -4,11 +4,11 @@ FactoryBot.define do
     permissions { %w[signin] }
 
     factory :editor do
-      permissions { %w(signin editor) }
+      permissions { %w[signin editor] }
     end
 
     factory :admin do
-      permissions { %w(signin editor admin) }
+      permissions { %w[signin editor admin] }
     end
   end
 

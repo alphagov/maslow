@@ -48,7 +48,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       get :index
 
-      assert_equal %w(foo bar), assigns(:needs).map(&:id)
+      assert_equal %w[foo bar], assigns(:needs).map(&:id)
     end
 
     context "paginated needs" do
@@ -78,10 +78,10 @@ class NeedsControllerTest < ActionController::TestCase
       "role" => "User",
       "goal" => "do stuff",
       "benefit" => "get stuff",
-      "organisation_ids" => %w(ministry-of-justice),
+      "organisation_ids" => %w[ministry-of-justice],
       "impact" => "Endangers people",
       "justifications" => ["It's something only government does", "The government is legally obliged to provide it"],
-      "met_when" => %w(Winning Awesome),
+      "met_when" => %w[Winning Awesome],
     }
   end
 
@@ -97,7 +97,7 @@ class NeedsControllerTest < ActionController::TestCase
         "role" => "User",
         "goal" => "do stuff",
         # No benefit
-        "organisation_ids" => %w(ministry-of-justice),
+        "organisation_ids" => %w[ministry-of-justice],
       }
 
       post(:create, params: { need: need_data })
@@ -413,19 +413,19 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "remove one of many values" do
       data = complete_need_data.merge(
-        "met_when" => %w(0 1 2 3),
+        "met_when" => %w[0 1 2 3],
       )
       post(:create, params: { delete_criteria: "2", need: data })
 
       assert_response 200
-      assert_equal %w(0 1 3), assigns[:need].met_when
+      assert_equal %w[0 1 3], assigns[:need].met_when
     end
 
     should "do nothing if an invalid request is made" do
       post(:create, params: { delete_criteria: "foo", need: complete_need_data })
 
       assert_response 200
-      assert_equal %w(Winning Awesome), assigns[:need].met_when
+      assert_equal %w[Winning Awesome], assigns[:need].met_when
     end
   end
 

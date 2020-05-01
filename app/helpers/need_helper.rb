@@ -40,19 +40,17 @@ module NeedHelper
               []
             else
               explanation_link_match_data.captures.map do |content_id|
-                begin
-                  need = Need.find(content_id)
-                  {
-                    content_id: content_id,
-                    title: need.title,
-                    url: need_path(content_id),
-                  }
-                rescue Need::NotFound
-                  {
-                    content_id: content_id,
-                    title: "an unknown need",
-                  }
-                end
+                need = Need.find(content_id)
+                {
+                  content_id: content_id,
+                  title: need.title,
+                  url: need_path(content_id),
+                }
+              rescue Need::NotFound
+                {
+                  content_id: content_id,
+                  title: "an unknown need",
+                }
               end
             end
 

@@ -72,7 +72,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
           within ".need-organisations" do
             assert page.has_content?(
               "Driver and Vehicle Licensing Agency, Driving Standards Agency",
-                   )
+            )
           end
 
           assert page.has_content?("Status: Proposed")

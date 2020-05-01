@@ -72,11 +72,11 @@ class Need
     "Endangers people",
   ].freeze
 
-  NUMERIC_FIELDS = %w(yearly_user_contacts yearly_site_views yearly_need_views yearly_searches).freeze
+  NUMERIC_FIELDS = %w[yearly_user_contacts yearly_site_views yearly_need_views yearly_searches].freeze
 
-  FIELDS_WITH_ARRAY_VALUES = %w(met_when justifications organisation_ids).freeze
+  FIELDS_WITH_ARRAY_VALUES = %w[met_when justifications organisation_ids].freeze
 
-  PUBLISHING_API_FIELDS = %w(
+  PUBLISHING_API_FIELDS = %w[
     base_path
     content_id
     description
@@ -97,21 +97,21 @@ class Need
     updated_at
     user_facing_version
     version
-  ).freeze
+  ].freeze
 
-  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w(need_id role goal benefit impact legislation other_evidence applies_to_all_organisations)
+  ALLOWED_FIELDS = NUMERIC_FIELDS + FIELDS_WITH_ARRAY_VALUES + PUBLISHING_API_FIELDS + %w[need_id role goal benefit impact legislation other_evidence applies_to_all_organisations]
 
   attr_accessor :persisted, :met_when, :justifications, :organisation_ids, :content_id
   alias_method :persisted?, :persisted
   alias_method :id, :content_id
 
-  validates_presence_of %w(role goal benefit)
+  validates :role, :goal, :benefit, presence: true
   validates :impact, inclusion: { in: IMPACT }, allow_blank: true
   validates_each :justifications do |record, attr, value|
     record.errors.add(attr, "must contain a known value") unless value.nil? || value.all? { |v| JUSTIFICATIONS.include? v }
   end
   NUMERIC_FIELDS.each do |field|
-    validates_numericality_of field, only_integer: true, allow_blank: true, greater_than_or_equal_to: 0
+    validates field, numericality: { only_integer: true, allow_blank: true, greater_than_or_equal_to: 0 }
   end
 
   def initialize(attributes = {})
@@ -162,11 +162,9 @@ class Need
   # PaginatedList
   def self.by_content_ids(*content_ids)
     needs = content_ids.map do |content_id|
-      begin
-        Need.find(content_id)
-      rescue NotFound
-        nil
-      end
+      Need.find(content_id)
+    rescue NotFound
+      nil
     end
     needs.compact
   end
@@ -262,7 +260,7 @@ class Need
       GdsApi.publishing_api.get_linked_items(
         content_id,
         link_type: "meets_user_needs",
-        fields: %w(title base_path document_type),
+        fields: %w[title base_path document_type],
       )
   rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.content_items_meeting_this_need")
@@ -368,7 +366,7 @@ class Need
   end
 
   def self.need_from_publishing_api_payload(attributes, load_organisation_ids: true)
-    attributes = self.move_details_to_top_level(attributes)
+    attributes = move_details_to_top_level(attributes)
     whitelisted_attributes = attributes.slice(*ALLOWED_FIELDS)
 
     need = Need.new(whitelisted_attributes)
@@ -407,7 +405,7 @@ class Need
     {
       document_type: "need",
       per_page: 50,
-      fields: %w(content_id details publication_state),
+      fields: %w[content_id details publication_state],
       locale: "en",
       order: "-updated_at",
     }
@@ -462,7 +460,7 @@ private
   def strip_newline_from_textareas(attrs)
     # Rails prepends a newline character into the textarea fields in the form.
     # Strip these so that we don't send them to the Publishing API.
-    %i(legislation other_evidence).each do |field|
+    %i[legislation other_evidence].each do |field|
       attrs[field].sub!(/\A\n/, "") if attrs[field].present?
     end
   end

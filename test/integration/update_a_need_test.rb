@@ -126,7 +126,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "display met_when criteria on multiple lines" do
-      met_when = %w(win awesome)
+      met_when = %w[win awesome]
       @content_item["details"]["met_when"] = met_when
       stub_publishing_api_has_item(@content_item)
 
@@ -184,7 +184,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to delete met_when criteria" do
-      @content_item["details"]["met_when"] = %w(win awesome more)
+      @content_item["details"]["met_when"] = %w[win awesome more]
       stub_publishing_api_has_item(@content_item)
 
       visit("/needs")
