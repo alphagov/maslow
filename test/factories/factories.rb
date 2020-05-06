@@ -63,9 +63,9 @@ FactoryBot.define do
           ],
           "impact": "Noticed by the average member of the public",
           "met_when": [
-                       "Knows how to find the list and claim an estate",
-                       "Claims an estate",
-                      ],
+            "Knows how to find the list and claim an estate",
+            "Claims an estate",
+          ],
           "legislation": "Driving Test Act 1994, Schedule 8",
           "yearly_need_views": 824000,
           "yearly_site_views": 2527607,

@@ -443,20 +443,20 @@ class NeedsControllerTest < ActionController::TestCase
       @need.expects(:unpublish).returns(true)
 
       put :actions, params: {
-            need_action: "unpublish",
-            content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id },
-          }
+        need_action: "unpublish",
+        content_id: @need.content_id,
+        need: { duplicate_of: @duplicate_need.content_id },
+      }
     end
 
     should "redirect to the need with a success message once complete" do
       @need.stubs(:unpublish).returns(true)
 
       put :actions, params: {
-            need_action: "unpublish",
-            content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id },
-          }
+        need_action: "unpublish",
+        content_id: @need.content_id,
+        need: { duplicate_of: @duplicate_need.content_id },
+      }
 
       assert_not @controller.flash[:error]
       assert_equal "Need withdrawn", @controller.flash[:notice]
@@ -475,10 +475,10 @@ class NeedsControllerTest < ActionController::TestCase
     should "stop viewers from marking needs as duplicates" do
       login_as_stub_user
       put :actions, params: {
-            need_action: "unpublish",
-            content_id: @need.content_id,
-            duplicate_of: @duplicate_need.content_id,
-          }
+        need_action: "unpublish",
+        content_id: @need.content_id,
+        duplicate_of: @duplicate_need.content_id,
+      }
       assert_redirected_to needs_path
     end
   end
