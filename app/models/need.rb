@@ -478,9 +478,9 @@ private
 
     keys = changed_keys(current, previous) - %w[user_facing_version]
 
-    keys.inject({}) { |changes, key|
+    keys.inject({}) do |changes, key|
       changes.merge(key => versions.map { |version| version[key] })
-    }
+    end
   end
 
   def changed_keys(current, previous)
