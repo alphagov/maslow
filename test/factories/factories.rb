@@ -20,9 +20,9 @@ FactoryBot.define do
     content_id
     base_path { "/needs/find-out-if-an-estate-is-claimable-and-how-to-make-a-claim-on-an-estate" }
     title { "find out if an estate is claimable and how to make a claim on an estate" }
-    description {
+    description do
       "As a relative of a deceased person, I need to find out if an estate is claimable and how to make a claim on an estate, so that claim my entitlement"
-    }
+    end
     schema_name { "need" }
     publishing_app { "maslow" }
     rendering_app { "info-frontend" }
@@ -35,24 +35,24 @@ FactoryBot.define do
     first_published_at { nil }
     last_edited_at { "2015-11-15T11:53:30" }
     publication_state { "draft" }
-    state_history {
+    state_history do
       { "1": "draft" }
-    }
+    end
 
     user_facing_version { 3 }
-    routes {
+    routes do
       [
         {
           "path" => base_path,
           "type" => "exact",
         },
       ]
-    }
+    end
 
     details { default_details }
 
     transient do
-      default_details {
+      default_details do
         {
           "applies_to_all_organisations": false,
           "benefit": "claim my entitlement",
@@ -75,14 +75,14 @@ FactoryBot.define do
           "other_evidence": "Relatives are entitled to claim up to 30 years after the death; it is their money to claim and it can only be claimed through the Treasury Solicitor",
           "role": "relative of a deceased person",
         }
-      }
+      end
       default_metadata { {} }
     end
 
-    initialize_with {
+    initialize_with do
       merged_details = default_details.deep_stringify_keys.deep_merge(details.deep_stringify_keys)
       attributes.merge(details: merged_details)
-    }
+    end
 
     # This is the default document state.
     trait :draft do

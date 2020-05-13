@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require_relative "../integration_test_helper"
 
 class UpdateANeedTest < ActionDispatch::IntegrationTest

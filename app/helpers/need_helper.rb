@@ -97,9 +97,9 @@ module NeedHelper
 
   def format_friendly_integer(number)
     if number >= 1000000
-      "%.3g\m" % (number.to_f / 1000000)
+      format("%.3g\m", (number.to_f / 1000000))
     elsif number >= 1000
-      "%.3g\k" % (number.to_f / 1000)
+      format("%.3g\k", (number.to_f / 1000))
     else
       number.to_s
     end

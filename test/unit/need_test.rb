@@ -168,35 +168,35 @@ class NeedTest < ActiveSupport::TestCase
       need = Need.new(@atts.merge("role" => ""))
 
       assert_not need.valid?
-      assert need.errors.has_key?(:role)
+      assert need.errors.key?(:role)
     end
 
     should "be invalid when goal is blank" do
       need = Need.new(@atts.merge("goal" => ""))
 
       assert_not need.valid?
-      assert need.errors.has_key?(:goal)
+      assert need.errors.key?(:goal)
     end
 
     should "be invalid when benefit is blank" do
       need = Need.new(@atts.merge("benefit" => ""))
 
       assert_not need.valid?
-      assert need.errors.has_key?(:benefit)
+      assert need.errors.key?(:benefit)
     end
 
     should "be invalid when justifications are not in the list" do
       need = Need.new(@atts.merge("justifications" => ["something else"]))
 
       assert_not need.valid?
-      assert need.errors.has_key?(:justifications)
+      assert need.errors.key?(:justifications)
     end
 
     should "be invalid when impact is not in the list" do
       need = Need.new(@atts.merge("impact" => "something else"))
 
       assert_not need.valid?
-      assert need.errors.has_key?(:impact)
+      assert need.errors.key?(:impact)
     end
 
     should "be valid with a blank value for yearly_user_contacts" do
