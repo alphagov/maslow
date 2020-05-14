@@ -4,16 +4,19 @@ require "gds_api/organisations"
 class OrganisationTest < ActiveSupport::TestCase
   context "loading organisations" do
     setup do
-      stub_publishing_api_has_linkables([
-        {
-          "content_id": SecureRandom.uuid,
-          "title" => "Committee on Climate Change",
-        },
-        {
-          "content_id": SecureRandom.uuid,
-          "title" => "Competition Commission",
-        },
-      ], document_type: "organisation")
+      stub_publishing_api_has_linkables(
+        [
+          {
+            "content_id": SecureRandom.uuid,
+            "title" => "Committee on Climate Change",
+          },
+          {
+            "content_id": SecureRandom.uuid,
+            "title" => "Competition Commission",
+          },
+        ],
+        document_type: "organisation",
+      )
 
       @linkables_request_path =
         "#{Plek.current.find('publishing-api')}/v2/linkables?document_type=organisation"
@@ -23,8 +26,10 @@ class OrganisationTest < ActiveSupport::TestCase
       organisations = Organisation.all
 
       assert_equal 2, organisations.size
-      assert_equal(["Committee on Climate Change", "Competition Commission"],
-                   organisations.map(&:title))
+      assert_equal(
+        ["Committee on Climate Change", "Competition Commission"],
+        organisations.map(&:title),
+      )
     end
 
     should "cache the organisation results" do

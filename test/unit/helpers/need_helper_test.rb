@@ -98,16 +98,16 @@ class NeedHelperTest < ActiveSupport::TestCase
       assert_equal "1k", format_friendly_integer(1000)
       assert_equal "1.5k", format_friendly_integer(1500)
       assert_equal "1.57k", format_friendly_integer(1567)
-      assert_equal "25.3k", format_friendly_integer(25336)
-      assert_equal "720k", format_friendly_integer(720123)
+      assert_equal "25.3k", format_friendly_integer(25_336)
+      assert_equal "720k", format_friendly_integer(720_123)
     end
 
     should "return numbers above 1 million using 'm' and up to three significant figures" do
-      assert_equal "6m", format_friendly_integer(6000000)
-      assert_equal "6.1m", format_friendly_integer(6100000)
-      assert_equal "6.32m", format_friendly_integer(6320303)
-      assert_equal "63.5m", format_friendly_integer(63541234)
-      assert_equal "635m", format_friendly_integer(635412340)
+      assert_equal "6m", format_friendly_integer(6_000_000)
+      assert_equal "6.1m", format_friendly_integer(6_100_000)
+      assert_equal "6.32m", format_friendly_integer(6_320_303)
+      assert_equal "63.5m", format_friendly_integer(63_541_234)
+      assert_equal "635m", format_friendly_integer(635_412_340)
     end
   end
 
@@ -130,11 +130,11 @@ class NeedHelperTest < ActiveSupport::TestCase
 
   context "bookmark_icon" do
     should "not return bookmarked if need is not in bookmarks" do
-      assert_equal "glyphicon-star-empty", bookmark_icon([10002], 10001)
+      assert_equal "glyphicon-star-empty", bookmark_icon([10_002], 10_001)
     end
 
     should "return bookmarked if need is in bookmarks" do
-      assert_equal "glyphicon-star", bookmark_icon([10001], 10001)
+      assert_equal "glyphicon-star", bookmark_icon([10_001], 10_001)
     end
   end
 end

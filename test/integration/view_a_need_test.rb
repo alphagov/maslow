@@ -11,16 +11,19 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
     @content_item = create(:need_content_item)
     @dvla_content_id = SecureRandom.uuid
     @dsa_content_id = SecureRandom.uuid
-    stub_publishing_api_has_linkables([
-      {
-        "content_id": @dvla_content_id,
-        "title" => "Driver and Vehicle Licensing Agency",
-      },
-      {
-        "content_id": @dsa_content_id,
-        "title" => "Driving Standards Agency",
-      },
-    ], document_type: "organisation")
+    stub_publishing_api_has_linkables(
+      [
+        {
+          "content_id": @dvla_content_id,
+          "title" => "Driver and Vehicle Licensing Agency",
+        },
+        {
+          "content_id": @dsa_content_id,
+          "title" => "Driving Standards Agency",
+        },
+      ],
+      document_type: "organisation",
+    )
     stub_publishing_api_has_content(
       [@content_item],
       Need.default_options.merge(

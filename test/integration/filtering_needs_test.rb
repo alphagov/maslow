@@ -47,7 +47,8 @@ class FilteringNeedsTest < ActionDispatch::IntegrationTest
             content_id: @hm_passport_office,
             title: "HM Passport Office",
           },
-        ], document_type: "organisation"
+        ],
+        document_type: "organisation",
       )
 
       stub_publishing_api_has_links(

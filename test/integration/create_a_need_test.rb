@@ -10,16 +10,19 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       ),
     )
     @ministry_of_justice_content_id = SecureRandom.uuid
-    stub_publishing_api_has_linkables([
-      {
-        "content_id": SecureRandom.uuid,
-        "title" => "Committee On Climate Change",
-      },
-      {
-        "content_id": @ministry_of_justice_content_id,
-        "title" => "Ministry Of Justice",
-      },
-    ], document_type: "organisation")
+    stub_publishing_api_has_linkables(
+      [
+        {
+          "content_id": SecureRandom.uuid,
+          "title" => "Committee On Climate Change",
+        },
+        {
+          "content_id": @ministry_of_justice_content_id,
+          "title" => "Ministry Of Justice",
+        },
+      ],
+      document_type: "organisation",
+    )
   end
 
   context "Creating a need" do
@@ -72,8 +75,8 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
         document_type: "need",
         title: "As a User, I need to find my local register office, so that I can find records of birth, marriage or death",
         details: {
-          yearly_user_contacts: 10000,
-          yearly_site_views: 1000000,
+          yearly_user_contacts: 10_000,
+          yearly_site_views: 1_000_000,
           yearly_need_views: 1000,
           yearly_searches: 2000,
           met_when: [
@@ -130,9 +133,9 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
       check("It's something only government does")
       choose("Noticed by the average member of the public")
       fill_in("Do you have any other evidence to support this need?", with: "Free text evidence with lots more evidence")
-      fill_in("Roughly how many user contacts do you get about this need per year", with: 10000)
+      fill_in("Roughly how many user contacts do you get about this need per year", with: 10_000)
       fill_in("Pageviews specific to this need per year", with: 1000)
-      fill_in("Pageviews for your website per year", with: 1000000)
+      fill_in("Pageviews for your website per year", with: 1_000_000)
       fill_in("How many searches relevant to this need are carried out per year", with: 2000)
       fill_in("What legislation underpins this need?", with: "http://www.legislation.gov.uk/stuff\nhttp://www.legislation.gov.uk/stuff")
       within "#met-when-criteria" do
@@ -182,8 +185,10 @@ class CreateANeedTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("Please fill in the required fields.")
       within "#met-when-criteria" do
-        assert_equal("Can download a birth certificate.",
-                     find_field("criteria-0").value)
+        assert_equal(
+          "Can download a birth certificate.",
+          find_field("criteria-0").value,
+        )
       end
     end
 

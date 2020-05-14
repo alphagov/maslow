@@ -22,13 +22,16 @@ class NeedStatus
 
   attr_reader :description, :reasons, :additional_comments, :validation_conditions
 
-  validates :description, inclusion: { in: [PROPOSED, NOT_VALID, VALID, VALID_WITH_CONDITIONS] },
-                          presence: { message: "You need to select the new status" }
+  validates :description,
+            inclusion: { in: [PROPOSED, NOT_VALID, VALID, VALID_WITH_CONDITIONS] },
+            presence: { message: "You need to select the new status" }
 
-  validates :reasons, if: proc { |s| s.description == NOT_VALID },
-                      presence: { message: "A reason is required to mark a need as not valid" }
-  validates :validation_conditions, if: proc { |s| s.description == VALID_WITH_CONDITIONS },
-                                    presence: { message: "The validation conditions are required to mark a need as valid with conditions" }
+  validates :reasons,
+            if: proc { |s| s.description == NOT_VALID },
+            presence: { message: "A reason is required to mark a need as not valid" }
+  validates :validation_conditions,
+            if: proc { |s| s.description == VALID_WITH_CONDITIONS },
+            presence: { message: "The validation conditions are required to mark a need as valid with conditions" }
 
   def initialize(options)
     options = OpenStruct.new(options) if options.is_a?(Hash)
