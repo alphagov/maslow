@@ -295,10 +295,11 @@ class NeedsControllerTest < ActionController::TestCase
     should "404 if need not found" do
       content_id = SecureRandom.uuid
       Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
-      put :update, params: {
-        content_id: content_id,
-        need: { goal: "do things" },
-      }
+      put :update,
+          params: {
+            content_id: content_id,
+            need: { goal: "do things" },
+          }
       assert_response :not_found
     end
 
@@ -307,10 +308,11 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save).never
 
-      put :update, params: {
-        content_id: need.content_id,
-        need: base_need_fields.merge("goal" => ""),
-      }
+      put :update,
+          params: {
+            content_id: need.content_id,
+            need: base_need_fields.merge("goal" => ""),
+          }
       assert_response 422
     end
 
@@ -319,10 +321,11 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save).returns(true)
 
-      put :update, params: {
-        content_id: need.content_id,
-        need: base_need_fields.merge("benefit" => "be awesome"),
-      }
+      put :update,
+          params: {
+            content_id: need.content_id,
+            need: base_need_fields.merge("benefit" => "be awesome"),
+          }
       assert_redirected_to need_path(need.content_id)
     end
 
@@ -331,11 +334,12 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(need.content_id).returns(need)
       need.expects(:save).returns(true)
 
-      put :update, params: {
-        content_id: need.content_id,
-        need: base_need_fields.merge("benefit" => "be awesome"),
-        add_new: "",
-      }
+      put :update,
+          params: {
+            content_id: need.content_id,
+            need: base_need_fields.merge("benefit" => "be awesome"),
+            add_new: "",
+          }
       assert_redirected_to new_need_path
     end
 
@@ -346,10 +350,11 @@ class NeedsControllerTest < ActionController::TestCase
       need.expects(:valid?).returns(false)
       need.expects(:save).never
 
-      put :update, params: {
-        content_id: need.content_id,
-        need: base_need_fields.merge("met_when" => ["something", "something else"]),
-      }
+      put :update,
+          params: {
+            content_id: need.content_id,
+            need: base_need_fields.merge("met_when" => ["something", "something else"]),
+          }
 
       assert_response 422
       assert_equal ["something", "something else"], assigns[:need].met_when
@@ -442,21 +447,23 @@ class NeedsControllerTest < ActionController::TestCase
     should "unpublish the need" do
       @need.expects(:unpublish).returns(true)
 
-      put :actions, params: {
-        need_action: "unpublish",
-        content_id: @need.content_id,
-        need: { duplicate_of: @duplicate_need.content_id },
-      }
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            need: { duplicate_of: @duplicate_need.content_id },
+          }
     end
 
     should "redirect to the need with a success message once complete" do
       @need.stubs(:unpublish).returns(true)
 
-      put :actions, params: {
-        need_action: "unpublish",
-        content_id: @need.content_id,
-        need: { duplicate_of: @duplicate_need.content_id },
-      }
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            need: { duplicate_of: @duplicate_need.content_id },
+          }
 
       assert_not @controller.flash[:error]
       assert_equal "Need withdrawn", @controller.flash[:notice]
@@ -474,11 +481,12 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "stop viewers from marking needs as duplicates" do
       login_as_stub_user
-      put :actions, params: {
-        need_action: "unpublish",
-        content_id: @need.content_id,
-        duplicate_of: @duplicate_need.content_id,
-      }
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            duplicate_of: @duplicate_need.content_id,
+          }
       assert_redirected_to needs_path
     end
   end

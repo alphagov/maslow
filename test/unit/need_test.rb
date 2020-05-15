@@ -56,7 +56,7 @@ class NeedTest < ActiveSupport::TestCase
     }
     @need_attributes1 = {
       "content_id" => "0001c0c6-2dd3-4b56-87f1-815efe32c155",
-      "need_id" => 100523,
+      "need_id" => 100_523,
       "details" => {
         "benefit" => "I can make sure I'm getting what I'm entitled to",
         "goal" => "know what my rights are after a crime",
@@ -66,7 +66,7 @@ class NeedTest < ActiveSupport::TestCase
 
     @need_attributes2 = {
       "content_id" => "c867e5f7-2d68-42ad-bedb-20638b3bf58e",
-      "need_id" => 100522,
+      "need_id" => 100_522,
       "details" => {
         "benefit" => "I can improve their services or stop them from operating",
         "goal" => "complain about a legal adviser",
@@ -76,7 +76,7 @@ class NeedTest < ActiveSupport::TestCase
 
     @need_attributes3 = {
       "content_id" => "0925fd2b-6b59-4120-a849-96ab19b9c7df",
-      "need_id" => 100521,
+      "need_id" => 100_521,
       "details" => {
         "role" => "citizen",
         "goal" => "take my tax appeal to a tribunal",
@@ -99,8 +99,8 @@ class NeedTest < ActiveSupport::TestCase
         "other_evidence" => "Ministerial priority",
         "legislation" => "Vehicle Excise and Registration Act 1994, schedule 4",
         "yearly_user_contacts" => 500,
-        "yearly_site_views" => 70000,
-        "yearly_need_views" => 15000,
+        "yearly_site_views" => 70_000,
+        "yearly_need_views" => 15_000,
         "yearly_searches" => 2000,
       }
 
@@ -235,7 +235,7 @@ class NeedTest < ActiveSupport::TestCase
 
   def stub_need_response
     {
-      "results" => [{ "id" => 100001 }],
+      "results" => [{ "id" => 100_001 }],
       "pages" => 2,
       "total" => 60,
       "page_size" => 50,
@@ -344,7 +344,7 @@ class NeedTest < ActiveSupport::TestCase
   def stub_response(additional_atts = {})
     response_hash = {
       "_response_info" => { "status" => "ok" },
-      "id" => 100001,
+      "id" => 100_001,
       "role" => "person",
       "goal" => "do things",
       "benefit" => "good things",
@@ -359,7 +359,7 @@ class NeedTest < ActiveSupport::TestCase
         :need_content_item,
         content_id: content_id,
         details: {
-          need_id: 100001,
+          need_id: 100_001,
           role: "human",
           goal: "I want to do something",
           benefit: "so that I can be happy",
@@ -375,7 +375,7 @@ class NeedTest < ActiveSupport::TestCase
       need = Need.find(content_id)
 
       assert_equal content_id, need.content_id
-      assert_equal 100001, need.need_id
+      assert_equal 100_001, need.need_id
       assert_equal "human", need.role
       assert_equal "I want to do something", need.goal
       assert_equal "so that I can be happy", need.benefit
@@ -548,7 +548,7 @@ class NeedTest < ActiveSupport::TestCase
       should "update fields and send to the Publishing API" do
         @need.update(
           impact: "Endangers people",
-          yearly_searches: 50000,
+          yearly_searches: 50_000,
         )
 
         stub_publishing_api_put_content(
@@ -557,7 +557,7 @@ class NeedTest < ActiveSupport::TestCase
           body: {
             content_id: @need_content_item["content_id"],
             impact: "Endangers people",
-            yearly_searches: 50000,
+            yearly_searches: 50_000,
           },
         )
 
@@ -570,7 +570,7 @@ class NeedTest < ActiveSupport::TestCase
 
         assert_equal "find out if an estate is claimable and how to make a claim on an estate", @need.goal
         assert_equal "Endangers people", @need.impact
-        assert_equal 50000, @need.yearly_searches
+        assert_equal 50_000, @need.yearly_searches
 
         assert_publishing_api_put_content(@need_content_item["content_id"], @need.send(:publishing_api_payload))
       end
@@ -603,12 +603,12 @@ class NeedTest < ActiveSupport::TestCase
     should "call Publishing API with the correct values" do
       need_content_item = create(
         :need_content_item,
-        need_id: 100001,
+        need_id: 100_001,
       )
 
       need_content_item_duplicate = create(
         :need_content_item,
-        need_id: 100002,
+        need_id: 100_002,
       )
 
       explanation = "Duplicate of #{need_content_item['content_id']}"

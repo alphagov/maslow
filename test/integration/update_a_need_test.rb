@@ -84,16 +84,19 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to update the organisations for a need" do
       content_id_of_organisation_to_add = SecureRandom.uuid
-      stub_publishing_api_has_linkables([
-        {
-          "content_id": SecureRandom.uuid,
-          "title" => "Committee on Climate Change",
-        },
-        {
-          "content_id": content_id_of_organisation_to_add,
-          "title" => "Ministry Of Justice",
-        },
-      ], document_type: "organisation")
+      stub_publishing_api_has_linkables(
+        [
+          {
+            "content_id": SecureRandom.uuid,
+            "title" => "Committee on Climate Change",
+          },
+          {
+            "content_id": content_id_of_organisation_to_add,
+            "title" => "Ministry Of Justice",
+          },
+        ],
+        document_type: "organisation",
+      )
 
       test_need = Need.find(@content_item["content_id"])
       payload = test_need.send(:publishing_api_payload)

@@ -6,12 +6,14 @@ class BookmarkingNeedsTest < ActionDispatch::IntegrationTest
   setup do
     login_as_stub_user
 
-    @need_content_item = create(:need_content_item,
-                                content_id: "c1573261-b973-467f-aa57-5a24435fa295", # Randomly generated.
-                                details: {
-                                  goal: "Apply for a primary school place",
-                                  need_id: 10001,
-                                })
+    @need_content_item = create(
+      :need_content_item,
+      content_id: "c1573261-b973-467f-aa57-5a24435fa295", # Randomly generated.
+      details: {
+        goal: "Apply for a primary school place",
+        need_id: 10_001,
+      },
+    )
 
     stub_publishing_api_has_linkables([], document_type: "organisation")
     stub_publishing_api_has_content(

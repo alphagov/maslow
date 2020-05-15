@@ -326,7 +326,7 @@ class Need
         conflicting_content_id = /content_id=([^\s]+)/.match(message)[1]
 
         if conflicting_content_id
-          raise BasePathAlreadyInUse.new(conflicting_content_id)
+          raise BasePathAlreadyInUse, conflicting_content_id
         end
       end
     end

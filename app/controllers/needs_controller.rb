@@ -92,8 +92,9 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save
-        redirect_to redirect_url, notice: "Need created",
-                                  flash: { goal: @need.goal }
+        redirect_to redirect_url,
+                    notice: "Need created",
+                    flash: { goal: @need.goal }
       else
         flash[:error] = "There was a problem saving your need."
         render "new", status: :internal_server_error
@@ -122,8 +123,9 @@ class NeedsController < ApplicationController
 
     if @need.valid?
       if @need.save && (@need.draft? || @need.publish)
-        redirect_to redirect_url, notice: "Need updated",
-                                  flash: { need_id: @need.need_id, goal: @need.goal }
+        redirect_to redirect_url,
+                    notice: "Need updated",
+                    flash: { need_id: @need.need_id, goal: @need.goal }
       else
         flash[:error] = "There was a problem saving your need."
         render "edit", status: :internal_server_error
