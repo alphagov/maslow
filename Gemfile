@@ -1,37 +1,21 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.4"
-
-gem "dalli", "~> 2.7"
-gem "govspeak", "~> 6"
-gem "mongoid", "~> 6"
-gem "plek", "~> 3"
-
-if ENV["SSO_DEV"]
-  gem "gds-sso", path: "../gds-sso"
-else
-  gem "gds-sso", "~> 14"
-end
-
 gem "cancancan", "~> 3"
-gem "kaminari", "~> 1"
-
-gem "sass-rails", "~> 6"
-gem "uglifier", "~> 4"
-
 gem "chosen-rails"
-
+gem "dalli", "~> 2.7"
 gem "formtastic", "~> 3"
 gem "formtastic-bootstrap", "~> 3"
+gem "gds-api-adapters", "~> 63"
+gem "gds-sso", "~> 14"
+gem "govspeak", "~> 6"
 gem "govuk_admin_template", "~> 6"
-
-if ENV["API_DEV"]
-  gem "gds-api-adapters", path: "../gds-api-adapters"
-else
-  gem "gds-api-adapters", "~> 63"
-end
-
 gem "govuk_app_config", "~> 2"
+gem "kaminari", "~> 1"
+gem "mongoid", "~> 6"
+gem "plek", "~> 3"
+gem "rails", "~> 5.2.4"
+gem "sass-rails", "~> 6"
+gem "uglifier", "~> 4"
 
 group :test do
   gem "capybara", "~> 3"
