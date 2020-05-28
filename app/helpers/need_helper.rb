@@ -119,7 +119,7 @@ module NeedHelper
   end
 
   def canonical_need_goal
-    Need.find(@need.duplicate_of).goal
+    Need.find(@need.duplicate_of).goal # rubocop:disable Rails/HelperInstanceVariable
   end
 
   def feedback_for_page(base_path)
