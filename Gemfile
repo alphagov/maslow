@@ -14,7 +14,7 @@ gem "kaminari", "~> 1"
 gem "mongoid", "~> 7.1.2"
 gem "plek", "~> 3"
 gem "rails", "~> 6.0.3"
-gem "sass-rails", "~> 6"
+gem "sass-rails", "< 6"
 gem "uglifier", "~> 4"
 
 group :test do
