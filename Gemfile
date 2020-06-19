@@ -24,7 +24,7 @@ group :test do
   gem "mocha", "~> 1", require: false
   gem "pry-byebug"
   gem "rails-controller-testing", "~> 1"
-  gem "shoulda-context", "~> 1"
+  gem "shoulda-context", "~> 2"
   gem "test-unit"
   gem "timecop", "~> 0.9"
   gem "webmock", "~> 3"
