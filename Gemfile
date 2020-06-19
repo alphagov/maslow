@@ -20,7 +20,7 @@ gem "uglifier", "~> 4"
 group :test do
   gem "capybara", "~> 3"
   gem "database_cleaner", "~> 1", require: false
-  gem "factory_bot_rails", "~> 5"
+  gem "factory_bot_rails", "~> 6"
   gem "mocha", "~> 1", require: false
   gem "pry-byebug"
   gem "rails-controller-testing", "~> 1"
