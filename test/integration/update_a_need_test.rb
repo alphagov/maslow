@@ -50,7 +50,7 @@ class UpdateANeedTest < ActionDispatch::IntegrationTest
 
     should "be able to update a need" do
       test_need = Need.find(@content_item["content_id"])
-      test_need.update(
+      test_need.set_attributes(
         role: "grandparent",
         benefit: "my grandchild can start school",
         legislation: "",

@@ -50,7 +50,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
       },
     )
 
-    Note.create(
+    Note.create!(
       content_id: @content_item["content_id"],
       text: "looks good",
       author: { name: "Testy McTestFace" },

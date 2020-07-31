@@ -123,7 +123,7 @@ class Need
       "update_type" => "major",
     }
 
-    update(
+    set_attributes(
       default_values.merge(attributes.to_h),
     )
 
@@ -232,7 +232,7 @@ class Need
     publication_state == "draft"
   end
 
-  def update(attrs)
+  def set_attributes(attrs)
     strip_newline_from_textareas(attrs)
 
     attrs.each do |field, value|
@@ -270,7 +270,7 @@ class Need
   def publish
     if unpublished?
       # Save to ensure that a draft exists to Publish
-      save
+      save!
     end
 
     GdsApi.publishing_api.publish(content_id, "major")
@@ -303,7 +303,7 @@ class Need
     false
   end
 
-  def save
+  def save!
     strip_newline_from_textareas(publishing_api_payload)
 
     GdsApi.publishing_api.put_content(
@@ -421,7 +421,7 @@ private
     end
 
     title_suffix = need_id ? " (#{need_id})" : ""
-    update(base_path: "/needs/#{goal.parameterize}") unless base_path
+    set_attributes(base_path: "/needs/#{goal.parameterize}") unless base_path
 
     {
       schema_name: "need",
