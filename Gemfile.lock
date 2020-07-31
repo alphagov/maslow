@@ -400,34 +400,34 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cancancan (~> 3)
-  capybara (~> 3)
+  cancancan
+  capybara
   chosen-rails
-  dalli (~> 2.7)
-  database_cleaner (~> 1)
-  factory_bot_rails (~> 6)
-  formtastic (~> 3)
-  formtastic-bootstrap (~> 3)
-  gds-api-adapters (~> 67)
-  gds-sso (~> 15)
-  govspeak (~> 6)
-  govuk_admin_template (~> 6)
-  govuk_app_config (~> 2)
-  jasmine (~> 3)
-  kaminari (~> 1)
-  mocha (~> 1)
-  mongoid (~> 7.1.2)
-  plek (~> 4)
+  dalli
+  database_cleaner
+  factory_bot_rails
+  formtastic
+  formtastic-bootstrap
+  gds-api-adapters
+  gds-sso
+  govspeak
+  govuk_admin_template
+  govuk_app_config
+  jasmine
+  kaminari
+  mocha
+  mongoid
+  plek
   pry-byebug
-  rails (~> 6.0.3)
-  rails-controller-testing (~> 1)
+  rails (= 6.0.3.2)
+  rails-controller-testing
   rubocop-govuk
-  sass-rails (< 6)
-  shoulda-context (~> 2)
+  sass-rails
+  shoulda-context
   test-unit
-  timecop (~> 0.9)
-  uglifier (~> 4)
-  webmock (~> 3)
+  timecop
+  uglifier
+  webmock
 
 BUNDLED WITH
    1.17.3
