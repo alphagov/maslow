@@ -28,10 +28,12 @@ group :test do
   gem "shoulda-context"
   gem "test-unit"
   gem "timecop"
+  gem "webdrivers"
   gem "webmock"
 end
 
 group :development, :test do
   gem "jasmine"
+  gem "jasmine_selenium_runner", require: false
   gem "rubocop-govuk"
 end

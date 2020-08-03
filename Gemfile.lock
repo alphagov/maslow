@@ -76,6 +76,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
+    childprocess (3.0.0)
     chosen-rails (1.9.0)
       coffee-rails (>= 3.2)
       railties (>= 3.0)
@@ -168,6 +169,9 @@ GEM
       rack (>= 1.2.1)
       rake
     jasmine-core (3.6.0)
+    jasmine_selenium_runner (3.0.0)
+      jasmine (~> 3.0)
+      selenium-webdriver (~> 3.8)
     jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -324,6 +328,7 @@ GEM
     rubocop-rspec (1.42.0)
       rubocop (>= 0.87.0)
     ruby-progressbar (1.10.1)
+    rubyzip (2.3.0)
     safe_yaml (1.0.5)
     sanitize (5.2.1)
       crass (~> 1.0.2)
@@ -339,6 +344,9 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    selenium-webdriver (3.142.7)
+      childprocess (>= 0.5, < 4.0)
+      rubyzip (>= 1.2.2)
     sentry-raven (3.0.0)
       faraday (>= 1.0)
     shoulda-context (2.0.0)
@@ -371,6 +379,10 @@ GEM
       rack (>= 2.0.6)
     warden-oauth2 (0.0.1)
       warden
+    webdrivers (4.4.1)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (>= 3.0, < 4.0)
     webmock (3.8.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -400,6 +412,7 @@ DEPENDENCIES
   govuk_admin_template
   govuk_app_config
   jasmine
+  jasmine_selenium_runner
   kaminari
   mocha
   mongoid
@@ -413,6 +426,7 @@ DEPENDENCIES
   test-unit
   timecop
   uglifier
+  webdrivers
   webmock
 
 BUNDLED WITH
