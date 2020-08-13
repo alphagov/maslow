@@ -8,7 +8,10 @@ require "mocha/minitest"
 require "webmock/test_unit"
 require "gds_api/test_helpers/publishing_api"
 
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(
+  allow_localhost: true,
+  allow: ["chromedriver.storage.googleapis.com"],
+)
 
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
