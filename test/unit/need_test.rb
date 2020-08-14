@@ -124,7 +124,7 @@ class NeedTest < ActiveSupport::TestCase
         )
         stub_publishing_api_patch_links(need.content_id, links: { organisations: [] })
 
-        assert need.save
+        assert need.save!
 
         assert_publishing_api_put_content(need.content_id, need.send(:publishing_api_payload))
       end
@@ -229,7 +229,7 @@ class NeedTest < ActiveSupport::TestCase
         GdsApi::HTTPErrorResponse.new(422, %w[error]),
       )
 
-      assert_equal false, need.save
+      assert_equal false, need.save!
     end
   end
 
@@ -546,7 +546,7 @@ class NeedTest < ActiveSupport::TestCase
 
     context "updating fields" do
       should "update fields and send to the Publishing API" do
-        @need.update(
+        @need.set_attributes(
           impact: "Endangers people",
           yearly_searches: 50_000,
         )
@@ -566,7 +566,7 @@ class NeedTest < ActiveSupport::TestCase
           links: { organisations: [] },
         )
 
-        @need.save
+        @need.save!
 
         assert_equal "find out if an estate is claimable and how to make a claim on an estate", @need.goal
         assert_equal "Endangers people", @need.impact
@@ -576,7 +576,7 @@ class NeedTest < ActiveSupport::TestCase
       end
 
       should "strip leading newline characters from textareas" do
-        @need.update(
+        @need.set_attributes(
           "legislation": "\nRemove the newline from legislation",
           "other_evidence": "\nRemove the newline from other_evidence",
         )
@@ -591,7 +591,7 @@ class NeedTest < ActiveSupport::TestCase
           },
         )
         stub_publishing_api_patch_links(@need.content_id, links: { organisations: [] })
-        @need.save
+        @need.save!
 
         assert_equal "Remove the newline from legislation", @need.legislation
         assert_equal "Remove the newline from other_evidence", @need.other_evidence

@@ -1,36 +1,39 @@
 source "https://rubygems.org"
 
-gem "cancancan", "~> 3"
+gem "rails", "6.0.3.2"
+
+gem "cancancan"
 gem "chosen-rails"
-gem "dalli", "~> 2.7"
-gem "formtastic", "~> 3"
-gem "formtastic-bootstrap", "~> 3"
-gem "gds-api-adapters", "~> 67"
-gem "gds-sso", "~> 15"
-gem "govspeak", "~> 6"
-gem "govuk_admin_template", "~> 6"
-gem "govuk_app_config", "~> 2"
-gem "kaminari", "~> 1"
-gem "mongoid", "~> 7.1.2"
-gem "plek", "~> 4"
-gem "rails", "~> 6.0.3"
-gem "sass-rails", "< 6"
-gem "uglifier", "~> 4"
+gem "dalli"
+gem "formtastic"
+gem "formtastic-bootstrap"
+gem "gds-api-adapters"
+gem "gds-sso"
+gem "govspeak"
+gem "govuk_admin_template"
+gem "govuk_app_config"
+gem "kaminari"
+gem "mongoid"
+gem "plek"
+gem "sass-rails"
+gem "uglifier"
 
 group :test do
-  gem "capybara", "~> 3"
-  gem "database_cleaner", "~> 1", require: false
-  gem "factory_bot_rails", "~> 6"
-  gem "mocha", "~> 1", require: false
+  gem "capybara"
+  gem "database_cleaner", require: false
+  gem "factory_bot_rails"
+  gem "mocha", require: false
   gem "pry-byebug"
-  gem "rails-controller-testing", "~> 1"
-  gem "shoulda-context", "~> 2"
+  gem "rails-controller-testing"
+  gem "shoulda-context"
   gem "test-unit"
-  gem "timecop", "~> 0.9"
-  gem "webmock", "~> 3"
+  gem "timecop"
+  gem "webdrivers"
+  gem "webmock"
 end
 
 group :development, :test do
-  gem "jasmine", "~> 3"
+  gem "jasmine"
+  gem "jasmine_selenium_runner", require: false
   gem "rubocop-govuk"
 end

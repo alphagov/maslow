@@ -91,7 +91,7 @@ class NeedsController < ApplicationController
     end
 
     if @need.valid?
-      if @need.save
+      if @need.save!
         redirect_to redirect_url,
                     notice: "Need created",
                     flash: { goal: @need.goal }
@@ -114,7 +114,7 @@ class NeedsController < ApplicationController
   def update
     authorize! :update, Need
     @need = load_need
-    @need.update(need_params)
+    @need.set_attributes(need_params)
 
     if criteria_params_present?
       add_or_remove_criteria(:edit)
@@ -122,7 +122,7 @@ class NeedsController < ApplicationController
     end
 
     if @need.valid?
-      if @need.save && (@need.draft? || @need.publish)
+      if @need.save! && (@need.draft? || @need.publish)
         redirect_to redirect_url,
                     notice: "Need updated",
                     flash: { need_id: @need.need_id, goal: @need.goal }

@@ -91,7 +91,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "fail with incomplete data" do
-      Need.any_instance.expects(:save).never
+      Need.any_instance.expects(:save!).never
 
       need_data = {
         "role" => "User",
@@ -105,7 +105,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "return a 500 response if save fails" do
-      Need.any_instance.expects(:save).returns(false)
+      Need.any_instance.expects(:save!).returns(false)
 
       need_data = {
         "role" => "User",
@@ -138,7 +138,7 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "create the need and redirect to add new need if 'add_new' provided" do
-      Need.any_instance.expects(:save).returns(true)
+      Need.any_instance.expects(:save!).returns(true)
       post(:create, params: { add_new: "", need: complete_need_data })
 
       assert_redirected_to new_need_path
@@ -306,7 +306,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "redisplay with a 422 if need is invalid" do
       need = existing_need
       Need.expects(:find).with(need.content_id).returns(need)
-      need.expects(:save).never
+      need.expects(:save!).never
 
       put :update,
           params: {
@@ -319,7 +319,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "save the need if valid and redirect to show it" do
       need = existing_need
       Need.expects(:find).with(need.content_id).returns(need)
-      need.expects(:save).returns(true)
+      need.expects(:save!).returns(true)
 
       put :update,
           params: {
@@ -332,7 +332,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "update the need and redirect to add new need if 'add_new' provided" do
       need = existing_need
       Need.expects(:find).with(need.content_id).returns(need)
-      need.expects(:save).returns(true)
+      need.expects(:save!).returns(true)
 
       put :update,
           params: {
@@ -348,7 +348,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(need.content_id).returns(need)
       # Forcing the validity check to false so we redisplay the form
       need.expects(:valid?).returns(false)
-      need.expects(:save).never
+      need.expects(:save!).never
 
       put :update,
           params: {
@@ -363,7 +363,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "return a 422 response if save fails" do
       need = existing_need
       Need.expects(:find).with(need.content_id).returns(need)
-      need.expects(:save).returns(false)
+      need.expects(:save!).returns(false)
 
       need_data = {
         "role" => "User",
@@ -394,7 +394,7 @@ class NeedsControllerTest < ActionController::TestCase
 
       should "publish the need" do
         # not testing the save method here
-        @stub_need.stubs(:save).returns(true)
+        @stub_need.stubs(:save!).returns(true)
         Need.stubs(:find).with(@stub_need.content_id).returns(@stub_need)
         @stub_need.expects(:publish)
 

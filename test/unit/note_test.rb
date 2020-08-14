@@ -25,7 +25,7 @@ class NoteTest < ActiveSupport::TestCase
       "content_id" => "123abc",
       "author" => @author,
     )
-    note.save
+    assert_equal false, note.valid?
 
     assert_equal "Text can't be blank", note.errors.full_messages.first
   end

@@ -59,12 +59,12 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.1)
-    autoprefixer-rails (9.7.6)
+    autoprefixer-rails (9.8.6)
       execjs
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
-    bson (4.9.2)
+    bson (4.10.0)
     builder (3.2.4)
     byebug (11.1.3)
     cancancan (3.1.0)
@@ -76,6 +76,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
+    childprocess (3.0.0)
     chosen-rails (1.9.0)
       coffee-rails (>= 3.2)
       railties (>= 3.0)
@@ -147,13 +148,11 @@ GEM
       sentry-raven (>= 2.7.1, < 3.1.0)
       statsd-ruby (~> 1.4.0)
       unicorn (>= 5.4, < 5.6)
-    govuk_publishing_components (21.57.1)
-      gds-api-adapters
+    govuk_publishing_components (21.60.1)
       govuk_app_config
       kramdown
       plek
       rails (>= 5.0.0.1)
-      rake
       rouge
       sprockets (< 4)
     hashdiff (1.0.1)
@@ -164,12 +163,15 @@ GEM
       domain_name (~> 0.5)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
-    jasmine (3.5.1)
-      jasmine-core (~> 3.5.0)
+    jasmine (3.6.0)
+      jasmine-core (~> 3.6.0)
       phantomjs
       rack (>= 1.2.1)
       rake
-    jasmine-core (3.5.0)
+    jasmine-core (3.6.0)
+    jasmine_selenium_runner (3.0.0)
+      jasmine (~> 3.0)
+      selenium-webdriver (~> 3.8)
     jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -211,7 +213,7 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.14.1)
     mocha (1.11.2)
-    mongo (2.12.1)
+    mongo (2.13.0)
       bson (>= 4.8.2, < 5.0.0)
     mongoid (7.1.2)
       activemodel (>= 5.1, < 6.1)
@@ -241,9 +243,9 @@ GEM
     omniauth-oauth2 (1.3.1)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
-    parallel (1.19.1)
-    parser (2.7.1.3)
-      ast (~> 2.4.0)
+    parallel (1.19.2)
+    parser (2.7.1.4)
+      ast (~> 2.4.1)
     phantomjs (2.1.1.0)
     plek (4.0.0)
     power_assert (1.2.0)
@@ -290,9 +292,6 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.1)
     rake (13.0.1)
-    rb-fsevent (0.10.4)
-    rb-inotify (0.10.1)
-      ffi (~> 1.0)
     regexp_parser (1.7.1)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -303,48 +302,40 @@ GEM
       netrc (~> 0.8)
     rexml (3.2.4)
     rinku (2.0.6)
-    rouge (3.20.0)
-    rubocop (0.85.1)
+    rouge (3.21.0)
+    rubocop (0.87.1)
       parallel (~> 1.10)
-      parser (>= 2.7.0.1)
+      parser (>= 2.7.1.1)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.7)
       rexml
-      rubocop-ast (>= 0.0.3)
+      rubocop-ast (>= 0.1.0, < 1.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.0.3)
+    rubocop-ast (0.2.0)
       parser (>= 2.7.0.1)
-    rubocop-govuk (3.16.0)
-      rubocop (= 0.85.1)
+    rubocop-govuk (3.17.0)
+      rubocop (= 0.87.1)
       rubocop-rails (= 2.6.0)
       rubocop-rake (= 0.5.1)
-      rubocop-rspec (= 1.39.0)
+      rubocop-rspec (= 1.42.0)
     rubocop-rails (2.6.0)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 0.82.0)
     rubocop-rake (0.5.1)
       rubocop
-    rubocop-rspec (1.39.0)
-      rubocop (>= 0.68.1)
+    rubocop-rspec (1.42.0)
+      rubocop (>= 0.87.0)
     ruby-progressbar (1.10.1)
+    rubyzip (2.3.0)
     safe_yaml (1.0.5)
     sanitize (5.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (5.1.0)
-      railties (>= 5.2.0)
-      sass (~> 3.1)
-      sprockets (>= 2.8, < 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
-      tilt (>= 1.1, < 3)
+    sass-rails (6.0.0)
+      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -353,6 +344,9 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    selenium-webdriver (3.142.7)
+      childprocess (>= 0.5, < 4.0)
+      rubyzip (>= 1.2.2)
     sentry-raven (3.0.0)
       faraday (>= 1.0)
     shoulda-context (2.0.0)
@@ -385,6 +379,10 @@ GEM
       rack (>= 2.0.6)
     warden-oauth2 (0.0.1)
       warden
+    webdrivers (4.4.1)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (>= 3.0, < 4.0)
     webmock (3.8.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -400,34 +398,36 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cancancan (~> 3)
-  capybara (~> 3)
+  cancancan
+  capybara
   chosen-rails
-  dalli (~> 2.7)
-  database_cleaner (~> 1)
-  factory_bot_rails (~> 6)
-  formtastic (~> 3)
-  formtastic-bootstrap (~> 3)
-  gds-api-adapters (~> 67)
-  gds-sso (~> 15)
-  govspeak (~> 6)
-  govuk_admin_template (~> 6)
-  govuk_app_config (~> 2)
-  jasmine (~> 3)
-  kaminari (~> 1)
-  mocha (~> 1)
-  mongoid (~> 7.1.2)
-  plek (~> 4)
+  dalli
+  database_cleaner
+  factory_bot_rails
+  formtastic
+  formtastic-bootstrap
+  gds-api-adapters
+  gds-sso
+  govspeak
+  govuk_admin_template
+  govuk_app_config
+  jasmine
+  jasmine_selenium_runner
+  kaminari
+  mocha
+  mongoid
+  plek
   pry-byebug
-  rails (~> 6.0.3)
-  rails-controller-testing (~> 1)
+  rails (= 6.0.3.2)
+  rails-controller-testing
   rubocop-govuk
-  sass-rails (< 6)
-  shoulda-context (~> 2)
+  sass-rails
+  shoulda-context
   test-unit
-  timecop (~> 0.9)
-  uglifier (~> 4)
-  webmock (~> 3)
+  timecop
+  uglifier
+  webdrivers
+  webmock
 
 BUNDLED WITH
    1.17.3
