@@ -1,92 +1,168 @@
-<%= semantic_form_for @need do |f| %>
-  <%= f.inputs "User story", :id => "user-story" do %>
-    <%= f.input :role, :label => "As a…", :hint => "Who is the user? E.g. a small business, a tax agent, a healthcare practitioner. Put 'user' when there's more than one type of user.", :required => false, :input_html => { :class => 'input-md-8' } %>
-    <%= f.input :goal, :label => "I need to…", :hint => "What does the user want to do?", :required => false, :input_html => { :class => 'input-md-8' } %>
-    <%= f.input :benefit, :label => "So that…", :hint => "Why does the user want to do this?", :required => false, :input_html => { :class => 'input-md-8' } %>
-
-    <% if f.object.applies_to_all_organisations %>
-      <p class="all-organisations">
-        This need applies to all organisations.
-      </p>
-    <% else %>
-      <div class="row">
-        <div class="col-md-8">
-          <%= f.input :organisation_ids,
-                    :as => :select,
-                    :collection => Organisation.to_options,
-                    :hint => "Which government departments and agencies meet this need? You can select more than one.",
-                    :label => "Departments and agencies<br/><span class='optional'>(optional)</span>".html_safe,
-                    :input_html => {
-                      :multiple => true,
-                      :class => "organisation-select",
-                      'data-module' => 'chosen'
-                    } %>
-        </div>
+<%= form_for @need do |f| %>
+  <%= f.fields "User story", id: "user-story" do %>
+    <fieldset id="user-story" class="inputs">
+      <legend>
+        <span>User story</span>
+      </legend>
+      <div class="form-group">
+        <span class="form-label">
+          <%= f.label :role, "As a…", required: false %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_field :role, class: "input-md-8 form-control" %>
+          <span class="help-block">Who is the user? E.g. a small business, a tax agent, a healthcare practitioner. Put 'user' when there's more than one type of user.</span>
+        </span>
       </div>
-    <% end %>
+
+      <div class="form-group">
+        <span class="form-label">
+          <%= f.label :goal, "I need to...", required: false %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_field :goal, class: "input-md-8 form-control" %>
+          <span class="help-block">What does the user want to do?</span>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <span class="form-label">
+          <%= f.label :benefit, "So that…", required: false %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_field :benefit, class: "input-md-8 form-control" %>
+          <span class="help-block">Why does the user want to do this?</span>
+        </span>
+      </div>
+
+      <% if f.object.applies_to_all_organisations %>
+        <p class="all-organisations">
+          This need applies to all organisations.
+        </p>
+      <% else %>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <span class="form-label">
+                <%= f.label :organisation_ids, "Departments and agencies <br/><span class='optional'>(optional)</span>".html_safe %>
+              </span>
+              <span class="form-wrapper">
+                <%= f.select :organisation_ids, Organisation.to_options, {}, { multiple: true, 'data-module': 'chosen', class: "organisation-select multi-select form-control" } %>
+                <span class="help-block">Which government departments and agencies meet this need? You can select more than one.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </fieldset>
   <% end %>
 
   <%= render partial: "met_when", locals: { met_when_criteria: criteria_with_blank_value(@need.met_when), f: f } %>
 
-  <%= f.input :justifications, :label => "Is this need in proposition for GOV.UK? You can tick more than one. <br/><span class='optional'>(optional)</span>".html_safe, :hint => "Why should this need be on GOV.UK?", :as => :check_boxes, :collection => Need::JUSTIFICATIONS %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :justifications, "Is this need in proposition for GOV.UK? You can tick more than one.<br/><span class='optional'>(optional)</span>".html_safe %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.collection_check_boxes :justifications, Need::JUSTIFICATIONS, :to_s, :to_s do |builder| %>
+        <div class="checkbox">
+          <%= builder.label do %>
+            <%= builder.check_box %>
+            <%= builder.object %>
+          <% end %>
+        </div>
+      <% end %>
+    </span>
+    <span class="help-block">Why should this need be on GOV.UK?</span>
+  </div>
 
-  <%= f.inputs "Provide evidence for this need", :id => "evidence" do %>
+  <fieldset id="evidence" class="inputs">
+    <legend>
+      <span>Provide evidence for this need</span>
+    </legend>
     <p class="hint-text">This helps us understand how important this need is in context of all the needs GOV.UK meets.</p>
-    <%= f.input :legislation,
-      :label => "What legislation underpins this need? <br/><span class='optional'>(optional)</span>".html_safe,
-      :hint => "Please supply a URL, e.g. on legislation.gov.uk",
-      :as => :text,
-      :input_html => { :class => 'input-md-8', :rows => 3 }
-    %>
-    <%= f.input :yearly_user_contacts,
-      :label => "Roughly how many user contacts do you get about this need per year <br/><span class='optional'>(optional)</span>".html_safe,
-      :hint => "Include calls to contact centres, emails, customer service tickets, etc.",
-      :input_html => { :type => :text, :class => 'input-md-2', :pattern =>"[0-9]*" }
-    %>
-    <%= f.input :yearly_need_views,
-      :label => "Pageviews specific to this need per year <br/><span class='optional'>(optional)</span>".html_safe,
-      :hint => "Combine the pageviews for all relevant content.",
-      :input_html => { :type => :text, :class => 'input-md-2', :pattern =>"[0-9]*" }
-    %>
-    <%= f.input :yearly_site_views,
-      :label => "Pageviews for your website per year <br/><span class='optional'>(optional)</span>".html_safe,
-      :hint => "This is for your whole website, not just this user need.",
-      :input_html => { :type => :text, :class => 'input-md-2', :pattern =>"[0-9]*" }
-    %>
-    <%= f.input :yearly_searches,
-      :label => "How many searches relevant to this need are carried out per year <br/><span class='optional'>(optional)</span>".html_safe,
-      :hint => "Include external and internal searches.",
-      :input_html => { :type => :text, :class => 'input-md-2', :pattern =>"[0-9]*" }
-    %>
-    <%= f.input :other_evidence,
-      :label => "Do you have any other evidence to support this need? <br/><span class='optional'>(optional)</span>".html_safe,
-      :hint => "E.g. user research, campaigns, user demand.",
-      :as => :text,
-      :input_html => { :class => 'input-md-8', :rows => 3 }
-    %>
-  <% end %>
 
-  <%= f.input :impact,
-    :label => "What is the impact of GOV.UK not doing this? <br/><span class='optional'>(optional)</span>".html_safe, :hint => "What is the impact of GOV.UK not doing this?",
-    :as => :radio,
-    :collection => Need::IMPACT
-  %>
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :legislation, "What legislation underpins this need? <br/><span class='optional'>(optional)</span>".html_safe %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_area :legislation, rows: 3,  class: "input-md-8 form-control" %>
+        <span class="help-block">Please supply a URL, e.g. on legislation.gov.uk</span>
+      </span>
+    </div>
+
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :yearly_user_contacts, "Roughly how many user contacts do you get about this need per year <br/><span class='optional'>(optional)</span>".html_safe %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_field :yearly_user_contacts, pattern: "[0-9]*", class: "input-md-2 form-control" %>
+        <span class="help-block">Include calls to contact centres, emails, customer service tickets, etc.</span>
+      </span>
+    </div>
+
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :yearly_need_views, "Pageviews specific to this need per year <br/><span class='optional'>(optional)</span>".html_safe %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_field :yearly_need_views, pattern: "[0-9]*", class: "input-md-2 form-control" %>
+        <span class="help-block">Combine the pageviews for all relevant content.</span>
+      </span>
+    </div>
+
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :yearly_site_views, "Pageviews for your website per year <br/><span class='optional'>(optional)</span>".html_safe %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_field :yearly_site_views, pattern: "[0-9]*", class: "input-md-2 form-control" %>
+        <span class="help-block">This is for your whole website, not just this user need.</span>
+      </span>
+    </div>
+
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :yearly_searches, "How many searches relevant to this need are carried out per year <br/><span class='optional'>(optional)</span>".html_safe %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_field :yearly_searches, pattern: "[0-9]*", class: "input-md-2 form-control" %>
+        <span class="help-block">Include external and internal searches.</span>
+      </span>
+    </div>
+
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :other_evidence, "Do you have any other evidence to support this need? <br/><span class='optional'>(optional)</span>".html_safe %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_area :other_evidence, rows: 3, class: "input-md-8 form-control" %>
+        <span class="help-block">E.g. user research, campaigns, user demand.</span>
+      </span>
+    </div>
+  </fieldset>
+
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :impact, "What is the impact of GOV.UK not doing this? <br/><span class='optional'>(optional)</span>".html_safe %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.collection_radio_buttons :impact, Need::IMPACT, :to_s, :to_s do |builder| %>
+        <div class="radio">
+          <%= builder.label do %>
+            <%= builder.radio_button %>
+            <%= builder.object %>
+          <% end %>
+        </div>
+      <% end %>
+    </span>
+    <span class="help-block">What is the impact of GOV.UK not doing this?</span>
+  </div>
 
   <%= render layout: 'workflow_footer' do %>
     <div class="navbar-btn">
-    <%= f.action :submit,
-                 :button_html => {
-                   :value => "Save",
-                   :class => "btn btn-primary"
-                 }
-               %>
-    <%= f.action :submit,
-                 :button_html => {
-                   :name => "add_new",
-                   :value => "Save and add a new need",
-                   :class => "btn btn-primary"
-                 }
-               %>
+      <%= f.submit "Save", class: "btn btn-primary" %>
+      <%= f.submit "Save and add a new need", name: "add_new", class: "btn btn-primary" %>
     </div>
   <% end %>
 <% end %>

@@ -1,11 +1,16 @@
-<%= semantic_form_for(:note, url: notes_url) do |f| %>
-  <%= f.inputs do %>
+<%= form_for(:note, url: notes_url) do |f| %>
+  <fieldset class="inputs">
     <%= hidden_field_tag :content_id, need.content_id %>
-    <%= f.input :text, :label => 'Note', :as => :text, :hint => "Don't forget to save your note when you have finished.", input_html: { class: "col-md-12 add-bottom-margin" } %>
-  <% end %>
-  <%= f.action :submit,
-               :button_html => {
-                 :value => "Add note",
-                 :class => "btn btn-primary"
-               } %>
+    <div class="form-group">
+      <span class="form-label">
+        <%= f.label :text, "Note" %>
+      </span>
+      <span class="form-wrapper">
+        <%= f.text_area :text, rows: 20, class: "col-md-12 add-bottom-margin" %>
+      </span>
+      <p class="text-muted">Don't forget to save your note when you have finished.</p>
+    </div>
+  </fieldset>
+
+  <%= f.submit "Add note", class: "btn btn-primary" %>
 <% end %>
