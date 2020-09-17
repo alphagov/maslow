@@ -1,8 +1,8 @@
 <tr>
   <td>
-    <%= semantic_form_for :bookmark, :url => toggle_bookmarks_path do |f| %>
-      <%= f.input :content_id, :as => :hidden, :input_html => { :value => need.content_id } %>
-      <%= f.input :redirect_to, :as => :hidden, :input_html => { :value => @current_page } %>
+    <%= form_for :bookmark, url: toggle_bookmarks_path do |f| %>
+      <%= f.hidden_field :content_id, value: need.content_id %>
+      <%= f.hidden_field :redirect_to, value: @current_page %>
       <button id="bookmark_<%= need.content_id %>" type="submit" class="btn btn-default">
         <span class="glyphicon <%= bookmark_icon(@bookmarks, need.content_id) %>"></span>
       </button>

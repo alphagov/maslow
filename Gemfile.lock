@@ -107,10 +107,6 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.13.1)
-    formtastic (3.1.5)
-      actionpack (>= 3.2.13)
-    formtastic-bootstrap (3.1.1)
-      formtastic (>= 3.0)
     gds-api-adapters (67.0.1)
       addressable
       link_header
@@ -405,8 +401,6 @@ DEPENDENCIES
   dalli
   database_cleaner
   factory_bot_rails
-  formtastic
-  formtastic-bootstrap
   gds-api-adapters
   gds-sso
   govspeak
