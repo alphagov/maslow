@@ -24,6 +24,7 @@ group :test do
   gem "pry-byebug"
   gem "rails-controller-testing"
   gem "shoulda-context"
+  gem "simplecov"
   gem "test-unit"
   gem "timecop"
   gem "webdrivers"
