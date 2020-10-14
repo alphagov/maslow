@@ -11,10 +11,8 @@ require "mocha/minitest"
 require "webmock/test_unit"
 require "gds_api/test_helpers/publishing_api"
 
-WebMock.disable_net_connect!(
-  allow_localhost: true,
-  allow: ["chromedriver.storage.googleapis.com"],
-)
+GovukTest.configure
+WebMock.disable_net_connect!(allow_localhost: true)
 
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
