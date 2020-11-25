@@ -4,8 +4,10 @@ library("govuk")
 
 node("mongodb-2.4") {
   govuk.buildProject(
-    // TODO: SASS linting is disabled because it currently fails
-    sassLint: false,
+    beforeTest: {
+      sh("yarn install")
+    },
     brakeman: true,
+    sassLint: false,
   )
 }
