@@ -7,7 +7,8 @@ part of the GOV.UK Publishing Platform.
 
 - Ruby
 - Bundler
-- The Ruby Gems listed in the Gemfile
+- NodeJS
+- Yarn
 - A running instance of the [Publishing API](https://github.com/alphagov/publishing-api)
 
 ## User accounts
