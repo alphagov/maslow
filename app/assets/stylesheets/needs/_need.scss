@@ -1,3 +1,5 @@
+// stylelint-disable selector-no-qualifying-type, scss/at-extend-no-missing-placeholder
+
 .need-title {
   display: inline-block;
   margin-right: 240px;
@@ -21,7 +23,7 @@
 .need-organisations {
   @extend .text-muted;
   font-size: 19px;
-  line-height: 1.31579 !important;
+  line-height: 1.31579 !important; // stylelint-disable-line declaration-no-important
   margin-bottom: 5px;
 }
 

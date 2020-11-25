@@ -6,7 +6,7 @@
 
 .revision,
 .note-history {
-  @extend .well;
+  @extend .well; // stylelint-disable-line scss/at-extend-no-missing-placeholder
   list-style: none;
 }
 

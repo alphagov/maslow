@@ -1,3 +1,5 @@
+// stylelint-disable selector-no-qualifying-type, scss/at-extend-no-missing-placeholder
+
 // Chosen multi-select overrides to conform with Bootstrap 3
 
 .chosen-container-multi .chosen-choices {
@@ -34,8 +36,8 @@ form.need {
 
 // Close as Duplicate form
 
-#duplicate_of_chosen {
-  width: 560px !important;
+#duplicate_of_chosen { // stylelint-disable-line selector-id-pattern, selector-max-id
+  width: 560px !important; // stylelint-disable-line declaration-no-important
 }
 
 // Need filter and search form
