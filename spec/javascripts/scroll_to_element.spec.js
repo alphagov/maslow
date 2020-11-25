@@ -1,23 +1,22 @@
-describe('A scroll to element module', function() {
-  "use strict";
+describe('A scroll to element module', function () {
+  'use strict'
 
-  var root = window,
-      module,
-      element;
+  var module
+  var element
 
-  beforeEach(function() {
-    element = $('<div></div>');
-    $('body').append(element);
-    module = new GOVUKAdmin.Modules.ScrollToElement();
-  });
+  beforeEach(function () {
+    element = $('<div></div>')
+    $('body').append(element)
+    module = new GOVUKAdmin.Modules.ScrollToElement()
+  })
 
-  afterEach(function() {
-    element.remove();
-  });
+  afterEach(function () {
+    element.remove()
+  })
 
-  it('scrolls to its element when it starts', function() {
-    spyOn(window, 'scrollTo');
-    module.start(element);
-    expect(window.scrollTo).toHaveBeenCalledWith(0, element.offset().top);
-  });
-});
+  it('scrolls to its element when it starts', function () {
+    spyOn(window, 'scrollTo')
+    module.start(element)
+    expect(window.scrollTo).toHaveBeenCalledWith(0, element.offset().top)
+  })
+})

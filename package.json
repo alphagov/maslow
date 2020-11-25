@@ -14,7 +14,10 @@
       "browser": true,
       "jquery": true,
       "jasmine": true
-    }
+    },
+    "globals": [
+      "GOVUKAdmin"
+    ]
   },
   "eslintConfig": {
     "rules": {
