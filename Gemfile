@@ -13,7 +13,7 @@ gem "govuk_app_config"
 gem "kaminari"
 gem "mongoid"
 gem "plek"
-gem "sass-rails"
+gem "sassc-rails"
 gem "uglifier"
 
 group :test do
