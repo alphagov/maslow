@@ -1,6 +1,4 @@
-/* ==========================================================================
-   Chosen multi-select overrides to conform with Bootstrap 3
-   ========================================================================== */
+// Chosen multi-select overrides to conform with Bootstrap 3
 
 .chosen-container-multi .chosen-choices {
   border-color: $input-border;
@@ -15,12 +13,10 @@
   height: auto;
 }
 
-/* ==========================================================================
-   Need form
-   ========================================================================== */
+// Need form
 
 form.need {
-  /* Avoid using "display: none" so that form still submits with this input */
+  // Avoid using "display: none" so that form still submits with this input
   input[type="submit"].hide {
     visibility: hidden;
     display: inline;
@@ -36,17 +32,13 @@ form.need {
   }
 }
 
-/* ==========================================================================
-   Close as Duplicate form
-   ========================================================================== */
+// Close as Duplicate form
 
 #duplicate_of_chosen {
   width: 560px !important;
 }
 
-/* ==========================================================================
-   Need filter and search form
-   ========================================================================== */
+// Need filter and search form
 
 .form-filter-needs,
 .form-search-needs {
@@ -62,9 +54,7 @@ form.need {
   text-align: left;
 }
 
-/* ==========================================================================
-   Miscellaneous forms
-   ========================================================================== */
+// Miscellaneous forms
 
 span.all-organisations {
   font-style: italic;
