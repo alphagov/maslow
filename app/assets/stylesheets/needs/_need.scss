@@ -1,3 +1,5 @@
+// stylelint-disable selector-no-qualifying-type, scss/at-extend-no-missing-placeholder
+
 .need-title {
   display: inline-block;
   margin-right: 240px;
@@ -21,19 +23,21 @@
 .need-organisations {
   @extend .text-muted;
   font-size: 19px;
-  line-height: 1.31579 !important;
+  line-height: 1.31579 !important; // stylelint-disable-line declaration-no-important
   margin-bottom: 5px;
 }
 
 .need-wrapper {
-  p, ul, li {
+  p,
+  ul,
+  li {
     font-size: 19px;
     line-height: 1.31579;
   }
 }
 
 .impact {
-  padding: 0.1em 0 0.1em 1em;
+  padding: .1em 0 .1em 1em;
   background-repeat: no-repeat;
   background-image: url("icon-important.png");
   @include image-2x( "icon-important@2x.png", 34px, 34px);
@@ -63,7 +67,7 @@
   line-height: 1.25;
   font-weight: normal;
   display: block;
-  color: #000;
+  color: #000000;
 }
 
 p.all-organisations {

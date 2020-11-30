@@ -1,21 +1,24 @@
-.revisions, .notes {
+.revisions,
+.notes {
   margin: $default-vertical-margin 0;
   padding: 0;
 }
 
-.revision, .note-history {
-  @extend .well;
+.revision,
+.note-history {
+  @extend .well; // stylelint-disable-line scss/at-extend-no-missing-placeholder
   list-style: none;
 }
 
-.revision-title, .note-title {
+.revision-title,
+.note-title {
   font-size: 16px;
   line-height: $default-vertical-margin;
   margin: 0 0 5px;
 }
 
 .changed-value {
-  background: #fff;
+  background: #ffffff;
   display: inline-block;
   font-family: monospace;
 }
