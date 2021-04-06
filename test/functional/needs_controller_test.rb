@@ -117,6 +117,20 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 500
     end
 
+    should "return a 422 error if the base path is in use" do
+      Need.expects(:find).with("content-id").returns(existing_need)
+      Need.any_instance.expects(:save!).raises(Need::BasePathAlreadyInUse.new("content-id"))
+
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test",
+      }
+      post(:create, params: { need: need_data })
+
+      assert_response 422
+    end
+
     should "remove blank entries from justifications" do
       need_data = complete_need_data.merge(
         "justifications" => ["", "It's something only government does"],
@@ -312,6 +326,19 @@ class NeedsControllerTest < ActionController::TestCase
           params: {
             content_id: need.content_id,
             need: base_need_fields.merge("goal" => ""),
+          }
+      assert_response 422
+    end
+
+    should "return a 422 error if the base path is in use" do
+      need = existing_need
+      Need.expects(:find).with(need.content_id).returns(need).at_least_once
+      need.expects(:save!).raises(Need::BasePathAlreadyInUse.new(need.content_id))
+
+      put :update,
+          params: {
+            content_id: need.content_id,
+            need: base_need_fields.merge("benefit" => "be awesome"),
           }
       assert_response 422
     end
