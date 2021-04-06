@@ -470,6 +470,32 @@ class NeedsControllerTest < ActionController::TestCase
       assert_redirected_to need_path(@need.content_id)
     end
 
+    should "not be able to give a need as its own duplicate" do
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            duplicate_of: @need.content_id,
+          }
+
+      assert_equal "Need cannot be a duplicate of itself", @controller.flash[:error]
+      assert_response 422
+    end
+
+    should "not be able to replace a need with a missing duplicate" do
+      Need.stubs(:find).with("not-a-real-content-id").raises(Need::NotFound.new("not-a-real-content-id"))
+
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            duplicate_of: "not-a-real-content-id",
+          }
+
+      assert_equal "Duplicate need not found", @controller.flash[:error]
+      assert_response 422
+    end
+
     should "not be able to edit a need closed as a duplicate" do
       @duplicate_need.publication_state = "unpublished"
 
