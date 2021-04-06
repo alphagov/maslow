@@ -261,8 +261,6 @@ private
 
   def load_need
     Need.find(params[:content_id])
-  rescue ArgumentError, TypeError # shouldn't happen; route is constrained
-    raise Http404
   rescue Need::NotFound
     raise Http404
   end
