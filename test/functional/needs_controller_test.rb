@@ -445,13 +445,13 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "unpublish the need" do
-      @need.expects(:unpublish).returns(true)
+      @need.expects(:unpublish).with("This need is a duplicate of: [embed:link:#{@duplicate_need.content_id}]").returns(true)
 
       put :actions,
           params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id },
+            duplicate_of: @duplicate_need.content_id,
           }
     end
 
@@ -462,7 +462,7 @@ class NeedsControllerTest < ActionController::TestCase
           params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id },
+            duplicate_of: @duplicate_need.content_id,
           }
 
       assert_not @controller.flash[:error]
