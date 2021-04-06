@@ -517,6 +517,25 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "POST something else" do
+    setup do
+      login_as_stub_editor
+      @need = existing_need
+      Need.stubs(:find).with(@need.content_id).returns(@need)
+    end
+
+    should "return an error" do
+      put :actions,
+          params: {
+            need_action: "some-other-action",
+            content_id: @need.content_id,
+          }
+
+      assert_equal "Unknown action: some-other-action", @controller.flash[:error]
+      assert_response 422
+    end
+  end
+
   context "GET actions" do
     setup do
       login_as_stub_editor

@@ -47,7 +47,7 @@ class NeedsController < ApplicationController
     when "discard"
       discard
     else
-      flash[:error] = "Unknown action: #{params['action']}"
+      flash[:error] = "Unknown action: #{params['need_action']}"
       render "actions", status: :unprocessable_entity
     end
   end
