@@ -461,6 +461,39 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "POST discard" do
+    setup do
+      login_as_stub_admin
+      @need = existing_need
+      Need.stubs(:find).with(@need.content_id).returns(@need)
+    end
+
+    should "discard the need" do
+      stub_any_publishing_api_discard_draft
+
+      put :actions,
+          params: {
+            need_action: "discard",
+            content_id: @need.content_id,
+          }
+
+      assert_equal "Need discarded", @controller.flash[:notice]
+    end
+
+    should "return a 500 if there's an error" do
+      stub_any_publishing_api_discard_draft.to_raise(GdsApi::HTTPErrorResponse)
+
+      put :actions,
+          params: {
+            need_action: "discard",
+            content_id: @need.content_id,
+          }
+
+      assert_equal "A problem was encountered when publishing", @controller.flash[:error]
+      assert_response 500
+    end
+  end
+
   context "POST unpublish" do
     setup do
       login_as_stub_editor
