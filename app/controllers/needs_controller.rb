@@ -213,28 +213,6 @@ private
     params["add_new"] ? new_need_path : need_url(@need.content_id)
   end
 
-  def need_status_params
-    filtered = params.require(:need)
-      .require(:status)
-      .permit(
-        :description,
-        :additional_comments,
-        :validation_conditions,
-        :other_reasons_why_invalid,
-        common_reasons_why_invalid: [],
-      )
-
-    {
-      description: filtered[:description],
-      reasons: [
-        filtered[:common_reasons_why_invalid],
-        filtered[:other_reasons_why_invalid],
-      ].flatten.select(&:present?),
-      additional_comments: filtered[:additional_comments],
-      validation_conditions: filtered[:validation_conditions],
-    }
-  end
-
   def need_params
     params.require(:need).permit(
       :role,
