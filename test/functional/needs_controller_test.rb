@@ -455,6 +455,19 @@ class NeedsControllerTest < ActionController::TestCase
           }
     end
 
+    should "use the given explanation if there's no duplicate" do
+      @need.expects(:unpublish).with("explanation goes here").returns(true)
+
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            explanation: "explanation goes here",
+          }
+
+      assert_equal "Need withdrawn", @controller.flash[:notice]
+    end
+
     should "redirect to the need with a success message once complete" do
       @need.stubs(:unpublish).returns(true)
 
