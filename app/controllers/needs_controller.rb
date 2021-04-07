@@ -47,7 +47,7 @@ class NeedsController < ApplicationController
     when "discard"
       discard
     else
-      flash[:error] = "Unknown action: #{params['action']}"
+      flash[:error] = "Unknown action: #{params['need_action']}"
       render "actions", status: :unprocessable_entity
     end
   end
@@ -213,28 +213,6 @@ private
     params["add_new"] ? new_need_path : need_url(@need.content_id)
   end
 
-  def need_status_params
-    filtered = params.require(:need)
-      .require(:status)
-      .permit(
-        :description,
-        :additional_comments,
-        :validation_conditions,
-        :other_reasons_why_invalid,
-        common_reasons_why_invalid: [],
-      )
-
-    {
-      description: filtered[:description],
-      reasons: [
-        filtered[:common_reasons_why_invalid],
-        filtered[:other_reasons_why_invalid],
-      ].flatten.select(&:present?),
-      additional_comments: filtered[:additional_comments],
-      validation_conditions: filtered[:validation_conditions],
-    }
-  end
-
   def need_params
     params.require(:need).permit(
       :role,
@@ -261,8 +239,6 @@ private
 
   def load_need
     Need.find(params[:content_id])
-  rescue ArgumentError, TypeError # shouldn't happen; route is constrained
-    raise Http404
   rescue Need::NotFound
     raise Http404
   end

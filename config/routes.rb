@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  mount GovukAdminTemplate::Engine, at: "/style-guide"
-
-  get "/healthcheck" => proc { [200, { "Content-type" => "text/plain" }, %w[OK]] }
+  get "/healthcheck",
+      to: GovukHealthcheck.rack_response(
+        GovukHealthcheck::Mongoid,
+      )
 
   resources :bookmarks, only: [:index], param: :content_id do
     collection do

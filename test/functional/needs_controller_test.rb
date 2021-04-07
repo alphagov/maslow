@@ -117,6 +117,20 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 500
     end
 
+    should "return a 422 error if the base path is in use" do
+      Need.expects(:find).with("content-id").returns(existing_need)
+      Need.any_instance.expects(:save!).raises(Need::BasePathAlreadyInUse.new("content-id"))
+
+      need_data = {
+        "role" => "User",
+        "goal" => "Do Stuff",
+        "benefit" => "test",
+      }
+      post(:create, params: { need: need_data })
+
+      assert_response 422
+    end
+
     should "remove blank entries from justifications" do
       need_data = complete_need_data.merge(
         "justifications" => ["", "It's something only government does"],
@@ -316,6 +330,19 @@ class NeedsControllerTest < ActionController::TestCase
       assert_response 422
     end
 
+    should "return a 422 error if the base path is in use" do
+      need = existing_need
+      Need.expects(:find).with(need.content_id).returns(need).at_least_once
+      need.expects(:save!).raises(Need::BasePathAlreadyInUse.new(need.content_id))
+
+      put :update,
+          params: {
+            content_id: need.content_id,
+            need: base_need_fields.merge("benefit" => "be awesome"),
+          }
+      assert_response 422
+    end
+
     should "save the need if valid and redirect to show it" do
       need = existing_need
       Need.expects(:find).with(need.content_id).returns(need)
@@ -434,6 +461,39 @@ class NeedsControllerTest < ActionController::TestCase
     end
   end
 
+  context "POST discard" do
+    setup do
+      login_as_stub_admin
+      @need = existing_need
+      Need.stubs(:find).with(@need.content_id).returns(@need)
+    end
+
+    should "discard the need" do
+      stub_any_publishing_api_discard_draft
+
+      put :actions,
+          params: {
+            need_action: "discard",
+            content_id: @need.content_id,
+          }
+
+      assert_equal "Need discarded", @controller.flash[:notice]
+    end
+
+    should "return a 500 if there's an error" do
+      stub_any_publishing_api_discard_draft.to_raise(GdsApi::HTTPErrorResponse)
+
+      put :actions,
+          params: {
+            need_action: "discard",
+            content_id: @need.content_id,
+          }
+
+      assert_equal "A problem was encountered when publishing", @controller.flash[:error]
+      assert_response 500
+    end
+  end
+
   context "POST unpublish" do
     setup do
       login_as_stub_editor
@@ -445,14 +505,27 @@ class NeedsControllerTest < ActionController::TestCase
     end
 
     should "unpublish the need" do
-      @need.expects(:unpublish).returns(true)
+      @need.expects(:unpublish).with("This need is a duplicate of: [embed:link:#{@duplicate_need.content_id}]").returns(true)
 
       put :actions,
           params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id },
+            duplicate_of: @duplicate_need.content_id,
           }
+    end
+
+    should "use the given explanation if there's no duplicate" do
+      @need.expects(:unpublish).with("explanation goes here").returns(true)
+
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            explanation: "explanation goes here",
+          }
+
+      assert_equal "Need withdrawn", @controller.flash[:notice]
     end
 
     should "redirect to the need with a success message once complete" do
@@ -462,12 +535,38 @@ class NeedsControllerTest < ActionController::TestCase
           params: {
             need_action: "unpublish",
             content_id: @need.content_id,
-            need: { duplicate_of: @duplicate_need.content_id },
+            duplicate_of: @duplicate_need.content_id,
           }
 
       assert_not @controller.flash[:error]
       assert_equal "Need withdrawn", @controller.flash[:notice]
       assert_redirected_to need_path(@need.content_id)
+    end
+
+    should "not be able to give a need as its own duplicate" do
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            duplicate_of: @need.content_id,
+          }
+
+      assert_equal "Need cannot be a duplicate of itself", @controller.flash[:error]
+      assert_response 422
+    end
+
+    should "not be able to replace a need with a missing duplicate" do
+      Need.stubs(:find).with("not-a-real-content-id").raises(Need::NotFound.new("not-a-real-content-id"))
+
+      put :actions,
+          params: {
+            need_action: "unpublish",
+            content_id: @need.content_id,
+            duplicate_of: "not-a-real-content-id",
+          }
+
+      assert_equal "Duplicate need not found", @controller.flash[:error]
+      assert_response 422
     end
 
     should "not be able to edit a need closed as a duplicate" do
@@ -488,6 +587,25 @@ class NeedsControllerTest < ActionController::TestCase
             duplicate_of: @duplicate_need.content_id,
           }
       assert_redirected_to needs_path
+    end
+  end
+
+  context "POST something else" do
+    setup do
+      login_as_stub_editor
+      @need = existing_need
+      Need.stubs(:find).with(@need.content_id).returns(@need)
+    end
+
+    should "return an error" do
+      put :actions,
+          params: {
+            need_action: "some-other-action",
+            content_id: @need.content_id,
+          }
+
+      assert_equal "Unknown action: some-other-action", @controller.flash[:error]
+      assert_response 422
     end
   end
 

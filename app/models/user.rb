@@ -23,10 +23,6 @@ class User
     @ability ||= Ability.new(self)
   end
 
-  def self.find_by_uid(uid)
-    find_by(uid: uid)
-  end
-
   def viewer?
     has_permission?("signin")
   end

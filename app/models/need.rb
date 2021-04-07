@@ -40,11 +40,6 @@ class Need
       @current_page = current_page
     end
 
-    def inspect
-      pagination_params = PAGINATION_PARAMS.index_with { |param_name| send(param_name) }
-      "#<#{self.class} #{super}, #{pagination_params}>"
-    end
-
     def to_options
       map do |need|
         [need.benefit, need.content_id]
