@@ -4,6 +4,11 @@ Rails.application.routes.draw do
         GovukHealthcheck::Mongoid,
       )
 
+  get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
+  get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
+    GovukHealthcheck::Mongoid,
+  )
+
   resources :bookmarks, only: [:index], param: :content_id do
     collection do
       post :toggle
