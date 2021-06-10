@@ -37,7 +37,7 @@ class NeedsController < ApplicationController
   def actions
     authorize! :perform_actions_on, Need
     @need = load_need
-    return if request.get?
+    return if request.get? || request.head?
 
     case params["need_action"]
     when "publish"
