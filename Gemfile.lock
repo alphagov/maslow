@@ -153,7 +153,7 @@ GEM
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
       rails (>= 3.2.0)
-    govuk_app_config (3.1.1)
+    govuk_app_config (3.2.0)
       logstasher (>= 1.2.2, < 2.2.0)
       sentry-raven (~> 3.1.1)
       statsd-ruby (~> 1.5.0)
@@ -205,7 +205,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    kgio (2.11.3)
+    kgio (2.11.4)
     kramdown (2.3.1)
       rexml
     link_header (0.0.8)
@@ -307,7 +307,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.20.3, < 2.0)
     rainbow (3.0.0)
-    raindrops (0.19.1)
+    raindrops (0.19.2)
     rake (13.0.3)
     regexp_parser (1.8.2)
     request_store (1.5.0)
