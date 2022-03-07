@@ -2,6 +2,9 @@
 
 library("govuk")
 
-node("mongodb-2.4") {
+node {
+  // Run against the MongoDB 3.6 Docker instance on GOV.UK CI
+  govuk.setEnvar("MONGODB_URI", "mongodb://127.0.0.1:27036/maslow-test")
+
   govuk.buildProject()
 }
