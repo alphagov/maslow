@@ -68,7 +68,7 @@ GEM
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
-    brakeman (5.0.4)
+    brakeman (5.2.1)
     bson (4.12.1)
     builder (3.2.4)
     byebug (11.1.3)
@@ -185,12 +185,11 @@ GEM
       rails (>= 6)
       rouge
       sprockets (< 4)
-    govuk_test (2.3.0)
+    govuk_test (3.0.0)
       brakeman (>= 5.0.2)
       capybara
       puma
       selenium-webdriver (>= 3.142)
-      webdrivers (>= 4)
     hashdiff (1.0.1)
     hashie (4.1.0)
     htmlentities (4.3.4)
@@ -372,7 +371,7 @@ GEM
       rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.0)
+    rubyzip (2.3.2)
     safe_yaml (1.0.5)
     sanitize (6.0.0)
       crass (~> 1.0.2)
@@ -431,10 +430,6 @@ GEM
       rack (>= 2.0.9)
     warden-oauth2 (0.0.1)
       warden
-    webdrivers (4.4.1)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.3.0)
-      selenium-webdriver (>= 3.0, < 4.0)
     webmock (3.8.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -479,7 +474,6 @@ DEPENDENCIES
   test-unit
   timecop
   uglifier
-  webdrivers
   webmock
 
 BUNDLED WITH
