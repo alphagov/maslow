@@ -21,8 +21,6 @@ updates:
       # Framework gems
       - dependency-name: factory_bot_rails
         dependency-type: direct
-      - dependency-name: jasmine
-        dependency-type: direct
       - dependency-name: mongoid
         dependency-type: direct
       - dependency-name: rails
@@ -39,6 +37,10 @@ updates:
       - dependency-name: stylelint-config-gds
         dependency-type: direct
       # Framework packages
+      - dependency-name: jasmine-browser-runner
+        dependency-type: direct
+      - dependency-name: jasmine-core
+        dependency-type: direct
       - dependency-name: standardx
         dependency-type: direct
       - dependency-name: stylelint
