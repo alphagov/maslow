@@ -23,7 +23,7 @@
 .need-organisations {
   @extend .text-muted;
   font-size: 19px;
-  line-height: 1.31579 !important; // stylelint-disable-line declaration-no-important
+  line-height: 1.3158 !important; // stylelint-disable-line declaration-no-important
   margin-bottom: 5px;
 }
 
@@ -32,7 +32,7 @@
   ul,
   li {
     font-size: 19px;
-    line-height: 1.31579;
+    line-height: 1.3158;
   }
 }
 
@@ -50,7 +50,7 @@
 
 .the-need {
   font-size: 28px;
-  line-height: 1.31579;
+  line-height: 1.3158;
   margin: $default-vertical-margin 0;
 }
 
