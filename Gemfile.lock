@@ -147,7 +147,7 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (4.6.1)
+    govuk_app_config (4.6.2)
       logstasher (~> 2.1)
       prometheus_exporter (~> 2.0)
       puma (~> 5.6)
@@ -215,7 +215,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    minitest (5.16.0)
     mocha (1.11.2)
     mongo (2.17.1)
       bson (>= 4.8.2, < 5.0.0)
@@ -252,7 +252,7 @@ GEM
       ast (~> 2.4.1)
     plek (4.0.0)
     power_assert (1.2.0)
-    prometheus_exporter (2.0.2)
+    prometheus_exporter (2.0.3)
       webrick
     pry (0.13.1)
       coderay (~> 1.1)
@@ -291,7 +291,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.2)
+    rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
     railties (6.1.6)
       actionpack (= 6.1.6)
@@ -407,7 +407,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.4)
+    zeitwerk (2.6.0)
 
 PLATFORMS
   ruby
