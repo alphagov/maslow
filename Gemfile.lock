@@ -98,7 +98,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.6)
-    dalli (2.7.10)
+    dalli (3.2.2)
     database_cleaner (1.8.5)
     docile (1.4.0)
     domain_name (0.5.20190701)
