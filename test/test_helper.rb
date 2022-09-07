@@ -6,7 +6,7 @@ SimpleCov.start "rails"
 require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "shoulda/context"
-require "database_cleaner"
+require "database_cleaner/mongoid"
 require "mocha/minitest"
 require "webmock/test_unit"
 require "gds_api/test_helpers/publishing_api"
@@ -14,7 +14,7 @@ require "gds_api/test_helpers/publishing_api"
 GovukTest.configure
 WebMock.disable_net_connect!(allow_localhost: true)
 
-DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.strategy = :deletion
 DatabaseCleaner.clean
 
 class ActiveSupport::TestCase
