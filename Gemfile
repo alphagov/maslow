@@ -18,7 +18,7 @@ gem "uglifier"
 
 group :test do
   gem "capybara"
-  gem "database_cleaner", require: false
+  gem "database_cleaner-mongoid", require: false
   gem "factory_bot_rails"
   gem "mocha", require: false
   gem "pry-byebug"
