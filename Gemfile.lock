@@ -281,7 +281,6 @@ GEM
     parser (3.1.2.1)
       ast (~> 2.4.1)
     plek (4.1.0)
-    power_assert (2.0.1)
     prometheus_exporter (2.0.3)
       webrick
     pry (0.14.1)
@@ -414,8 +413,6 @@ GEM
       sprockets (>= 3.0.0)
     statsd-ruby (1.5.0)
     strscan (3.0.4)
-    test-unit (3.5.5)
-      power_assert
     thor (1.2.1)
     tilt (2.0.11)
     timecop (0.9.5)
@@ -476,7 +473,6 @@ DEPENDENCIES
   sassc-rails
   shoulda-context
   simplecov
-  test-unit
   timecop
   uglifier
   webmock
