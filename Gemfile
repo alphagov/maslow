@@ -31,5 +31,5 @@ end
 
 group :development, :test do
   gem "govuk_test"
-  gem "rubocop-govuk"
+  gem "rubocop-govuk", require: false
 end
