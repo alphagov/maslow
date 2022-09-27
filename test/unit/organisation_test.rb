@@ -40,14 +40,6 @@ class OrganisationTest < ActiveSupport::TestCase
       assert_requested(:get, @linkables_request_path, times: 1)
     end
 
-    should "cache the organisation results, but only for an hour" do
-      Organisation.all
-
-      Timecop.travel(Time.zone.now + 61.minutes) do
-        Organisation.all
-      end
-    end
-
     should "show the title and publication state" do
       organisation = Organisation.new(title: "name", publication_state: "draft")
       assert_equal "name (draft)", organisation.title_and_publication_state
