@@ -25,7 +25,6 @@ class ActiveSupport::TestCase
   teardown do
     DatabaseCleaner.clean
     WebMock.reset!
-    Rails.cache.clear
   end
 
   def stub_user
