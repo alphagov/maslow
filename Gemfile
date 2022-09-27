@@ -25,7 +25,6 @@ group :test do
   gem "rails-controller-testing"
   gem "shoulda-context"
   gem "simplecov"
-  gem "timecop"
   gem "webmock"
 end
 

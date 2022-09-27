@@ -26,7 +26,6 @@ class ActiveSupport::TestCase
     DatabaseCleaner.clean
     WebMock.reset!
     Rails.cache.clear
-    Timecop.return
   end
 
   def stub_user
