@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "6.1.7"
+gem "rails", "7.0.4"
 
 gem "cancancan"
 gem "chosen-rails"
@@ -25,12 +25,10 @@ group :test do
   gem "rails-controller-testing"
   gem "shoulda-context"
   gem "simplecov"
-  gem "test-unit"
-  gem "timecop"
   gem "webmock"
 end
 
 group :development, :test do
   gem "govuk_test"
-  gem "rubocop-govuk"
+  gem "rubocop-govuk", require: false
 end

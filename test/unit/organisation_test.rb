@@ -33,19 +33,10 @@ class OrganisationTest < ActiveSupport::TestCase
     end
 
     should "cache the organisation results" do
-      5.times do
-        Organisation.all
-      end
+      Rails.stubs(:cache).returns(ActiveSupport::Cache.lookup_store(:memory_store))
+      5.times { Organisation.all }
 
       assert_requested(:get, @linkables_request_path, times: 1)
-    end
-
-    should "cache the organisation results, but only for an hour" do
-      Organisation.all
-
-      Timecop.travel(Time.zone.now + 61.minutes) do
-        Organisation.all
-      end
     end
 
     should "show the title and publication state" do

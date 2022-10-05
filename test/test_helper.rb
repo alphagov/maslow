@@ -8,7 +8,7 @@ require "rails/test_help"
 require "shoulda/context"
 require "database_cleaner/mongoid"
 require "mocha/minitest"
-require "webmock/test_unit"
+require "webmock/minitest"
 require "gds_api/test_helpers/publishing_api"
 
 GovukTest.configure
@@ -25,8 +25,6 @@ class ActiveSupport::TestCase
   teardown do
     DatabaseCleaner.clean
     WebMock.reset!
-    Rails.cache.clear
-    Timecop.return
   end
 
   def stub_user
