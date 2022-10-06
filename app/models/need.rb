@@ -181,7 +181,7 @@ class Need
     @responses = [latest_revision]
     while version > 1
       version -= 1
-      @responses << fetch_from_publishing_api(@content_id, version: version)
+      @responses << fetch_from_publishing_api(@content_id, version:)
     end
     compute_changes(@responses)
   end
@@ -289,7 +289,7 @@ class Need
     GdsApi.publishing_api.unpublish(
       content_id,
       type: "withdrawal",
-      explanation: explanation,
+      explanation:,
     )
   rescue GdsApi::HTTPErrorResponse => e
     logger.error("GdsApi::HTTPErrorResponse in Need.unpublish")
@@ -353,7 +353,7 @@ class Need
     responses.map do |x|
       need_from_publishing_api_payload(
         x,
-        load_organisation_ids: load_organisation_ids,
+        load_organisation_ids:,
       )
     end
   end
@@ -423,7 +423,7 @@ private
       publishing_app: "maslow",
       rendering_app: "info-frontend",
       locale: "en",
-      base_path: base_path,
+      base_path:,
       routes: [
         {
           path: base_path,
@@ -432,8 +432,8 @@ private
       ],
       document_type: "need",
       title: "As a #{@role}, I need to #{@goal}, so that #{@benefit}#{title_suffix}",
-      details: details,
-      update_type: update_type,
+      details:,
+      update_type:,
     }
   end
 

@@ -42,19 +42,19 @@ module NeedHelper
               explanation_link_match_data.captures.map do |content_id|
                 need = Need.find(content_id)
                 {
-                  content_id: content_id,
+                  content_id:,
                   title: need.title,
                   url: need_path(content_id),
                 }
               rescue Need::NotFound
                 {
-                  content_id: content_id,
+                  content_id:,
                   title: "an unknown need",
                 }
               end
             end
 
-    Govspeak::Document.new(explanation, links: links).to_html.html_safe
+    Govspeak::Document.new(explanation, links:).to_html.html_safe
   end
 
   def options_for_withdrawing_as_duplicate(need)

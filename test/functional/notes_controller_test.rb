@@ -9,7 +9,7 @@ class NotesControllerTest < ActionController::TestCase
     should "be successful" do
       content_id = SecureRandom.uuid
 
-      post :create, params: note_atts(content_id: content_id)
+      post :create, params: note_atts(content_id:)
 
       assert_redirected_to revisions_need_path(content_id)
       assert_equal "Note saved", flash[:notice]
