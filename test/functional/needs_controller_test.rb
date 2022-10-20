@@ -217,7 +217,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "404 if the need doesn't exist" do
       content_id = SecureRandom.uuid
       Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
-      get :show, params: { content_id: content_id }
+      get :show, params: { content_id: }
 
       assert_response :not_found
     end
@@ -254,7 +254,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "404 if the need doesn't exist" do
       content_id = SecureRandom.uuid
       Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
-      get :revisions, params: { content_id: content_id }
+      get :revisions, params: { content_id: }
 
       assert_response :not_found
     end
@@ -282,7 +282,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "404 if the need doesn't exist" do
       content_id = SecureRandom.uuid
       Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
-      get :edit, params: { content_id: content_id }
+      get :edit, params: { content_id: }
       assert_response :not_found
     end
 
@@ -311,7 +311,7 @@ class NeedsControllerTest < ActionController::TestCase
       Need.expects(:find).with(content_id).raises(Need::NotFound.new(content_id))
       put :update,
           params: {
-            content_id: content_id,
+            content_id:,
             need: { goal: "do things" },
           }
       assert_response :not_found
@@ -437,7 +437,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     should "remove the only value" do
       need = complete_need_data.merge("met_when" => %w[Winning])
-      post(:create, params: { delete_criteria: "0", need: need })
+      post(:create, params: { delete_criteria: "0", need: })
 
       assert_response 200
       assert_equal [], assigns[:need].met_when

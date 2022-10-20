@@ -357,7 +357,7 @@ class NeedTest < ActiveSupport::TestCase
       content_id = SecureRandom.uuid
       need_content_item = create(
         :need_content_item,
-        content_id: content_id,
+        content_id:,
         details: {
           need_id: 100_001,
           role: "human",
@@ -368,7 +368,7 @@ class NeedTest < ActiveSupport::TestCase
 
       stub_publishing_api_has_item(need_content_item)
       stub_publishing_api_has_links(
-        content_id: content_id,
+        content_id:,
         links: { organisations: [] },
       )
 
@@ -396,11 +396,11 @@ class NeedTest < ActiveSupport::TestCase
       ]
 
       content_id = SecureRandom.uuid
-      need_content_item = create(:need_content_item, content_id: content_id)
+      need_content_item = create(:need_content_item, content_id:)
       stub_publishing_api_has_item(need_content_item)
 
       stub_publishing_api_has_links(
-        content_id: content_id,
+        content_id:,
         links: {
           organisations: [
             first_organisation_content_id,
@@ -459,13 +459,13 @@ class NeedTest < ActiveSupport::TestCase
       content_id = SecureRandom.uuid
       need_content_item1 = create(
         :need_content_item,
-        content_id: content_id,
+        content_id:,
         publication_state: "superseded",
         user_facing_version: 1,
       )
       need_content_item2 = create(
         :need_content_item,
-        content_id: content_id,
+        content_id:,
         publication_state: "superseded",
         details: {
           goal: "how to make a claim on an estate",
@@ -474,7 +474,7 @@ class NeedTest < ActiveSupport::TestCase
       )
       need_content_item3 = create(
         :need_content_item,
-        content_id: content_id,
+        content_id:,
         publication_state: "published",
         details: {
           goal: "how to make a claim on an estate",
@@ -493,7 +493,7 @@ class NeedTest < ActiveSupport::TestCase
       )
 
       stub_publishing_api_has_links(
-        content_id: content_id,
+        content_id:,
         links: {
           organisations: [],
         },
@@ -619,7 +619,7 @@ class NeedTest < ActiveSupport::TestCase
         },
         "body": {
           "type": "withdrawal",
-          explanation: explanation,
+          explanation:,
         },
       )
 

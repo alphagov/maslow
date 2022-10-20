@@ -10,9 +10,9 @@ class NotesController < ApplicationController
     author = current_user
 
     @note = Note.new(
-      text: text,
-      need_id: need_id,
-      content_id: content_id,
+      text:,
+      need_id:,
+      content_id:,
       author: author_attributes(author),
     )
 

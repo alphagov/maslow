@@ -254,7 +254,7 @@ private
   def add_or_remove_criteria(action)
     add_criteria if params[:criteria_action]
     remove_criteria if params[:delete_criteria]
-    render action: action
+    render action:
   end
 
   def add_criteria
