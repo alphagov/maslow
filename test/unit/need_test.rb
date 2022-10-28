@@ -615,8 +615,7 @@ class NeedTest < ActiveSupport::TestCase
 
       stub_publishing_api_unpublish(
         need_content_item_duplicate["content_id"],
-        query: {
-        },
+        query: {},
         "body": {
           "type": "withdrawal",
           explanation:,
