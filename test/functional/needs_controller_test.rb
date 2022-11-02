@@ -53,7 +53,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "paginated needs" do
       should "pass the 'page' parameter to Need.list" do
-        Need.expects(:list).with("page" => "three")
+        Need.expects(:list).with({ "page" => "three" })
         get :index, params: { "page" => "three" }
       end
     end
@@ -67,7 +67,7 @@ class NeedsControllerTest < ActionController::TestCase
 
     context "searching needs" do
       should "send the search query" do
-        Need.expects(:list).with("q" => "citizenship")
+        Need.expects(:list).with({ "q" => "citizenship" })
         get(:index, params: { "q" => "citizenship" })
       end
     end
