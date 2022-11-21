@@ -19,7 +19,7 @@ class OrganisationTest < ActiveSupport::TestCase
       )
 
       @linkables_request_path =
-        "#{Plek.new.find('publishing-api')}/v2/linkables?document_type=organisation"
+        "#{Plek.find('publishing-api')}/v2/linkables?document_type=organisation"
     end
 
     should "return organisations from the organisations api" do

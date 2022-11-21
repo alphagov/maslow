@@ -174,7 +174,7 @@ class ViewANeedTest < ActionDispatch::IntegrationTest
               within "tr:first-child" do
                 assert page.has_link?(
                   "Linked item title",
-                  href: "#{Plek.new.website_root}/linked_foo",
+                  href: "#{Plek.website_root}/linked_foo",
                 )
               end
             end
