@@ -20,7 +20,7 @@
   </li>
 <% end %>
 <% content_for :navbar_right do %>
-  Hello, <%= link_to current_user.name, Plek.new.external_url_for('signon') %>
+  Hello, <%= link_to current_user.name, Plek.external_url_for('signon') %>
   &bull; <%= link_to 'Sign out', gds_sign_out_path %>
 <% end %>
 <% content_for :footer_version do %><%= CURRENT_RELEASE_SHA %><% end %>
