@@ -459,6 +459,7 @@ DEPENDENCIES
   govuk_app_config
   govuk_test
   kaminari
+  mail (~> 2.7.1)
   mocha
   mongoid
   plek
