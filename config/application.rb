@@ -50,5 +50,7 @@ module Maslow
     # to use CSS that has same function names as SCSS such as max.
     # https://github.com/alphagov/govuk-frontend/issues/1350
     config.assets.css_compressor = nil
+
+    config.assets.prefix = ENV.fetch("ASSETS_PREFIX", "/assets")
   end
 end
