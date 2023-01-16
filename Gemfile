@@ -11,7 +11,6 @@ gem "govspeak"
 gem "govuk_admin_template"
 gem "govuk_app_config"
 gem "kaminari"
-gem "mail", "~> 2.8.0" # TODO: remove once https://github.com/mikel/mail/issues/1489 is fixed.
 gem "mongoid"
 gem "plek"
 gem "sassc-rails"
