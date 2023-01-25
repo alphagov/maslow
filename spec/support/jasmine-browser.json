@@ -1,5 +1,5 @@
 {
-  "srcDir": "public/assets",
+  "srcDir": "public/assets/maslow",
   "srcFiles": [
     "govuk-admin-template-*.js",
     "application-*.js"

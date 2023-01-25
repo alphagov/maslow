@@ -51,6 +51,8 @@ module Maslow
     # https://github.com/alphagov/govuk-frontend/issues/1350
     config.assets.css_compressor = nil
 
-    config.assets.prefix = ENV.fetch("ASSETS_PREFIX", "/assets")
+    # Set asset path to be application specific so that we can put all GOV.UK
+    # assets into an S3 bucket and distinguish app by path.
+    config.assets.prefix = "/assets/maslow"
   end
 end
