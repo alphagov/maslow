@@ -134,7 +134,7 @@ GEM
       null_logger
       plek (>= 1.9.0)
       rest-client (~> 2.0)
-    gds-sso (18.0.0)
+    gds-sso (18.1.0)
       oauth2 (~> 2.0)
       omniauth (~> 2.1)
       omniauth-oauth2 (~> 1.8)
@@ -245,9 +245,9 @@ GEM
     minitest (5.19.0)
     mocha (2.1.0)
       ruby2_keywords (>= 0.0.5)
-    mongo (2.19.0)
+    mongo (2.19.1)
       bson (>= 4.14.1, < 5.0.0)
-    mongoid (8.1.1)
+    mongoid (8.1.2)
       activemodel (>= 5.1, < 7.1, != 7.0.0)
       concurrent-ruby (>= 1.0.5, < 2.0)
       mongo (>= 2.18.0, < 3.0.0)
@@ -497,8 +497,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
-    rack-protection (3.0.6)
-      rack
+    rack-protection (3.1.0)
+      rack (~> 2.2, >= 2.2.4)
     rack-proxy (0.7.6)
       rack
     rack-test (2.1.0)
@@ -639,7 +639,7 @@ GEM
       rack (>= 2.0.9)
     warden-oauth2 (0.0.1)
       warden
-    webmock (3.18.1)
+    webmock (3.19.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
