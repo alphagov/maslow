@@ -23,7 +23,7 @@
   Hello, <%= link_to current_user.name, Plek.external_url_for('signon') %>
   &bull; <%= link_to 'Sign out', gds_sign_out_path %>
 <% end %>
-<% content_for :footer_version do %><%= CURRENT_RELEASE_SHA %><% end %>
+<% content_for :footer_version, ENV.fetch("SENTRY_RELEASE", "null")[0..18] %>
 <% content_for :app_title do %>GOV.UK Maslow<% end %>
 <% content_for :content do %>
 <% [:notice, :alert, :error].select { |k|  flash[k].present? }.each do |k| %>
