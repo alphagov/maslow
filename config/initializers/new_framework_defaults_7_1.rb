@@ -13,7 +13,7 @@
 # to manually require files that are managed by the autoloader, which you shouldn't do anyway.
 # This will reduce the size of the load path, making `require` faster if you don't use bootsnap, or reduce the size
 # of the bootsnap cache if you use it.
-# Rails.application.config.add_autoload_paths_to_load_path = false
+Rails.application.config.add_autoload_paths_to_load_path = false
 
 # Remove the default X-Download-Options headers since it is used only by Internet Explorer.
 # If you need to support Internet Explorer, add back `"X-Download-Options" => "noopen"`.
@@ -27,7 +27,7 @@
 
 # Do not treat an `ActionController::Parameters` instance
 # as equal to an equivalent `Hash` by default.
-# Rails.application.config.action_controller.allow_deprecated_parameters_hash_equality = false
+Rails.application.config.action_controller.allow_deprecated_parameters_hash_equality = false
 
 # Active Record Encryption now uses SHA-256 as its hash digest algorithm. Important: If you have
 # data encrypted with previous Rails versions, there are two scenarios to consider:
@@ -70,13 +70,13 @@
 # replicas will not be able to deserialize `BigDecimal` arguments from this
 # serializer. Therefore, this setting should only be enabled after all replicas
 # have been successfully upgraded to Rails 7.1.
-# Rails.application.config.active_job.use_big_decimal_serializer = true
+Rails.application.config.active_job.use_big_decimal_serializer = true
 
 # Specify if an `ArgumentError` should be raised if `Rails.cache` `fetch` or
 # `write` are given an invalid `expires_at` or `expires_in` time.
 # Options are `true`, and `false`. If `false`, the exception will be reported
 # as `handled` and logged instead.
-# Rails.application.config.active_support.raise_on_invalid_cache_expiration_time = true
+Rails.application.config.active_support.raise_on_invalid_cache_expiration_time = true
 
 # Specify whether Query Logs will format tags using the SQLCommenter format
 # (https://open-telemetry.github.io/opentelemetry-sqlcommenter/), or using the legacy format.
@@ -109,7 +109,7 @@
 # that have not yet been upgraded must be able to read messages from upgraded
 # servers, first deploy without changing the serializer, then set the serializer
 # in a subsequent deploy.
-# Rails.application.config.active_support.message_serializer = :json_allow_marshal
+Rails.application.config.active_support.message_serializer = :json_allow_marshal
 
 # Enable a performance optimization that serializes message data and metadata
 # together. This changes the message format, so messages serialized this way
@@ -120,7 +120,7 @@
 # not yet been upgraded must be able to read messages from upgraded servers,
 # leave this optimization off on the first deploy, then enable it on a
 # subsequent deploy.
-# Rails.application.config.active_support.use_message_serializer_for_metadata = true
+Rails.application.config.active_support.use_message_serializer_for_metadata = true
 
 # Set the maximum size for Rails log files.
 #
@@ -143,7 +143,7 @@
 
 # Enable precompilation of `config.filter_parameters`. Precompilation can
 # improve filtering performance, depending on the quantity and types of filters.
-# Rails.application.config.precompile_filter_parameters = true
+Rails.application.config.precompile_filter_parameters = true
 
 # Enable before_committed! callbacks on all enrolled records in a transaction.
 # The previous behavior was to only run the callbacks on the first copy of a record
@@ -187,7 +187,7 @@
 # and you have no plans to rollback.
 # When you're ready to change format, add this to `config/application.rb` (NOT
 # this file):
-#   config.active_support.cache_format_version = 7.1
+# config.active_support.cache_format_version = 7.1
 
 # Configure Action View to use HTML5 standards-compliant sanitizers when they are supported on your
 # platform.
@@ -197,7 +197,7 @@
 #
 # In previous versions of Rails, Action View always used `Rails::HTML4::Sanitizer` as its vendor.
 #
-# Rails.application.config.action_view.sanitizer_vendor = Rails::HTML::Sanitizer.best_supported_vendor
+Rails.application.config.action_view.sanitizer_vendor = Rails::HTML::Sanitizer.best_supported_vendor
 
 # Configure Action Text to use an HTML5 standards-compliant sanitizer when it is supported on your
 # platform.
@@ -211,7 +211,7 @@
 
 # Configure the log level used by the DebugExceptions middleware when logging
 # uncaught exceptions during requests
-# Rails.application.config.action_dispatch.debug_exception_log_level = :error
+Rails.application.config.action_dispatch.debug_exception_log_level = :error
 
 # Configure the test helpers in Action View, Action Dispatch, and rails-dom-testing to use HTML5
 # parsers.
@@ -220,4 +220,4 @@
 #
 # In previous versions of Rails, these test helpers always used an HTML4 parser.
 #
-# Rails.application.config.dom_testing_default_html_version = :html5
+Rails.application.config.dom_testing_default_html_version = :html5
