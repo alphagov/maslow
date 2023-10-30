@@ -1,5 +1,4 @@
 require "gds-sso/user"
-require "ability"
 
 class User
   include Mongoid::Document
