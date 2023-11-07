@@ -6,6 +6,8 @@
   <%= yield :extra_headers %>
 <% end %>
 
+<% render "layouts/google_tag_manager" %>
+
 <% content_for :favicon do %>
   <% environment_style = GovukAdminTemplate.environment_style %>
   <%= favicon_link_tag environment_style ?

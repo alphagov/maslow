@@ -704,6 +704,7 @@ DEPENDENCIES
   govspeak
   govuk_admin_template
   govuk_app_config
+  govuk_publishing_components
   govuk_test
   kaminari
   mocha
