@@ -32,7 +32,7 @@ module Maslow
     # Once this application is fully deployed to Rails 7.1 and you have no plans to rollback
     # replace the line below with config.active_support.cache_format_version = 7.1
     # This will mean that we can revert back to rails 7.0 if there is an issue
-    config.active_support.cache_format_version = 7.0
+    config.active_support.cache_format_version = 7.1
 
     # Configuration for the application, engines, and railties goes here.
     #
