@@ -22,3 +22,10 @@
 
 # Ignore compiled assets
 /public/assets
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
