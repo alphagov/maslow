@@ -6,6 +6,7 @@ gem "bootsnap", require: false
 gem "cancancan"
 gem "chosen-rails"
 gem "dalli"
+gem "dartsass-rails"
 gem "gds-api-adapters"
 gem "gds-sso"
 gem "govspeak"
@@ -15,7 +16,6 @@ gem "govuk_publishing_components"
 gem "kaminari"
 gem "mongoid"
 gem "plek"
-gem "sassc-rails"
 gem "uglifier"
 
 group :test do
