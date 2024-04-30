@@ -143,7 +143,7 @@ GEM
     faraday-net_http (3.1.0)
       net-http
     ffi (1.15.5)
-    gds-api-adapters (95.0.1)
+    gds-api-adapters (95.1.0)
       addressable
       link_header
       null_logger
@@ -531,7 +531,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.4)
+    public_suffix (5.0.5)
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
