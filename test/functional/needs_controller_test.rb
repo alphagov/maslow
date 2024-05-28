@@ -114,7 +114,7 @@ class NeedsControllerTest < ActionController::TestCase
       }
       post(:create, params: { need: need_data })
 
-      assert_response 500
+      assert_response :internal_server_error
     end
 
     should "return a 422 error if the base path is in use" do
@@ -128,7 +128,7 @@ class NeedsControllerTest < ActionController::TestCase
       }
       post(:create, params: { need: need_data })
 
-      assert_response 422
+      assert_response :unprocessable_entity
     end
 
     should "remove blank entries from justifications" do
@@ -147,7 +147,7 @@ class NeedsControllerTest < ActionController::TestCase
     should "add a blank value to met_when if a 'Add criteria' is requested" do
       post(:create, params: { criteria_action: "Add criteria", need: complete_need_data })
 
-      assert_response 200
+      assert_response :ok
       assert_equal ["Winning", "Awesome", ""], assigns[:need].met_when
     end
 
@@ -168,7 +168,7 @@ class NeedsControllerTest < ActionController::TestCase
 
         post :create, params: { need: complete_need_data }
 
-        assert_response 403
+        assert_response :forbidden
         assert_equal "Invalid authenticity token", response.body
       end
     end
@@ -327,7 +327,7 @@ class NeedsControllerTest < ActionController::TestCase
             content_id: need.content_id,
             need: base_need_fields.merge("goal" => ""),
           }
-      assert_response 422
+      assert_response :unprocessable_entity
     end
 
     should "return a 422 error if the base path is in use" do
@@ -340,7 +340,7 @@ class NeedsControllerTest < ActionController::TestCase
             content_id: need.content_id,
             need: base_need_fields.merge("benefit" => "be awesome"),
           }
-      assert_response 422
+      assert_response :unprocessable_entity
     end
 
     should "save the need if valid and redirect to show it" do
@@ -383,7 +383,7 @@ class NeedsControllerTest < ActionController::TestCase
             need: base_need_fields.merge("met_when" => ["something", "something else"]),
           }
 
-      assert_response 422
+      assert_response :unprocessable_entity
       assert_equal ["something", "something else"], assigns[:need].met_when
     end
 
@@ -399,7 +399,7 @@ class NeedsControllerTest < ActionController::TestCase
       }
       put(:update, params: { content_id: need.content_id, need: need_data })
 
-      assert_response 500
+      assert_response :internal_server_error
     end
 
     should "stop viewers from updating needs" do
@@ -439,7 +439,7 @@ class NeedsControllerTest < ActionController::TestCase
       need = complete_need_data.merge("met_when" => %w[Winning])
       post(:create, params: { delete_criteria: "0", need: })
 
-      assert_response 200
+      assert_response :ok
       assert_equal [], assigns[:need].met_when
     end
 
@@ -449,14 +449,14 @@ class NeedsControllerTest < ActionController::TestCase
       )
       post(:create, params: { delete_criteria: "2", need: data })
 
-      assert_response 200
+      assert_response :ok
       assert_equal %w[0 1 3], assigns[:need].met_when
     end
 
     should "do nothing if an invalid request is made" do
       post(:create, params: { delete_criteria: "foo", need: complete_need_data })
 
-      assert_response 200
+      assert_response :ok
       assert_equal %w[Winning Awesome], assigns[:need].met_when
     end
   end
@@ -490,7 +490,7 @@ class NeedsControllerTest < ActionController::TestCase
           }
 
       assert_equal "A problem was encountered when publishing", @controller.flash[:error]
-      assert_response 500
+      assert_response :internal_server_error
     end
   end
 
@@ -552,7 +552,7 @@ class NeedsControllerTest < ActionController::TestCase
           }
 
       assert_equal "Need cannot be a duplicate of itself", @controller.flash[:error]
-      assert_response 422
+      assert_response :unprocessable_entity
     end
 
     should "not be able to replace a need with a missing duplicate" do
@@ -566,7 +566,7 @@ class NeedsControllerTest < ActionController::TestCase
           }
 
       assert_equal "Duplicate need not found", @controller.flash[:error]
-      assert_response 422
+      assert_response :unprocessable_entity
     end
 
     should "not be able to edit a need closed as a duplicate" do
@@ -575,7 +575,7 @@ class NeedsControllerTest < ActionController::TestCase
       get :edit, params: { content_id: @duplicate_need.content_id }
 
       assert_equal "Closed needs cannot be edited", @controller.flash[:notice]
-      assert_response 303
+      assert_response :see_other
     end
 
     should "stop viewers from marking needs as duplicates" do
@@ -605,7 +605,7 @@ class NeedsControllerTest < ActionController::TestCase
           }
 
       assert_equal "Unknown action: some-other-action", @controller.flash[:error]
-      assert_response 422
+      assert_response :unprocessable_entity
     end
   end
 
