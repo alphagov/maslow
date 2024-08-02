@@ -39,7 +39,7 @@ module Maslow
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
 
-    config.time_zone = "London"
+    config.govuk_time_zone = "London"
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
