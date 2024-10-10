@@ -90,4 +90,12 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
+
+  # Enable DNS rebinding protection and other `Host` header attacks.
+  config.hosts = [
+    /maslow\..*gov.uk?/,
+  ]
+
+  # Skip DNS rebinding protection for the default health check endpoint.
+  config.host_authorization = { exclude: ->(request) { request.path.match?("^\/healthcheck") } }
 end
