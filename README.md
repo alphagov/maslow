@@ -1,4 +1,8 @@
-# Maslow
+# Maslow (DEPRECATED)
+
+> **NOTE**: This project is deprecated and is [planned to be retired](https://github.com/alphagov/govuk-rfcs/blob/main/rfc-161-technical-direction-in-publishing-2023.md).
+
+---
 
 Maslow is a tool to create and manage user needs.
 
