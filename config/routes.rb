@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     GovukHealthcheck::Mongoid,
   )
 
+  mount GovukPublishingComponents::Engine, at: "/component-guide"
+
   resources :bookmarks, only: [:index], param: :content_id do
     collection do
       post :toggle
